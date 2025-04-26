@@ -1,0 +1,32 @@
+{
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagName": "v${version}",
+    "requireCleanWorkingDir": true,
+    "push": true,
+    "pushRepo": "origin",
+    "assets": ["CHANGELOG.md", "docs/**/*"]
+  },
+  "npm": {
+    "publish": true,
+    "pkgRoot": ".",
+    "skipChecks": false
+  },
+  "github": {
+    "release": true,
+    "tokenRef": "GITHUB_TOKEN",
+    "draft": false,
+    "assets": ["docs/**/*"]
+  },
+  "hooks": {
+    "before:init": "yarn lint && yarn test && yarn docs:build",
+    "after:git:release": "echo 🎉 Published v${version}"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  },
+  "increment": "patch"
+}
