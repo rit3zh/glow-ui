@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/rit3zh/glow-ui/compare/v1.9.0...v1.10.0) (2025-04-26)
+
+
+### Features
+
+* **button:** fixed the animation. ([3b44405](https://github.com/rit3zh/glow-ui/commit/3b44405a9b84494f8685be911fbcb0141e942e77))
+
 ## [1.9.0](https://github.com/rit3zh/glow-ui/compare/v1.8.0...v1.9.0) (2025-04-26)
 
 
