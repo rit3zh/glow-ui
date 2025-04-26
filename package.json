@@ -9,8 +9,12 @@
     "web": "expo start --web",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "version": "standard-version",
     "type-check": "tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docs": "typedoc",
+    "docs:deploy": "gh-pages -d docs",
+    "release": "npm run build && npm run version && npm run docs && npm run docs:deploy && git push --follow-tags origin main"
   },
   "lint-staged": {
     "*.ts": [
@@ -43,11 +47,13 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-native": "^5.0.0",
+    "gh-pages": "^6.3.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
     "release-it": "^19.0.1",
     "standard-version": "^9.5.0",
+    "typedoc": "^0.28.3",
     "typescript": "^5.3.3"
   },
   "private": true
