@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "docs": "typedoc",
     "docs:deploy": "gh-pages -d docs",
-    "release": "npm run build && npm run version && npm run docs && npm run docs:deploy && npx release-it --ci --no-github.release && git push --follow-tags origin main"
+    "release": "npm run build && npm run version && npm run docs && npm run docs:deploy && git push --follow-tags origin main"
   },
   "lint-staged": {
     "*.ts": [
