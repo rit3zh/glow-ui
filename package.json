@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "build": "tsc",
     "version": "standard-version",
     "type-check": "tsc --noEmit",
     "prepare": "husky install",
