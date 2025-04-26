@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-.package-lock.json
+package-lock.json
 yarn.lock
 # Expo
 .expo/
