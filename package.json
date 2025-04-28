@@ -1,6 +1,6 @@
 {
   "name": "glow-ui",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
@@ -65,7 +65,7 @@
     "standard-version": "^9.5.0",
     "typedoc": "^0.28.3",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.31.0"
+    "typescript-eslint": "^8.31.1"
   },
   "private": true
 }
