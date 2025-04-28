@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.1](https://github.com/rit3zh/glow-ui/compare/v1.11.1...v1.12.1) (2025-04-28)
+
 ### [1.11.1](https://github.com/rit3zh/glow-ui/compare/v1.10.2...v1.11.1) (2025-04-28)
 
 ### [1.10.2](https://github.com/rit3zh/glow-ui/compare/v1.10.1...v1.10.2) (2025-04-28)
