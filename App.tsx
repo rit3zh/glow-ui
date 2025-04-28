@@ -1,11 +1,93 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
+import "./global.css";
+import {
+  AvatarGroup,
+  ExpandableButton,
+  Timeline,
+  Badge,
+  ActionCard,
+  Touchable,
+  TouchableRipple,
+} from "@/components/base";
+import { SymbolView } from "expo-symbols";
+import { Fragment } from "react";
+import { StyleSheet, View } from "react-native";
+import { BottomSheet } from "@/components/molecules/BottomSheet";
+import { walletActions } from "@/components/molecules/BottomSheet/constants";
+import { ListItem } from "@/components/molecules/List";
+import { Center, Row } from "@/components/atoms";
 export function App() {
+  const BACKGROUND_COLOR: string = `#1a1a1a`;
+  const INDICATOR_COLOR: string = `#9e9e9e`;
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <BottomSheet
+        backgroundColor={BACKGROUND_COLOR}
+        indicatorColor={INDICATOR_COLOR}
+      >
+        <Center>
+          <Row spacing={10}>
+            <TouchableRipple
+              rippleColor="rgba(255, 255, 255, 0.5)"
+              radius={90}
+              value={0.1}
+              duration={500}
+            >
+              <ActionCard
+                title="Transaction history"
+                icon={() => (
+                  <SymbolView
+                    name="note.text"
+                    size={30}
+                    tintColor={"#949494"}
+                  />
+                )}
+              />
+            </TouchableRipple>
+            <TouchableRipple
+              rippleColor="rgba(255, 255, 255, 0.5)"
+              radius={90}
+              value={0.2}
+              duration={500}
+            >
+              <ActionCard
+                title="Subscriptions"
+                icon={() => (
+                  <SymbolView
+                    name="circle.grid.2x2"
+                    size={30}
+                    tintColor={"#949494"}
+                  />
+                )}
+              />
+            </TouchableRipple>
+          </Row>
+        </Center>
+        {walletActions.map((action, idx) => (
+          <Fragment key={idx}>
+            <Touchable>
+              <ListItem
+                title={action.title}
+                subtitle={action.description}
+                leadingIcon={() => (
+                  <SymbolView
+                    name={action.overlayIcon ?? "circle"}
+                    tintColor={action.tint}
+                    size={30}
+                  />
+                )}
+                destructive={action.descrutive}
+                trailingIcon={() => (
+                  <SymbolView
+                    name={"chevron.forward"}
+                    tintColor={action.tint}
+                    size={12}
+                  />
+                )}
+              />
+            </Touchable>
+          </Fragment>
+        ))}
+      </BottomSheet>
     </View>
   );
 }
@@ -14,7 +96,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
