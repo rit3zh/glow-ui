@@ -1,12 +1,8 @@
-import type { ReactNode } from "react";
-
-export interface TouchableRippleProps {
-  children: ReactNode;
+export type TouchableRippleProps = {
+  children: React.ReactElement;
   onPress?: () => void;
+  onLongPress?: () => void;
   rippleColor?: string;
-  radius?: number;
   duration?: number;
-  value?: number;
-  rippleWidth?: number;
-  rippleHeight?: number;
-}
+  borderRadius?: number;
+};

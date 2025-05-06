@@ -5,21 +5,13 @@ import {
   ActivityIndicator,
   StyleSheet,
   ViewStyle,
-  StyleProp,
 } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
-
-interface ExpandableButtonProps {
-  title: string;
-  isLoading: boolean;
-  onPress: () => void;
-  width?: number;
-  height?: number;
-}
+import type { ExpandableButtonProps } from "./ExpandableButton.types";
 
 export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
   title,
@@ -27,7 +19,7 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
   onPress,
   width = 200,
   height = 48,
-}) => {
+}): React.JSX.Element & React.ReactNode => {
   const animatedWidth = useSharedValue<number>(width);
 
   useEffect(() => {

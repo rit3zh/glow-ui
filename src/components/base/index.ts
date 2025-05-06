@@ -1,4 +1,3 @@
-export * from "./timeline-view/TimelineView";
 export * from "./button/ExpandableButton";
 export * from "./avatar-group/AvatarGroup";
 export * from "./badge/Badge";
