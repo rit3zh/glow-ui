@@ -5,3 +5,5 @@ export * from "./Breadcrumbs";
 export * from "./Card";
 export * from "./List";
 export * from "./Loaders";
+export * from "./SearchBar/children/SearchBar";
+export * from "./Stepper";

@@ -1,0 +1,27 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "seekbar",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/kim-minseong/SeekBar.git",
+          "name" : "SeekBar"
+        },
+        "state" : {
+          "checkoutState" : {
+            "branch" : "main",
+            "revision" : "aad83f51a597c4ca1fb8512f284cd8de016073fb"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "SeekBar"
+      }
+    ]
+  },
+  "version" : 6
+}

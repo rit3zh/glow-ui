@@ -8,11 +8,7 @@ export const DialogTitle: React.FC<DialogTitleProps> = ({
 }: DialogTitleProps): React.ReactNode & React.JSX.Element => {
   return (
     <View>
-      <Text
-        className="text-white"
-        style={[styles.title, style]}
-        numberOfLines={2}
-      >
+      <Text style={[styles.title, style]} numberOfLines={2}>
         {children}
       </Text>
     </View>

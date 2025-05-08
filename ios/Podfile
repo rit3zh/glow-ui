@@ -35,7 +35,6 @@ target 'glowui' do
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
-
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',
@@ -44,7 +43,19 @@ target 'glowui' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
 
+spm_pkg "SeekBar", :url => "https://github.com/kim-minseong/SeekBar.git", :branch => "main"
+
+
+
   post_install do |installer|
+    system("chmod -R u+w Pods/RCT-Folly")
+  Dir.glob("Pods/RCT-Folly/folly/Portability.h").each do |file|
+    text = File.read(file)
+    new_contents = text.gsub('#define FOLLY_HAS_COROUTINES 1', '#define FOLLY_HAS_COROUTINES 0')
+    File.open(file, "w") { |file| file.puts new_contents }
+  end
+
+
     react_native_post_install(
       installer,
       config[:reactNativePath],

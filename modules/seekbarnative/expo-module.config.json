@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "SeekBarIOSReactNativeModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.seekbarnative.SeekBarIOSReactNativeModule"
+    ]
+  }
+}

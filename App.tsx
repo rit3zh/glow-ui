@@ -1,36 +1,82 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { TouchableRipple } from "@/components/base/ripple/Ripple";
-import { SafeAreaView } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AnimatedMaskedText, ActionCard } from "@/components";
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Switch,
+  TouchableOpacity,
+} from "react-native";
+import {
+  Stepper,
+  StepperButton,
+  StepperContent,
+  StepperValue,
+} from "@/components/molecules";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/organisms/";
+import { Popover, PopoverOption } from "@/components/molecules/Popover/Popover";
 import { SymbolView } from "expo-symbols";
-import { FloatingSheet } from "@/components/templates/sheet/floating-sheet/FloatingSheet";
 
-export function App() {
-  return (
-    <GestureHandlerRootView>
-      <SafeAreaView style={styles.container}>
-        <FloatingSheet />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+export const App: React.FC = () => {
+  const [showPopover, setShowPopover] = useState<boolean>(false);
+
+  const popoverContent = (
+    <View>
+      <PopoverOption
+        title="New Chat"
+        description="Send a message to your contact"
+        onPress={() => setShowPopover(false)}
+      />
+      <PopoverOption
+        title="New Contact"
+        description="Add a contact to be able to send message"
+        onPress={() => setShowPopover(false)}
+      />
+      <PopoverOption
+        title="New Community"
+        description="Join the community around you"
+        onPress={() => setShowPopover(false)}
+      />
+    </View>
   );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  button: {
-    backgroundColor: "#eee",
-    width: 500,
-    height: 500,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#000",
-  },
-});
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Popover
+        isVisible={showPopover}
+        onClose={() => setShowPopover(false)}
+        content={popoverContent}
+        position="top"
+        useBlur={true}
+        blurIntensity={100}
+      >
+        <TouchableOpacity
+          onPress={() => setShowPopover(true)}
+          style={{
+            padding: 15,
+            backgroundColor: "#007AFF",
+            width: 200,
+            height: 100,
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ color: "white" }}>Show Popover</Text>
+          <SymbolView
+            name="plus"
+            size={20}
+            tintColor="#fff"
+            style={{ position: "absolute", top: 10, right: 10 }}
+          />
+        </TouchableOpacity>
+      </Popover>
+    </View>
+  );
+};
+
+// i love my girlfriend's video

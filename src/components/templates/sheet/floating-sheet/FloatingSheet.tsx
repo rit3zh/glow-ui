@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   Button,
   Dimensions,
   Animated,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import {
   DragChangeEvent,
@@ -18,27 +20,34 @@ import {
 import { BlurView } from "expo-blur";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+import { SeekBar } from "modules/seekbarnative";
 
 const { width, height } = Dimensions.get("window");
 
 const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
 
 const IMAGE_URL: string = `https://m.media-amazon.com/images/I/81-SxZnlDXL._UF1000,1000_QL80_.jpg`;
+const COVER_URL: string = `https://i.scdn.co/image/ab67616d0000b2730c471c36970b9406233842a5`;
 
 const AnimatedVideo = Animated.createAnimatedComponent(VideoView);
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 export const FloatingSheet = () => {
+  const [value, setValue] = useState<number>(0);
   const sheetRef = useRef<TrueSheet>(null);
-
   const animation = useRef(new Animated.Value(0)).current;
-
   const [isPresented, setIsPresented] = useState(false);
-
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [songTitle, setSongTitle] = useState("SZA - Kill Bill");
+  const [songArtist, setSongArtist] = useState("SOS");
   const sheetSizes = [85, height * 0.9];
 
+  // Animation values
   const animatedImageSize = animation.interpolate({
     inputRange: [0, height * 0.5, height * 0.9],
-    outputRange: [50, 250, 400],
+    outputRange: [20, 250, 400],
     extrapolate: "clamp",
   });
 
@@ -47,6 +56,7 @@ export const FloatingSheet = () => {
     outputRange: [50, 450],
     extrapolate: "clamp",
   });
+
   const animatedVideoInitialMargin = animation.interpolate({
     inputRange: [5, height * 0.8],
     outputRange: [20, 0],
@@ -60,8 +70,8 @@ export const FloatingSheet = () => {
   });
 
   const animatedMarginTop = animation.interpolate({
-    inputRange: [85, height * 0.9],
-    outputRange: [0, 30],
+    inputRange: [85, height * 0.8, height * 0.9],
+    outputRange: [0, 18, 20],
     extrapolate: "clamp",
   });
 
@@ -74,6 +84,33 @@ export const FloatingSheet = () => {
   const animatedBackgroundColor = animation.interpolate({
     inputRange: [85, height * 0.9],
     outputRange: ["rgb(255, 82, 82)", "rgb(76, 175, 80)"],
+    extrapolate: "clamp",
+  });
+
+  // Cover to video transition animations
+  const coverOpacity = animation.interpolate({
+    inputRange: [85, height * 0.3, height * 0.5],
+    outputRange: [1, 0.7, 0],
+    extrapolate: "clamp",
+  });
+
+  const videoOpacity = animation.interpolate({
+    inputRange: [85, height * 0.3, height * 0.5],
+    outputRange: [0, 0.5, 1],
+    extrapolate: "clamp",
+  });
+
+  // Boolean to track if sheet is fully opened
+  const isFullyOpened = animation.interpolate({
+    inputRange: [height * 0.89, height * 0.9],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+
+  // Controls visibility animation linked to cover/video transition
+  const controlsOpacity = animation.interpolate({
+    inputRange: [85, height * 0.3, height * 0.9, height * 0.9],
+    outputRange: [0.3, 0.5, 0.8, 1],
     extrapolate: "clamp",
   });
 
@@ -196,6 +233,7 @@ export const FloatingSheet = () => {
     }
     return height;
   };
+
   const videoSource = useVideoPlayer(
     require("@/assets/video/sza.mp4"),
     (player) => {
@@ -204,6 +242,15 @@ export const FloatingSheet = () => {
       player.play();
     }
   );
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      videoSource.pause();
+    } else {
+      videoSource.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <View style={styles.container}>
@@ -219,7 +266,7 @@ export const FloatingSheet = () => {
         blurTint="dark"
         cornerRadius={20}
         collapsable={false}
-        dismissible={false}
+        dismissible={true}
         onPresent={handlePresent}
         onDragChange={handleDragChange}
         onSizeChange={handleSizeChange}
@@ -227,40 +274,18 @@ export const FloatingSheet = () => {
         onDismiss={handleDismiss}
         initialIndexAnimated={true}
       >
-        {/* <LinearGradient
-          colors={["transparent", "rgba(0,0,0,5)"]}
-          style={{
-            position: "absolute",
-            width: width,
-            height: height + 10,
-            top: 0,
-          }}
-        /> */}
-
-        <Animated.View
-          style={[
-            styles.sheetContent,
-            {
-              // marginTop: animatedMarginTop
-            },
-          ]}
-        >
-          <Animated.View
-            style={{
-              position: "relative",
-            }}
-          >
+        <Animated.View style={styles.sheetContent}>
+          <Animated.View style={{ position: "relative" }}>
+            {/* Video component with fade-in animation */}
             <AnimatedVideo
               style={[
-                styles.animatedBox,
+                styles.mediaContent,
                 {
                   width: animatedVideoSize,
                   height: animatedVideoHeight,
                   borderRadius: animatedBorderRadius,
-                  // backgroundColor: animatedBackgroundColor,
-                  // marginLeft: 20,
-                  // marginTop: 10,
                   margin: animatedVideoInitialMargin,
+                  opacity: videoOpacity, // Fade in the video as player expands
                 },
               ]}
               contentFit="cover"
@@ -268,24 +293,123 @@ export const FloatingSheet = () => {
               nativeControls={false}
               allowsPictureInPicture={false}
               startsPictureInPictureAutomatically={false}
-              onPictureInPictureStart={() => alert("Helo")}
             />
-            {/* <Animated.Image
+
+            {/* Cover image overlay with fade-out animation */}
+            <AnimatedImage
+              source={{ uri: COVER_URL }}
               style={[
-                styles.animatedBox,
+                styles.coverImage,
                 {
                   width: animatedImageSize,
                   height: animatedImageSize,
                   borderRadius: animatedBorderRadius,
-                  backgroundColor: animatedBackgroundColor,
-                  marginLeft: 20,
-                  marginTop: 10,
+                  opacity: coverOpacity, // Fade out the cover as player expands
+                  position: "absolute",
+                  top: animatedVideoInitialMargin,
+                  left: animatedVideoInitialMargin,
+                  marginTop: animatedMarginTop,
+                  marginLeft: animatedMarginTop,
                 },
               ]}
-              source={{
-                uri: "https://m.media-amazon.com/images/I/81Ia466fcoL._UF1000,1000_QL80_.jpg",
-              }}
-            /> */}
+              resizeMode="cover"
+            />
+
+            {/* Linear gradient overlay for better control visibility */}
+
+            {/* Music Player Controls - Visibility linked to expansion */}
+            <Animated.View
+              style={[
+                styles.musicControls,
+                {
+                  opacity: controlsOpacity,
+                  position: "absolute",
+
+                  transform: [
+                    {
+                      translateY: animation.interpolate({
+                        inputRange: [85, height * 0.9],
+                        outputRange: [50, 0],
+                        extrapolate: "clamp",
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              {/* Song Info */}
+              <View style={styles.songInfo}>
+                <Text style={styles.songTitle}>{songTitle}</Text>
+                <Text style={styles.songArtist}>{songArtist}</Text>
+              </View>
+
+              {/* Progress Bar */}
+              <View style={styles.progressContainer}>
+                <SeekBar
+                  value={value}
+                  onValueChange={(newValue) => setValue(newValue)}
+                  frame={{
+                    width: width - 40,
+                    height: 19,
+                  }}
+                />
+                <View style={styles.timeInfo}>
+                  <Text style={styles.timeText}>1:30</Text>
+                  <Text style={styles.timeText}>3:45</Text>
+                </View>
+              </View>
+
+              {/* Main Controls */}
+              <View style={styles.controlsRow}>
+                <TouchableOpacity style={styles.controlButton}>
+                  <Ionicons name="shuffle" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.controlButton}>
+                  <Ionicons name="play-skip-back" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.playPauseButton}
+                  onPress={togglePlayPause}
+                >
+                  <Ionicons
+                    name={isPlaying ? "pause" : "play"}
+                    size={30}
+                    color="white"
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.controlButton}>
+                  <Ionicons name="play-skip-forward" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.controlButton}>
+                  <Ionicons name="repeat" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Additional Controls */}
+              <View style={styles.additionalControls}>
+                <TouchableOpacity style={styles.additionalButton}>
+                  <Ionicons name="heart-outline" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.additionalButton}>
+                  <Ionicons name="share-outline" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.additionalButton}>
+                  <Ionicons
+                    name="ellipsis-horizontal"
+                    size={24}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+
+            {/* Animated blur effect */}
             <Animated.View
               style={{
                 position: "absolute",
@@ -295,6 +419,7 @@ export const FloatingSheet = () => {
                 height: animatedImageSize,
                 borderRadius: animatedBorderRadius,
                 overflow: "hidden",
+                opacity: coverOpacity, // Fade out with cover image
               }}
             >
               <AnimatedBlur
@@ -322,6 +447,80 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  sheetContent: {},
-  animatedBox: {},
+  sheetContent: {
+    position: "relative",
+  },
+  mediaContent: {
+    position: "relative",
+  },
+  coverImage: {
+    zIndex: 10, // Ensure cover image is above video initially
+  },
+  gradient: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: "absolute",
+    // height: height,
+  },
+  musicControls: {
+    position: "absolute",
+    bottom: height * 0.14,
+    left: 0,
+    right: 0,
+    padding: 20,
+  },
+  songInfo: {
+    marginBottom: 30,
+    alignItems: "center",
+  },
+  songTitle: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  songArtist: {
+    color: "rgba(255, 255, 255, 0.8)",
+    fontSize: 18,
+    marginTop: 5,
+    textAlign: "center",
+  },
+  progressContainer: {
+    marginBottom: 20,
+  },
+  timeInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+  },
+  timeText: {
+    color: "rgba(255, 255, 255, 0.6)",
+    fontSize: 12,
+  },
+  controlsRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  controlButton: {
+    padding: 10,
+  },
+  playPauseButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  additionalControls: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  additionalButton: {
+    marginHorizontal: 25,
+  },
 });

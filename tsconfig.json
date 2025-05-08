@@ -9,7 +9,8 @@
       "@hooks/*": ["./src/hooks/*"],
       "@screens/*": ["./src/screens/*"],
       "@utils/*": ["./src/utils/*"],
-      "@themes/*": ["./src/themes/*"]
+      "@themes/*": ["./src/themes/*"],
+      "modules/*": ["./modules/*"]
     }
   }
 }
