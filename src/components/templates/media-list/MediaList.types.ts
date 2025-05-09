@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { StyleProp, ViewStyle } from "react-native";
 
 export interface AnimationConfig {
   /**
@@ -52,4 +53,6 @@ export interface MediaListProps<T> {
    * Animation configuration
    */
   animationConfig?: AnimationConfig;
+
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }

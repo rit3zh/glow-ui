@@ -7,3 +7,4 @@ export * from "./List";
 export * from "./Loaders";
 export * from "./SearchBar/children/SearchBar";
 export * from "./Stepper";
+export * from "./Toast";

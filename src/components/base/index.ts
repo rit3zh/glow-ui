@@ -5,3 +5,5 @@ export * from "./action-card/ActionCard";
 export * from "./touchable/Touchable";
 export * from "./ripple/Ripple";
 export * from "./avatar/Avatar";
+export * from "./title/Title";
+export * from "./subtitle/Subtitle";

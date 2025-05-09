@@ -19,6 +19,7 @@ export const MediaList = <T,>({
     rotate: true,
     translateY: true,
   },
+  contentContainerStyle,
 }: MediaListProps<T>): React.ReactNode => {
   const chunkedData = chunkList(data, chunkSize);
   const snapToOffsets = getSnapOffsetsByCount(screenWidth, chunkedData.length);
@@ -104,11 +105,14 @@ export const MediaList = <T,>({
           >
             <FlatList
               data={nested}
-              contentContainerStyle={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 10,
-              }}
+              contentContainerStyle={[
+                {
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  // marginTop: 10,
+                },
+                contentContainerStyle,
+              ]}
               scrollEnabled={false}
               keyExtractor={keyExtractor}
               renderItem={({ item, index: itemIndex }) => (
