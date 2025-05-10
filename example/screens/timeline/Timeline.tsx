@@ -8,7 +8,7 @@ const ShippedComponent = () => {
     <View style={styles.shippingDetails}>
       <Text style={styles.shippingTitle}>Shipping Details</Text>
       <View style={styles.shippingInfo}>
-        b<Text style={styles.shippingLabel}>Carrier:</Text>
+        <Text style={styles.shippingLabel}>Carrier:</Text>
         <Text style={styles.shippingValue}>FedEx</Text>
       </View>
       <View style={styles.shippingInfo}>

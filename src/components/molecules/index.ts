@@ -8,3 +8,4 @@ export * from "./Loaders";
 export * from "./SearchBar/children/SearchBar";
 export * from "./Stepper";
 export * from "./Toast";
+export * from "./Timeline/TimelineView";

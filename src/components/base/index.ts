@@ -7,3 +7,4 @@ export * from "./ripple/Ripple";
 export * from "./avatar/Avatar";
 export * from "./title/Title";
 export * from "./subtitle/Subtitle";
+export * from "./privacy-notice-text/PrivacyNoticeLink";
