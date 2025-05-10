@@ -1,4 +1,5 @@
 // @github crisanne
+// .base
 import { CustomScrollView } from "@/components/templates/index";
 import { SpinnerRefreshIndicator } from "@/components/templates/scroll-view/resource/spinner/SpinnerRefreshIndicator";
 import { useRef, useState } from "react";
