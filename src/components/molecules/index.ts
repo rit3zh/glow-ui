@@ -9,3 +9,4 @@ export * from "./SearchBar/children/SearchBar";
 export * from "./Stepper";
 export * from "./Toast";
 export * from "./Timeline/TimelineView";
+export * from "./Pagination/Pagination";

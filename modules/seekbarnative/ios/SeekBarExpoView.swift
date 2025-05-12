@@ -11,7 +11,7 @@ import SwiftUI
 class SeekBarExpoView: ExpoView {
     let props: SeekBarProps
   let onEvent = EventDispatcher()
-  
+
   required init(appContext: AppContext? = nil) {
       props = SeekBarProps(onEvent: onEvent)
       let hostingController = UIHostingController(rootView: SeekBarView(props: props))
