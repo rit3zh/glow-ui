@@ -1,5 +1,5 @@
 // rit3zh & crisanne
-
+// changes
 import { SafeAreaView, StyleSheet, Text } from "react-native";
 import { BACKGROUND_COLOR, TEXT } from "./app.config";
 import { Pagination } from "@/components";
