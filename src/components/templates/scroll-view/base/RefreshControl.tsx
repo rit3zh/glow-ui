@@ -7,8 +7,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { RefreshControlComponent } from "./RefreshControl.props";
 import { useEffect } from "react";
-import { StyleSheet } from "react-native";
-
 const RefreshControl: RefreshControlComponent = ({
   progress,
   isPulling,

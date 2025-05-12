@@ -38,6 +38,7 @@
     "@react-navigation/stack": "^7.3.0",
     "expo": "~52.0.46",
     "expo-blur": "~14.0.3",
+    "expo-haptics": "~14.0.1",
     "expo-linear-gradient": "^14.0.2",
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",

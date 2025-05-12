@@ -1,16 +1,17 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import Animated, {
+  useSharedValue,
+  withRepeat,
+  withTiming,
   useAnimatedStyle,
   interpolate,
   Extrapolation,
-  withRepeat,
-  withTiming,
-  useSharedValue,
 } from "react-native-reanimated";
+import { RefreshControlProps } from "../../base/RefreshControl.props";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Svg from "react-native-svg";
 
-import type { RefreshControlProps } from "../../base/RefreshControl.props";
-export const SpinnerRefreshIndicator: React.FC<RefreshControlProps> = ({
+export const ArrowRefreshIndicator: React.FC<RefreshControlProps> = ({
   pullDistance,
   isRefreshing,
   refreshTriggerDistance,
@@ -21,8 +22,8 @@ export const SpinnerRefreshIndicator: React.FC<RefreshControlProps> = ({
     if (isRefreshing.value) {
       rotation.value = withRepeat(
         withTiming(360, { duration: 1000 }),
-        -1, // Infinite repetitions
-        false // Don't reverse
+        -1,
+        false
       );
     } else {
       rotation.value = 0;
@@ -34,30 +35,19 @@ export const SpinnerRefreshIndicator: React.FC<RefreshControlProps> = ({
   }, [isRefreshing.value]);
 
   const containerStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      pullDistance.value,
-      [0, refreshTriggerDistance * 0.5],
-      [0, 1],
-      Extrapolation.CLAMP
-    );
-
     return {
-      opacity,
-      transform: [
-        {
-          translateY: interpolate(
-            pullDistance.value,
-            [0, refreshTriggerDistance],
-            [0, refreshTriggerDistance * 0.3],
-            Extrapolation.CLAMP
-          ),
-        },
-      ],
+      opacity: interpolate(
+        pullDistance.value,
+        [0, refreshTriggerDistance * 0.3],
+        [0, 1],
+        Extrapolation.CLAMP
+      ),
     };
   });
 
-  const spinnerStyle = useAnimatedStyle(() => {
-    const spin = isRefreshing.value
+  const arrowStyle = useAnimatedStyle(() => {
+    // Transform arrow into loading spinner
+    const rotate = isRefreshing.value
       ? `${rotation.value}deg`
       : `${interpolate(
           pullDistance.value,
@@ -66,42 +56,79 @@ export const SpinnerRefreshIndicator: React.FC<RefreshControlProps> = ({
           Extrapolation.CLAMP
         )}deg`;
 
-    const scale = interpolate(
+    return {
+      transform: [
+        { rotate },
+        {
+          scale: interpolate(
+            pullDistance.value,
+            [0, refreshTriggerDistance],
+            [0.8, 1.2],
+            Extrapolation.CLAMP
+          ),
+        },
+      ],
+    };
+  });
+
+  const progressStyle = useAnimatedStyle(() => {
+    const progress = interpolate(
       pullDistance.value,
-      [0, refreshTriggerDistance * 0.5, refreshTriggerDistance],
-      [0.8, 1, 1.2],
+      [0, refreshTriggerDistance],
+      [0, 1],
       Extrapolation.CLAMP
     );
 
+    // Circle progress animation
     return {
-      transform: [{ rotate: spin }, { scale }],
+      strokeDashoffset: isRefreshing.value
+        ? 0
+        : interpolate(progress, [0, 1], [100, 0], Extrapolation.CLAMP),
     };
   });
 
   const textStyle = useAnimatedStyle(() => {
     return {
-      opacity: isRefreshing.value
-        ? 1
-        : interpolate(
-            pullDistance.value,
-            [refreshTriggerDistance * 0.5, refreshTriggerDistance],
-            [0.5, 1],
-            Extrapolation.CLAMP
-          ),
+      opacity: interpolate(
+        pullDistance.value,
+        [refreshTriggerDistance * 0.5, refreshTriggerDistance],
+        [0, 1],
+        Extrapolation.CLAMP
+      ),
     };
   });
 
   return (
-    <Animated.View style={[styles.spinnerContainer, containerStyle]}>
-      <Animated.View style={[styles.spinner, spinnerStyle]}>
-        <View style={styles.spinnerCircle} />
+    <Animated.View style={[styles.arrowContainer, containerStyle]}>
+      <Animated.View style={[styles.arrowCircle]}>
+        <Svg height="50" width="50" viewBox="0 0 50 50">
+          <Animated
+            cx="25"
+            cy="25"
+            r="20"
+            stroke="#3b82f6"
+            strokeWidth="2"
+            fill="transparent"
+            strokeDasharray="100"
+            style={progressStyle}
+          />
+        </Svg>
+
+        <Animated.View style={[styles.arrow, arrowStyle]}>
+          {isRefreshing.value ? (
+            <View style={styles.spinner} />
+          ) : (
+            <Text style={styles.arrowSymbol}>↓</Text>
+          )}
+        </Animated.View>
       </Animated.View>
-      <Animated.Text style={[styles.spinnerText, textStyle]}>
+
+      <Animated.Text style={[styles.arrowText, textStyle]}>
         {isRefreshing.value
           ? "Refreshing..."
           : pullDistance.value >= refreshTriggerDistance
             ? "Release to refresh"
-            : "Pull down to refresh"}
+            : "Pull to refresh"}
       </Animated.Text>
     </Animated.View>
   );
