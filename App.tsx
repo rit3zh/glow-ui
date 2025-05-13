@@ -1,33 +1,9 @@
-// Made with ❤️ by
-// rit3zh & crisanne
-// May 12, 2025 (EDT)
+import "./global.css";
+import "react-native-reanimated";
 
-import { SafeAreaView, StyleSheet, Text } from "react-native";
-import { BACKGROUND_COLOR, TEXT } from "./app.config";
-import { Pagination } from "@/components";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as React from "react";
+import { NavigationFlow } from "./app/flow/NavigationFlow";
 
 export function App() {
-  return (
-    <GestureHandlerRootView>
-      <SafeAreaView style={styles.container}>
-        {/* <Text style={styles.text}>{TEXT}</Text> */}
-        <Pagination activeIndex={2} totalItems={5} />
-      </SafeAreaView>
-    </GestureHandlerRootView>
-  );
+  return <NavigationFlow />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_COLOR,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-});

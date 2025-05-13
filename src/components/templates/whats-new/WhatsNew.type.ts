@@ -1,8 +1,13 @@
-import { BlurTint } from "@lodev09/react-native-true-sheet";
+import type { BlurTint } from "@lodev09/react-native-true-sheet";
 import * as React from "react";
 
 export interface WhatsNewProps {
   children: React.ReactNode;
+  /**
+   * @interface BlurTint
+   * @optional
+   * The tint color of the blur effect.
+   */
   blurTint?: BlurTint;
 }
 export interface WhatsNewTriggerProps {
