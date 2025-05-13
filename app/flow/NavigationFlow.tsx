@@ -4,12 +4,9 @@ import { Home } from "../screens/Home";
 import { Details } from "../screens/Details";
 import { enableScreens } from "react-native-screens";
 
-// Enable native screens for better performance
-enableScreens(true);
-
 const Stack = createNativeStackNavigator();
 
-export function NavigationFlow() {
+export function NavigationFlow<T>() {
   return (
     <NavigationContainer>
       <Stack.Navigator

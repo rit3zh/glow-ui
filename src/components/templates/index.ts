@@ -1,2 +1,3 @@
 export * from "./whats-new/index";
-export * from "./scroll-view/index";
+export * from "./headers/parallax/index";
+export * from "./media-list/index";

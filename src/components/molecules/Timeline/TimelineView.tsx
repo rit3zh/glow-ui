@@ -1,6 +1,3 @@
-// crixsanne
-// TimelineView.tsx
-
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {

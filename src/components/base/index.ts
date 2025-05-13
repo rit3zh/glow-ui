@@ -8,3 +8,5 @@ export * from "./avatar/Avatar";
 export * from "./title/Title";
 export * from "./subtitle/Subtitle";
 export * from "./privacy-notice-text/PrivacyNoticeLink";
+
+export * from "./touchable/Touchable";
