@@ -11,30 +11,29 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import {
-  DragChangeEvent,
-  DragEndEvent,
-  PresentEvent,
-  SizeChangeEvent,
-  TrueSheet,
-} from "@lodev09/react-native-true-sheet";
-
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
+import { sheetSizes } from "./constants/sizes/sheetSizes";
 import { BlurView } from "expo-blur";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SeekBar } from "modules/seekbarnative";
 import { SymbolView } from "expo-symbols";
+import {
+  onHandleSizeChange,
+  onHandleDragEnd,
+  onHandleDragChange,
+  onHandleMinimize,
+} from "./utils/animation-utils";
+import { getValueFromIndex } from "./utils/helpers/getValueFromIndex";
+import { dismiss } from "./utils/animation-utils/reference/dismiss";
+import { present } from "./utils/animation-utils/reference/present";
 
 const { width, height } = Dimensions.get("window");
 
 const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
 
-const IMAGE_URL: string = `https://m.media-amazon.com/images/I/81-SxZnlDXL._UF1000,1000_QL80_.jpg`;
 const COVER_URL: string = `https://i.scdn.co/image/ab67616d0000b2730c471c36970b9406233842a5`;
 
-const AnimatedVideo = Animated.createAnimatedComponent(VideoView);
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -49,11 +48,8 @@ export const FloatingSheet = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [songTitle, setSongTitle] = useState("SZA - Kill Bill");
   const [songArtist, setSongArtist] = useState("SOS");
-  const sheetSizes = [85, height * 0.9];
-
-  // New state to track minimized state
+  const [isScrollEnabled, setIsScrollEnabled] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  // New animation value for minimize effect
   const minimizeAnimation = useRef(new Animated.Value(0)).current;
 
   const animatedImageSize = animation.interpolate({
@@ -104,7 +100,6 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  // Cover to video transition animations
   const coverOpacity = animation.interpolate({
     inputRange: [85, height * 0.3, height * 0.5],
     outputRange: [1, 0.7, 0],
@@ -117,14 +112,12 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  // Boolean to track if sheet is fully opened
   const isFullyOpened = animation.interpolate({
     inputRange: [height * 0.89, height * 0.9],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
 
-  // Controls visibility animation linked to cover/video transition
   const controlsOpacity = Animated.multiply(
     animation.interpolate({
       inputRange: [85, height * 0.3, height * 0.9],
@@ -138,7 +131,6 @@ export const FloatingSheet = () => {
     })
   );
 
-  // Blur intensity animation - increases during transition and decreases at endpoints
   const animatedBlurIntensity = animation.interpolate({
     inputRange: [
       85,
@@ -151,27 +143,6 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  // New animations for minimized state
-  const minimizedImageScale = minimizeAnimation.interpolate({
-    inputRange: [20, 250, 400],
-    outputRange: [0, height * 0.5, height * 0.9],
-    extrapolate: "clamp",
-  });
-
-  // Fixed positioning for minimized image
-  const minimizedImageTop = minimizeAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 20],
-    extrapolate: "clamp",
-  });
-
-  const minimizedImageLeft = minimizeAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 20],
-    extrapolate: "clamp",
-  });
-
-  // New animation for content that appears when minimized
   const newContentOpacity = minimizeAnimation.interpolate({
     inputRange: [0, 0.7, 1],
     outputRange: [0, 0.5, 1],
@@ -184,17 +155,8 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  const scrollEnabled = animation.interpolate({
-    inputRange: [sheetSizes[0], sheetSizes[1] - 1, sheetSizes[1]],
-    outputRange: [0, 0, 1],
-    extrapolate: "clamp",
-  });
-
-  const [isScrollEnabled, setIsScrollEnabled] = useState(false);
-
   useEffect(() => {
     if (!isExpanded) {
-      console.log("red");
       setIsMinimized(false);
     }
   }, [isExpanded]);
@@ -211,8 +173,6 @@ export const FloatingSheet = () => {
       animation.removeListener(listenerId);
     };
   }, []);
-
-  // Present the sheet
   const presentSheet = async () => {
     try {
       if (sheetRef.current) {
@@ -222,129 +182,6 @@ export const FloatingSheet = () => {
     } catch (error) {
       console.log("Error presenting sheet:", error);
     }
-  };
-
-  // Dismiss the sheet
-  const dismissSheet = async () => {
-    try {
-      if (sheetRef.current) {
-        await sheetRef.current.dismiss();
-        setIsPresented(false);
-      }
-    } catch (error) {
-      console.log("Error dismissing sheet:", error);
-    }
-  };
-
-  // Handle sheet presentation
-  const handlePresent = (e: PresentEvent) => {
-    // Get the initial position value from the event
-    const initialValue = getValueFromIndex(e.nativeEvent.index);
-    setIsPresented(true);
-
-    // Update the animation value with spring animation
-    Animated.spring(animation, {
-      toValue: initialValue,
-      friction: 12, // Increased friction for slower motion
-      tension: 25, // Decreased tension for softer feel
-      useNativeDriver: false, // Required for color animations
-    }).start();
-  };
-
-  // Handle drag changes during sheet movement
-  // This improved version will handle drag changes while respecting the minimized state
-  const THRESHOLD = sheetSizes[1] - 10; // Adjustable buffer
-
-  const handleDragChange = (e: DragChangeEvent) => {
-    if (isMinimized) return;
-
-    const newValue = e.nativeEvent.value;
-    animation.setValue(newValue);
-
-    // Optional: detect if expanded *during* dragging
-    setIsExpanded(newValue >= THRESHOLD);
-    if (value >= THRESHOLD) {
-      console.log("first");
-    }
-  };
-
-  const handleSizeChange = (e: SizeChangeEvent) => {
-    const newValue = e.nativeEvent.value;
-    if (isMinimized) return;
-
-    setIsExpanded(newValue >= sheetSizes[1] - 10);
-    setSheetPosition(newValue);
-
-    Animated.spring(animation, {
-      toValue: newValue,
-      friction: 12,
-      tension: 25,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handleDragEnd = (e: DragEndEvent) => {
-    const endValue = e.nativeEvent.value;
-    if (isMinimized) return;
-
-    let closestValue = sheetSizes[0];
-    let minDistance = Math.abs(endValue - sheetSizes[0]);
-
-    for (let i = 1; i < sheetSizes.length; i++) {
-      const size = sheetSizes[i];
-      const distance = Math.abs(endValue - size);
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestValue = size;
-      }
-    }
-
-    // Update state based on where the sheet snapped
-    setIsExpanded(closestValue === sheetSizes[1]);
-
-    setSheetPosition(closestValue);
-
-    Animated.spring(animation, {
-      toValue: closestValue,
-      friction: 12,
-      tension: 25,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handleDismiss = () => {
-    setIsPresented(false);
-    setIsMinimized(false);
-    setSheetPosition(0);
-
-    Animated.timing(animation, {
-      toValue: 0,
-      duration: 450,
-      useNativeDriver: false,
-    }).start();
-
-    // Reset minimize animation
-    Animated.timing(minimizeAnimation, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const getValueFromIndex = (index: number): number => {
-    if (index < 0 || index >= sheetSizes.length) {
-      return 0;
-    }
-
-    const size = sheetSizes[index] as number | string;
-    if (typeof size === "number") {
-      return size;
-    } else if (typeof size === "string" && size?.endsWith("%")) {
-      const percentage = parseFloat(size) / 100;
-      return height * percentage;
-    }
-    return height;
   };
 
   const videoSource = useVideoPlayer(
@@ -365,21 +202,6 @@ export const FloatingSheet = () => {
     setIsPlaying(!isPlaying);
   };
 
-  const handleMinimize = () => {
-    const newMinimizedState = !isMinimized;
-    setIsMinimized(newMinimizedState);
-
-    const targetValue = newMinimizedState ? 85 : height * 0.9;
-    setSheetPosition(targetValue);
-
-    Animated.spring(animation, {
-      toValue: targetValue,
-      friction: 8,
-      tension: 40,
-      useNativeDriver: false,
-    }).start();
-  };
-
   return (
     <View style={styles.container}>
       <Button
@@ -395,12 +217,54 @@ export const FloatingSheet = () => {
         cornerRadius={20}
         collapsable={false}
         dismissible={true}
-        onPresent={handlePresent}
-        onDragChange={handleDragChange}
-        onSizeChange={handleSizeChange}
-        onDragEnd={handleDragEnd}
+        onPresent={(e) =>
+          present({
+            animation,
+            setIsPresented,
+            isMinimized,
+            getValueFromIndex: (index) =>
+              getValueFromIndex({ index, sheetSizes }),
+            event: e,
+          })
+        }
+        onDragChange={(e) =>
+          onHandleDragChange({
+            event: e,
+            animation,
+            isMinimized,
+            setIsExpanded,
+          })
+        }
+        onSizeChange={(e) =>
+          onHandleSizeChange({
+            event: e,
+            animation,
+            isMinimized,
+            setIsExpanded,
+            setSheetPosition,
+            sheetSizes,
+          })
+        }
+        onDragEnd={(e) =>
+          onHandleDragEnd({
+            event: e,
+            animation,
+            setIsExpanded,
+            setSheetPosition,
+            isMinimized,
+            sheetSizes,
+          })
+        }
         scrollRef={scrollRef}
-        onDismiss={handleDismiss}
+        onDismiss={() =>
+          dismiss({
+            animation,
+            minimizeAnimation,
+            setIsPresented,
+            setIsMinimized,
+            setSheetPosition,
+          })
+        }
         initialIndexAnimated={true}
         style={{ flex: 1 }}
         contentContainerStyle={{ flex: 1 }}
@@ -413,8 +277,6 @@ export const FloatingSheet = () => {
         >
           <Animated.View style={styles.sheetContent}>
             <Animated.View style={{ position: "relative" }}>
-              {/* Cover image with proper positioning in both normal and minimized states */}
-
               <AnimatedImage
                 source={{ uri: COVER_URL }}
                 style={[
@@ -434,7 +296,6 @@ export const FloatingSheet = () => {
                 resizeMode="cover"
               />
 
-              {/* New content that appears when minimized */}
               <Animated.View
                 style={[
                   styles.newContent,
@@ -447,7 +308,6 @@ export const FloatingSheet = () => {
               >
                 <Text style={styles.newContentTitle}>Next Up</Text>
 
-                {/* Sample playlist items */}
                 <View style={styles.playlistItem}>
                   <Image
                     source={{
@@ -509,7 +369,6 @@ export const FloatingSheet = () => {
                 </View>
               </Animated.View>
 
-              {/* Music Controls */}
               <Animated.View
                 style={[
                   styles.musicControls,
@@ -528,13 +387,11 @@ export const FloatingSheet = () => {
                   },
                 ]}
               >
-                {/* Song Info */}
                 <View style={styles.songInfo}>
                   <Text style={styles.songTitle}>{songTitle}</Text>
                   <Text style={styles.songArtist}>{songArtist}</Text>
                 </View>
 
-                {/* Progress Bar */}
                 <View style={styles.progressContainer}>
                   <SeekBar
                     value={value}
@@ -550,7 +407,6 @@ export const FloatingSheet = () => {
                   </View>
                 </View>
 
-                {/* Main Controls */}
                 <View style={styles.controlsRow}>
                   <TouchableOpacity style={styles.controlButton}>
                     <Ionicons name="shuffle" size={24} color="white" />
@@ -584,7 +440,6 @@ export const FloatingSheet = () => {
                   </TouchableOpacity>
                 </View>
 
-                {/* Additional Controls */}
                 <View style={styles.additionalControls}>
                   <TouchableOpacity style={styles.additionalButton}>
                     <Ionicons name="heart-outline" size={24} color="white" />
@@ -640,7 +495,17 @@ export const FloatingSheet = () => {
                   />
                 </View>
                 <View style={styles.minimizeButtonContainer}>
-                  <Pressable onPress={handleMinimize}>
+                  <Pressable
+                    onPress={() =>
+                      onHandleMinimize({
+                        animation,
+                        setIsMinimized,
+                        isMinimized,
+                        height,
+                        setSheetPosition,
+                      })
+                    }
+                  >
                     <SymbolView
                       name="button.angledbottom.horizontal.left"
                       resizeMode="scaleAspectFit"
@@ -654,7 +519,6 @@ export const FloatingSheet = () => {
                 </View>
               </Animated.View>
 
-              {/* Minimized player controls that show when image is minimized */}
               {isMinimized && (
                 <Animated.View
                   style={[
@@ -678,7 +542,15 @@ export const FloatingSheet = () => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={handleMinimize}
+                    onPress={() =>
+                      onHandleMinimize({
+                        animation,
+                        setIsMinimized,
+                        isMinimized,
+                        height,
+                        setSheetPosition,
+                      })
+                    }
                     style={styles.expandButton}
                   >
                     <Ionicons name="chevron-up" size={24} color="white" />
@@ -686,7 +558,6 @@ export const FloatingSheet = () => {
                 </Animated.View>
               )}
 
-              {/* Animated blur effect */}
               <Animated.View
                 style={{
                   position: "absolute",
@@ -805,13 +676,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
   },
-  // New styles for minimized state
   newContent: {
     position: "absolute",
-    top: 80,
+    top: 0,
+    bottom: 0,
+
     left: 0,
     right: 0,
     paddingHorizontal: 20,
+    backgroundColor: "red",
   },
   newContentTitle: {
     color: "white",
