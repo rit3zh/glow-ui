@@ -1,6 +1,6 @@
 import type { MediaListProps } from "./MediaList.types";
-import { Dimensions, FlatList, Animated } from "react-native";
 import { BlurView } from "expo-blur";
+import { Dimensions, FlatList, Animated } from "react-native";
 import { useRef, useState, useEffect } from "react";
 import { chunkList } from "./utils/chunk";
 import { getSnapOffsetsByCount } from "./utils/snap";

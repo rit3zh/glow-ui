@@ -19,8 +19,7 @@ import {
 } from "@lodev09/react-native-true-sheet";
 
 import { BlurView } from "expo-blur";
-import { useVideoPlayer, VideoView } from "expo-video";
-import { LinearGradient } from "expo-linear-gradient";
+import { useVideoPlayer } from "expo-video";
 import { Ionicons } from "@expo/vector-icons";
 import { SeekBar } from "modules/seekbarnative";
 import { SymbolView } from "expo-symbols";
@@ -29,13 +28,8 @@ const { width, height } = Dimensions.get("window");
 
 const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
 
-const IMAGE_URL: string = `https://m.media-amazon.com/images/I/81-SxZnlDXL._UF1000,1000_QL80_.jpg`;
 const COVER_URL: string = `https://i.scdn.co/image/ab67616d0000b2730c471c36970b9406233842a5`;
-
-const AnimatedVideo = Animated.createAnimatedComponent(VideoView);
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const AnimatedImage = Animated.createAnimatedComponent(Image);
-const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 export const FloatingSheet = () => {
   const [value, setValue] = useState<number>(0);
   const sheetRef = useRef<TrueSheet>(null);

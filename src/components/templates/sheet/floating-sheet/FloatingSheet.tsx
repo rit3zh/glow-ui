@@ -14,7 +14,7 @@ import {
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { sheetSizes } from "./constants/sizes/sheetSizes";
 import { BlurView } from "expo-blur";
-import { useVideoPlayer, VideoView } from "expo-video";
+import { useVideoPlayer } from "expo-video";
 import { Ionicons } from "@expo/vector-icons";
 import { SeekBar } from "modules/seekbarnative";
 import { SymbolView } from "expo-symbols";
@@ -27,7 +27,6 @@ import {
 import { getValueFromIndex } from "./utils/helpers/getValueFromIndex";
 import { dismiss } from "./utils/animation-utils/reference/dismiss";
 import { present } from "./utils/animation-utils/reference/present";
-
 const { width, height } = Dimensions.get("window");
 
 const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
@@ -40,7 +39,7 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 export const FloatingSheet = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [value, setValue] = useState<number>(0);
-  const [sheetPosition, setSheetPosition] = useState<number>(85);
+  const [_, setSheetPosition] = useState<number>(85);
   const sheetRef = useRef<TrueSheet>(null);
   const scrollRef = useRef<ScrollView>(null);
   const animation = useRef(new Animated.Value(0)).current;
@@ -118,6 +117,7 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
+  // Controls opacity - combine the main animation with minimize animation
   const controlsOpacity = Animated.multiply(
     animation.interpolate({
       inputRange: [85, height * 0.3, height * 0.9],
@@ -125,7 +125,7 @@ export const FloatingSheet = () => {
       extrapolate: "clamp",
     }),
     minimizeAnimation.interpolate({
-      inputRange: [0, 1],
+      inputRange: [0, 0.1], // Make controls disappear quickly when minimizing starts
       outputRange: [1, 0],
       extrapolate: "clamp",
     })
@@ -143,9 +143,10 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
+  // New content opacity - show quickly when minimizing starts
   const newContentOpacity = minimizeAnimation.interpolate({
-    inputRange: [0, 0.7, 1],
-    outputRange: [0, 0.5, 1],
+    inputRange: [0, 0.3, 1],
+    outputRange: [0, 0.8, 1],
     extrapolate: "clamp",
   });
 
@@ -157,9 +158,13 @@ export const FloatingSheet = () => {
 
   useEffect(() => {
     if (!isExpanded) {
+      // Reset minimize state when not expanded
       setIsMinimized(false);
+      // Reset minimize animation
+      minimizeAnimation.setValue(0);
     }
   }, [isExpanded]);
+
   useEffect(() => {
     const listenerId = animation.addListener(({ value }) => {
       if (value >= sheetSizes[1] - 10) {
@@ -173,6 +178,7 @@ export const FloatingSheet = () => {
       animation.removeListener(listenerId);
     };
   }, []);
+
   const presentSheet = async () => {
     try {
       if (sheetRef.current) {
@@ -285,7 +291,6 @@ export const FloatingSheet = () => {
                     width: animatedImageSize,
                     height: animatedImageSize,
                     borderRadius: animatedBorderRadius,
-                    // opacity: coverOpacity,
                     position: "absolute",
                     top: animatedVideoInitialMargin,
                     left: animatedVideoInitialMargin,
@@ -296,13 +301,15 @@ export const FloatingSheet = () => {
                 resizeMode="cover"
               />
 
+              {/* Minimized Content View - Playlist */}
               <Animated.View
                 style={[
                   styles.newContent,
                   {
                     opacity: newContentOpacity,
                     transform: [{ translateY: newContentTranslateY }],
-                    display: isMinimized ? "flex" : "none",
+                    // Use pointerEvents to make content interactable only when visible
+                    pointerEvents: isMinimized ? "auto" : "none",
                   },
                 ]}
               >
@@ -369,6 +376,7 @@ export const FloatingSheet = () => {
                 </View>
               </Animated.View>
 
+              {/* Music Controls - Hidden when minimized */}
               <Animated.View
                 style={[
                   styles.musicControls,
@@ -384,6 +392,8 @@ export const FloatingSheet = () => {
                         }),
                       },
                     ],
+                    // Use pointerEvents to disable interaction when minimized
+                    pointerEvents: isMinimized ? "none" : "auto",
                   },
                 ]}
               >
@@ -499,6 +509,7 @@ export const FloatingSheet = () => {
                     onPress={() =>
                       onHandleMinimize({
                         animation,
+                        minimizeAnimation, // Pass minimize animation
                         setIsMinimized,
                         isMinimized,
                         height,
@@ -519,44 +530,46 @@ export const FloatingSheet = () => {
                 </View>
               </Animated.View>
 
-              {isMinimized && (
-                <Animated.View
-                  style={[
-                    styles.minimizedControls,
-                    {
-                      opacity: newContentOpacity,
-                    },
-                  ]}
+              {/* Minimized Controls - Only shown when minimized */}
+              <Animated.View
+                style={[
+                  styles.minimizedControls,
+                  {
+                    opacity: newContentOpacity,
+                    // Use pointerEvents to make minimized controls interactable only when visible
+                    pointerEvents: isMinimized ? "auto" : "none",
+                  },
+                ]}
+              >
+                <Text style={styles.minimizedTitle} numberOfLines={1}>
+                  {songTitle}
+                </Text>
+                <TouchableOpacity
+                  onPress={togglePlayPause}
+                  style={styles.minimizedPlayButton}
                 >
-                  <Text style={styles.minimizedTitle} numberOfLines={1}>
-                    {songTitle}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={togglePlayPause}
-                    style={styles.minimizedPlayButton}
-                  >
-                    <Ionicons
-                      name={isPlaying ? "pause" : "play"}
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      onHandleMinimize({
-                        animation,
-                        setIsMinimized,
-                        isMinimized,
-                        height,
-                        setSheetPosition,
-                      })
-                    }
-                    style={styles.expandButton}
-                  >
-                    <Ionicons name="chevron-up" size={24} color="white" />
-                  </TouchableOpacity>
-                </Animated.View>
-              )}
+                  <Ionicons
+                    name={isPlaying ? "pause" : "play"}
+                    size={24}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    onHandleMinimize({
+                      animation,
+                      minimizeAnimation, // Pass minimize animation
+                      setIsMinimized,
+                      isMinimized,
+                      height,
+                      setSheetPosition,
+                    })
+                  }
+                  style={styles.expandButton}
+                >
+                  <Ionicons name="chevron-up" size={24} color="white" />
+                </TouchableOpacity>
+              </Animated.View>
 
               <Animated.View
                 style={{
@@ -680,11 +693,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     bottom: 0,
-
     left: 0,
     right: 0,
     paddingHorizontal: 20,
-    backgroundColor: "red",
+    backgroundColor: "rgba(25, 20, 20, 1)", // Dark background for playlist
   },
   newContentTitle: {
     color: "white",
@@ -727,6 +739,7 @@ const styles = StyleSheet.create({
     top: 20,
     left: 80,
     right: 20,
+
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

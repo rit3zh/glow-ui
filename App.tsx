@@ -5,5 +5,5 @@ import * as React from "react";
 import { NavigationFlow } from "./app/flow/NavigationFlow";
 
 export function App() {
-  return <NavigationFlow />;
+  return <NavigationFlow name="ReactNativeGlowUINavigationFlow" />;
 }

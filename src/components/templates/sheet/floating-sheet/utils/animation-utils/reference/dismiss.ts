@@ -1,11 +1,11 @@
 import { Animated } from "react-native";
 
-interface DismissProps {
+interface DismissParams {
   animation: Animated.Value;
   minimizeAnimation: Animated.Value;
   setIsPresented: (isPresented: boolean) => void;
-  setIsMinimized: (isMinimized: boolean) => void;
-  setSheetPosition: (sheetPosition: number) => void;
+  setIsMinimized?: (isMinimized: boolean) => void;
+  setSheetPosition?: (sheetPosition: number) => void;
 }
 
 export const dismiss = ({
@@ -14,20 +14,20 @@ export const dismiss = ({
   setIsPresented,
   setIsMinimized,
   setSheetPosition,
-}: DismissProps) => {
-  setIsPresented(false);
-  setIsMinimized(false);
-  setSheetPosition(0);
+}: DismissParams) => {
+  // When dismissing, reset all animations and states
+  animation.setValue(0);
+  minimizeAnimation.setValue(0);
 
-  Animated.timing(animation, {
-    toValue: 0,
-    duration: 450,
-    useNativeDriver: false,
-  }).start();
+  if (setIsPresented) {
+    setIsPresented(false);
+  }
 
-  Animated.timing(minimizeAnimation, {
-    toValue: 0,
-    duration: 300,
-    useNativeDriver: false,
-  }).start();
+  if (setIsMinimized) {
+    setIsMinimized(false);
+  }
+
+  if (setSheetPosition) {
+    setSheetPosition(0);
+  }
 };

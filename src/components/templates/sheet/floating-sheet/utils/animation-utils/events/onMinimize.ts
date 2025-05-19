@@ -2,6 +2,7 @@ import { Animated } from "react-native";
 
 interface OnHandleMinimizeProps {
   animation: Animated.Value;
+  minimizeAnimation: Animated.Value;
   setIsMinimized: (isMinimized: boolean) => void;
   isMinimized: boolean;
   height: number;
@@ -10,6 +11,7 @@ interface OnHandleMinimizeProps {
 
 export const onHandleMinimize = ({
   animation,
+  minimizeAnimation,
   setIsMinimized,
   isMinimized,
   height,
@@ -25,6 +27,13 @@ export const onHandleMinimize = ({
     toValue: targetValue,
     friction: 8,
     tension: 40,
+
+    useNativeDriver: false,
+  }).start();
+
+  Animated.timing(minimizeAnimation, {
+    toValue: newMinimizedState ? 1 : 0,
+    duration: 500,
     useNativeDriver: false,
   }).start();
 };

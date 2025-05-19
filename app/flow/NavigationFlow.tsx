@@ -1,38 +1,23 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import { useEffect } from "react";
 import { Home } from "../screens/Home";
-import { Details } from "../screens/Details";
-import { enableScreens } from "react-native-screens";
 
 const Stack = createNativeStackNavigator();
 
-export function NavigationFlow<T>() {
+export function NavigationFlow<
+  T extends {
+    [key: string]: any;
+  },
+>(options?: T) {
   return (
-    <NavigationContainer>
+    <NavigationContainer key={options?.name || options?.id} theme={DarkTheme}>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
         }}
       >
-        <Stack.Screen
-          name="Home"
-          component={Home as any}
-          options={{
-            animation: "fade_from_bottom",
-            gestureEnabled: true,
-            presentation: "fullScreenModal",
-          }}
-        />
-        <Stack.Screen
-          name="Details"
-          component={Details as any}
-          options={{
-            animation: "fade_from_bottom",
-            gestureEnabled: true,
-            presentation: "fullScreenModal",
-          }}
-        />
-        {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+        <Stack.Screen name="Home" component={Home as any} options={{}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

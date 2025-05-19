@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-export const SegmentedControlItem = ({
+export const SegmentedControlItem: React.FC<SegmentedControlItemProps> = ({
   value,
   children,
   className,
