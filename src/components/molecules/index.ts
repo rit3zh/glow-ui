@@ -10,3 +10,4 @@ export * from "./Stepper";
 export * from "./Toast";
 export * from "./Timeline/TimelineView";
 export * from "./Pagination/Pagination";
+export * from "./Chip/Chip";
