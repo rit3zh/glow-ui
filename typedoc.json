@@ -1,6 +1,6 @@
 {
-  "entryPoints": ["src/index.ts"],
-  "out": "docs",
+  "entryPoints": ["./src/index.ts"],
+  "out": "website/docs",
   "tsconfig": "tsconfig.json",
   "exclude": ["**/__tests__/**", "**/*.test.ts"],
   "excludeExternals": true,

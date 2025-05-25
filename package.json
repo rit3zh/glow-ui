@@ -2,6 +2,9 @@
   "name": "glow-ui",
   "version": "1.13.1",
   "main": "index.ts",
+  "bin": {
+    "glow-ui": "./cli/dist/index.js"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
