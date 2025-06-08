@@ -15,7 +15,7 @@ import {
 } from "@expo/vector-icons";
 import { VerticalDivider } from "@/components";
 
-const DividerDemo = () => {
+const DividerDemo: React.FC & React.FunctionComponent = (_$_) => {
   return (
     <ScrollView
       style={styles.container}
@@ -29,12 +29,11 @@ const DividerDemo = () => {
           <View style={styles.iconContainer}>
             <MaterialIcons name="view-column" size={32} color="#10b981" />
           </View>
-          <Text style={styles.headerTitle}>VerticalDivider Component Demo</Text>
+          <Text style={styles.headerTitle}>Divider Component</Text>
           <Text style={styles.subtitle}>
             Beautiful separation components for your app
           </Text>
         </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>App Statistics</Text>
 

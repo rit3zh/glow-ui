@@ -126,7 +126,6 @@ program
     console.log(`📦 Copying component: ${chalk.green(componentName)}`);
     console.log(`📁 Output directory: ${chalk.yellow(outDir)}`);
 
-    // 🧭 Initialize progress bar
     const bar = new cliProgress.SingleBar(
       {
         format: "📦 {bar} {percentage}% | {value}/{total} files",

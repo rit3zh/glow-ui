@@ -584,6 +584,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "700",
     letterSpacing: -1,
+    marginLeft: 10,
   },
   overlayControls: {
     flexDirection: "row",
