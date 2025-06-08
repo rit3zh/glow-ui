@@ -1,6 +1,6 @@
 {
   "name": "glow-ui",
-  "version": "1.13.2",
+  "version": "1.13.4",
   "main": "expo-router/entry",
   "bin": {
     "glow-ui": "./cli/dist/index.js"
