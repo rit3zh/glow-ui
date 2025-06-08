@@ -31,6 +31,8 @@ export const Timeline: React.FC<TimelineProps> &
   timestampStyle,
   lineWidth = 2,
   iconSize = 20,
+  metaContainerStyle,
+  metaTextStyle,
 }: TimelineProps): React.ReactNode & React.JSX.Element => {
   const statusRefs = React.useRef<Record<string | number, string>>({});
 
@@ -64,7 +66,7 @@ export const Timeline: React.FC<TimelineProps> &
 
         const dotScale = useSharedValue(statusChanged ? 1.5 : 1);
         const dotColorAnimated = useSharedValue(
-          isComplete ? 1 : isCurrent ? 0.5 : 0
+          isComplete ? 1 : isCurrent ? 0.5 : 0,
         );
         const lineProgress = useSharedValue(isComplete ? 1 : 0);
         const iconRotate = useSharedValue(statusChanged ? 0 : 1);
@@ -75,7 +77,7 @@ export const Timeline: React.FC<TimelineProps> &
               case "bounce":
                 dotScale.value = withSequence(
                   withTiming(1.5, { duration: 200 }),
-                  withSpring(1)
+                  withSpring(1),
                 );
                 break;
               case "spring":
@@ -84,17 +86,17 @@ export const Timeline: React.FC<TimelineProps> &
               case "rotate":
                 iconRotate.value = withSequence(
                   withTiming(0, { duration: 10 }),
-                  withTiming(4, { duration: 800 })
+                  withTiming(4, { duration: 800 }),
                 );
                 dotScale.value = withSequence(
                   withTiming(1.6, { duration: 200 }),
-                  withSpring(1)
+                  withSpring(1),
                 );
                 dotColorAnimated.value = withSequence(
                   withTiming(0, { duration: 200 }),
                   withTiming(isComplete ? 1 : isCurrent ? 0.5 : 0, {
                     duration: 400,
-                  })
+                  }),
                 );
                 break;
               case "fade":
@@ -102,31 +104,31 @@ export const Timeline: React.FC<TimelineProps> &
                   withTiming(0, { duration: 200 }),
                   withTiming(isComplete ? 1 : isCurrent ? 0.5 : 0, {
                     duration: 400,
-                  })
+                  }),
                 );
                 break;
               case "scale":
                 dotScale.value = withSequence(
                   withTiming(0.5, { duration: 200 }),
                   withTiming(1.2, { duration: 200 }),
-                  withTiming(1, { duration: 200 })
+                  withTiming(1, { duration: 200 }),
                 );
                 break;
               default:
                 dotScale.value = withSequence(
                   withTiming(1.5, { duration: 200 }),
-                  withSpring(1)
+                  withSpring(1),
                 );
             }
 
             dotColorAnimated.value = withTiming(
               isComplete ? 1 : isCurrent ? 0.5 : 0,
-              { duration: 400 }
+              { duration: 400 },
             );
 
             iconRotate.value = withSequence(
               withTiming(0, { duration: 10 }),
-              withTiming(1, { duration: 400 })
+              withTiming(1, { duration: 400 }),
             );
 
             if (isComplete) {
@@ -145,7 +147,7 @@ export const Timeline: React.FC<TimelineProps> &
             backgroundColor: interpolateColor(
               dotColorAnimated.value,
               [0, 0.5, 1],
-              [inactiveColor, activeColor, activeColor]
+              [inactiveColor, activeColor, activeColor],
             ),
           };
         });
@@ -155,7 +157,7 @@ export const Timeline: React.FC<TimelineProps> &
             backgroundColor: interpolateColor(
               lineProgress.value,
               [0, 1],
-              [inactiveColor, activeColor]
+              [inactiveColor, activeColor],
             ),
             width: lineWidth,
             transform: [
@@ -228,13 +230,19 @@ export const Timeline: React.FC<TimelineProps> &
               )}
 
               {item.meta && (
-                <View style={styles.metaContainer}>
-                  <Text style={styles.metaText}>{item.meta}</Text>
+                <View style={[styles.metaContainer, metaContainerStyle]}>
+                  <Text style={[styles.metaText, metaTextStyle]}>
+                    {item.meta}
+                  </Text>
                 </View>
               )}
 
               {item.children && (
-                <View style={styles.childrenContainer}>{item.children}</View>
+                <View
+                  style={[styles.childrenContainer, item.childrenContainer]}
+                >
+                  {item.children}
+                </View>
               )}
             </View>
           </AnimatedTouchableOpacity>
@@ -300,7 +308,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   metaContainer: {
-    backgroundColor: "#f1f5f9",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 6,
@@ -313,11 +320,9 @@ const styles = StyleSheet.create({
     color: "#475569",
   },
   childrenContainer: {
-    marginTop: 12,
-    backgroundColor: "#f8fafc",
-    borderRadius: 8,
+    // marginTop: 12,
+    // backgroundColor: "#f8fafc",
+    // borderRadius: 8,
     padding: 12,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
   },
 });

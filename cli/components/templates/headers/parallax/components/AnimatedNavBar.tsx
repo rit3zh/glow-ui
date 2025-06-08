@@ -14,7 +14,7 @@ const AnimatedNavbar = ({
   const [headerOpacity, overflowHeaderOpacity] = useAnimateNavbar(
     scroll,
     imageHeight,
-    headerHeight
+    headerHeight,
   );
 
   return (
@@ -55,8 +55,6 @@ const styles = StyleSheet.create({
     top: 0,
     width: "100%",
     backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
   },
   overflowHeader: {
     backgroundColor: "transparent",

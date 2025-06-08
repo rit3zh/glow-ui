@@ -10,7 +10,10 @@ export const ActionCardTitle: React.FC<ActionCardTitleTypes> &
 }): React.ReactNode => {
   return (
     <View className="mt-3">
-      <Text className={`${className} text-white font-bold text-xl`}>
+      <Text
+        className={`${className} text-white font-bold text-xl`}
+        style={style}
+      >
         {children}
       </Text>
     </View>

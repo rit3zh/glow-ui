@@ -27,16 +27,23 @@ import {
 import { getValueFromIndex } from "./utils/helpers/getValueFromIndex";
 import { dismiss } from "./utils/animation-utils/reference/dismiss";
 import { present } from "./utils/animation-utils/reference/present";
+import { IFloatingPlayerProps } from "./types/FloatingPlayer.types";
 const { width, height } = Dimensions.get("window");
 
 const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
 
-const COVER_URL: string = `https://i.scdn.co/image/ab67616d0000b2730c471c36970b9406233842a5`;
-
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-export const FloatingSheet = () => {
+export const FloatingSheet: React.FC<IFloatingPlayerProps> = ({
+  renderMaximizedContent,
+  renderMinimizedContent,
+  image,
+  isPresented: _isPresentedSheet = false,
+  showImageWhenExpanded = true,
+  customImageAnimation,
+  onSheetDismiss,
+}: IFloatingPlayerProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [value, setValue] = useState<number>(0);
   const [_, setSheetPosition] = useState<number>(85);
@@ -50,6 +57,14 @@ export const FloatingSheet = () => {
   const [isScrollEnabled, setIsScrollEnabled] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const minimizeAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (_isPresentedSheet) {
+      presentSheet();
+    } else {
+      sheetRef.current?.dismiss();
+    }
+  }, [_isPresentedSheet]);
 
   const animatedImageSize = animation.interpolate({
     inputRange: [0, height * 0.5, height * 0.9],
@@ -117,7 +132,6 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  // Controls opacity - combine the main animation with minimize animation
   const controlsOpacity = Animated.multiply(
     animation.interpolate({
       inputRange: [85, height * 0.3, height * 0.9],
@@ -125,10 +139,10 @@ export const FloatingSheet = () => {
       extrapolate: "clamp",
     }),
     minimizeAnimation.interpolate({
-      inputRange: [0, 0.1], // Make controls disappear quickly when minimizing starts
+      inputRange: [0, 0.1],
       outputRange: [1, 0],
       extrapolate: "clamp",
-    })
+    }),
   );
 
   const animatedBlurIntensity = animation.interpolate({
@@ -143,7 +157,6 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
-  // New content opacity - show quickly when minimizing starts
   const newContentOpacity = minimizeAnimation.interpolate({
     inputRange: [0, 0.3, 1],
     outputRange: [0, 0.8, 1],
@@ -156,11 +169,61 @@ export const FloatingSheet = () => {
     extrapolate: "clamp",
   });
 
+  const collapsedSongInfoOpacity = animation.interpolate({
+    inputRange: [85, height * 0.2, height * 0.4],
+    outputRange: [1, 0.8, 0],
+    extrapolate: "clamp",
+  });
+
+  const collapsedSongInfoTranslateY = animation.interpolate({
+    inputRange: [85, height * 0.3],
+    outputRange: [0, -20],
+    extrapolate: "clamp",
+  });
+
+  const imageOpacity = animation.interpolate({
+    inputRange: [85, height * 0.5, height * 0.9],
+    outputRange: [
+      1,
+      showImageWhenExpanded ? 0.8 : 0,
+      showImageWhenExpanded ? 1 : 0,
+    ],
+    extrapolate: "clamp",
+  });
+
+  const defaultImageAnimations = {
+    width: animatedImageSize,
+    height: animatedImageSize,
+    borderRadius: animatedBorderRadius,
+    position: "absolute" as const,
+    top: animatedVideoInitialMargin,
+    left: animatedVideoInitialMargin,
+    marginTop: animatedMarginTop,
+    marginLeft: animatedMarginLeft,
+    opacity: imageOpacity,
+  };
+
+  const finalImageAnimations = customImageAnimation
+    ? {
+        ...defaultImageAnimations,
+        ...customImageAnimation(animation, {
+          width: animatedImageSize,
+          height: animatedImageSize,
+          borderRadius: animatedBorderRadius,
+          marginTop: animatedMarginTop,
+          marginLeft: animatedMarginLeft,
+          opacity: imageOpacity,
+          initialMargin: animatedVideoInitialMargin,
+        }),
+      }
+    : defaultImageAnimations;
+
+  const shouldShowImage = showImageWhenExpanded || !isExpanded;
+
   useEffect(() => {
     if (!isExpanded) {
-      // Reset minimize state when not expanded
       setIsMinimized(false);
-      // Reset minimize animation
+
       minimizeAnimation.setValue(0);
     }
   }, [isExpanded]);
@@ -196,7 +259,7 @@ export const FloatingSheet = () => {
       player.loop = true;
       player.volume = 0;
       player.play();
-    }
+    },
   );
 
   const togglePlayPause = () => {
@@ -209,368 +272,245 @@ export const FloatingSheet = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Button
-        onPress={presentSheet}
-        title="Present Sheet"
-        disabled={isPresented}
-      />
-
-      <TrueSheet
-        ref={sheetRef}
-        sizes={sheetSizes}
-        blurTint="dark"
-        cornerRadius={20}
-        collapsable={false}
-        dismissible={true}
-        onPresent={(e) =>
-          present({
-            animation,
-            setIsPresented,
-            isMinimized,
-            getValueFromIndex: (index) =>
-              getValueFromIndex({ index, sheetSizes }),
-            event: e,
-          })
-        }
-        onDragChange={(e) =>
-          onHandleDragChange({
-            event: e,
-            animation,
-            isMinimized,
-            setIsExpanded,
-          })
-        }
-        onSizeChange={(e) =>
-          onHandleSizeChange({
-            event: e,
-            animation,
-            isMinimized,
-            setIsExpanded,
-            setSheetPosition,
-            sheetSizes,
-          })
-        }
-        onDragEnd={(e) =>
-          onHandleDragEnd({
-            event: e,
-            animation,
-            setIsExpanded,
-            setSheetPosition,
-            isMinimized,
-            sheetSizes,
-          })
-        }
-        scrollRef={scrollRef}
-        onDismiss={() =>
-          dismiss({
-            animation,
-            minimizeAnimation,
-            setIsPresented,
-            setIsMinimized,
-            setSheetPosition,
-          })
-        }
-        initialIndexAnimated={true}
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flex: 1 }}
+    <TrueSheet
+      ref={sheetRef}
+      sizes={sheetSizes}
+      blurTint="dark"
+      cornerRadius={20}
+      collapsable={false}
+      dismissible={true}
+      onPresent={(e) =>
+        present({
+          animation,
+          setIsPresented,
+          isMinimized,
+          getValueFromIndex: (index) =>
+            getValueFromIndex({ index, sheetSizes }),
+          event: e,
+        })
+      }
+      onDragChange={(e) =>
+        onHandleDragChange({
+          event: e,
+          animation,
+          isMinimized,
+          setIsExpanded,
+        })
+      }
+      onSizeChange={(e) =>
+        onHandleSizeChange({
+          event: e,
+          animation,
+          isMinimized,
+          setIsExpanded,
+          setSheetPosition,
+          setIsMinimized,
+          sheetSizes,
+        })
+      }
+      onDragEnd={(e) =>
+        onHandleDragEnd({
+          event: e,
+          animation,
+          setIsMinimized,
+          setIsExpanded,
+          setSheetPosition,
+          isMinimized,
+          sheetSizes,
+        })
+      }
+      scrollRef={scrollRef}
+      onDismiss={() => {
+        typeof onSheetDismiss !== "undefined" || undefined
+          ? onSheetDismiss!()
+          : null;
+        return dismiss({
+          animation,
+          minimizeAnimation,
+          setIsPresented,
+          setIsMinimized,
+          setSheetPosition,
+        });
+      }}
+      initialIndexAnimated={true}
+      style={{ flex: 1 }}
+      contentContainerStyle={{ flex: 1 }}
+    >
+      <AnimatedScrollView
+        ref={scrollRef}
+        scrollEnabled={isScrollEnabled}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
       >
-        <AnimatedScrollView
-          ref={scrollRef}
-          scrollEnabled={isScrollEnabled}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-        >
-          <Animated.View style={styles.sheetContent}>
-            <Animated.View style={{ position: "relative" }}>
+        <Animated.View style={styles.sheetContent}>
+          <Animated.View style={{ position: "relative" }}>
+            {shouldShowImage && (
               <AnimatedImage
-                source={{ uri: COVER_URL }}
-                style={[
-                  styles.coverImage,
-                  {
-                    width: animatedImageSize,
-                    height: animatedImageSize,
-                    borderRadius: animatedBorderRadius,
-                    position: "absolute",
-                    top: animatedVideoInitialMargin,
-                    left: animatedVideoInitialMargin,
-                    marginTop: animatedMarginTop,
-                    marginLeft: animatedMarginLeft,
-                  },
-                ]}
+                source={{ ...image }}
+                style={[styles.coverImage, finalImageAnimations as any]}
                 resizeMode="cover"
               />
+            )}
 
-              {/* Minimized Content View - Playlist */}
-              <Animated.View
-                style={[
-                  styles.newContent,
-                  {
-                    opacity: newContentOpacity,
-                    transform: [{ translateY: newContentTranslateY }],
-                    // Use pointerEvents to make content interactable only when visible
-                    pointerEvents: isMinimized ? "auto" : "none",
-                  },
-                ]}
-              >
-                <Text style={styles.newContentTitle}>Next Up</Text>
+            <Animated.View
+              style={[
+                styles.collapsedSongInfo,
+                {
+                  opacity: Animated.multiply(
+                    collapsedSongInfoOpacity,
+                    minimizeAnimation.interpolate({
+                      inputRange: [0, 0.1],
+                      outputRange: [1, 0],
+                      extrapolate: "clamp",
+                    }),
+                  ),
+                  transform: [{ translateY: collapsedSongInfoTranslateY }],
+                  pointerEvents: !isExpanded && !isMinimized ? "auto" : "none",
+                },
+              ]}
+            >
+              {typeof renderMinimizedContent !== "undefined" || undefined
+                ? renderMinimizedContent!()
+                : null}
+            </Animated.View>
 
-                <View style={styles.playlistItem}>
-                  <Image
-                    source={{
-                      uri: "https://i.scdn.co/image/ab67616d0000b273b89175b369cf61d4d1b4f093",
-                    }}
-                    style={styles.playlistItemImage}
-                  />
-                  <View style={styles.playlistItemInfo}>
-                    <Text style={styles.playlistItemTitle}>Snooze</Text>
-                    <Text style={styles.playlistItemArtist}>SZA</Text>
-                  </View>
-                  <TouchableOpacity style={styles.playlistItemButton}>
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
+            <Animated.View
+              style={[
+                styles.newContent,
+                {
+                  opacity: newContentOpacity,
+                  transform: [{ translateY: newContentTranslateY }],
+                  pointerEvents: isMinimized ? "auto" : "none",
+                },
+              ]}
+            >
+              <Text style={styles.newContentTitle}>Next Up</Text>
 
-                <View style={styles.playlistItem}>
-                  <Image
-                    source={{
-                      uri: "https://i.scdn.co/image/ab67616d0000b273b89175b369cf61d4d1b4f093",
-                    }}
-                    style={styles.playlistItemImage}
-                  />
-                  <View style={styles.playlistItemInfo}>
-                    <Text style={styles.playlistItemTitle}>Nobody Gets Me</Text>
-                    <Text style={styles.playlistItemArtist}>SZA</Text>
-                  </View>
-                  <TouchableOpacity style={styles.playlistItemButton}>
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.playlistItem}>
-                  <Image
-                    source={{
-                      uri: "https://i.scdn.co/image/ab67616d0000b273b89175b369cf61d4d1b4f093",
-                    }}
-                    style={styles.playlistItemImage}
-                  />
-                  <View style={styles.playlistItemInfo}>
-                    <Text style={styles.playlistItemTitle}>Blind</Text>
-                    <Text style={styles.playlistItemArtist}>SZA</Text>
-                  </View>
-                  <TouchableOpacity style={styles.playlistItemButton}>
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
-
-              {/* Music Controls - Hidden when minimized */}
-              <Animated.View
-                style={[
-                  styles.musicControls,
-                  {
-                    opacity: controlsOpacity,
-                    position: "absolute",
-                    transform: [
-                      {
-                        translateY: animation.interpolate({
-                          inputRange: [85, height * 0.9],
-                          outputRange: [50, 0],
-                          extrapolate: "clamp",
-                        }),
-                      },
-                    ],
-                    // Use pointerEvents to disable interaction when minimized
-                    pointerEvents: isMinimized ? "none" : "auto",
-                  },
-                ]}
-              >
-                <View style={styles.songInfo}>
-                  <Text style={styles.songTitle}>{songTitle}</Text>
-                  <Text style={styles.songArtist}>{songArtist}</Text>
-                </View>
-
-                <View style={styles.progressContainer}>
-                  <SeekBar
-                    value={value}
-                    onValueChange={(newValue) => setValue(newValue)}
-                    frame={{
-                      width: width - 40,
-                      height: 12,
-                    }}
-                  />
-                  <View style={styles.timeInfo}>
-                    <Text style={styles.timeText}>1:30</Text>
-                    <Text style={styles.timeText}>3:45</Text>
-                  </View>
-                </View>
-
-                <View style={styles.controlsRow}>
-                  <TouchableOpacity style={styles.controlButton}>
-                    <Ionicons name="shuffle" size={24} color="white" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.controlButton}>
-                    <Ionicons name="play-skip-back" size={24} color="white" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.playPauseButton}
-                    onPress={togglePlayPause}
-                  >
-                    <Ionicons
-                      name={isPlaying ? "pause" : "play"}
-                      size={30}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.controlButton}>
-                    <Ionicons
-                      name="play-skip-forward"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.controlButton}>
-                    <Ionicons name="repeat" size={24} color="white" />
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.additionalControls}>
-                  <TouchableOpacity style={styles.additionalButton}>
-                    <Ionicons name="heart-outline" size={24} color="white" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.additionalButton}>
-                    <Ionicons name="share-outline" size={24} color="white" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.additionalButton}>
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    marginTop: 40,
-                    alignItems: "center",
-                    flexDirection: "row",
-                    justifyContent: "center",
+              <View style={styles.playlistItem}>
+                <Image
+                  source={{
+                    ...image,
                   }}
-                >
-                  <SymbolView
-                    name="speaker.1.fill"
-                    resizeMode="scaleAspectFit"
-                    tintColor={"gray"}
-                    style={{
-                      width: 20,
-                      height: 20,
-                      marginRight: 10,
-                    }}
-                  />
-                  <SeekBar
-                    value={value}
-                    onValueChange={(newValue) => setValue(newValue)}
-                    frame={{
-                      width: width - 100,
-                      height: 9,
-                    }}
-                  />
-                  <SymbolView
-                    name="speaker.wave.2.fill"
-                    resizeMode="scaleAspectFit"
-                    tintColor={"gray"}
-                    style={{
-                      width: 20,
-                      height: 20,
-                      marginLeft: 10,
-                    }}
-                  />
+                  style={styles.playlistItemImage}
+                />
+                <View style={styles.playlistItemInfo}>
+                  <Text style={styles.playlistItemTitle}>Snooze</Text>
+                  <Text style={styles.playlistItemArtist}>SZA</Text>
                 </View>
-                <View style={styles.minimizeButtonContainer}>
-                  <Pressable
-                    onPress={() =>
-                      onHandleMinimize({
-                        animation,
-                        minimizeAnimation, // Pass minimize animation
-                        setIsMinimized,
-                        isMinimized,
-                        height,
-                        setSheetPosition,
-                      })
-                    }
-                  >
-                    <SymbolView
-                      name="button.angledbottom.horizontal.left"
-                      resizeMode="scaleAspectFit"
-                      tintColor={"gray"}
-                      style={{
-                        width: 20,
-                        height: 20,
-                      }}
-                    />
-                  </Pressable>
-                </View>
-              </Animated.View>
-
-              {/* Minimized Controls - Only shown when minimized */}
-              <Animated.View
-                style={[
-                  styles.minimizedControls,
-                  {
-                    opacity: newContentOpacity,
-                    // Use pointerEvents to make minimized controls interactable only when visible
-                    pointerEvents: isMinimized ? "auto" : "none",
-                  },
-                ]}
-              >
-                <Text style={styles.minimizedTitle} numberOfLines={1}>
-                  {songTitle}
-                </Text>
-                <TouchableOpacity
-                  onPress={togglePlayPause}
-                  style={styles.minimizedPlayButton}
-                >
+                <TouchableOpacity style={styles.playlistItemButton}>
                   <Ionicons
-                    name={isPlaying ? "pause" : "play"}
+                    name="ellipsis-horizontal"
                     size={24}
                     color="white"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() =>
-                    onHandleMinimize({
-                      animation,
-                      minimizeAnimation, // Pass minimize animation
-                      setIsMinimized,
-                      isMinimized,
-                      height,
-                      setSheetPosition,
-                    })
-                  }
-                  style={styles.expandButton}
-                >
-                  <Ionicons name="chevron-up" size={24} color="white" />
-                </TouchableOpacity>
-              </Animated.View>
+              </View>
 
+              <View style={styles.playlistItem}>
+                <Image
+                  source={{
+                    ...image,
+                  }}
+                  style={styles.playlistItemImage}
+                />
+                <View style={styles.playlistItemInfo}>
+                  <Text style={styles.playlistItemTitle}>Nobody Gets Me</Text>
+                  <Text style={styles.playlistItemArtist}>SZA</Text>
+                </View>
+                <TouchableOpacity style={styles.playlistItemButton}>
+                  <Ionicons
+                    name="ellipsis-horizontal"
+                    size={24}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.playlistItem}>
+                <Image
+                  source={{
+                    ...image,
+                  }}
+                  style={styles.playlistItemImage}
+                />
+                <View style={styles.playlistItemInfo}>
+                  <Text style={styles.playlistItemTitle}>Blind</Text>
+                  <Text style={styles.playlistItemArtist}>SZA</Text>
+                </View>
+                <TouchableOpacity style={styles.playlistItemButton}>
+                  <Ionicons
+                    name="ellipsis-horizontal"
+                    size={24}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.musicControls,
+                {
+                  opacity: controlsOpacity,
+                  position: "absolute",
+                  transform: [
+                    {
+                      translateY: animation.interpolate({
+                        inputRange: [85, height * 0.9],
+                        outputRange: [50, 0],
+                        extrapolate: "clamp",
+                      }),
+                    },
+                  ],
+                  pointerEvents: isMinimized ? "none" : "auto",
+                },
+              ]}
+            >
+              {typeof renderMaximizedContent !== "undefined" || undefined
+                ? renderMaximizedContent!()
+                : null}
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.minimizedControls,
+                {
+                  opacity: newContentOpacity,
+                  pointerEvents: isMinimized ? "auto" : "none",
+                },
+              ]}
+            >
+              <Text style={styles.minimizedTitle} numberOfLines={1}>
+                {songTitle}
+              </Text>
+              <TouchableOpacity
+                onPress={togglePlayPause}
+                style={styles.minimizedPlayButton}
+              >
+                <Ionicons
+                  name={isPlaying ? "pause" : "play"}
+                  size={24}
+                  color="white"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  onHandleMinimize({
+                    animation,
+                    minimizeAnimation,
+                    setIsMinimized,
+                    isMinimized,
+                    height,
+                    setSheetPosition,
+                  })
+                }
+                style={styles.expandButton}
+              >
+                <Ionicons name="chevron-up" size={24} color="white" />
+              </TouchableOpacity>
+            </Animated.View>
+
+            {shouldShowImage && (
               <Animated.View
                 style={{
                   position: "absolute",
@@ -580,7 +520,7 @@ export const FloatingSheet = () => {
                   height: animatedImageSize,
                   borderRadius: animatedBorderRadius,
                   overflow: "hidden",
-                  opacity: coverOpacity,
+                  opacity: Animated.multiply(coverOpacity, imageOpacity),
                 }}
               >
                 <AnimatedBlur
@@ -595,20 +535,15 @@ export const FloatingSheet = () => {
                   }}
                 />
               </Animated.View>
-            </Animated.View>
+            )}
           </Animated.View>
-        </AnimatedScrollView>
-      </TrueSheet>
-    </View>
+        </Animated.View>
+      </AnimatedScrollView>
+    </TrueSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   sheetContent: {
     position: "relative",
     minHeight: height,
@@ -696,7 +631,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 20,
-    backgroundColor: "rgba(25, 20, 20, 1)", // Dark background for playlist
+    backgroundColor: "rgba(25, 20, 20, 1)",
   },
   newContentTitle: {
     color: "white",
@@ -739,7 +674,6 @@ const styles = StyleSheet.create({
     top: 20,
     left: 80,
     right: 20,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -757,5 +691,35 @@ const styles = StyleSheet.create({
   },
   expandButton: {
     padding: 5,
+  },
+
+  collapsedSongInfo: {
+    position: "absolute",
+    top: 20,
+    left: 80,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 8,
+    zIndex: 5,
+  },
+  collapsedSongTextContainer: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  collapsedSongTitle: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 2,
+  },
+  collapsedSongArtist: {
+    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 12,
+  },
+  collapsedPlayButton: {
+    padding: 8,
+    marginRight: 10,
   },
 });

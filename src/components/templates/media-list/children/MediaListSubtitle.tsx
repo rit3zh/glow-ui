@@ -6,12 +6,13 @@ const WIDTH = Dimensions.get("window").width;
 
 export const MediaListSubTitle: React.FC<MediaListTitleProps> = ({
   children,
+  style = {},
 }: MediaListTitleProps): React.ReactNode & React.JSX.Element => {
   return (
     <View style={styles.container}>
       <Text
         className="text-neutral-400"
-        style={{ fontSize: 10.8, textAlign: "center" }}
+        style={[{ fontSize: 10.8, textAlign: "center" }, style]}
       >
         {children}
       </Text>

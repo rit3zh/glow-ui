@@ -19,10 +19,12 @@ export const AccordionTrigger = ({
   children,
   isActive,
   onToggle,
+  className = "",
 }: {
   children: React.ReactNode;
   isActive?: boolean;
   onToggle?: () => void;
+  className?: string;
 }) => {
   const rotate = useSharedValue(0);
 
@@ -40,7 +42,7 @@ export const AccordionTrigger = ({
   });
 
   return (
-    <Pressable onPress={onToggle} style={styles.trigger}>
+    <Pressable onPress={onToggle} style={styles.trigger} className={className}>
       <View style={styles.triggerContent}>
         <Text style={[styles.triggerText]}>{children}</Text>
         <Animated.View style={[styles.chevronContainer, animatedStyle]}>

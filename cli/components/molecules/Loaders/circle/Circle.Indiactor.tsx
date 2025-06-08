@@ -1,6 +1,6 @@
 // components/LoadingIndicator.tsx
 import React, { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import Animated, {
   useSharedValue,
@@ -12,11 +12,21 @@ import Animated, {
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const DOT_RADIUS = 6;
-const DOT_SPACING = 20;
-const DURATION = 450;
+export interface CircleLoadingIndicatorProps {
+  dotColor?: string;
+  dotRadius?: number;
+  dotSpacing?: number;
+  duration?: number;
+  style?: ViewStyle;
+}
 
-export const CircleLoadingIndicator: React.FC = () => {
+export const CircleLoadingIndicator: React.FC<CircleLoadingIndicatorProps> = ({
+  dotColor = "#007AFF",
+  dotRadius = 6,
+  dotSpacing = 20,
+  duration = 450,
+  style,
+}) => {
   const progress1 = useSharedValue(0);
   const progress2 = useSharedValue(0);
   const progress3 = useSharedValue(0);
@@ -24,67 +34,73 @@ export const CircleLoadingIndicator: React.FC = () => {
   useEffect(() => {
     progress1.value = withRepeat(
       withTiming(1, {
-        duration: DURATION,
+        duration,
         easing: Easing.inOut(Easing.ease),
       }),
       -1,
-      true
+      true,
     );
 
     setTimeout(() => {
       progress2.value = withRepeat(
         withTiming(1, {
-          duration: DURATION,
+          duration,
           easing: Easing.inOut(Easing.ease),
         }),
         -1,
-        true
+        true,
       );
-    }, 150);
+    }, duration / 3);
 
-    setTimeout(() => {
-      progress3.value = withRepeat(
-        withTiming(1, {
-          duration: DURATION,
-          easing: Easing.inOut(Easing.ease),
-        }),
-        -1,
-        true
-      );
-    }, 300);
-  }, []);
+    setTimeout(
+      () => {
+        progress3.value = withRepeat(
+          withTiming(1, {
+            duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          -1,
+          true,
+        );
+      },
+      (2 * duration) / 3,
+    );
+  }, [duration]);
+
+  const jumpHeight = dotRadius * 0.85;
 
   const animatedProps1 = useAnimatedProps(() => ({
-    cy: 12 - progress1.value * 5,
+    cy: 12 - progress1.value * jumpHeight,
   }));
-
   const animatedProps2 = useAnimatedProps(() => ({
-    cy: 12 - progress2.value * 5,
+    cy: 12 - progress2.value * jumpHeight,
   }));
-
   const animatedProps3 = useAnimatedProps(() => ({
-    cy: 12 - progress3.value * 5,
+    cy: 12 - progress3.value * jumpHeight,
   }));
 
   return (
-    <View style={styles.container}>
-      <Svg width={80} height={24}>
+    <View style={[styles.container, style]}>
+      <Svg width={(dotRadius * 2 + dotSpacing) * 3} height={24}>
         <AnimatedCircle
-          cx={DOT_RADIUS}
-          r={DOT_RADIUS}
-          fill="#007AFF"
+          cx={dotRadius}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
           animatedProps={animatedProps1}
         />
         <AnimatedCircle
-          cx={DOT_RADIUS + DOT_SPACING}
-          r={DOT_RADIUS}
-          fill="#007AFF"
+          cx={dotRadius + dotSpacing + dotRadius * 2}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
           animatedProps={animatedProps2}
         />
         <AnimatedCircle
-          cx={DOT_RADIUS + 2 * DOT_SPACING}
-          r={DOT_RADIUS}
-          fill="#007AFF"
+          cx={dotRadius + (dotSpacing + dotRadius * 2) * 2}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
           animatedProps={animatedProps3}
         />
       </Svg>

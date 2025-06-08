@@ -1,4 +1,11 @@
-export const BACKGROUND_COLOR: string = `#141414`;
-export const TEXT: string = `Hello React Native 🚀`;
+import { ExpoConfig, ConfigContext } from "@expo/config";
 
-export const UI_LIB: string = `GLOW UI`;
+export default ({ config }: ConfigContext): ExpoConfig => ({
+  ...config,
+  name: "YourAppName",
+  slug: "your-app-slug",
+  ios: {
+    ...config.ios,
+    bundleIdentifier: "com.anonymous.glow-ui",
+  },
+});

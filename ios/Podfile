@@ -4,7 +4,7 @@ require File.join(File.dirname(`node --print "require.resolve('react-native/pack
 require 'json'
 podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}
 
-ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+ENV['RCT_NEW_ARCH_ENABLED'] = podfile_properties['newArchEnabled'] == 'true' ? '1' : '0'
 ENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] = podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']
 
 platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
@@ -13,7 +13,7 @@ install! 'cocoapods',
 
 prepare_react_native_project!
 
-target 'glowui' do
+target 'YourAppName' do
   use_expo_modules!
 
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
@@ -35,6 +35,7 @@ target 'glowui' do
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
+
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',
@@ -43,28 +44,7 @@ target 'glowui' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
 
-spm_pkg "SeekBar", :url => "https://github.com/kim-minseong/SeekBar.git", :branch => "main"
-
-
-
   post_install do |installer|
-    system("chmod -R u+w Pods/RCT-Folly")
-  Dir.glob("Pods/RCT-Folly/folly/Portability.h").each do |file|
-    text = File.read(file)
-    new_contents = text.gsub('#define FOLLY_HAS_COROUTINES 1', '#define FOLLY_HAS_COROUTINES 0')
-    File.open(file, "w") { |file| file.puts new_contents }
-  end
-
-   pre_install do |installer|
-    installer.pod_targets.each do |pod|
-      if pod.name.eql?('RNScreens')
-        def pod.build_type
-          Pod::BuildType.static_library
-        end
-      end
-    end
-  end
-
     react_native_post_install(
       installer,
       config[:reactNativePath],

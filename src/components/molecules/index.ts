@@ -12,3 +12,4 @@ export * from "./Timeline/TimelineView";
 export * from "./Pagination/Pagination";
 export * from "./Chip/Chip";
 export * from "./Shimmer/Shimmer";
+export * from "./SeekBar/SeekBar";

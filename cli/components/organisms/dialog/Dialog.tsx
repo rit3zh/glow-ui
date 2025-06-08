@@ -1,23 +1,143 @@
-import React, { useContext, useState, ReactNode, useEffect } from "react";
-import { DialogStyles as styles } from "./styles/styles";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { BlurView } from "expo-blur";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
-  Easing,
-} from "react-native-reanimated";
-import { DialogContext } from "./context/DialogContext";
-import { useDialog } from "./hooks/useDialog";
-import { DialogComponent } from "./Dialog.types";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+  Animated,
+  Dimensions,
+  StyleProp,
+  TextStyle,
+} from "react-native";
 
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+// Types
+interface DialogContextType {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
 
-export const Dialog: DialogComponent = ({ children }) => {
+interface DialogProps {
+  children: ReactNode;
+}
+
+interface DialogTriggerProps {
+  children: ReactNode;
+  asChild?: boolean;
+}
+
+interface DialogContentProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface DialogHeaderProps {
+  children: ReactNode;
+}
+
+interface DialogTitleProps {
+  children: ReactNode;
+  style?: StyleProp<TextStyle>;
+}
+
+interface DialogDescriptionProps {
+  children: ReactNode;
+  style?: StyleProp<TextStyle>;
+}
+
+interface DialogFooterProps {
+  children: ReactNode;
+}
+
+interface DialogCloseProps {
+  children: ReactNode;
+  asChild?: boolean;
+}
+
+// Context
+const DialogContext = createContext<DialogContextType | undefined>(undefined);
+
+const useDialog = () => {
+  const context = useContext(DialogContext);
+  if (!context) {
+    throw new Error("Dialog components must be used within a Dialog");
+  }
+  return context;
+};
+
+// Styles
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  content: {
+    backgroundColor: "#09090b",
+    borderRadius: 12,
+    padding: 24,
+    width: "100%",
+    maxWidth: 400,
+    borderWidth: 1,
+    borderColor: "#27272a",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  header: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 4,
+    lineHeight: 24,
+  },
+  description: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 8,
+    marginTop: 24,
+  },
+  button: {},
+  primaryButton: {
+    backgroundColor: "#fafafa",
+    borderColor: "#fafafa",
+  },
+  secondaryButton: {
+    backgroundColor: "transparent",
+    // borderColor: "#27272a",
+  },
+  primaryButtonText: {
+    color: "#09090b",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  secondaryButtonText: {
+    color: "#fafafa",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+});
+
+// Components
+export const Dialog: React.FC<DialogProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <DialogContext.Provider value={{ open, setOpen }}>
       {children}
@@ -25,121 +145,158 @@ export const Dialog: DialogComponent = ({ children }) => {
   );
 };
 
-Dialog.Trigger = ({ children }: { children: ReactNode }): JSX.Element => {
+export const DialogTrigger: React.FC<DialogTriggerProps> = ({
+  children,
+  asChild,
+}) => {
   const { setOpen } = useDialog();
-  return <Pressable onPress={() => setOpen(true)}>{children}</Pressable>;
-};
 
-Dialog.Content = function DialogContent({ children }: { children: ReactNode }) {
-  const ctx = useContext(DialogContext);
-  if (!ctx) throw new Error("Dialog.Content must be used within <Dialog>");
-  const { open, setOpen } = ctx;
-
-  const [isMounted, setIsMounted] = useState(open);
-
-  // Shared animation values
-  const animationProgress = useSharedValue(0);
-  const translateY = useSharedValue(10); // Initial position slightly below target
-  const scale = useSharedValue(0.97);
-  const opacity = useSharedValue(0);
-  const blurOpacity = useSharedValue(0);
-
-  // Dialog animation style with more natural transitions
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }, { scale: scale.value }],
-  }));
-
-  // Blur animation style
-  const blurAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: blurOpacity.value,
-  }));
-
-  const springConfig = {
-    damping: 18,
-    mass: 1,
-    stiffness: 150,
-    overshootClamping: false,
-
-    restSpeedThreshold: 2,
-  };
-
-  const timingConfig = {
-    duration: 220,
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
-  };
-
-  useEffect(() => {
-    if (open) {
-      setIsMounted(true);
-
-      blurOpacity.value = withTiming(1, {
-        duration: 250,
-        easing: Easing.out(Easing.ease),
-      });
-
-      opacity.value = withTiming(1, timingConfig);
-      translateY.value = withSpring(0, springConfig);
-      scale.value = withSpring(1, springConfig);
-    } else if (isMounted) {
-      opacity.value = withTiming(0, {
-        duration: 150,
-        easing: Easing.in(Easing.ease),
-      });
-
-      // Subtle exit animation
-      translateY.value = withTiming(8, {
-        duration: 150,
-        easing: Easing.in(Easing.ease),
-      });
-
-      scale.value = withTiming(0.96, {
-        duration: 150,
-        easing: Easing.in(Easing.ease),
-      });
-
-      blurOpacity.value = withTiming(
-        0,
-        {
-          duration: 200,
-          easing: Easing.in(Easing.ease),
-        },
-        () => {
-          runOnJS(setIsMounted)(false);
-        }
-      );
-    }
-  }, [open]);
-
-  if (!isMounted) return null;
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      onPress: () => setOpen(true),
+    } as any);
+  }
 
   return (
-    <View style={StyleSheet.absoluteFillObject}>
-      <Pressable onPress={() => setOpen(false)} style={styles.backdrop}>
-        <AnimatedBlurView
-          intensity={25}
-          tint="dark"
-          style={[StyleSheet.absoluteFill, blurAnimatedStyle]}
-        />
-      </Pressable>
-      <View style={styles.centered}>
-        <Animated.View style={[styles.modal, animatedStyle]}>
-          {children}
-        </Animated.View>
-      </View>
-    </View>
+    <TouchableOpacity onPress={() => setOpen(true)}>
+      {children}
+    </TouchableOpacity>
   );
 };
 
-Dialog.Title = ({ children }: { children: ReactNode }): JSX.Element => (
-  <Text style={styles.title}>{children}</Text>
-);
+export const DialogContent: React.FC<DialogContentProps> = ({ children }) => {
+  const { open, setOpen } = useDialog();
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [scaleAnim] = useState(new Animated.Value(0.9));
+  const [translateYAnim] = useState(new Animated.Value(50));
+  const [overlayFadeAnim] = useState(new Animated.Value(0));
 
-Dialog.Description = ({ children }: { children: ReactNode }): JSX.Element => (
-  <Text style={styles.description}>{children}</Text>
-);
+  React.useEffect(() => {
+    if (open) {
+      // Opening animation - fade in up
+      Animated.parallel([
+        Animated.timing(overlayFadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          tension: 65,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+        Animated.spring(translateYAnim, {
+          toValue: 0,
+          tension: 65,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // Closing animation - fade out down
+      Animated.parallel([
+        Animated.timing(overlayFadeAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.9,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: 30,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [open]);
 
-Dialog.Close = ({ children }: { children: ReactNode }): JSX.Element => {
+  return (
+    <Modal
+      visible={open}
+      transparent
+      animationType="fade"
+      onRequestClose={() => setOpen(false)}
+    >
+      <Animated.View style={[styles.overlay, { opacity: overlayFadeAnim }]}>
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={() => setOpen(false)}
+        />
+        <Animated.View
+          style={[
+            styles.content,
+            {
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }, { translateY: translateYAnim }],
+            },
+          ]}
+        >
+          <Pressable>{children}</Pressable>
+        </Animated.View>
+      </Animated.View>
+    </Modal>
+  );
+};
+
+export const DialogHeader: React.FC<DialogHeaderProps> = ({ children }) => {
+  return <View style={styles.header}>{children}</View>;
+};
+
+export const DialogTitle: React.FC<DialogTitleProps> = ({
+  children,
+  style,
+}) => {
+  return <Text style={[styles.title, style]}>{children}</Text>;
+};
+
+export const DialogDescription: React.FC<DialogDescriptionProps> = ({
+  children,
+  style,
+}) => {
+  return <Text style={[styles.description, style]}>{children}</Text>;
+};
+
+export const DialogFooter: React.FC<DialogFooterProps> = ({ children }) => {
+  return <View style={styles.footer}>{children}</View>;
+};
+
+export const DialogClose: React.FC<DialogCloseProps> = ({
+  children,
+  asChild,
+}) => {
   const { setOpen } = useDialog();
-  return <Pressable onPress={() => setOpen(false)}>{children}</Pressable>;
+
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      onPress: () => setOpen(false),
+    } as any);
+  }
+
+  return (
+    <TouchableOpacity
+      style={[styles.button, styles.secondaryButton]}
+      onPress={() => setOpen(false)}
+    >
+      {typeof children === "string" ? (
+        <Text style={styles.secondaryButtonText}>{children}</Text>
+      ) : (
+        children
+      )}
+    </TouchableOpacity>
+  );
 };

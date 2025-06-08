@@ -81,20 +81,17 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
   bounceEffect = true,
   rippleEffect = true,
 }) => {
-  // Animation values
   const progress = useSharedValue(checked ? 1 : 0);
   const scale = useSharedValue(1);
   const rippleOpacity = useSharedValue(0);
   const rippleScale = useSharedValue(0);
 
-  // Update progress when checked state changes
   useEffect(() => {
     progress.value = withTiming(checked ? 1 : 0, {
       duration: animationDuration,
       easing: Easing.bezier(0.16, 1, 0.3, 1),
     });
 
-    // Add bounce effect when checked
     if (checked && bounceEffect) {
       scale.value = withSequence(
         withTiming(0.8, { duration: animationDuration / 2 }),
@@ -102,12 +99,11 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
           mass: 1,
           stiffness: 500,
           damping: 15,
-        })
+        }),
       );
     }
   }, [checked, animationDuration, progress, scale, bounceEffect]);
 
-  // Handle press with ripple effect
   const handlePress = () => {
     if (disabled) return;
 
@@ -116,34 +112,32 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
     if (rippleEffect) {
       rippleOpacity.value = withSequence(
         withTiming(0.3, { duration: 100 }),
-        withTiming(0, { duration: 300 })
+        withTiming(0, { duration: 300 }),
       );
 
       rippleScale.value = withSequence(
         withTiming(0, { duration: 0 }),
-        withTiming(1, { duration: 400 })
+        withTiming(1, { duration: 400 }),
       );
     }
   };
 
-  // Animated styles for the checkbox
   const animatedBoxStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
         progress.value,
         [0, 1],
-        [inactiveColor, activeColor]
+        [inactiveColor, activeColor],
       ),
       borderColor: interpolateColor(
         progress.value,
         [0, 1],
-        [borderColor, activeColor]
+        [borderColor, activeColor],
       ),
       transform: [{ scale: scale.value }],
     };
   });
 
-  // Animated styles for the checkmark
   const animatedCheckStyle = useAnimatedStyle(() => {
     return {
       opacity: progress.value,
@@ -153,14 +147,13 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
             progress.value,
             [0, 0.5, 1],
             [0, 1.2, 1],
-            Extrapolation.CLAMP
+            Extrapolation.CLAMP,
           ),
         },
       ],
     };
   });
 
-  // Animated styles for ripple effect
   const animatedRippleStyle = useAnimatedStyle(() => {
     return {
       opacity: rippleOpacity.value,
@@ -168,11 +161,9 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
     };
   });
 
-  // Determines checkbox border radius if not specified
   const actualBorderRadius =
     borderRadius !== undefined ? borderRadius : size / 4;
 
-  // Render checkbox component
   return (
     <TouchableOpacity
       onPress={handlePress}

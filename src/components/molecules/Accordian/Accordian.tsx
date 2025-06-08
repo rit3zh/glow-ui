@@ -1,7 +1,13 @@
 import React, { useState, ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
 
-export const Accordion = ({ children }: { children: ReactNode }) => {
+export const Accordion = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleToggle = (index: number) => {

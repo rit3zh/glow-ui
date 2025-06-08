@@ -1,0 +1,96 @@
+{
+  "site": {
+    "heading": "para seus projetos com facilidade",
+    "description": "Modelo lindamente projetado e que você pode usar para seus projetos gratuitamente. Acessível. Personalizável. De código aberto.",
+    "announcement": "Apresentando Opendocs",
+    "changelog": "Histórico de alterações",
+
+    "buttons": {
+      "get_started": "Começar",
+      "toggle_menu": "Alternar Menu",
+      "toggle_language": "Alternar Idioma",
+      "deploy_vercel": "Deploy na Vercel"
+    },
+
+    "words": {
+      "menu": "Menu",
+      "docs": "Documentação",
+      "blog": "Blog"
+    },
+
+    "featured_cards": {
+      "nextjs": {
+        "description": "Construído com Next.js usando a app router."
+      },
+
+      "shadcn": {
+        "description": "Construído em cima de Shadcn (site/components)."
+      },
+
+      "tailwind": {
+        "description": "Estilizado com Tailwind CSS."
+      },
+
+      "i18n": {
+        "description": "Suporte à internacionalização com next-intl."
+      },
+
+      "more": {
+        "title": "e mais!",
+        "description": "Muitos mais recursos para usar como documentos e postagens de blog usando MDX, modo escuro e claro, paleta de comandos de pesquisa, sitemap internacionalizado e mais..."
+      }
+    },
+
+    "footer": {
+      "created_by": "Criado por"
+    },
+
+    "search": {
+      "search": "Pesquisar",
+      "search_documentation": "Pesquisar documentação",
+      "no_results_found": "Nenhum resultado encontrado",
+      "type_command_or_search": "Digite um comando ou pesquise"
+    },
+
+    "themes": {
+      "theme": "Tema",
+      "dark": "Escuro",
+      "light": "Claro",
+      "system": "Padrão do sistema"
+    }
+  },
+
+  "docs": {
+    "on_this_page": "Nesta página",
+    "edit_page_on_github": "Editar esta página no GitHub",
+    "start_discussion_on_github": "Iniciar uma discussão no GitHub",
+    "api_reference": "Referência da API",
+    "docs": "Documentação",
+    "source": "Fonte",
+
+    "not_found": {
+      "description": "O documento que você está procurando não existe.",
+      "title": "Documento não encontrado"
+    }
+  },
+
+  "blog": {
+    "words": {
+      "posts": "Postagens",
+      "by": "por"
+    },
+
+    "cards": {
+      "min_read": "min de leitura"
+    },
+
+    "buttons": {
+      "next": "Próximo",
+      "rss_feed": "Feed RSS",
+      "previous": "Anterior",
+      "read_more": "ler mais",
+      "go_to_next_page": "Ir para a próxima página",
+      "go_to_previous_page": "Ir para a página anterior"
+    }
+  }
+}

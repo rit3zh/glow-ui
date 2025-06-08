@@ -4,15 +4,21 @@ import { AnimatedScrollViewTitleProps } from "../types";
 
 export const AnimatedScrollViewTitle: React.FC<
   AnimatedScrollViewTitleProps
-> = ({ children, size }: AnimatedScrollViewTitleProps): React.ReactNode => {
+> = ({
+  children,
+  size,
+  style,
+}: AnimatedScrollViewTitleProps): React.ReactNode => {
   const { width } = useWindowDimensions();
   const maxWidth = 0.5 * width;
 
   return (
     <View
-      style={{
-        ...styles.container,
-      }}
+      style={[
+        {
+          ...styles.container,
+        },
+      ]}
     >
       <Text
         numberOfLines={2}
@@ -22,6 +28,7 @@ export const AnimatedScrollViewTitle: React.FC<
             maxWidth: maxWidth,
             fontSize: size ? size : 35,
           },
+          style,
         ]}
       >
         {children}

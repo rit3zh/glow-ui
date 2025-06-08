@@ -16,6 +16,7 @@ export const TouchableRipple: React.FC<TouchableRippleProps> = ({
   rippleColor = "rgba(0,0,0,0.2)",
   duration = 400,
   borderRadius = 0,
+  style = {},
 }) => {
   const [layout, setLayout] = useState({ width: 0, height: 0 });
 
@@ -80,7 +81,7 @@ export const TouchableRipple: React.FC<TouchableRippleProps> = ({
 
   if (!isValidElement(children)) {
     console.error(
-      "TouchableRipple expects a single valid React element as child."
+      "TouchableRipple expects a single valid React element as child.",
     );
     return null;
   }
@@ -89,10 +90,15 @@ export const TouchableRipple: React.FC<TouchableRippleProps> = ({
     <GestureDetector gesture={Gesture.Race(gesture, longPressGesture)}>
       <View onLayout={onLayout}>
         <View
-          style={{
-            overflow: "hidden",
-            borderRadius,
-          }}
+          style={
+            [
+              {
+                overflow: "hidden",
+                borderRadius,
+              },
+              style,
+            ] as any
+          }
         >
           {cloneElement(children, {
             ...(children.props as any),

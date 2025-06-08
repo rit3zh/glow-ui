@@ -1,3 +1,4 @@
 {
-  "mdx-preview.preview.useVscodeMarkdownStyles": false
+  "mdx-preview.preview.useVscodeMarkdownStyles": false,
+  "find-it-faster.general.useTerminalInEditor": true
 }

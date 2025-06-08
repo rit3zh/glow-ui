@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
 
 export interface AnimationConfig {
   /**
@@ -59,8 +59,10 @@ export interface MediaListProps<T> {
 
 export interface MediaListWrapperProps {
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 export interface MediaListTitleProps {
   children: React.ReactNode;
+  style?: StyleProp<TextStyle>;
 }

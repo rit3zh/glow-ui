@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { ViewStyle } from "react-native";
+import { TextStyle, ViewStyle } from "react-native";
 
 export interface ExpandableButtonProps {
   /** Text to display on the button */
@@ -31,7 +31,7 @@ export interface ExpandableButtonProps {
   /** Button style */
   style?: ViewStyle;
   /** Text style override */
-  textStyle?: ViewStyle;
+  textStyle?: TextStyle;
   /** Whether to add a press animation effect */
   withPressAnimation?: boolean;
   /** Custom loading component */

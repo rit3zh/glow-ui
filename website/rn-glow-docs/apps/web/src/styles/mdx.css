@@ -1,0 +1,85 @@
+pre {
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+pre [data-line] {
+  padding: 0 0.5rem;
+}
+
+.mdx > .steps:first-child > h3:first-child {
+  @apply mt-0;
+}
+
+.steps > h3 {
+  @apply mt-8 mb-4 text-base font-semibold;
+}
+
+[data-theme="light"] {
+  display: block;
+}
+
+[data-theme="dark"] {
+  display: none;
+}
+
+.dark [data-theme="light"] {
+  display: none;
+}
+
+.dark [data-theme="dark"] {
+  display: block;
+}
+
+pre > code {
+  counter-reset: line;
+}
+
+code[data-line-numbers] {
+  counter-reset: line;
+}
+
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply inline-block w-4 mr-4 text-right text-gray-500;
+}
+
+[data-highlighted-line] {
+  background: rgba(46, 42, 72, 0.725);
+}
+
+[data-rehype-pretty-code-title]::before {
+  content: '◯ ';
+  @apply text-purple-500;
+}
+
+[data-rehype-pretty-code-title] {
+  @apply bg-zinc-900 text-primary-active border -mb-7 mt-3 rounded-t-lg py-2 px-3 font-semibold text-sm w-max;
+}
+
+
+[data-highlighted-chars] {
+  @apply bg-zinc-600/50 rounded;
+  box-shadow: 0 0 0 4px rgb(82 82 91 / 0.5);
+}
+
+[data-chars-id] {
+  @apply shadow-none p-1 border-b-2;
+}
+
+[data-chars-id] span {
+  @apply !text-inherit;
+}
+
+[data-chars-id='v'] {
+  @apply !text-pink-300 bg-rose-800/50 font-bold;
+}
+
+[data-chars-id='s'] {
+  @apply !text-yellow-300 bg-yellow-800/50 font-bold;
+}
+
+[data-chars-id='i'] {
+  @apply !text-purple-200 bg-purple-800/50 font-bold;
+}

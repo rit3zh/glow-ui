@@ -7,6 +7,7 @@ interface DragEndEventProps {
   setIsExpanded: (isExpanded: boolean) => void;
   setSheetPosition: (sheetPosition: number) => void;
   isMinimized: boolean;
+  setIsMinimized: (isMinimized: boolean) => void;
   sheetSizes: number[];
 }
 export const onHandleDragEnd = ({
@@ -16,6 +17,7 @@ export const onHandleDragEnd = ({
   setSheetPosition,
   isMinimized,
   sheetSizes,
+  setIsMinimized,
 }: DragEndEventProps) => {
   const endValue = event.nativeEvent.value;
   if (isMinimized) {
@@ -33,6 +35,7 @@ export const onHandleDragEnd = ({
     }
 
     setIsExpanded(closestValue === sheetSizes[1]);
+    setIsMinimized(false);
 
     setSheetPosition(closestValue);
   } else {

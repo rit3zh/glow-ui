@@ -11,6 +11,6 @@ export interface AnimatedMaskedTextProps {
    * @description The first color in the array is always going to be "transparent."
    */
   colors?: string[];
-
+  baseTextColor?: string;
   style?: StyleProp<TextStyle>;
 }

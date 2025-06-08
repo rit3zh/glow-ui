@@ -8,9 +8,11 @@ export const BreadcrumbsItem: React.FC<BreadcrumbItemProps> = ({
   isCurrent,
   tint = "#888",
   currentTint = "#000",
+  className,
 }) => {
   const content = (
     <Text
+      className={`${className}`}
       style={[
         isCurrent
           ? { color: currentTint, fontWeight: "500" }

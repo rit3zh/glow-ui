@@ -5,16 +5,18 @@ export const AccordionItem = ({
   children,
   isActive,
   onToggle,
+  className,
 }: {
   children: ReactNode;
   isActive?: boolean;
   onToggle?: () => void;
+  className?: string;
 }) => {
   const [width, setWidth] = React.useState(0);
   return (
     <>
       <View
-        className="p-3"
+        className={"p-3" + className}
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
       >
         {React.Children.map(children, (child) => {

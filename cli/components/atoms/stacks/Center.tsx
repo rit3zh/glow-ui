@@ -7,7 +7,10 @@ export const Center: React.FC<CenterTypes> = ({
   ...props
 }): React.ReactNode & React.JSX.Element => {
   return (
-    <View {...props} className="items-center justify-center">
+    <View
+      {...props}
+      className={"items-center justify-center" + props.className}
+    >
       {children}
     </View>
   );

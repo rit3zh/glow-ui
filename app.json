@@ -3,6 +3,8 @@
     "name": "glow-ui",
     "slug": "glow-ui",
     "version": "1.0.0",
+    "scheme": "glow-ui-examples",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,11 +22,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.glowui"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-video"]
+    "plugins": [
+      "expo-video"
+    ]
   }
 }

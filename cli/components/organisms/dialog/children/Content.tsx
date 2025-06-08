@@ -8,12 +8,24 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 import { DialogStyles as styles } from "../styles/styles";
 import { BlurView } from "expo-blur";
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-export function DialogContent({ children }: { children: ReactNode }) {
+export function DialogContent({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) {
   const ctx = useContext(DialogContext);
   if (!ctx) throw new Error("Dialog.Content must be used within <Dialog>");
   const { open, setOpen } = ctx;
@@ -89,7 +101,7 @@ export function DialogContent({ children }: { children: ReactNode }) {
         },
         () => {
           runOnJS(setIsMounted)(false);
-        }
+        },
       );
     }
   }, [open]);
@@ -105,7 +117,7 @@ export function DialogContent({ children }: { children: ReactNode }) {
           style={[StyleSheet.absoluteFill, blurAnimatedStyle]}
         />
       </Pressable>
-      <View style={styles.centered}>
+      <View style={[styles.centered, style]}>
         <Animated.View style={[styles.modal, animatedStyle]}>
           {children}
         </Animated.View>

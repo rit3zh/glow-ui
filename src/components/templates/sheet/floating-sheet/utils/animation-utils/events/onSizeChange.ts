@@ -7,6 +7,7 @@ interface SizeChangeEventProps {
   setIsExpanded?: (isExpanded: boolean) => void;
   setSheetPosition?: (sheetPosition: number) => void;
   isMinimized?: boolean;
+  setIsMinimized?: (isMinimized: boolean) => void;
   sheetSizes?: number[];
 }
 
@@ -17,6 +18,7 @@ export const onHandleSizeChange = ({
   setSheetPosition,
   isMinimized,
   sheetSizes,
+  setIsMinimized,
 }: SizeChangeEventProps) => {
   const newValue = event!.nativeEvent.value;
   if (isMinimized) {
@@ -28,6 +30,7 @@ export const onHandleSizeChange = ({
       tension: 25,
       useNativeDriver: false,
     }).start();
+    setIsMinimized!(false);
   } else {
     Animated.spring(animation!, {
       toValue: newValue,

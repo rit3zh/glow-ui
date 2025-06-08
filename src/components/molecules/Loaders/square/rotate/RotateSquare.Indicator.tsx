@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,35 +9,77 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
 
-// Make the entire SVG animated
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-export const RotatingSquaresSpinner = () => {
-  const rotation = useSharedValue(0);
+interface RotatingSquaresSpinnerProps {
+  color?: string;
+  squareSize?: number;
+  spacing?: number;
+  size?: number;
+  duration?: number;
+  repeatCount?: number;
+  style?: ViewStyle;
+}
+
+export const RotatingSquaresSpinner: React.FC<RotatingSquaresSpinnerProps> = ({
+  color = "#FF5722",
+  squareSize = 10,
+  spacing = 20,
+  size = 60,
+  duration = 1000,
+  repeatCount = -1,
+  style,
+}) => {
+  const rotation = useSharedValue<number>(0);
 
   useEffect(() => {
-    // Create a continuous rotation animation
     rotation.value = withRepeat(
-      withTiming(100, {
-        // Full 360 rotation
-        duration: 1000,
+      withTiming(360, {
+        duration,
         easing: Easing.linear,
       }),
-      -10 // Infinite repeat
+      repeatCount,
     );
-  }, []);
+  }, [duration, repeatCount]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotation.value}deg` }],
   }));
 
+  const half = size / 2;
+  const offset = squareSize / 2;
+
   return (
-    <View style={styles.container}>
-      <AnimatedSvg width={60} height={60} style={animatedStyle}>
-        <Rect x={10} y={10} width={10} height={10} fill="#FF5722" />
-        <Rect x={40} y={10} width={10} height={10} fill="#FF5722" />
-        <Rect x={10} y={40} width={10} height={10} fill="#FF5722" />
-        <Rect x={40} y={40} width={10} height={10} fill="#FF5722" />
+    <View style={[styles.container, style]}>
+      <AnimatedSvg width={size} height={size} style={animatedStyle}>
+        <Rect
+          x={half - spacing - offset}
+          y={half - spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half + spacing - offset}
+          y={half - spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half - spacing - offset}
+          y={half + spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half + spacing - offset}
+          y={half + spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
       </AnimatedSvg>
     </View>
   );

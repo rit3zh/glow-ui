@@ -6,9 +6,10 @@ const WIDTH = Dimensions.get("window").width;
 
 export const MediaListWrapper: React.FC<MediaListWrapperProps> = ({
   children,
+  style,
 }: MediaListWrapperProps): React.ReactNode & React.JSX.Element => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.contentContainer}>{children}</View>
     </View>
   );

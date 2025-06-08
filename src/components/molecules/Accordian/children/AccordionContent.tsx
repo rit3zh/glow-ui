@@ -13,9 +13,11 @@ import Animated, {
 export const AccordionContent = ({
   children,
   isActive = false,
+  className = "",
 }: {
   children: ReactNode;
   isActive?: boolean;
+  className?: string;
 }) => {
   const [contentHeight, setContentHeight] = useState(0);
   const animatedHeight = useSharedValue(0);
@@ -80,6 +82,7 @@ export const AccordionContent = ({
           onLayout={onLayout}
           entering={FadeIn}
           layout={LinearTransition}
+          className={className}
         >
           {children}
         </Animated.View>

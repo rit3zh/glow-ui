@@ -1,278 +1,410 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  LayoutChangeEvent,
+  Text,
+  Dimensions,
+  Pressable,
 } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
+  interpolate,
   Easing,
-  LinearTransition,
+  runOnJS,
+  useAnimatedReaction,
 } from "react-native-reanimated";
 import { SymbolView } from "expo-symbols";
 import { BlurView } from "expo-blur";
-
-import type { SearchBarProps } from "./SearchBar.types";
+import { SearchBarProps } from "./SearchBar.types";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 const AnimatedView = Animated.createAnimatedComponent(View);
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-export const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = "Search...",
+const { width: screenWidth } = Dimensions.get("window");
+
+export const SearchBar = ({
+  placeholder = "Search",
   onSearch,
   onClear,
-  className,
-  parentHeight = 40,
+  style,
   renderLeadingIcons,
   renderTrailingIcons,
+  onSearchDone = () => {},
+  onSearchMount = () => {},
+  containerWidth,
+  focusedWidth,
+  cancelButtonWidth = 68,
+  enableWidthAnimation = true,
+  centerWhenUnfocused = true,
   ...props
-}) => {
+}: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [containerHeight, setContainerHeight] = useState(0);
+  const [containerDimensions, setContainerDimensions] = useState({ width: 0 });
+  const inputRef = useRef<TextInput>(null);
 
-  // Animation values
-  const scale = useSharedValue(0.8);
-  const opacity = useSharedValue(0);
-  const searchIconScale = useSharedValue(1);
-  const searchIconOpacity = useSharedValue(1);
-  const containerScale = useSharedValue(1);
-  const translateY = useSharedValue(0);
-  const containerPadding = useSharedValue(8);
-  const blurIntensity = useSharedValue(20);
+  const focusProgress = useSharedValue(0);
+  const clearButtonScale = useSharedValue(0);
+  const clearButtonOpacity = useSharedValue(0);
+  const textOpacity = useSharedValue(1);
+  const textScale = useSharedValue(1);
+  const textTranslateY = useSharedValue(0);
+  const currentWidth = useSharedValue(containerWidth || screenWidth - 32);
+
+  // Update width when container dimensions change
+  useEffect(() => {
+    if (containerWidth) {
+      currentWidth.value = containerWidth;
+    } else if (containerDimensions.width > 0) {
+      currentWidth.value = containerDimensions.width;
+    }
+  }, [containerWidth, containerDimensions.width]);
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    if (!enableWidthAnimation) {
+      return { width: currentWidth.value };
+    }
+
+    const searchBarWidth = interpolate(
+      focusProgress.value,
+      [0, 1],
+      [
+        currentWidth.value,
+        focusedWidth || currentWidth.value - cancelButtonWidth,
+      ],
+    );
+    return { width: searchBarWidth };
+  });
+
+  const animatedCancelStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(focusProgress.value, [0, 0.5, 1], [0, 0, 1]);
+    const translateX = interpolate(focusProgress.value, [0, 1], [20, 0]);
+    return {
+      opacity,
+      transform: [{ translateX }],
+    };
+  });
+
+  const animatedSearchContentStyle = useAnimatedStyle(() => {
+    const justifyContent =
+      focusProgress.value === 0 && centerWhenUnfocused
+        ? "center"
+        : "flex-start";
+    const paddingLeft = interpolate(focusProgress.value, [0, 1], [0, 12]);
+    return { justifyContent, paddingLeft };
+  });
+
+  const animatedInputWrapperStyle = useAnimatedStyle(() => {
+    if (!centerWhenUnfocused) {
+      return { transform: [{ translateX: 0 }] };
+    }
+
+    const iconAndPadding = 40;
+    const _centerOffSetValue = props?.textCenterOffset ?? 2.5;
+    const centerOffset =
+      (currentWidth.value - iconAndPadding * _centerOffSetValue) / 2 - 10;
+
+    const translateX = interpolate(
+      focusProgress.value,
+      [0, 1],
+      [centerOffset, 0],
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+    );
+
+    return {
+      transform: [{ translateX }],
+    };
+  });
+
+  const animatedIconStyle = useAnimatedStyle(() => {
+    if (!centerWhenUnfocused) {
+      return { transform: [{ translateX: 0 }] };
+    }
+    const _iconCenterValue = props?.iconCenterOffset ?? 2.5;
+    const centerOffset = (currentWidth.value - 36 * _iconCenterValue) / 2 - 10;
+    const translateX = interpolate(
+      focusProgress.value,
+      [0, 1],
+      [centerOffset, 0],
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+    );
+
+    return {
+      transform: [{ translateX }],
+    };
+  });
 
   const animatedClearButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
+    transform: [{ scale: clearButtonScale.value }],
+    opacity: clearButtonOpacity.value,
   }));
 
-  const animatedSearchIconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: searchIconScale.value }],
-    opacity: searchIconOpacity.value,
-  }));
+  const animatedInputStyle = useAnimatedStyle(() => {
+    return {
+      opacity: textOpacity.value,
+      transform: [
+        { scale: textScale.value },
+        { translateY: textTranslateY.value },
+      ],
+    };
+  });
 
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: containerScale.value },
-      { translateY: translateY.value },
-    ],
-    paddingVertical: containerPadding.value,
-  }));
+  const animateTextChange = () => {
+    textScale.value = withSpring(0.95, {
+      damping: 15,
+      stiffness: 150,
+    });
+    textTranslateY.value = withSpring(-2, {
+      damping: 15,
+      stiffness: 150,
+    });
 
-  const animatedBlurStyle = useAnimatedStyle(() => ({
-    opacity: blurIntensity.value / 20,
-  }));
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    setContainerHeight(height);
-  };
-
-  const calculateTranslation = () => {
-    const maxTranslation = containerHeight;
-    return Math.max(containerHeight, parentHeight - 80) / 2;
+    setTimeout(() => {
+      textScale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 150,
+      });
+      textTranslateY.value = withSpring(0, {
+        damping: 15,
+        stiffness: 150,
+      });
+    }, 50);
   };
 
   const handleFocus = () => {
-    props.onSearchMount!();
+    onSearchMount();
     setIsFocused(true);
-
-    containerScale.value = withSpring(1.02, {
-      damping: 15,
-      stiffness: 120,
-    });
-    searchIconScale.value = withSpring(0.8, {
-      damping: 15,
-      stiffness: 120,
-    });
-    searchIconOpacity.value = withTiming(0.5, {
-      duration: 200,
-      easing: Easing.out(Easing.ease),
-    });
-    translateY.value = withSpring(-calculateTranslation(), {
-      damping: 25,
-      stiffness: 120,
-    });
-    containerPadding.value = withSpring(4, {
-      damping: 15,
-      stiffness: 120,
-    });
-    blurIntensity.value = withSpring(40, {
-      damping: 15,
-      stiffness: 120,
+    focusProgress.value = withSpring(1, {
+      damping: 20,
+      stiffness: 200,
+      mass: 0.8,
+      velocity: 0.5,
+      duration: 550 as any,
     });
   };
 
-  const handleBlur = (e: any) => {
+  const handleCancel = () => {
+    inputRef.current?.blur();
     setIsFocused(false);
-    props.onSearchDone!();
-    containerScale.value = withSpring(1, {
-      damping: 15,
-      stiffness: 120,
-    });
-    searchIconScale.value = withSpring(1, {
-      damping: 15,
-      stiffness: 120,
-    });
-    searchIconOpacity.value = withTiming(1, {
-      duration: 200,
-      easing: Easing.out(Easing.ease),
-    });
-    translateY.value = withSpring(0, {
-      damping: 15,
-      stiffness: 120,
-    });
-    containerPadding.value = withSpring(8, {
-      damping: 15,
-      stiffness: 120,
-    });
-    blurIntensity.value = withSpring(20, {
-      damping: 15,
-      stiffness: 120,
-    });
+    setQuery("");
+    onSearchDone();
+    onClear?.();
+    focusProgress.value = withTiming(0);
+    clearButtonScale.value = withTiming(0);
+    clearButtonOpacity.value = withTiming(0, { duration: 200 });
+  };
+
+  const handleBlur = () => {
+    if (!query) handleCancel();
   };
 
   const handleChangeText = (text: string) => {
     setQuery(text);
+    animateTextChange();
+
     if (text.length > 0) {
-      scale.value = withSpring(1, {
-        damping: 15,
-        stiffness: 120,
-      });
-      opacity.value = withTiming(1, {
-        duration: 200,
-        easing: Easing.out(Easing.ease),
-      });
+      clearButtonScale.value = withSpring(1);
+      clearButtonOpacity.value = withTiming(1, { duration: 200 });
+      textOpacity.value = withTiming(1, { duration: 150 });
     } else {
-      scale.value = withSpring(0.8, {
-        damping: 15,
-        stiffness: 120,
-      });
-      opacity.value = withTiming(0, {
-        duration: 200,
-        easing: Easing.out(Easing.ease),
-      });
+      clearButtonScale.value = withSpring(0);
+      clearButtonOpacity.value = withTiming(0, { duration: 200 });
     }
+
     onSearch?.(text);
   };
 
   const handleClear = () => {
-    setQuery("");
-    scale.value = withSpring(0.8, {
-      damping: 15,
-      stiffness: 120,
+    textOpacity.value = withTiming(0, { duration: 150 }, () => {
+      runOnJS(setQuery)("");
+      textOpacity.value = withTiming(1, { duration: 150 });
     });
-    opacity.value = withTiming(0, {
-      duration: 200,
-      easing: Easing.out(Easing.ease),
-    });
+
+    clearButtonScale.value = withTiming(0);
+    clearButtonOpacity.value = withTiming(0, { duration: 200 });
     onClear?.();
+    inputRef.current?.focus();
+  };
+
+  const handleLayout = (event: any) => {
+    const { width } = event.nativeEvent.layout;
+    setContainerDimensions({ width });
   };
 
   return (
-    <AnimatedView
-      style={[styles.container, animatedContainerStyle]}
-      className={className}
-      layout={LinearTransition}
-      onLayout={handleLayout}
-    >
-      <AnimatedBlurView
-        intensity={blurIntensity.value}
-        tint="systemUltraThinMaterialDark"
-        style={[
-          styles.searchContainer,
-          isFocused && styles.focusedContainer,
-          // animatedBlurStyle,
-        ]}
-      >
+    <View style={[styles.container, style]} onLayout={handleLayout}>
+      <View style={styles.searchRow}>
         <AnimatedView
-          style={[styles.searchIconContainer, animatedSearchIconStyle]}
+          style={[styles.searchBarContainer, animatedContainerStyle]}
         >
-          {renderLeadingIcons ? (
-            renderLeadingIcons()
-          ) : (
-            <SymbolView
-              name="magnifyingglass"
-              size={18}
-              tintColor={props.tint}
-            />
-          )}
-        </AnimatedView>
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor="#8E8E93"
-          value={query}
-          onChangeText={handleChangeText}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          returnKeyType="search"
-          {...props}
-        />
-        {query.length > 0 && (
-          <AnimatedTouchable
-            onPress={handleClear}
-            style={[styles.clearButton, animatedClearButtonStyle]}
+          <BlurView
+            intensity={15}
+            tint="systemChromeMaterialDark"
+            style={styles.blurContainer}
           >
-            {renderTrailingIcons ? (
-              renderTrailingIcons()
-            ) : (
-              <SymbolView
-                name="xmark.circle.fill"
-                size={18}
-                tintColor={props.tint}
-              />
-            )}
-          </AnimatedTouchable>
-        )}
-      </AnimatedBlurView>
-    </AnimatedView>
+            <View style={styles.searchContainer}>
+              <AnimatedView
+                style={[styles.searchContent, animatedSearchContentStyle]}
+              >
+                <AnimatedView
+                  style={[
+                    styles.searchIconContainer,
+                    animatedIconStyle,
+                    props?.iconStyle,
+                  ]}
+                >
+                  {renderLeadingIcons ? (
+                    renderLeadingIcons()
+                  ) : (
+                    <SymbolView
+                      name="magnifyingglass"
+                      size={18}
+                      tintColor="#8E8E93"
+                    />
+                  )}
+                </AnimatedView>
+
+                <AnimatedView style={[{ flex: 1 }, animatedInputWrapperStyle]}>
+                  <AnimatedTextInput
+                    ref={inputRef}
+                    style={[
+                      styles.input,
+                      animatedInputStyle,
+                      props?.inputStyle,
+                    ]}
+                    cursorColor={props?.tint ?? "#007AFF"}
+                    placeholder={placeholder}
+                    placeholderTextColor="#8E8E93"
+                    value={query}
+                    onChangeText={handleChangeText}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    returnKeyType="search"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    selectionColor={props?.tint ?? "#007AFF"}
+                    {...props}
+                  />
+                </AnimatedView>
+
+                {query.length > 0 && (
+                  <AnimatedTouchable
+                    onPress={handleClear}
+                    style={[styles.clearButton, animatedClearButtonStyle]}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    {renderTrailingIcons ? (
+                      renderTrailingIcons()
+                    ) : (
+                      <SymbolView
+                        name="xmark.circle.fill"
+                        size={18}
+                        tintColor="#8E8E93"
+                      />
+                    )}
+                  </AnimatedTouchable>
+                )}
+              </AnimatedView>
+            </View>
+          </BlurView>
+        </AnimatedView>
+
+        <AnimatedView
+          style={[styles.cancelButtonContainer, animatedCancelStyle]}
+        >
+          <TouchableOpacity
+            onPress={handleCancel}
+            style={styles.cancelButton}
+            activeOpacity={0.6}
+            hitSlop={{ top: 10, bottom: 10, left: 5, right: 5 }}
+          >
+            <Text
+              style={[
+                styles.cancelText,
+                {
+                  color: props?.tint ?? "#007AFF",
+                },
+              ]}
+            >
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        </AnimatedView>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {},
   container: {
     width: "100%",
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
+    paddingVertical: 8,
   },
-  searchContainer: {
+  searchRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(28, 28, 30, 0.6)",
-    overflow: "hidden",
-
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
-  focusedContainer: {
-    backgroundColor: "rgba(28, 28, 30, 0.8)",
+  searchBarContainer: {},
+  blurContainer: {
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  searchContainer: {
+    backgroundColor: "rgba(118, 118, 128, 0.12)",
+    borderRadius: 12,
+    minHeight: 35,
+    justifyContent: "center",
+  },
+  searchContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   searchIconContainer: {
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 8,
   },
   input: {
-    flex: 1,
+    width: "100%",
     color: "#FFFFFF",
     fontSize: 17,
     fontFamily: "System",
-    paddingVertical: 2,
+    fontWeight: "400",
+
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    minHeight: 24,
+
+    textAlign: "left",
   },
-  clearButton: {},
+  clearButton: {
+    padding: 4,
+    marginLeft: 4,
+  },
+  cancelButtonContainer: {
+    paddingLeft: 12,
+    minWidth: 60,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  cancelButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
+  cancelText: {
+    fontSize: 17,
+    fontFamily: "System",
+    fontWeight: "400",
+  },
 });

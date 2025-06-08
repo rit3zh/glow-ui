@@ -4,6 +4,7 @@ import type {
   ImageStyle,
   ScrollViewProps,
   StyleProp,
+  TextStyle,
   ViewStyle,
 } from "react-native";
 import { Animated, ImageSourcePropType } from "react-native";
@@ -98,6 +99,7 @@ export type AnimatedHeaderProps = {
 export interface AnimatedScrollViewTitleProps {
   children: React.ReactNode;
   size?: number;
+  style?: StyleProp<TextStyle>;
 }
 
 export interface HeaderComponentWrapperProps extends ViewStyle {

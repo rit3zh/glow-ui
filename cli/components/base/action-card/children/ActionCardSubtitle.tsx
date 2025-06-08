@@ -10,7 +10,10 @@ export const ActionCardSubtitle: React.FC<ActionCardSubtitleTypes> &
 }): React.ReactNode => {
   return (
     <View className="mt-1">
-      <Text className={`${className} text-[#737373] text-[12.9px] text-center`}>
+      <Text
+        className={`${className} text-[#737373] text-[12.9px] text-center`}
+        style={style}
+      >
         {children}
       </Text>
     </View>

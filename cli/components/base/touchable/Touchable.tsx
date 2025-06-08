@@ -15,6 +15,7 @@ export const Touchable: React.FC<TouchableProps> &
   onPress,
   disabled = false,
   scaleTo = 0.95,
+  style,
 }: TouchableProps) => {
   const scale = useSharedValue(1);
 
@@ -42,7 +43,7 @@ export const Touchable: React.FC<TouchableProps> &
       disabled={disabled}
       style={{ flexShrink: 1 }}
     >
-      <Animated.View style={animatedStyle}>{children}</Animated.View>
+      <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>
     </Pressable>
   );
 };

@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
 import React from "react";
 import { WhatsNewButtonProps } from "../WhatsNew.type";
+import { useWhatsNew } from "../context/WhatsNewContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -8,19 +9,23 @@ export const WhatsNewButton: React.FC<WhatsNewButtonProps> = ({
   children,
   tint = "#1084fc",
 }: WhatsNewButtonProps): React.ReactNode => {
+  const { close } = useWhatsNew();
+
   return (
-    <View style={style.coreContainer}>
-      <View
-        style={[
-          style.container,
-          {
-            backgroundColor: tint,
-          },
-        ]}
-      >
-        <Text style={style.text}>{children}</Text>
+    <Pressable className="flex-1" onPress={close}>
+      <View style={style.coreContainer}>
+        <View
+          style={[
+            style.container,
+            {
+              backgroundColor: tint,
+            },
+          ]}
+        >
+          <Text style={style.text}>{children}</Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 const style = StyleSheet.create({

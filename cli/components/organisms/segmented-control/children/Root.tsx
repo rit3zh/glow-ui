@@ -22,13 +22,13 @@ export const SegmentedControlRoot = ({
   const segmentedControlWidth = width - 40;
 
   const items = Children.toArray(children).filter(
-    (child) => isValidElement(child) && child.type === SegmentedControlItem
+    (child) => isValidElement(child) && child.type === SegmentedControlItem,
   );
 
   const itemWidth = (segmentedControlWidth - internalPadding) / items.length;
 
   const [selectedValue, setSelectedValue] = useState(
-    controlledValue || defaultValue || (items[0] as any)?.props?.value || ""
+    controlledValue || defaultValue || (items[0] as any)?.props?.value || "",
   );
 
   useEffect(() => {
@@ -45,18 +45,18 @@ export const SegmentedControlRoot = ({
   };
 
   const selectedIndex = items.findIndex(
-    (child) => isValidElement(child) && child.props.value === selectedValue
+    (child) => isValidElement(child) && child.props.value === selectedValue,
   );
 
   const translateX = useSharedValue(
-    selectedIndex >= 0 ? selectedIndex * itemWidth + internalPadding / 2 : 0
+    selectedIndex >= 0 ? selectedIndex * itemWidth + internalPadding / 2 : 0,
   );
 
   useEffect(() => {
     if (selectedIndex >= 0) {
       translateX.value = withTiming(
         selectedIndex * itemWidth + internalPadding / 2,
-        { duration: 500 }
+        { duration: 350 },
       );
     }
   }, [selectedIndex, itemWidth, translateX]);

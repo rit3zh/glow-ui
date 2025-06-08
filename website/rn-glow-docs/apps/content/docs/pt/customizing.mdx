@@ -1,0 +1,41 @@
+---
+title: Personalização
+description: Como personalizar seu site de documentação.
+---
+
+Para personalizar seu site de documentação, você pode checar os arquivos e pastas abaixo:
+
+- **`src/config`**: Contém os arquivos de configuração do site, como:
+  - as configurações das informações do site
+  - de tema de código
+  - menu de navegação
+  - internacionalização.
+
+- **`src/i18n/locales/[idioma].json`**: Contém as strings de texto para cada idioma suportado e que não são relacionadas diretamente aos conteúdos MDX (site, botões, cards...).
+
+- **`src/components`**: Contém os componentes do site.
+
+## Configurações dos documentos MDX
+
+Os documentos MDX são armazenados na pasta `apps/content/docs/[idioma]` ou `apps/content/blog/[idioma]`. Cada documento é um arquivo MDX que contém um cabeçalho com metadados, como título e descrição. Abaixo está um exemplo de cabeçalho de documento:
+
+```mdx
+---
+title: Título do Documento
+description: Descrição do Documento.
+---
+```
+
+Para adicionar novos metadados ao documento, você pode adicionar novas chaves ao cabeçalho. Por exemplo, você pode adicionar uma chave `author` para indicar o autor do documento:
+
+```mdx
+---
+title: Título do Documento
+description: Descrição do Documento.
+author: Nome do Autor
+---
+```
+Mas ao adicionar metadados personalizados, você também precisa atualizar o arquivo `contentlayer.config.ts` que se encontra na raiz do projeto e dentro da propriedade `fields` nas constantes `Doc` ou `Blog`.
+Após isso, será necessário exibir a nova informação no template do documento. Para isso, você precisará atualizar o arquivo `src/app/[locale]/docs/[[...slug]]/page.tsx`, ou `src/app/[locale]/blog/[[...slug]]/page.tsx` ou um de seus componentes filhos.
+
+

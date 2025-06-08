@@ -1,138 +1,191 @@
-import React, { useEffect, useState } from "react";
-import { View, LayoutChangeEvent, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, LayoutChangeEvent, LayoutRectangle } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withTiming,
   withRepeat,
+  withSequence,
+  withTiming,
   Easing,
-  runOnJS,
+  cancelAnimation,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
 import type { ShimmerEffectProps } from "./Shimmer.types";
 
+/**
+ * @returns {React.ReactNode | React.JSX.Element}
+ */
 export const ShimmerEffect: React.FC<ShimmerEffectProps> = ({
-  children,
-  isLoading,
+  isLoading = true,
+
   shimmerColors = [
-    "rgba(0,0,0, 0.3)",
-    "rgba(255, 255, 255, 0.1)",
-    "rgba(0,0,0, 0.3)",
+    "rgba(15, 15, 15, 0.1)",
+    "rgba(255, 255, 255, 0.15)",
+    "rgba(15, 15, 15, 0.1)",
   ],
-  shimmerDuration = 1200,
-  shimmerWidth = 0.3,
-  shimmerAngle = 20,
-  containerStyle,
-  blurIntensity = 50,
-  blurTint = "light",
+  duration = 1200,
+  className,
+
+  style,
+  variant = "shimmer",
+  direction = "leftToRight",
 }) => {
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
   const translateX = useSharedValue(0);
-  const shineOpacity = useSharedValue(0.3);
-  const shimmerOpacity = useSharedValue(0);
-  const [layoutWidth, setLayoutWidth] = useState(0);
-  const [showShimmer, setShowShimmer] = useState(isLoading);
+  const translateY = useSharedValue(0);
+  const opacity = useSharedValue(0.5);
 
-  // Run shimmer animation when loading
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
+    setLayout(e.nativeEvent.layout);
+  }, []);
+
+  const shimmerStyle = useAnimatedStyle(() => {
+    const transforms = [];
+
+    if (variant === "shimmer") {
+      if (direction === "leftToRight" || direction === "rightToLeft") {
+        transforms.push({ translateX: translateX.value });
+      } else {
+        transforms.push({ translateY: translateY.value });
+      }
+    }
+
+    return {
+      transform: transforms,
+      opacity: opacity.value,
+    };
+  });
+
   useEffect(() => {
-    const shimmerPixelWidth = layoutWidth * shimmerWidth * 5;
-    const travel = layoutWidth + shimmerPixelWidth;
+    if (!layout || !isLoading) {
+      cancelAnimation(translateX);
+      cancelAnimation(translateY);
+      cancelAnimation(opacity);
+      return;
+    }
 
-    if (isLoading && layoutWidth > 0) {
-      setShowShimmer(true);
-      shimmerOpacity.value = withTiming(1, { duration: 300 });
+    if (variant === "shimmer") {
+      switch (direction) {
+        case "leftToRight":
+          translateX.value = -layout.width - 350;
+          translateX.value = withRepeat(
+            withTiming(layout.width, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
 
-      translateX.value = withRepeat(
-        withTiming(travel, {
-          duration: shimmerDuration,
-          easing: Easing.linear,
-        }),
-        -1
-      );
+        case "rightToLeft":
+          translateX.value = layout.width + 350;
+          translateX.value = withRepeat(
+            withTiming(-layout.width - 350, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
 
-      shineOpacity.value = withRepeat(
-        withTiming(1, {
-          duration: shimmerDuration / 2,
-          easing: Easing.inOut(Easing.ease),
-        }),
+        case "topToBottom":
+          translateY.value = -layout.height - 250;
+          translateY.value = withRepeat(
+            withTiming(layout.height, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+
+        case "bottomToTop":
+          translateY.value = layout.height + 100;
+          translateY.value = withRepeat(
+            withTiming(-layout.height - 100, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+      }
+      opacity.value = 1;
+    } else {
+      opacity.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: duration / 2 }),
+          withTiming(0.3, { duration: duration / 2 }),
+        ),
         -1,
-        true
-      );
-    } else if (showShimmer) {
-      shimmerOpacity.value = withTiming(
-        0,
-        { duration: 800, easing: Easing.linear },
-        () => runOnJS(setShowShimmer)(false)
+        true,
       );
     }
-  }, [isLoading, layoutWidth]);
 
-  const animatedTranslateStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value - layoutWidth * shimmerWidth }],
-  }));
-
-  const animatedShineOpacity = useAnimatedStyle(() => ({
-    opacity: shineOpacity.value,
-  }));
-
-  const animatedFadeOutStyle = useAnimatedStyle(() => ({
-    opacity: shimmerOpacity.value,
-  }));
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    setLayoutWidth(event.nativeEvent.layout.width);
-  };
+    return () => {
+      cancelAnimation(translateX);
+      cancelAnimation(translateY);
+      cancelAnimation(opacity);
+    };
+  }, [layout, isLoading, duration, variant, direction]);
 
   return (
-    <View style={[styles.container, containerStyle]} onLayout={handleLayout}>
-      {children}
-      {showShimmer && layoutWidth > 0 && (
+    <View
+      onLayout={onLayout}
+      className={className}
+      style={[style, { overflow: "hidden" }]}
+    >
+      {isLoading && layout && (
         <Animated.View
-          style={[styles.shimmerOverlay, animatedFadeOutStyle]}
           pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width:
+                variant === "shimmer" &&
+                (direction === "leftToRight" || direction === "rightToLeft")
+                  ? layout.width * 3
+                  : layout.width,
+              height:
+                variant === "shimmer" &&
+                (direction === "topToBottom" || direction === "bottomToTop")
+                  ? layout.height * 3
+                  : layout.height,
+            },
+            shimmerStyle,
+          ]}
         >
-          <Animated.View
-            style={[
-              styles.animatedGradient,
-              animatedTranslateStyle,
-              animatedShineOpacity,
-            ]}
-          >
-            <BlurView
-              intensity={blurIntensity}
-              tint={blurTint}
-              style={StyleSheet.absoluteFill}
-            >
-              <LinearGradient
-                colors={shimmerColors as [string, string, ...string[]]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={{
-                  width: layoutWidth * shimmerWidth,
-                  height: "100%",
-                  transform: [{ rotateZ: `${shimmerAngle}deg` }, { scaleY: 2 }],
-                }}
-              />
-            </BlurView>
-          </Animated.View>
+          {variant === "shimmer" ? (
+            <LinearGradient
+              colors={shimmerColors as [string, string, ...string[]]}
+              start={
+                direction === "leftToRight" || direction === "rightToLeft"
+                  ? { x: 0, y: 0.5 }
+                  : { x: 0.5, y: 0 }
+              }
+              end={
+                direction === "leftToRight" || direction === "rightToLeft"
+                  ? { x: 1, y: 0.5 }
+                  : { x: 0.5, y: 1 }
+              }
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: shimmerColors[0],
+              }}
+            />
+          )}
         </Animated.View>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: "relative",
-    overflow: "hidden",
-  },
-  shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1,
-  },
-  animatedGradient: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-  },
-});

@@ -29,7 +29,7 @@ export const MediaList = <T,>({
 
   const onScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-    { useNativeDriver: true }
+    { useNativeDriver: true },
   );
 
   useEffect(() => {
@@ -58,6 +58,9 @@ export const MediaList = <T,>({
       keyExtractor={(_, index) => index.toString()}
       onScroll={onScroll}
       scrollEventThrottle={16}
+      style={{
+        flexGrow: 0,
+      }}
       renderItem={({ item: nested, index }) => {
         // Calculate animations based on scroll position
         const inputRange = [

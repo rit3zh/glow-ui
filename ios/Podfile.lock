@@ -15,9 +15,13 @@ PODS:
     - ExpoModulesCore
   - ExpoHaptics (14.0.1):
     - ExpoModulesCore
+  - ExpoHead (4.0.21):
+    - ExpoModulesCore
   - ExpoKeepAwake (14.0.3):
     - ExpoModulesCore
   - ExpoLinearGradient (14.0.2):
+    - ExpoModulesCore
+  - ExpoLinking (7.0.5):
     - ExpoModulesCore
   - ExpoModulesCore (2.2.3):
     - DoubleConversion
@@ -54,6 +58,7 @@ PODS:
   - hermes-engine (0.77.2):
     - hermes-engine/Pre-built (= 0.77.2)
   - hermes-engine/Pre-built (0.77.2)
+  - Kingfisher (7.12.0)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1589,6 +1594,9 @@ PODS:
     - React-logger (= 0.77.2)
     - React-perflogger (= 0.77.2)
     - React-utils (= 0.77.2)
+  - ReactNativeRenderSwiftUi (1.0.4):
+    - ExpoModulesCore
+    - Kingfisher (~> 7.0)
   - RNCMaskedView (0.3.2):
     - DoubleConversion
     - glog
@@ -1763,8 +1771,6 @@ PODS:
     - Yoga
   - RNSVG (15.8.0):
     - React-Core
-  - SeekBarIOSReactNative (1.0.0):
-    - ExpoModulesCore
   - SocketRocket (0.7.1)
   - TrueSheet (2.0.5):
     - DoubleConversion
@@ -1799,8 +1805,10 @@ DEPENDENCIES:
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
+  - ExpoHead (from `../node_modules/expo-router/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
+  - ExpoLinking (from `../node_modules/expo-linking/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSymbols (from `../node_modules/expo-symbols/ios`)
   - ExpoVideo (from `../node_modules/expo-video/ios`)
@@ -1872,18 +1880,19 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeRenderSwiftUi (from `../node_modules/swiftui-native/ios`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RnFadeWrapper (from `../node_modules/rn-fade-wrapper`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - SeekBarIOSReactNative (from `../modules/seekbarnative/ios`)
   - "TrueSheet (from `../node_modules/@lodev09/react-native-true-sheet`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
+    - Kingfisher
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1905,10 +1914,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   ExpoHaptics:
     :path: "../node_modules/expo-haptics/ios"
+  ExpoHead:
+    :path: "../node_modules/expo-router/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
+  ExpoLinking:
+    :path: "../node_modules/expo-linking/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoSymbols:
@@ -2048,6 +2061,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeRenderSwiftUi:
+    :path: "../node_modules/swiftui-native/ios"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RnFadeWrapper:
@@ -2060,16 +2075,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  SeekBarIOSReactNative:
-    :path: "../modules/seekbarnative/ios"
   TrueSheet:
     :path: "../node_modules/@lodev09/react-native-true-sheet"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: 1dca942403ed9342f98334bf4c3621f011aa7946
-  DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
+  boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
+  DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EXConstants: fcfc75800824ac2d5c592b5bc74130bad17b146b
   Expo: a6ff273c618506b12129a0d06f2a08201bfbcf43
   ExpoAsset: 48386d40d53a8c1738929b3ed509bcad595b5516
@@ -2077,16 +2090,19 @@ SPEC CHECKSUMS:
   ExpoFileSystem: 42d363d3b96f9afab980dcef60d5657a4443c655
   ExpoFont: f354e926f8feae5e831ec8087f36652b44a0b188
   ExpoHaptics: 8d199b2f33245ea85289ff6c954c7ee7c00a5b5d
+  ExpoHead: df924203fbf8e0913fc38b0f6aec71f9a9115482
   ExpoKeepAwake: b0171a73665bfcefcfcc311742a72a956e6aa680
   ExpoLinearGradient: 35ebd83b16f80b3add053a2fd68cc328ed927f60
+  ExpoLinking: 8d12bee174ba0cdf31239706578e29e74a417402
   ExpoModulesCore: 7cbb8499aa4f46aeefcf332922d4ab3d4b203fa8
   ExpoSymbols: f3002db15156cd4e505c77b6ea1df5c984db9965
   ExpoVideo: 10e69b9c0652aba5c2edee2c572090e0412bd7ce
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 4c16dde959a9d6b24f2aa32cb87cb919a1ace3f3
-  fmt: 01b82d4ca6470831d1cc0852a1af644be019e8f6
-  glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
+  fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
+  glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: 8eb265241fa1d7095d3a40d51fd90f7dce68217c
+  Kingfisher: 53a10ea35051a436b5fb626ca2dd8f3144d755e9
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 85b72250b63cfb54f29ca96ceb108cb9ef3c2079
   RCTRequired: 567cb8f5d42b990331bfd93faad1d8999b1c1736
@@ -2148,17 +2164,17 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f334cebc0beed0a72490492e978007082c03d533
   ReactCodegen: 6f764a42662ad6379fd3fbb9c09baff6e4797b20
   ReactCommon: 7763e59534d58e15f8f22121cdfe319040e08888
+  ReactNativeRenderSwiftUi: 365c97ad85b2e389d3f3916d46ce05330e5581fe
   RNCMaskedView: 2a1adda250c1b71134fa097ae7fc56e0b41ca01e
   RnFadeWrapper: 6110e759db77b2f922521a2e6f85e9c4f2888b7c
   RNGestureHandler: 9f3109e11ed88fe5bed280bf7762b25e4c52f396
   RNReanimated: 9821995bd24f989b2618eac9510dc86c14d0a5df
   RNScreens: 674c4ba566a98f1bb0bee199415dddbdef1c81e5
   RNSVG: 8542aa11770b27563714bbd8494a8436385fc85f
-  SeekBarIOSReactNative: 74309cbae8007dae868da490bec05b672454582e
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TrueSheet: 22b2382408912e7cf1af469256572314035bb497
   Yoga: 31a098f74c16780569aebd614a0f37a907de0189
 
-PODFILE CHECKSUM: 882be5c8c4787f14f614d66fd2fdb26c01aa6330
+PODFILE CHECKSUM: c7e3cc33cc4517034e31fc1278d482b0528a4188
 
 COCOAPODS: 1.16.2

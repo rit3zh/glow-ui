@@ -31,7 +31,7 @@ export const AnimatedScrollView = forwardRef<
       renderHeaderNavBarComponent,
       ...props
     }: AnimatedScrollViewProps,
-    ref
+    ref,
   ) => {
     const imageHeight = headerMaxHeight || IMG_HEADER_HEIGHT;
     const headerNavHeight = topBarHeight || HEADER_HEIGHT;
@@ -43,6 +43,7 @@ export const AnimatedScrollView = forwardRef<
       <>
         <Animated.ScrollView
           ref={ref}
+          scrollEnabled
           onScroll={onScroll}
           scrollEventThrottle={16}
           {...props}
@@ -83,5 +84,5 @@ export const AnimatedScrollView = forwardRef<
         />
       </>
     );
-  }
+  },
 );

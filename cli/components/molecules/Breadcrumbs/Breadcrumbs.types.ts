@@ -6,6 +6,7 @@ export type BreadcrumbItemProps = {
   isCurrent?: boolean;
   tint?: string;
   currentTint?: string;
+  className?: string;
 };
 
 export type BreadcrumbsListProps = {

@@ -10,7 +10,7 @@ export const ToastViewport: React.FC = () => {
 
   const topToasts = toasts.filter((toast) => toast.options.position === "top");
   const bottomToasts = toasts.filter(
-    (toast) => toast.options.position === "bottom"
+    (toast) => toast.options.position === "bottom",
   );
 
   return (
@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 9999,
+    paddingHorizontal: 16,
+    pointerEvents: "box-none",
   },
   topViewport: {
     top: 0,

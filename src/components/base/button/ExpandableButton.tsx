@@ -43,12 +43,10 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
   },
   disabled = false,
 }): React.JSX.Element => {
-  // Animation values
   const animatedWidth = useSharedValue<number>(width);
   const animatedScale = useSharedValue<number>(1);
   const animatedOpacity = useSharedValue<number>(1);
 
-  // Update width on loading state change
   useEffect(() => {
     animatedWidth.value = withSpring<number>(isLoading ? height : width, {
       damping: animationConfig.damping,
@@ -56,10 +54,8 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
     });
   }, [isLoading, width, height, animatedWidth, animationConfig]);
 
-  // Calculate default border radius if not provided
   const calculatedBorderRadius = borderRadius ?? height / 2;
 
-  // Animated styles
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => ({
     width: animatedWidth.value,
     borderRadius: withTiming(isLoading ? height / 2 : calculatedBorderRadius, {
@@ -69,7 +65,6 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
     opacity: animatedOpacity.value,
   }));
 
-  // Handle press animation
   const handlePressIn = () => {
     if (withPressAnimation && !disabled && !isLoading) {
       animatedScale.value = withTiming(0.95, { duration: 100 });
@@ -82,7 +77,6 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
     }
   };
 
-  // Determine the content to render
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -113,7 +107,6 @@ export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
     );
   };
 
-  // Render with or without gradient
   const wrappedButton = gradientColors ? (
     <Animated.View style={[animatedStyle]}>
       <LinearGradient

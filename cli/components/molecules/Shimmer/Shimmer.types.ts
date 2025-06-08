@@ -1,12 +1,15 @@
 import type { StyleProp, ViewStyle } from "react-native";
-export interface ShimmerEffectProps {
-  children: React.ReactNode;
-  isLoading: boolean;
+export type ShimmerEffectProps = {
+  isLoading?: boolean;
   shimmerColors?: string[];
-  shimmerDuration?: number;
-  shimmerWidth?: number;
-  shimmerAngle?: number;
-  containerStyle?: StyleProp<ViewStyle>;
-  blurIntensity?: number;
-  blurTint?: "light" | "dark" | "default";
-}
+  duration?: number;
+  className?: string;
+  style?: ViewStyle;
+  variant?: "shimmer" | "pulse";
+  direction?: ShimmerDirection;
+};
+export type ShimmerDirection =
+  | "leftToRight"
+  | "rightToLeft"
+  | "topToBottom"
+  | "bottomToTop";

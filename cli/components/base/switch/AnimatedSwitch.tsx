@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  Pressable,
-  View,
-  ViewStyle,
-  ImageSourcePropType,
-  ImageStyle,
-} from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,7 +8,6 @@ import Animated, {
   useDerivedValue,
   withTiming,
   withSequence,
-  withDelay,
 } from "react-native-reanimated";
 import { AnimatedSwitchProps } from "./AnimatedSwitch.types";
 
@@ -47,6 +39,7 @@ export const AnimatedSwitch: React.FC<AnimatedSwitchProps> = ({
   backgroundImageStyle,
 
   animateIcons = true,
+
   iconAnimationType = "fade",
 }) => {
   const finalThumbSize = thumbSize ?? height - thumbInset * 2;
@@ -71,7 +64,7 @@ export const AnimatedSwitch: React.FC<AnimatedSwitchProps> = ({
       } else if (iconAnimationType === "bounce") {
         iconBounce.value = withSequence(
           withTiming(1.2, { duration: 100 }),
-          withTiming(1, { duration: 100 })
+          withTiming(1, { duration: 100 }),
         );
       }
     }

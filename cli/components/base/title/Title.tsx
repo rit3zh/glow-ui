@@ -6,10 +6,12 @@ export const Title: React.FC<TitleProps> = ({
   children,
   size = 18,
   style,
+  className,
 }): React.ReactNode => {
   return (
     <View>
       <Text
+        className={className}
         style={[
           styles.text,
           style,

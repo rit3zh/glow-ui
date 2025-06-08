@@ -9,6 +9,9 @@ const MARGIN = 15;
 
 export const VerticalDivider: React.FC<VerticalDividerProps> = ({
   children,
+  color,
+  height,
+  width,
 }: VerticalDividerProps): React.JSX.Element => {
   const validChildren = React.Children.toArray(children);
 
@@ -18,16 +21,16 @@ export const VerticalDivider: React.FC<VerticalDividerProps> = ({
   }
 
   return (
-    <View className="flex-row items-center">
+    <View className="flex-row  items-center">
       {validChildren.map((child, index) => (
         <React.Fragment key={index}>
           {index > 0 && (
             <View
               style={{
-                width: WIDTH,
-                height: HEIGHT,
+                width: width ?? WIDTH,
+                height: height ?? HEIGHT,
                 borderRadius: BORDER_RADIUS,
-                backgroundColor: "#7d7d7d",
+                backgroundColor: color ?? "#7d7d7d",
                 margin: MARGIN,
               }}
             />

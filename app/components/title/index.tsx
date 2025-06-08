@@ -1,0 +1,636 @@
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import {
+  MaterialIcons,
+  Feather,
+  Ionicons,
+  FontAwesome5,
+} from "@expo/vector-icons";
+import { Title } from "@/components/index";
+
+const TitleDemo = () => {
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      scrollEnabled
+      contentInsetAdjustmentBehavior="always"
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.header}>
+        <View style={styles.iconContainer}>
+          <MaterialIcons name="title" size={32} color="#60a5fa" />
+        </View>
+        <Title size={28} style={styles.headerTitle}>
+          Title Component Demo
+        </Title>
+        <Text style={styles.subtitle}>
+          Beautiful typography with various sizes and styles
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Typography Scale</Text>
+
+        <View style={styles.typeCard}>
+          <View style={styles.typeRow}>
+            <Title size={32} style={styles.displayTitle}>
+              Display Large
+            </Title>
+            <Text style={styles.sizeLabel}>32px</Text>
+          </View>
+          <Text style={styles.typeDescription}>
+            Perfect for hero sections and main headings
+          </Text>
+        </View>
+
+        <View style={styles.typeCard}>
+          <View style={styles.typeRow}>
+            <Title size={28} style={styles.displayTitle}>
+              Display Medium
+            </Title>
+            <Text style={styles.sizeLabel}>28px</Text>
+          </View>
+          <Text style={styles.typeDescription}>
+            Great for page titles and important headings
+          </Text>
+        </View>
+
+        <View style={styles.typeCard}>
+          <View style={styles.typeRow}>
+            <Title size={24} style={styles.displayTitle}>
+              Heading Large
+            </Title>
+            <Text style={styles.sizeLabel}>24px</Text>
+          </View>
+          <Text style={styles.typeDescription}>
+            Ideal for section headers and card titles
+          </Text>
+        </View>
+
+        <View style={styles.typeCard}>
+          <View style={styles.typeRow}>
+            <Title size={20} style={styles.displayTitle}>
+              Heading Medium
+            </Title>
+            <Text style={styles.sizeLabel}>20px</Text>
+          </View>
+          <Text style={styles.typeDescription}>
+            Perfect for subsection titles
+          </Text>
+        </View>
+
+        <View style={styles.typeCard}>
+          <View style={styles.typeRow}>
+            <Title size={16} style={styles.displayTitle}>
+              Heading Small
+            </Title>
+            <Text style={styles.sizeLabel}>16px</Text>
+          </View>
+          <Text style={styles.typeDescription}>
+            Good for smaller headings and labels
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Color Variations</Text>
+
+        <View style={styles.colorGrid}>
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#fafafa" }]} />
+              <Text style={styles.colorName}>Primary</Text>
+            </View>
+            <Title size={20} style={{ color: "#fafafa" }}>
+              Main Heading
+            </Title>
+          </View>
+
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#60a5fa" }]} />
+              <Text style={styles.colorName}>Blue</Text>
+            </View>
+            <Title size={20} style={{ color: "#60a5fa" }}>
+              Accent Title
+            </Title>
+          </View>
+
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#10b981" }]} />
+              <Text style={styles.colorName}>Green</Text>
+            </View>
+            <Title size={20} style={{ color: "#10b981" }}>
+              Success Title
+            </Title>
+          </View>
+
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#f59e0b" }]} />
+              <Text style={styles.colorName}>Amber</Text>
+            </View>
+            <Title size={20} style={{ color: "#f59e0b" }}>
+              Warning Title
+            </Title>
+          </View>
+
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#ef4444" }]} />
+              <Text style={styles.colorName}>Red</Text>
+            </View>
+            <Title size={20} style={{ color: "#ef4444" }}>
+              Error Title
+            </Title>
+          </View>
+
+          <View style={styles.colorCard}>
+            <View style={styles.colorHeader}>
+              <View style={[styles.colorDot, { backgroundColor: "#8b5cf6" }]} />
+              <Text style={styles.colorName}>Purple</Text>
+            </View>
+            <Title size={20} style={{ color: "#8b5cf6" }}>
+              Brand Title
+            </Title>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Real-world Examples</Text>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardIcon}>
+              <MaterialIcons name="dashboard" size={24} color="#60a5fa" />
+            </View>
+            <View style={styles.cardHeaderText}>
+              <Title size={18} style={styles.cardTitle}>
+                Dashboard Overview
+              </Title>
+              <Text style={styles.cardSubtitle}>Your performance metrics</Text>
+            </View>
+          </View>
+          <View style={styles.statsRow}>
+            <View style={styles.statItem}>
+              <Title size={24} style={{ color: "#10b981" }}>
+                2,847
+              </Title>
+              <Text style={styles.statLabel}>Total Users</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Title size={24} style={{ color: "#f59e0b" }}>
+                94.2%
+              </Title>
+              <Text style={styles.statLabel}>Uptime</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatar}>
+              <FontAwesome5 name="user-circle" size={48} color="#60a5fa" />
+            </View>
+            <View style={styles.profileInfo}>
+              <Title size={22} style={styles.profileName}>
+                Sarah Johnson
+              </Title>
+              <Text style={styles.profileRole}>Senior Product Designer</Text>
+              <Text style={styles.profileCompany}>@ TechCorp Inc.</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.articleMeta}>
+            <View style={styles.categoryTag}>
+              <Text style={styles.categoryText}>DESIGN</Text>
+            </View>
+            <Text style={styles.readTime}>5 min read</Text>
+          </View>
+          <Title size={20} style={styles.articleTitle}>
+            The Future of Mobile Design Patterns
+          </Title>
+          <Text style={styles.articleExcerpt}>
+            Exploring emerging trends in mobile UI/UX design and how they're
+            shaping user experiences across different platforms...
+          </Text>
+          <View style={styles.articleFooter}>
+            <Text style={styles.articleDate}>March 15, 2024</Text>
+            <View style={styles.articleActions}>
+              <Feather name="heart" size={16} color="#71717a" />
+              <Text style={styles.actionCount}>24</Text>
+              <Feather name="message-circle" size={16} color="#71717a" />
+              <Text style={styles.actionCount}>8</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.featureHeader}>
+            <View style={styles.featureIcon}>
+              <Feather name="zap" size={20} color="#f59e0b" />
+            </View>
+            <Title size={18} style={styles.featureTitle}>
+              Lightning Fast Performance
+            </Title>
+          </View>
+          <Text style={styles.featureDescription}>
+            Experience blazing-fast load times with our optimized architecture
+            and advanced caching mechanisms.
+          </Text>
+          <View style={styles.featureMetrics}>
+            <View style={styles.metric}>
+              <Title size={16} style={{ color: "#10b981" }}>
+                <Text style={styles.metricNumber}>99.9%</Text>
+              </Title>
+              <Text style={styles.metricLabel}>Uptime</Text>
+            </View>
+            <View style={styles.metric}>
+              <Title size={16} style={{ color: "#60a5fa" }}>
+                <Text style={styles.metricNumber}>&lt;100ms</Text>
+              </Title>
+              <Text style={styles.metricLabel}>Response Time</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Custom Styling</Text>
+
+        <View style={styles.customCard}>
+          <Title
+            size={24}
+            style={[
+              styles.gradientTitle,
+              {
+                textAlign: "center",
+                marginBottom: 8,
+                fontWeight: "800",
+                letterSpacing: 1,
+              },
+            ]}
+          >
+            PREMIUM FEATURES
+          </Title>
+          <Text style={styles.customDescription}>
+            Advanced styling with custom properties
+          </Text>
+        </View>
+
+        <View style={styles.customCard}>
+          <Title
+            size={18}
+            style={{
+              color: "#fafafa",
+              textAlign: "center",
+              fontWeight: "300",
+              fontStyle: "italic",
+              opacity: 0.9,
+            }}
+          >
+            "Design is not just what it looks like and feels like. Design is how
+            it works."
+          </Title>
+          <Text style={styles.quoteAuthor}>— Steve Jobs</Text>
+        </View>
+      </View>
+
+      <View style={styles.footer}>
+        <View style={styles.footerIcon}>
+          <Feather name="type" size={16} color="#71717a" />
+        </View>
+        <Text style={styles.footerText}>
+          The Title component provides consistent typography across your entire
+          application
+        </Text>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 32,
+    paddingTop: 20,
+  },
+  iconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#18181b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  headerTitle: {
+    color: "#fafafa",
+    textAlign: "center",
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 24,
+    maxWidth: 320,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#e4e4e7",
+    marginBottom: 16,
+    marginLeft: 4,
+  },
+  typeCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  typeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  displayTitle: {
+    color: "#fafafa",
+    fontWeight: "600",
+  },
+  sizeLabel: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    backgroundColor: "#09090b",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  typeDescription: {
+    fontSize: 14,
+    color: "#71717a",
+    lineHeight: 20,
+  },
+  colorGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  colorCard: {
+    flex: 1,
+    minWidth: "47%",
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+  },
+  colorHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+    gap: 8,
+  },
+  colorDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  colorName: {
+    fontSize: 12,
+    color: "#a1a1aa",
+    fontWeight: "500",
+  },
+  exampleCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  cardIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#09090b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  cardHeaderText: {
+    flex: 1,
+  },
+  cardTitle: {
+    color: "#fafafa",
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: "#a1a1aa",
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 24,
+  },
+  statItem: {
+    flex: 1,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#71717a",
+    marginTop: 4,
+  },
+  profileHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  avatar: {
+    marginRight: 16,
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  profileName: {
+    color: "#fafafa",
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  profileRole: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    marginBottom: 2,
+  },
+  profileCompany: {
+    fontSize: 14,
+    color: "#71717a",
+  },
+  articleMeta: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  categoryTag: {
+    backgroundColor: "#60a5fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  categoryText: {
+    fontSize: 10,
+    color: "#fafafa",
+    fontWeight: "700",
+    letterSpacing: 1,
+  },
+  readTime: {
+    fontSize: 12,
+    color: "#71717a",
+  },
+  articleTitle: {
+    color: "#fafafa",
+    fontWeight: "600",
+    marginBottom: 12,
+    lineHeight: 28,
+  },
+  articleExcerpt: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  articleFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  articleDate: {
+    fontSize: 12,
+    color: "#71717a",
+  },
+  articleActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  actionCount: {
+    fontSize: 12,
+    color: "#71717a",
+  },
+  featureHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  featureIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#09090b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  featureTitle: {
+    color: "#fafafa",
+    fontWeight: "600",
+  },
+  featureDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  featureMetrics: {
+    flexDirection: "row",
+    gap: 24,
+  },
+  metric: {
+    alignItems: "center",
+  },
+  metricNumber: {
+    fontWeight: "700",
+  },
+  metricLabel: {
+    fontSize: 12,
+    color: "#71717a",
+    marginTop: 4,
+  },
+  customCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  gradientTitle: {
+    color: "#60a5fa",
+  },
+  customDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+  },
+  quoteAuthor: {
+    fontSize: 14,
+    color: "#71717a",
+    textAlign: "center",
+    marginTop: 8,
+    fontStyle: "italic",
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: "#18181b",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  footerIcon: {
+    marginRight: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+    flex: 1,
+    lineHeight: 20,
+  },
+});
+
+export default TitleDemo;

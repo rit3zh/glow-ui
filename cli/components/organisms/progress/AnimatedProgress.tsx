@@ -57,7 +57,7 @@ export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
           if (isFinished && onAnimationComplete) {
             onAnimationComplete();
           }
-        }
+        },
       );
     }
   }, [validProgress, animationDuration, onAnimationComplete, indeterminate]);
@@ -68,7 +68,7 @@ export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
       indeterminateValue.value = withRepeat(
         withTiming(1, { duration: 1500, easing: Easing.linear }),
         -1,
-        false
+        false,
       );
     } else {
       indeterminateValue.value = 0;
@@ -84,10 +84,10 @@ export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
       pulseValue.value = withRepeat(
         withSequence(
           withTiming(1.1, { duration: 500, easing: Easing.ease }),
-          withTiming(1, { duration: 500, easing: Easing.ease })
+          withTiming(1, { duration: 500, easing: Easing.ease }),
         ),
         -1,
-        true
+        true,
       );
     } else {
       pulseValue.value = 1;
@@ -116,7 +116,7 @@ export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
                 easing: Easing.linear,
               }),
               -1,
-              true
+              true,
             ),
           },
         ],

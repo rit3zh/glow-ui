@@ -5,14 +5,20 @@ import type { SubtitleProps } from "./Subtitle.props";
 
 export const Subtitle: React.FC<SubtitleProps> = ({
   children,
+  size = 13.5,
+  style,
+  className,
 }): React.ReactNode => {
   return (
     <Text
+      className={className}
       style={[
         styles.text,
         {
           maxWidth: "90%",
+          fontSize: size ? size : 13.5,
         },
+        style,
       ]}
       numberOfLines={2}
     >
