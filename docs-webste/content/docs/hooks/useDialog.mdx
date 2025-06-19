@@ -1,0 +1,55 @@
+---
+title: 💬 useDialog
+description: Minimalist hook for accessing the Dialog context in React Native Glow UI
+---
+
+## ⚡️ Quick Example
+
+```tsx
+import { useDialog } from "cli/components/organisms/dialog/hooks/useDialog";
+
+const dialog = useDialog();
+
+dialog.open();
+dialog.close();
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { useContext } from "react";
+import { DialogContextType } from "../Dialog.types";
+import { DialogContext } from "../context/DialogContext";
+
+export const useDialog = (): DialogContextType => {
+  const ctx = useContext(DialogContext);
+  if (!ctx) throw new Error("Dialog components must be used within <Dialog>");
+  return ctx;
+};
+```
+
+---
+
+## 🧩 What it does
+
+- Returns the Dialog context value
+- Lets you open, close, or control dialogs from anywhere in your component tree
+- Throws an error if used outside a DialogProvider
+
+---
+
+## 🚨 Error Handling
+
+If you use this hook outside of a DialogProvider, you'll get:
+
+```
+Error: Dialog components must be used within <Dialog>
+```
+
+---
+
+## 💡 Tip
+
+Use this hook in your components to programmatically control dialogs with ease!

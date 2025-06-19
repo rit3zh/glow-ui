@@ -1,0 +1,60 @@
+---
+title: 🧭 useAnimateNavbar
+description: Minimalist hook for animating a parallax navigation bar in React Native Glow UI
+---
+
+## ⚡️ Quick Example
+
+```tsx
+import { useAnimateNavbar } from 'src/components/templates/headers/parallax/hooks/useAnimatedNavBar';
+import { Animated } from 'react-native';
+
+const scrollY = new Animated.Value(0);
+const [headerOpacity, overflowHeaderOpacity] = useAnimateNavbar(scrollY, 300, 80);
+
+<Animated.View style={{ opacity: headerOpacity }}>...</Animated.View>
+<Animated.View style={{ opacity: overflowHeaderOpacity }}>...</Animated.View>
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import type { Animated } from "react-native";
+
+export const useAnimateNavbar = (
+  scroll: Animated.Value,
+  imageHeight: number,
+  headerHeight: number,
+) => {
+  const HEADER_HEIGHT_DIFFERENCE = imageHeight - headerHeight;
+  const headerOpacity = scroll.interpolate({
+    inputRange: [0, HEADER_HEIGHT_DIFFERENCE * 0.75, HEADER_HEIGHT_DIFFERENCE],
+    outputRange: [0, 0, 1],
+    extrapolate: "clamp",
+  });
+  const overflowHeaderOpacity = scroll.interpolate({
+    inputRange: [0, HEADER_HEIGHT_DIFFERENCE * 0.75, HEADER_HEIGHT_DIFFERENCE],
+    outputRange: [1, 1, 0],
+    extrapolate: "clamp",
+  });
+
+  return [headerOpacity, overflowHeaderOpacity];
+};
+```
+
+---
+
+## 🧩 What it does
+
+- Takes your scroll animated value, image height, and header height
+- Returns two animated opacities:
+  - `headerOpacity`: Fades in the nav bar as you scroll up
+  - `overflowHeaderOpacity`: Fades out the header image as you scroll up
+
+---
+
+## 💡 Tip
+
+Use this hook to create smooth, modern parallax header effects in your Glow UI screens!

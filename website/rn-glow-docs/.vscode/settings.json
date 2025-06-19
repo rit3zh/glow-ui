@@ -10,20 +10,14 @@
 
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
 
-  "tailwindCSS.classAttributes": [
-    "class",
-    "className",
-    "tw"
-  ],
+  "tailwindCSS.classAttributes": ["class", "className", "tw"],
 
-  "css.customData": [
-    ".vscode/css.json"
-  ],
+  "css.customData": [".vscode/css.json"],
 
-"[javascript]": {
+  "[javascript]": {
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
@@ -44,8 +38,6 @@
     }
   },
 
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
+  "mdx-preview.preview.useVscodeMarkdownStyles": false
 }

@@ -1,0 +1,68 @@
+---
+title: 🔢 getValueFromIndex
+description: Helper to get a pixel value from a sheet size index in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Converts a sheet size index to a pixel value
+- Supports both numeric and percentage-based sizes
+- Returns 0 for invalid indices
+
+---
+
+## 📝 Parameters
+
+- `sheetSizes` (`number[] | string[]`): Array of sheet sizes (numbers or percentage strings)
+- `index` (`number`): The index of the desired size
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { getValueFromIndex } from "cli/components/templates/sheet/floating-sheet/utils/helpers/getValueFromIndex";
+
+const sheetSizes = [85, "90%"];
+const value = getValueFromIndex({ sheetSizes, index: 1 });
+// value will be 90% of the window height
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { Dimensions } from "react-native";
+
+interface GetValueFromIndexProps {
+  sheetSizes: number[];
+  index: number;
+}
+
+const { height } = Dimensions.get("window");
+
+export const getValueFromIndex = ({
+  index,
+  sheetSizes,
+}: GetValueFromIndexProps): number => {
+  if (index < 0 || index >= sheetSizes.length) {
+    return 0;
+  }
+
+  const size = sheetSizes[index] as number | string;
+  if (typeof size === "number") {
+    return size;
+  } else if (typeof size === "string" && size?.endsWith("%")) {
+    const percentage = parseFloat(size) / 100;
+    return height * percentage;
+  }
+  return height;
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this helper to easily convert sheet size indices to pixel values, supporting both fixed and percentage-based sizing!

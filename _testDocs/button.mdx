@@ -1,0 +1,306 @@
+---
+title: Button
+description: Button component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add button
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### ExpandableButton.types.ts
+
+```ts
+import { Feather } from "@expo/vector-icons";
+import { TextStyle, ViewStyle } from "react-native";
+
+export interface ExpandableButtonProps {
+  /** Text to display on the button */
+  title: string;
+  /** Whether the button is in a loading state */
+  isLoading: boolean;
+  /** Function to call when button is pressed */
+  onPress: () => void;
+  /** Width of the button in its expanded state */
+  width?: number;
+  /** Height of the button */
+  height?: number;
+  /** Background color of the button (ignored if gradient is provided) */
+  backgroundColor?: string;
+  /** Text color */
+  textColor?: string;
+  /** Font size of the button text */
+  fontSize?: number;
+  /** Optional icon to display before text */
+  icon?: keyof typeof Feather.glyphMap;
+  /** Icon size */
+  iconSize?: number;
+  /** Icon color (defaults to text color) */
+  iconColor?: string;
+  /** Button border radius (automatically calculated by default) */
+  borderRadius?: number;
+  /** Gradient colors to use (if provided) */
+  gradientColors?: string[];
+  /** Button style */
+  style?: ViewStyle;
+  /** Text style override */
+  textStyle?: TextStyle;
+  /** Whether to add a press animation effect */
+  withPressAnimation?: boolean;
+  /** Custom loading component */
+  loadingComponent?: React.ReactNode;
+  /** Loading indicator color */
+  loadingIndicatorColor?: string;
+  /** Animation configuration */
+  animationConfig?: {
+    damping?: number;
+    stiffness?: number;
+    duration?: number;
+  };
+  /** Whether to disable the button */
+  disabled?: boolean;
+}
+```
+
+### 💻 Components
+#### ExpandableButton.tsx
+
+```tsx
+import React, { useEffect } from "react";
+import { Feather } from "@expo/vector-icons";
+import {
+  Pressable,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  ViewStyle,
+  Platform,
+} from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import type { ExpandableButtonProps } from "./ExpandableButton.types";
+import { LinearGradient } from "expo-linear-gradient";
+
+export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
+  title,
+  isLoading,
+  onPress,
+  width = 200,
+  height = 48,
+  backgroundColor = "#3B82F6",
+  textColor = "white",
+  fontSize = 16,
+  icon,
+  iconSize = 18,
+  iconColor,
+  borderRadius,
+  gradientColors,
+  style,
+  textStyle,
+  withPressAnimation = true,
+  loadingComponent,
+  loadingIndicatorColor = "white",
+  animationConfig = {
+    damping: 15,
+    stiffness: 150,
+    duration: 300,
+  },
+  disabled = false,
+}): React.JSX.Element => {
+  const animatedWidth = useSharedValue<number>(width);
+  const animatedScale = useSharedValue<number>(1);
+  const animatedOpacity = useSharedValue<number>(1);
+
+  useEffect(() => {
+    animatedWidth.value = withSpring<number>(isLoading ? height : width, {
+      damping: animationConfig.damping,
+      stiffness: animationConfig.stiffness,
+    });
+  }, [isLoading, width, height, animatedWidth, animationConfig]);
+
+  const calculatedBorderRadius = borderRadius ?? height / 2;
+
+  const animatedStyle = useAnimatedStyle<ViewStyle>(() => ({
+    width: animatedWidth.value,
+    borderRadius: withTiming(isLoading ? height / 2 : calculatedBorderRadius, {
+      duration: animationConfig.duration,
+    }),
+    transform: [{ scale: animatedScale.value }],
+    opacity: animatedOpacity.value,
+  }));
+
+  const handlePressIn = () => {
+    if (withPressAnimation && !disabled && !isLoading) {
+      animatedScale.value = withTiming(0.95, { duration: 100 });
+    }
+  };
+
+  const handlePressOut = () => {
+    if (withPressAnimation && !disabled && !isLoading) {
+      animatedScale.value = withTiming(1, { duration: 200 });
+    }
+  };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        loadingComponent || (
+          <ActivityIndicator color={loadingIndicatorColor} size="small" />
+        )
+      );
+    }
+
+    return (
+      <>
+        {icon && (
+          <Feather
+            name={icon}
+            size={iconSize}
+            color={iconColor || textColor}
+            style={{ marginRight: 8 }}
+          />
+        )}
+        <Text
+          style={[styles.text, { color: textColor, fontSize }, textStyle]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {title}
+        </Text>
+      </>
+    );
+  };
+
+  const wrappedButton = gradientColors ? (
+    <Animated.View style={[animatedStyle]}>
+      <LinearGradient
+        colors={gradientColors as [string, string, ...string[]]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={[
+          styles.gradientContainer,
+          {
+            height,
+            width: "100%",
+            borderRadius: isLoading ? height / 2 : calculatedBorderRadius,
+          },
+          style,
+        ]}
+      >
+        {renderContent()}
+      </LinearGradient>
+    </Animated.View>
+  ) : (
+    <Animated.View
+      style={[
+        styles.button,
+        {
+          height,
+          backgroundColor: backgroundColor,
+        },
+        animatedStyle,
+        style,
+      ]}
+    >
+      {renderContent()}
+    </Animated.View>
+  );
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={isLoading || disabled}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={({ pressed }) => [
+        styles.pressable,
+        Platform.OS === "ios" && pressed && styles.pressed,
+      ]}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: isLoading || disabled }}
+    >
+      {wrappedButton}
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  pressable: {
+    alignSelf: "flex-start",
+  },
+  pressed: {
+    opacity: 0.9,
+  },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    overflow: "hidden",
+  },
+  gradientContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    overflow: "hidden",
+    height: "100%",
+    width: "100%",
+  },
+  text: {
+    fontWeight: "600",
+  },
+});
+```

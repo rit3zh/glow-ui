@@ -1,0 +1,86 @@
+---
+title: 🍞 useToast
+description: Minimalist hook for accessing the Toast context in React Native Glow UI
+---
+
+## ⚡️ Quick Example
+
+```tsx
+import { useToast } from "src/components/molecules/Toast/hooks/useToast";
+
+const toast = useToast();
+
+function LoadingToast() {
+  return (
+    <View style={styles.customToast}>
+      <View style={styles.customToastHeader}>
+        <MaterialIcons name="hourglass-empty" size={18} color="#8B5CF6" />
+        <Text style={styles.customToastTitle}>Processing</Text>
+      </View>
+      <Text style={styles.customToastMessage}>
+        Please wait while we process your request...
+      </Text>
+    </View>
+  );
+}
+
+const id = toast.show(<LoadingToast />, {
+  duration: 0,
+  action: {
+    label: "Cancel",
+    onPress: () => {
+      toast.dismiss(id);
+      Toast.show("Operation cancelled", {
+        type: "warning",
+        action: {
+          label: "Retry",
+          onPress: () => console.log("Retry pressed"),
+        },
+      });
+    },
+  },
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { useContext } from "react";
+import { ToastContextValue } from "../Toast.types";
+
+export const useToast = <T extends ToastContextValue>(
+  ReactContext: React.Context<T>,
+): ToastContextValue => {
+  const context = useContext(ReactContext);
+  if (!context) {
+    throw new Error("useToast must be used within a ToastProvider");
+  }
+  return context;
+};
+```
+
+---
+
+## 🧩 What it does
+
+- Returns the Toast context value
+- Lets you show, update, or dismiss toasts from anywhere in your component tree
+- Throws an error if used outside a ToastProvider
+
+---
+
+## 🚨 Error Handling
+
+If you use this hook outside of a ToastProvider, you'll get:
+
+```
+Error: useToast must be used within a ToastProvider
+```
+
+---
+
+## 💡 Tip
+
+Use this hook in your components to show, hide, or customize toasts easily!

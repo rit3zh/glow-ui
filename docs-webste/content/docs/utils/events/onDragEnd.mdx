@@ -1,0 +1,119 @@
+---
+title: 🏁 onHandleDragEnd
+description: Utility to handle drag end events for floating sheets in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Handles drag end events for floating sheets
+- Snaps the sheet to the closest size
+- Updates expanded/minimized state and animates the sheet
+
+---
+
+## 📝 Parameters
+
+- `animation` (`Animated.Value`): The animated value for the sheet position
+- `event` (`DragEndEvent`): The drag end event containing the new value
+- `setIsExpanded` (`(isExpanded: boolean) => void`): Callback to set expanded state
+- `setSheetPosition` (`(sheetPosition: number) => void`): Callback to set the sheet's position
+- `isMinimized` (`boolean`): Whether the sheet is minimized
+- `setIsMinimized` (`(isMinimized: boolean) => void`): Callback to set minimized state
+- `sheetSizes` (`number[]`): Array of possible sheet sizes
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { onHandleDragEnd } from "src/components/templates/sheet/floating-sheet/utils/animation-utils/events/onDragEnd";
+
+onHandleDragEnd({
+  animation,
+  event,
+  setIsExpanded,
+  setSheetPosition,
+  isMinimized,
+  setIsMinimized,
+  sheetSizes,
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import type { DragEndEvent } from "@lodev09/react-native-true-sheet";
+import { Animated } from "react-native";
+
+interface DragEndEventProps {
+  animation: Animated.Value;
+  event: DragEndEvent;
+  setIsExpanded: (isExpanded: boolean) => void;
+  setSheetPosition: (sheetPosition: number) => void;
+  isMinimized: boolean;
+  setIsMinimized: (isMinimized: boolean) => void;
+  sheetSizes: number[];
+}
+export const onHandleDragEnd = ({
+  event,
+  animation,
+  setIsExpanded,
+  setSheetPosition,
+  isMinimized,
+  sheetSizes,
+  setIsMinimized,
+}: DragEndEventProps) => {
+  const endValue = event.nativeEvent.value;
+  if (isMinimized) {
+    let closestValue = sheetSizes[0];
+    let minDistance = Math.abs(endValue - sheetSizes[0]);
+
+    for (let i = 1; i < sheetSizes.length; i++) {
+      const size = sheetSizes[i];
+      const distance = Math.abs(endValue - size);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestValue = size;
+      }
+    }
+
+    setIsExpanded(closestValue === sheetSizes[1]);
+    setIsMinimized(false);
+
+    setSheetPosition(closestValue);
+  } else {
+    let closestValue = sheetSizes[0];
+    let minDistance = Math.abs(endValue - sheetSizes[0]);
+
+    for (let i = 1; i < sheetSizes.length; i++) {
+      const size = sheetSizes[i];
+      const distance = Math.abs(endValue - size);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestValue = size;
+      }
+    }
+
+    setIsExpanded(closestValue === sheetSizes[1]);
+
+    setSheetPosition(closestValue);
+
+    Animated.spring(animation, {
+      toValue: closestValue,
+      friction: 12,
+      tension: 25,
+      useNativeDriver: false,
+    }).start();
+  }
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this utility to snap your floating sheet to the nearest size and animate it smoothly when the user stops dragging!

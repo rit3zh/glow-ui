@@ -3,7 +3,7 @@ import en from '@/i18n/locales/en.json'
 import pt from '@/i18n/locales/pt.json'
 
 export const siteConfig = {
-  name: 'glow',
+  name: 'Glow UI Docs',
 
   description: {
     en: en.site.description,

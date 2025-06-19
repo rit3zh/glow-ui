@@ -1,0 +1,82 @@
+---
+title: 🚀 present
+description: Utility to open and animate a floating sheet in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Sets the sheet as presented (open)
+- Animates the sheet to its initial position using a spring animation
+- Handles minimized and non-minimized states
+
+---
+
+## 📝 Parameters
+
+- `animation` (`Animated.Value`): Main animation value for the sheet
+- `setIsPresented` (`(isPresented: boolean) => void`): Callback to set the presented state
+- `isMinimized` (`boolean`): Whether the sheet is minimized
+- `getValueFromIndex` (`(index: number) => number`): Function to get the animation value from a given index
+- `event` (`PresentEvent`): The event containing the target index
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { present } from "cli/components/templates/sheet/floating-sheet/utils/animation-utils/reference/present";
+
+present({
+  animation,
+  setIsPresented,
+  isMinimized,
+  getValueFromIndex,
+  event,
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import type { PresentEvent } from "@lodev09/react-native-true-sheet";
+import { Animated } from "react-native";
+
+interface PresentEventProps {
+  animation: Animated.Value;
+  setIsPresented: (isPresented: boolean) => void;
+  isMinimized: boolean;
+  getValueFromIndex: (index: number) => number;
+  event: PresentEvent;
+}
+
+export const present = ({
+  animation,
+  getValueFromIndex,
+  isMinimized,
+  setIsPresented,
+  event,
+}: PresentEventProps) => {
+  if (isMinimized) {
+    const initialValue = getValueFromIndex(event.nativeEvent.index);
+    setIsPresented(true);
+  } else {
+    const initialValue = getValueFromIndex(event.nativeEvent.index);
+    setIsPresented(true);
+
+    Animated.spring(animation, {
+      toValue: initialValue,
+      friction: 12,
+      tension: 25,
+      useNativeDriver: false,
+    }).start();
+  }
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this utility to smoothly open and animate your floating sheet to the correct position!

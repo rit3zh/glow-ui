@@ -1,0 +1,959 @@
+---
+title: Progress
+description: Progress component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add progress
+```
+
+## 📶 `AnimatedProgressBarProps`
+
+<TypeTable
+  type={{
+    progress: {
+      description: "📊 Progress value between 0 and 1.",
+      type: "number",
+      default: "0",
+      required: true,
+    },
+    animationDuration: {
+      description: "⏱️ Duration of the animation in milliseconds.",
+      type: "number",
+      default: "800",
+    },
+    width: {
+      description: "📏 Width of the progress bar container.",
+      type: "number | string",
+      default: "'100%'",
+    },
+    height: {
+      description: "📐 Height of the progress bar.",
+      type: "number",
+      default: "10",
+    },
+    progressColor: {
+      description: "🎨 Color of the progress indicator.",
+      type: "string",
+      default: "'#2089dc'",
+    },
+    trackColor: {
+      description: "🛤️ Color of the background track.",
+      type: "string",
+      default: "'#e0e0e0'",
+    },
+    borderRadius: {
+      description: "🌀 Border radius of the progress bar.",
+      type: "number",
+      default: "4",
+    },
+    showPercentage: {
+      description: "📈 Whether to show the progress percentage.",
+      type: "boolean",
+      default: "false",
+    },
+    percentagePosition: {
+      description: "📍 Position of the percentage text.",
+      type: '"left" | "right" | "top" | "bottom" | "inside"',
+      default: "'right'",
+    },
+    percentageTextStyle: {
+      description: "🖋️ Style for the percentage text.",
+      type: "TextStyle",
+    },
+    containerStyle: {
+      description: "📦 Style for the container.",
+      type: "ViewStyle",
+    },
+    formatPercentage: {
+      description: "🧮 Format function for the percentage display.",
+      type: "(value: number) => string",
+      default: "(value) => `${Math.round(value * 100)}%`",
+    },
+    indeterminate: {
+      description: "🔄 Use indeterminate animation for unknown progress.",
+      type: "boolean",
+      default: "false",
+    },
+    pulsate: {
+      description: "💡 Show pulse animation effect.",
+      type: "boolean",
+      default: "false",
+    },
+    useGradient: {
+      description: "🌈 Whether to use gradient for the progress bar.",
+      type: "boolean",
+      default: "false",
+    },
+    gradientColors: {
+      description: "🎨 Colors for gradient (requires `useGradient`).",
+      type: "string[]",
+      default: "['#4dabf7', '#3b5bdb']",
+    },
+    onAnimationComplete: {
+      description: "✅ Optional callback when animation completes.",
+      type: "() => void",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Progress.tsx">
+
+```tsx
+import React, { useEffect } from "react";
+import { StyleSheet, View, Dimensions, Text } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  withRepeat,
+  withSequence,
+} from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import type { AnimatedProgressBarProps } from "./AnimatedProgress.types";
+
+export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
+  progress = 0,
+  animationDuration = 800,
+  width = "100%",
+  height = 10,
+  progressColor = "#2089dc",
+  trackColor = "#e0e0e0",
+  borderRadius = 4,
+  showPercentage = false,
+  percentagePosition = "right",
+  percentageTextStyle,
+  containerStyle,
+  formatPercentage = (value: number) => `${Math.round(value * 100)}%`,
+  indeterminate = false,
+  pulsate = false,
+  onAnimationComplete,
+  gradientColors = ["#4dabf7", "#3b5bdb"],
+  useGradient = false,
+}) => {
+  const validProgress = Math.min(Math.max(progress, 0), 1);
+
+  const progressValue = useSharedValue(0);
+  const indeterminateValue = useSharedValue(0);
+  const pulseValue = useSharedValue(1);
+
+  const screenWidth = Dimensions.get("window").width;
+
+  const containerWidth =
+    typeof width === "string"
+      ? width.endsWith("%")
+        ? screenWidth * (parseInt(width, 10) / 100)
+        : parseInt(width, 10)
+      : width;
+
+  useEffect(() => {
+    if (!indeterminate) {
+      progressValue.value = withTiming(
+        validProgress,
+        {
+          duration: animationDuration,
+          easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+        },
+        (isFinished) => {
+          if (isFinished && onAnimationComplete) {
+            onAnimationComplete();
+          }
+        },
+      );
+    }
+  }, [validProgress, animationDuration, onAnimationComplete, indeterminate]);
+
+  useEffect(() => {
+    if (indeterminate) {
+      indeterminateValue.value = 0;
+      indeterminateValue.value = withRepeat(
+        withTiming(1, { duration: 1500, easing: Easing.linear }),
+        -1,
+        false,
+      );
+    } else {
+      indeterminateValue.value = 0;
+    }
+
+    return () => {
+      indeterminateValue.value = 0;
+    };
+  }, [indeterminate]);
+
+  useEffect(() => {
+    if (pulsate && !indeterminate && validProgress > 0) {
+      pulseValue.value = withRepeat(
+        withSequence(
+          withTiming(1.1, { duration: 500, easing: Easing.ease }),
+          withTiming(1, { duration: 500, easing: Easing.ease }),
+        ),
+        -1,
+        true,
+      );
+    } else {
+      pulseValue.value = 1;
+    }
+
+    return () => {
+      pulseValue.value = 1;
+    };
+  }, [pulsate, indeterminate, validProgress]);
+
+  const progressBarStyle = useAnimatedStyle(() => {
+    if (indeterminate) {
+      return {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "30%",
+        height: "100%",
+        backgroundColor: useGradient ? "transparent" : progressColor,
+        borderRadius,
+        transform: [
+          {
+            translateX: withRepeat(
+              withTiming(containerWidth * 0.7, {
+                duration: 1500,
+                easing: Easing.linear,
+              }),
+              -1,
+              true,
+            ),
+          },
+        ],
+      };
+    }
+
+    return {
+      width: `${progressValue.value * 100}%`,
+      backgroundColor: useGradient ? "transparent" : progressColor,
+      borderRadius,
+      height: "100%",
+      transform: pulsate ? [{ scale: pulseValue.value }] : [],
+    };
+  });
+
+  const renderPercentageText = () => {
+    if (!showPercentage) return null;
+
+    const textContent = formatPercentage(validProgress);
+    const textElement = (
+      <Text style={[styles.percentageText, percentageTextStyle]}>
+        {textContent}
+      </Text>
+    );
+
+    if (percentagePosition === "inside" && validProgress > 0.1) {
+      return <View style={styles.insideTextContainer}>{textElement}</View>;
+    }
+
+    return textElement;
+  };
+
+  const renderProgressBar = () => {
+    if (useGradient) {
+      return (
+        <Animated.View style={progressBarStyle}>
+          <LinearGradient
+            colors={gradientColors as [string, string, ...string[]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          >
+            {percentagePosition === "inside" && renderPercentageText()}
+          </LinearGradient>
+        </Animated.View>
+      );
+    }
+
+    return (
+      <Animated.View style={progressBarStyle}>
+        {percentagePosition === "inside" && renderPercentageText()}
+      </Animated.View>
+    );
+  };
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          flexDirection:
+            percentagePosition === "left" || percentagePosition === "right"
+              ? "row"
+              : "column",
+        },
+        containerStyle,
+      ]}
+    >
+      {percentagePosition === "left" && renderPercentageText()}
+      {percentagePosition === "top" && renderPercentageText()}
+
+      <View
+        style={[
+          styles.track,
+          {
+            width: width,
+            height: height,
+            backgroundColor: trackColor,
+            borderRadius,
+            overflow: "hidden",
+          } as any,
+        ]}
+      >
+        {!indeterminate ? renderProgressBar() : renderProgressBar()}
+      </View>
+
+      {percentagePosition === "right" && renderPercentageText()}
+      {percentagePosition === "bottom" && renderPercentageText()}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  track: {
+    justifyContent: "center",
+    position: "relative",
+  },
+  percentageText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    marginHorizontal: 8,
+    color: "#000",
+  },
+  insideTextContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradient: {
+    flex: 1,
+    borderRadius: 4,
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title='Progress.types.ts'>
+
+```ts
+import type { TextStyle, ViewStyle } from "react-native";
+
+export interface AnimatedProgressBarProps {
+  /**
+   * Progress value between 0 and 1
+   * @default 0
+   */
+  progress: number;
+
+  /**
+   * Duration of the animation in milliseconds
+   * @default 800
+   */
+  animationDuration?: number;
+
+  /**
+   * Width of the progress bar container
+   * @default '100%'
+   */
+  width?: number | string;
+
+  /**
+   * Height of the progress bar
+   * @default 10
+   */
+  height?: number;
+
+  /**
+   * Color of the progress indicator
+   * @default '#2089dc'
+   */
+  progressColor?: string;
+
+  /**
+   * Color of the background track
+   * @default '#e0e0e0'
+   */
+  trackColor?: string;
+
+  /**
+   * Border radius of the progress bar
+   * @default 4
+   */
+  borderRadius?: number;
+
+  /**
+   * Whether to show the progress percentage
+   * @default false
+   */
+  showPercentage?: boolean;
+
+  /**
+   * Position of the percentage text
+   * @default 'right'
+   */
+  percentagePosition?: "left" | "right" | "top" | "bottom" | "inside";
+
+  /**
+   * Style for the percentage text
+   */
+  percentageTextStyle?: TextStyle;
+
+  /**
+   * Style for the container
+   */
+  containerStyle?: ViewStyle;
+
+  /**
+   * Format function for the percentage display
+   * @default (value: number) => `${Math.round(value * 100)}%`
+   */
+  formatPercentage?: (value: number) => string;
+
+  /**
+   * Whether to use indeterminate animation style for unknown progress
+   * @default false
+   */
+  indeterminate?: boolean;
+
+  /**
+   * Whether to show the pulse animation effect
+   * @default false
+   */
+  pulsate?: boolean;
+
+  /**
+   * Whether to use a gradient for the progress bar
+   * @default false
+   */
+  useGradient?: boolean;
+
+  /**
+   * Colors for gradient (requires useGradient to be true)
+   * @default ['#4dabf7', '#3b5bdb']
+   */
+  gradientColors?: string[];
+
+  /**
+   * Optional callback when animation completes
+   */
+  onAnimationComplete?: () => void;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  Dimensions,
+} from "react-native";
+import { AnimatedProgressBar } from "@/components/organisms/progress/AnimatedProgress";
+import { Ionicons, MaterialIcons, Feather } from "@expo/vector-icons";
+
+const { width: screenWidth } = Dimensions.get("window");
+
+const ProgressDemo: React.FC = () => {
+  const [progress, setProgress] = useState<number>(0);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+
+  const handleReset = () => {
+    setProgress(0);
+    setIsAnimating(false);
+  };
+
+  const handleIncrement = () => {
+    setProgress((prev) => Math.min(prev + 0.1, 1));
+  };
+
+  const handleDecrement = () => {
+    setProgress((prev) => Math.max(prev - 0.1, 0));
+  };
+
+  const handleAnimate = () => {
+    setIsAnimating(true);
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 1) {
+          clearInterval(interval);
+          setIsAnimating(false);
+          return 1;
+        }
+        return prev + 0.02;
+      });
+    }, 50);
+  };
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      scrollEnabled
+      showsVerticalScrollIndicator={false}
+      contentInsetAdjustmentBehavior="always"
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Ionicons name="bar-chart" size={32} color="#8b5cf6" />
+            <Text style={styles.title}>Progress Components</Text>
+          </View>
+          <Text style={styles.subtitle}>
+            Beautifully designed progress indicators
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleContainer}>
+              <Feather name="activity" size={20} color="#ffffff" />
+              <Text style={styles.cardTitle}>Basic Progress</Text>
+            </View>
+            <Text style={styles.cardDescription}>
+              A simple progress bar with smooth animations
+            </Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarContainer}>
+              <AnimatedProgressBar
+                progress={progress}
+                width="100%"
+                height={8}
+                progressColor="#ffffff"
+                trackColor="#1e1e1e"
+                borderRadius={12}
+                animationDuration={600}
+              />
+            </View>
+            <View style={styles.progressTextContainer}>
+              <Text style={styles.progressText}>
+                {Math.round(progress * 100)}%
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleContainer}>
+              <MaterialIcons name="gradient" size={20} color="#8b5cf6" />
+              <Text style={styles.cardTitle}>Gradient Progress</Text>
+            </View>
+            <Text style={styles.cardDescription}>
+              Enhanced with beautiful gradient colors
+            </Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarContainer}>
+              <AnimatedProgressBar
+                progress={progress}
+                width="100%"
+                height={12}
+                useGradient={true}
+                gradientColors={["#8b5cf6", "#06b6d4"]}
+                trackColor="#262626"
+                borderRadius={16}
+                animationDuration={800}
+              />
+            </View>
+            <View style={styles.progressTextContainer}>
+              <Text style={styles.progressText}>
+                {Math.round(progress * 100)}%
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleContainer}>
+              <Ionicons name="pulse" size={20} color="#f59e0b" />
+              <Text style={styles.cardTitle}>Pulsating Progress</Text>
+            </View>
+            <Text style={styles.cardDescription}>
+              With subtle pulsing animation effect
+            </Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarContainer}>
+              <AnimatedProgressBar
+                progress={progress}
+                width="100%"
+                height={10}
+                pulsate={true}
+                useGradient={true}
+                gradientColors={["#f59e0b", "#ef4444"]}
+                trackColor="#1f1f1f"
+                borderRadius={14}
+                animationDuration={1000}
+              />
+            </View>
+            <View style={styles.progressTextContainer}>
+              <Text style={styles.progressText}>
+                {Math.round(progress * 100)}%
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleContainer}>
+              <MaterialIcons name="line-weight" size={20} color="#10b981" />
+              <Text style={styles.cardTitle}>Thick Progress</Text>
+            </View>
+            <Text style={styles.cardDescription}>
+              Larger size for better visibility
+            </Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarContainer}>
+              <AnimatedProgressBar
+                progress={progress}
+                width="100%"
+                height={20}
+                useGradient={true}
+                gradientColors={["#10b981", "#059669"]}
+                trackColor="#171717"
+                borderRadius={20}
+                animationDuration={1200}
+              />
+            </View>
+            <View style={styles.progressTextContainer}>
+              <Text style={styles.progressTextLarge}>
+                {Math.round(progress * 100)}%
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.controlsCard}>
+          <View style={styles.controlsTitleContainer}>
+            <Ionicons name="settings" size={20} color="#ffffff" />
+            <Text style={styles.controlsTitle}>Controls</Text>
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonSecondary]}
+              onPress={handleDecrement}
+              disabled={progress <= 0}
+            >
+              <Ionicons
+                name="remove"
+                size={16}
+                color={progress <= 0 ? "#525252" : "#ffffff"}
+              />
+              <Text
+                style={[
+                  styles.buttonText,
+                  progress <= 0 && styles.buttonTextDisabled,
+                ]}
+              >
+                10%
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.button, styles.buttonSecondary]}
+              onPress={handleIncrement}
+              disabled={progress >= 1}
+            >
+              <Ionicons
+                name="add"
+                size={16}
+                color={progress >= 1 ? "#525252" : "#ffffff"}
+              />
+              <Text
+                style={[
+                  styles.buttonText,
+                  progress >= 1 && styles.buttonTextDisabled,
+                ]}
+              >
+                10%
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonPrimary]}
+              onPress={handleAnimate}
+              disabled={isAnimating}
+            >
+              <Ionicons
+                name="play"
+                size={16}
+                color={isAnimating ? "#525252" : "#000000"}
+              />
+              <Text
+                style={[
+                  styles.buttonTextPrimary,
+                  isAnimating && styles.buttonTextDisabled,
+                ]}
+              >
+                {isAnimating ? "Animating..." : "Animate"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.button, styles.buttonDestructive]}
+              onPress={handleReset}
+            >
+              <Ionicons name="refresh" size={16} color="#ffffff" />
+              <Text style={styles.buttonTextDestructive}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
+  contentContainer: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  header: {
+    marginBottom: 32,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    lineHeight: 24,
+  },
+  card: {
+    backgroundColor: "#111111",
+    borderRadius: 16,
+    padding: 24,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#1f1f1f",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  cardHeader: {
+    marginBottom: 20,
+  },
+  cardTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: "#71717a",
+    lineHeight: 20,
+  },
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  progressBarContainer: {
+    flex: 1,
+  },
+  progressTextContainer: {
+    minWidth: 50,
+    alignItems: "flex-end",
+  },
+  progressText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#d4d4d8",
+    fontFamily: "monospace",
+  },
+  progressTextLarge: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#d4d4d8",
+    fontFamily: "monospace",
+  },
+  controlsCard: {
+    backgroundColor: "#111111",
+    borderRadius: 16,
+    padding: 24,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#1f1f1f",
+  },
+  controlsTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginBottom: 20,
+  },
+  controlsTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 12,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    flexDirection: "row",
+    gap: 8,
+  },
+  buttonPrimary: {
+    backgroundColor: "#ffffff",
+  },
+  buttonSecondary: {
+    backgroundColor: "#262626",
+    borderWidth: 1,
+    borderColor: "#404040",
+  },
+  buttonDestructive: {
+    backgroundColor: "#dc2626",
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
+  buttonTextPrimary: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#000000",
+  },
+  buttonTextDestructive: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
+  buttonTextDisabled: {
+    opacity: 0.5,
+  },
+});
+
+export default ProgressDemo;
+```

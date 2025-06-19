@@ -6,7 +6,7 @@ import {
   View,
   Pressable,
 } from "react-native";
-import { SymbolView } from "expo-symbols"; // Chevron icon
+import { SymbolView } from "expo-symbols";
 import Animated, {
   withTiming,
   Easing,
@@ -14,7 +14,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-// Accordion Trigger Component with Animated Chevron
 export const AccordionTrigger = ({
   children,
   isActive,

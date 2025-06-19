@@ -1,0 +1,555 @@
+---
+title: Shimmer
+description: Shimmer component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add shimmer
+```
+
+## ✨ `ShimmerEffectProps`
+
+<TypeTable
+  type={{
+    isLoading: {
+      description: "⏳ Whether to show the shimmer loading effect.",
+      type: "boolean",
+    },
+    shimmerColors: {
+      description: "🌈 Array of colors used in the shimmer gradient.",
+      type: "string[]",
+    },
+    duration: {
+      description: "⏱️ Duration of the shimmer animation in milliseconds.",
+      type: "number",
+    },
+    className: {
+      description: "🎨 Optional class name for styling.",
+      type: "string",
+    },
+    style: {
+      description: "🧱 Style object for container view.",
+      type: "ViewStyle",
+    },
+    variant: {
+      description: "🔄 Type of shimmer animation variant.",
+      type: '"shimmer" | "pulse"',
+    },
+    direction: {
+      description: "➡️ Direction of shimmer animation.",
+      type: "ShimmerDirection",
+    },
+  }}
+/>
+
+---
+
+## 🧭 `ShimmerDirection`
+
+<TypeTable
+  type={{
+    leftToRight: {
+      description: "⬅️➡️ Shimmer moves from left to right.",
+      type: '"leftToRight"',
+    },
+    rightToLeft: {
+      description: "➡️⬅️ Shimmer moves from right to left.",
+      type: '"rightToLeft"',
+    },
+    topToBottom: {
+      description: "🔼🔽 Shimmer moves from top to bottom.",
+      type: '"topToBottom"',
+    },
+    bottomToTop: {
+      description: "🔽🔼 Shimmer moves from bottom to top.",
+      type: '"bottomToTop"',
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Shimmer.tsx">
+
+```tsx
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, LayoutChangeEvent, LayoutRectangle } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+  cancelAnimation,
+} from "react-native-reanimated";
+import type { ShimmerEffectProps } from "./Shimmer.types";
+
+/**
+ * @returns {React.ReactNode | React.JSX.Element}
+ */
+export const ShimmerEffect: React.FC<ShimmerEffectProps> = ({
+  isLoading = true,
+
+  shimmerColors = [
+    "rgba(15, 15, 15, 0.1)",
+    "rgba(255, 255, 255, 0.15)",
+    "rgba(15, 15, 15, 0.1)",
+  ],
+  duration = 1200,
+  className,
+
+  style,
+  variant = "shimmer",
+  direction = "leftToRight",
+}) => {
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const opacity = useSharedValue(0.5);
+
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
+    setLayout(e.nativeEvent.layout);
+  }, []);
+
+  const shimmerStyle = useAnimatedStyle(() => {
+    const transforms = [];
+
+    if (variant === "shimmer") {
+      if (direction === "leftToRight" || direction === "rightToLeft") {
+        transforms.push({ translateX: translateX.value });
+      } else {
+        transforms.push({ translateY: translateY.value });
+      }
+    }
+
+    return {
+      transform: transforms,
+      opacity: opacity.value,
+    };
+  });
+
+  useEffect(() => {
+    if (!layout || !isLoading) {
+      cancelAnimation(translateX);
+      cancelAnimation(translateY);
+      cancelAnimation(opacity);
+      return;
+    }
+
+    if (variant === "shimmer") {
+      switch (direction) {
+        case "leftToRight":
+          translateX.value = -layout.width - 350;
+          translateX.value = withRepeat(
+            withTiming(layout.width, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+
+        case "rightToLeft":
+          translateX.value = layout.width + 350;
+          translateX.value = withRepeat(
+            withTiming(-layout.width - 350, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+
+        case "topToBottom":
+          translateY.value = -layout.height - 250;
+          translateY.value = withRepeat(
+            withTiming(layout.height, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+
+        case "bottomToTop":
+          translateY.value = layout.height + 100;
+          translateY.value = withRepeat(
+            withTiming(-layout.height - 100, {
+              duration,
+              easing: Easing.linear,
+            }),
+            -1,
+            false,
+          );
+          break;
+      }
+      opacity.value = 1;
+    } else {
+      opacity.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: duration / 2 }),
+          withTiming(0.3, { duration: duration / 2 }),
+        ),
+        -1,
+        true,
+      );
+    }
+
+    return () => {
+      cancelAnimation(translateX);
+      cancelAnimation(translateY);
+      cancelAnimation(opacity);
+    };
+  }, [layout, isLoading, duration, variant, direction]);
+
+  return (
+    <View
+      onLayout={onLayout}
+      className={className}
+      style={[style, { overflow: "hidden" }]}
+    >
+      {isLoading && layout && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width:
+                variant === "shimmer" &&
+                (direction === "leftToRight" || direction === "rightToLeft")
+                  ? layout.width * 3
+                  : layout.width,
+              height:
+                variant === "shimmer" &&
+                (direction === "topToBottom" || direction === "bottomToTop")
+                  ? layout.height * 3
+                  : layout.height,
+            },
+            shimmerStyle,
+          ]}
+        >
+          {variant === "shimmer" ? (
+            <LinearGradient
+              colors={shimmerColors as [string, string, ...string[]]}
+              start={
+                direction === "leftToRight" || direction === "rightToLeft"
+                  ? { x: 0, y: 0.5 }
+                  : { x: 0.5, y: 0 }
+              }
+              end={
+                direction === "leftToRight" || direction === "rightToLeft"
+                  ? { x: 1, y: 0.5 }
+                  : { x: 0.5, y: 1 }
+              }
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: shimmerColors[0],
+              }}
+            />
+          )}
+        </Animated.View>
+      )}
+    </View>
+  );
+};
+```
+
+</Accordion>
+
+<Accordion title='Shimmer.types.ts'>
+
+```ts
+import type { StyleProp, ViewStyle } from "react-native";
+export type ShimmerEffectProps = {
+  isLoading?: boolean;
+  shimmerColors?: string[];
+  duration?: number;
+  className?: string;
+  style?: ViewStyle;
+  variant?: "shimmer" | "pulse";
+  direction?: ShimmerDirection;
+};
+export type ShimmerDirection =
+  | "leftToRight"
+  | "rightToLeft"
+  | "topToBottom"
+  | "bottomToTop";
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView, Dimensions } from "react-native";
+import React, { useState } from "react";
+import { ShimmerEffect } from "@/components";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
+
+const ShimmerDemo: React.FC = (_$_): React.ReactNode => {
+  const [isLoading] = useState<boolean>(true);
+  const shimmerConfig: any = {
+    duration: 800,
+    shimmerColors: [
+      "rgba(0, 0, 0, 0.5)",
+      "rgba(255, 255, 255, 0.2)",
+      "rgba(0, 0, 0, 0.5)",
+    ],
+    variant: "shimmer",
+    direction: "leftToRight",
+  };
+
+  const ProfileCard: React.FC = (_$_) => (
+    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
+        PROFILE CARD
+      </Text>
+      <View className="flex-row items-center">
+        <ShimmerEffect
+          isLoading={isLoading}
+          {...shimmerConfig}
+          className="w-16 h-16 bg-zinc-800 rounded-full"
+        />
+
+        <View className="flex-1 ml-4">
+          <ShimmerEffect
+            isLoading={isLoading}
+            {...shimmerConfig}
+            className="h-5 bg-zinc-800 rounded mb-2 w-full"
+          />
+          <ShimmerEffect
+            isLoading={isLoading}
+            {...shimmerConfig}
+            className="h-4 bg-zinc-800 rounded w-3/4"
+          />
+        </View>
+      </View>
+    </View>
+  );
+
+  const StatsCard: React.FC = (_$_) => (
+    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
+        STATISTICS
+      </Text>
+      <View className="flex-row justify-between">
+        {[1, 2, 3].map((item, index) => (
+          <View key={index} className="items-center flex-1">
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="w-12 h-12 bg-zinc-800 rounded-lg mb-3"
+            />
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="h-6 bg-zinc-800 rounded mb-1 w-10"
+            />
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="h-4 bg-zinc-800 rounded w-12"
+            />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  const ListItems: React.FC = () => (
+    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
+        RECENT ACTIVITY
+      </Text>
+      {[1, 2, 3, 4].map((item, index) => (
+        <View
+          key={index}
+          className={`flex-row items-center py-3 ${index < 3 ? "border-b border-zinc-800" : ""}`}
+        >
+          <ShimmerEffect
+            isLoading={isLoading}
+            {...shimmerConfig}
+            className="w-10 h-10 bg-zinc-800 rounded-full mr-4"
+          />
+          <View className="flex-1">
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="h-4 bg-zinc-800 rounded mb-2 w-4/5"
+            />
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="h-3 bg-zinc-800 rounded w-2/5"
+            />
+          </View>
+          <ShimmerEffect
+            isLoading={isLoading}
+            {...shimmerConfig}
+            className="w-6 h-6 bg-zinc-800 rounded"
+          />
+        </View>
+      ))}
+    </View>
+  );
+
+  const ImageGallery = () => (
+    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
+        GALLERY
+      </Text>
+      <View className="flex-row flex-wrap justify-between">
+        {[1, 2, 3, 4, 5, 6].map((item, index) => (
+          <ShimmerEffect
+            key={index}
+            isLoading={isLoading}
+            {...shimmerConfig}
+            className="bg-zinc-800 rounded-lg mb-3"
+            style={{ width: (width - 80) / 3, height: (width - 80) / 3 }}
+          />
+        ))}
+      </View>
+    </View>
+  );
+
+  const ActionButtons = () => (
+    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
+        ACTIONS
+      </Text>
+      <View className="flex-row justify-between">
+        {[1, 2, 3].map((action, index) => (
+          <View key={index} className="flex-1 mx-1">
+            <ShimmerEffect
+              isLoading={isLoading}
+              {...shimmerConfig}
+              className="bg-zinc-800 rounded-lg p-4 h-20"
+            />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  return (
+    <ScrollView
+      className="flex-1 bg-black"
+      showsVerticalScrollIndicator={false}
+      scrollEnabled={true}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
+      <SafeAreaView className="flex-1">
+        <View className="px-6 pt-8 pb-6 border-b border-zinc-800">
+          <View className="flex-row items-center flex-1 gap-3 border-b mb-3">
+            <MaterialCommunityIcons name="shimmer" size={30} color="white" />
+            <Text className="text-3xl font-bold text-zinc-100 mb-2">
+              Shimmer
+            </Text>
+          </View>
+          <Text className="text-zinc-400 mb-4">
+            Beautiful loading states with dark theme
+          </Text>
+          <View className="flex-row items-center">
+            <View className="w-3 h-3 rounded-full mr-2 bg-blue-500" />
+            <Text className="text-zinc-400 text-sm">Loading state active</Text>
+          </View>
+        </View>
+
+        <View className="px-6 pt-6">
+          <ProfileCard />
+          <StatsCard />
+          <ListItems />
+          <ImageGallery />
+          <ActionButtons />
+
+          <View className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6 items-center">
+            <Feather name="zap" size={24} color="#71717a" />
+            <Text className="text-zinc-400 text-center mt-2">
+              Fast shimmer effects with 500ms duration
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default ShimmerDemo;
+```

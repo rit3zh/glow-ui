@@ -1,0 +1,630 @@
+---
+title: Segemented Control
+description: Segemented Control component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add segemented-control
+```
+
+## 🔘 `SegmentedControlItemProps`
+
+<TypeTable
+  type={{
+    value: {
+      description: "🆔 Unique string value that identifies this segment.",
+      type: "string",
+      required: true,
+    },
+    children: {
+      description: "📦 Content to display inside the segment.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    className: {
+      description: "🎨 Optional class name for styling.",
+      type: "string",
+    },
+  }}
+/>
+
+---
+
+## 🧩 `SegmentedControlRootProps`
+
+<TypeTable
+  type={{
+    defaultValue: {
+      description: "🔰 Default selected value (uncontrolled).",
+      type: "string",
+    },
+    value: {
+      description: "📌 Controlled selected value.",
+      type: "string",
+    },
+    onValueChange: {
+      description: "🔄 Callback when the selected value changes.",
+      type: "(value: string) => void",
+    },
+    children: {
+      description: "📦 Segmented control items to render.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    theme: {
+      description: "🌗 Visual theme of the segmented control.",
+      type: '"dark" | "light"',
+    },
+    className: {
+      description: "🎨 Optional class name for custom styling.",
+      type: "string",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="SegmentedControlItem.tsx">
+
+```tsx
+import { useContext, useEffect } from "react";
+import type { SegmentedControlItemProps } from "../SegmentedControl.types";
+import { SegmentedControlContext } from "../context/SegmentedControlContext";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { Pressable, StyleSheet, Text } from "react-native";
+
+export const SegmentedControlItem: React.FC<SegmentedControlItemProps> = ({
+  value,
+  children,
+  className,
+}: SegmentedControlItemProps) => {
+  const context = useContext(SegmentedControlContext);
+
+  if (!context) {
+    throw new Error(
+      "SegmentedControlItem must be used within a SegmentedControl",
+    );
+  }
+
+  const { selectedValue, onValueChange, itemWidth } = context;
+  const isSelected = selectedValue === value;
+  const scale = useSharedValue(1);
+  useEffect(() => {
+    scale.value = withTiming(isSelected ? 1.1 : 1, {
+      duration: 200,
+    });
+  }, [isSelected]);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+  return (
+    <Pressable
+      onPress={() => onValueChange(value)}
+      style={[
+        {
+          width: itemWidth,
+        },
+        styles.itemContainer,
+      ]}
+    >
+      {typeof children === "string" ? (
+        <Text
+          style={[
+            styles.label,
+            context.theme === "dark" ? styles.darkLabel : styles.lightLabel,
+            isSelected && styles.selectedLabel,
+          ]}
+        >
+          {children}
+        </Text>
+      ) : (
+        <Animated.View style={[animatedStyle]}>{children}</Animated.View>
+      )}
+    </Pressable>
+  );
+};
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    height: 40,
+    borderRadius: 6,
+    padding: 2,
+    position: "relative",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  indicator: {
+    position: "absolute",
+    borderRadius: 4,
+    height: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  itemContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    height: "100%",
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  darkLabel: {
+    color: "#a1a1aa",
+  },
+  lightLabel: {
+    color: "#71717a",
+  },
+  selectedLabel: {
+    color: "#ffffff",
+    fontWeight: "600",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="SegmentedControlRoot.tsx">
+
+```tsx
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import type { SegmentedControlRootProps } from "../SegmentedControl.types";
+import { Children, isValidElement, useEffect, useState } from "react";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { SegmentedControlContext } from "../context/SegmentedControlContext";
+import { SegmentedControlItem } from "./Item";
+
+export const SegmentedControlRoot = ({
+  defaultValue,
+  value: controlledValue,
+  onValueChange,
+  children,
+  theme = "dark",
+  className,
+}: SegmentedControlRootProps) => {
+  const { width } = useWindowDimensions();
+  const internalPadding = 4;
+  const segmentedControlWidth = width - 40;
+
+  const items = Children.toArray(children).filter(
+    (child) => isValidElement(child) && child.type === SegmentedControlItem,
+  );
+
+  const itemWidth = (segmentedControlWidth - internalPadding) / items.length;
+
+  const [selectedValue, setSelectedValue] = useState(
+    controlledValue || defaultValue || (items[0] as any)?.props?.value || "",
+  );
+
+  useEffect(() => {
+    if (controlledValue !== undefined) {
+      setSelectedValue(controlledValue);
+    }
+  }, [controlledValue]);
+
+  const handleValueChange = (value: string) => {
+    if (controlledValue === undefined) {
+      setSelectedValue(value);
+    }
+    onValueChange?.(value);
+  };
+
+  const selectedIndex = items.findIndex(
+    (child) => isValidElement(child) && child.props.value === selectedValue,
+  );
+
+  const translateX = useSharedValue(
+    selectedIndex >= 0 ? selectedIndex * itemWidth + internalPadding / 2 : 0,
+  );
+
+  useEffect(() => {
+    if (selectedIndex >= 0) {
+      translateX.value = withTiming(
+        selectedIndex * itemWidth + internalPadding / 2,
+        { duration: 350 },
+      );
+    }
+  }, [selectedIndex, itemWidth, translateX]);
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
+  const backgroundColor = theme === "dark" ? "#09090b" : "#f8f9fa";
+  const indicatorColor = theme === "dark" ? "#27272a" : "#e4e4e7";
+
+  return (
+    <SegmentedControlContext.Provider
+      value={{
+        selectedValue,
+        onValueChange: handleValueChange,
+        itemWidth,
+        theme,
+      }}
+    >
+      <View
+        style={[
+          styles.container,
+          {
+            width: segmentedControlWidth,
+            backgroundColor,
+          },
+        ]}
+      >
+        <Animated.View
+          style={[
+            {
+              width: itemWidth - 4,
+            },
+            styles.indicator,
+            indicatorStyle,
+            { backgroundColor: indicatorColor },
+          ]}
+        />
+        {children}
+      </View>
+    </SegmentedControlContext.Provider>
+  );
+};
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    height: 40,
+    borderRadius: 10,
+    padding: 2,
+    position: "relative",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  indicator: {
+    position: "absolute",
+    borderRadius: 10,
+    height: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  itemContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    height: "100%",
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  darkLabel: {
+    color: "#a1a1aa",
+  },
+  lightLabel: {
+    color: "#71717a",
+  },
+  selectedLabel: {
+    color: "#ffffff",
+    fontWeight: "600",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title='SegmentedControl.types.ts'>
+
+```ts
+export type SegmentedControlItemProps = {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export type SegmentedControlRootProps = {
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  children: React.ReactNode;
+  theme?: "dark" | "light";
+  className?: string;
+};
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { SegmentedControl } from "@/components";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const SegmentedControlDemo: React.FC = (): React.ReactNode => {
+  const [selectedValue, setSelectedValue] = useState("analytics");
+
+  return (
+    <ScrollView
+      className="flex-1 bg-zinc-950"
+      contentContainerStyle={{ flexGrow: 1 }}
+      contentInsetAdjustmentBehavior="always"
+      scrollEnabled
+    >
+      <SafeAreaView className="flex-1 px-6 py-12">
+        <View className="mb-12 mt-12 ml-5">
+          <Text className="text-3xl font-bold text-white mb-2">Dashboard</Text>
+          <Text className="text-zinc-400 text-base">
+            Monitor your application performance and analytics
+          </Text>
+        </View>
+
+        <View className="mb-8 ml-5">
+          <SegmentedControl.Root
+            value={selectedValue}
+            onValueChange={setSelectedValue}
+            className="bg-zinc-900 border border-zinc-800 rounded-lg p-1 shadow-2xl"
+          >
+            <SegmentedControl.Item
+              value="analytics"
+              className={`flex-1 py-3 px-4 rounded-md transition-all duration-200 ${
+                selectedValue === "analytics"
+                  ? "bg-zinc-700 shadow-lg"
+                  : "bg-transparent"
+              }`}
+            >
+              <View className="flex-row items-center justify-center space-x-2">
+                <MaterialCommunityIcons
+                  name="chart-line"
+                  size={20}
+                  color={selectedValue === "analytics" ? "#ffffff" : "#a1a1aa"}
+                  className="mr-2"
+                />
+                <Text
+                  className={`text-center font-medium transition-colors duration-200 ${
+                    selectedValue === "analytics"
+                      ? "text-white"
+                      : "text-zinc-400"
+                  }`}
+                >
+                  Analytics
+                </Text>
+              </View>
+            </SegmentedControl.Item>
+
+            <SegmentedControl.Item
+              value="reports"
+              className={`flex-1 py-3 px-4 rounded-md transition-all duration-200 ${
+                selectedValue === "reports"
+                  ? "bg-zinc-700 shadow-lg"
+                  : "bg-transparent"
+              }`}
+            >
+              <View className="flex-row items-center justify-center space-x-2">
+                <MaterialCommunityIcons
+                  name="file-document"
+                  size={20}
+                  color={selectedValue === "reports" ? "#ffffff" : "#a1a1aa"}
+                  className="mr-2"
+                />
+                <Text
+                  className={`text-center font-medium transition-colors duration-200 ${
+                    selectedValue === "reports" ? "text-white" : "text-zinc-400"
+                  }`}
+                >
+                  Reports
+                </Text>
+              </View>
+            </SegmentedControl.Item>
+
+            <SegmentedControl.Item
+              value="insights"
+              className={`flex-1 py-3 px-4 rounded-md transition-all duration-200 ${
+                selectedValue === "insights"
+                  ? "bg-zinc-700 shadow-lg"
+                  : "bg-transparent"
+              }`}
+            >
+              <View className="flex-row items-center justify-center space-x-2">
+                <MaterialCommunityIcons
+                  name="lightbulb"
+                  size={20}
+                  color={selectedValue === "insights" ? "#ffffff" : "#a1a1aa"}
+                  className="mr-2"
+                />
+                <Text
+                  className={`text-center font-medium transition-colors duration-200 ${
+                    selectedValue === "insights"
+                      ? "text-white"
+                      : "text-zinc-400"
+                  }`}
+                >
+                  Insights
+                </Text>
+              </View>
+            </SegmentedControl.Item>
+          </SegmentedControl.Root>
+        </View>
+
+        <View className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-xl">
+          <View className="mb-4">
+            <View className="flex-row items-center justify-between mb-2">
+              <Text className="text-xl font-semibold text-white capitalize">
+                {selectedValue}
+              </Text>
+              <View className="bg-emerald-500/20 px-3 py-1 rounded-full">
+                <Text className="text-emerald-400 text-xs font-medium">
+                  Live
+                </Text>
+              </View>
+            </View>
+            <Text className="text-zinc-400 leading-5">
+              {selectedValue === "analytics" &&
+                "Real-time performance metrics and user engagement data"}
+              {selectedValue === "reports" &&
+                "Comprehensive reports and detailed breakdowns"}
+              {selectedValue === "insights" &&
+                "AI-powered insights and recommendations"}
+            </Text>
+          </View>
+
+          <View className="space-y-4">
+            <View className="bg-zinc-800 rounded-lg p-4 border border-zinc-700">
+              <View className="flex-row items-center justify-between mb-2">
+                <Text className="text-white font-medium">
+                  {selectedValue === "analytics" && "Active Users"}
+                  {selectedValue === "reports" && "Monthly Report"}
+                  {selectedValue === "insights" && "Key Insight"}
+                </Text>
+                <Text className="text-zinc-400 text-sm">
+                  {selectedValue === "analytics" && "Last 24h"}
+                  {selectedValue === "reports" && "December 2024"}
+                  {selectedValue === "insights" && "Q1 2025"}
+                </Text>
+              </View>
+              <Text className="text-2xl font-bold text-white mb-1">
+                {selectedValue === "analytics" && "1,247"}
+                {selectedValue === "reports" && "89%"}
+                {selectedValue === "insights" && "+23%"}
+              </Text>
+              <Text className="text-zinc-400 text-sm">
+                {selectedValue === "analytics" && "+12% from yesterday"}
+                {selectedValue === "reports" && "Performance increase"}
+                {selectedValue === "insights" && "Conversion improvement"}
+              </Text>
+            </View>
+
+            <View className="bg-zinc-800 rounded-lg p-4 border border-zinc-700 mt-5">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-white font-medium">
+                  {selectedValue === "analytics" && "Bounce Rate"}
+                  {selectedValue === "reports" && "Export Data"}
+                  {selectedValue === "insights" && "Next Action"}
+                </Text>
+                <View
+                  className={`px-2 py-1 rounded text-xs ${
+                    selectedValue === "analytics"
+                      ? "bg-red-500/20 text-red-400"
+                      : selectedValue === "reports"
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-yellow-500/20 text-yellow-400"
+                  }`}
+                >
+                  <Text
+                    className={`text-xs font-medium ${
+                      selectedValue === "analytics"
+                        ? "text-red-400"
+                        : selectedValue === "reports"
+                          ? "text-blue-400"
+                          : "text-yellow-400"
+                    }`}
+                  >
+                    {selectedValue === "analytics" && "High"}
+                    {selectedValue === "reports" && "Ready"}
+                    {selectedValue === "insights" && "Pending"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View className="mt-8 pt-6 border-t border-zinc-800">
+          <Text className="text-zinc-500 text-center text-sm">
+            Data updates every 5 minutes
+          </Text>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default SegmentedControlDemo;
+```

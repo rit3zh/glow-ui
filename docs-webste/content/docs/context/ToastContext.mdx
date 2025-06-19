@@ -1,0 +1,64 @@
+---
+title: 🍞 ToastContext
+description: Context and value shape for managing toasts in React Native Glow UI
+---
+
+## ⚡️ What it is
+
+- A React context for managing toast notifications
+- Provides methods to show, update, dismiss, and dismiss all toasts
+- Holds the current list of toasts and their state
+
+---
+
+## 📝 Context Shape
+
+```ts
+export interface ToastContextValue {
+  toasts: Toast[];
+  show: (content: React.ReactNode | string, options?: ToastOptions) => string;
+  update: (
+    id: string,
+    content: React.ReactNode | string,
+    options?: ToastOptions,
+  ) => void;
+  dismiss: (id: string) => void;
+  dismissAll: () => void;
+}
+```
+
+---
+
+## 🚀 Usage Example
+
+```tsx
+import { useContext } from "react";
+import { ToastContext } from "src/components/molecules/Toast/ToastProvider";
+import { Button } from "react-native";
+
+function MyComponent() {
+  const toast = useContext(ToastContext);
+  return (
+    <Button
+      onPress={() => toast.show("Hello, world!", { type: "success" })}
+      title="Show Toast"
+    />
+  );
+}
+```
+
+---
+
+## 🧩 Toast Options
+
+- `duration` (number): How long the toast is visible (ms)
+- `type` ("default" | "success" | "error" | "warning" | "info"): Semantic type
+- `position` ("top" | "bottom"): Where the toast appears
+- `onClose` (function): Called when the toast closes
+- `action` (object): Optional action button with `label` and `onPress`
+
+---
+
+## 💡 Tip
+
+Use the ToastContext to show, update, or dismiss toasts from anywhere in your app!

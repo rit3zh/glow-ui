@@ -1,0 +1,1023 @@
+---
+title: Stepper
+description: Stepper component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add stepper
+```
+
+## 🔢 `StepperProps`
+
+<TypeTable
+  type={{
+    children: {
+      description:
+        "📦 The content (usually buttons and value display) within the stepper.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    style: {
+      description: "🎨 Style applied to the outer stepper component.",
+      type: "ViewStyle",
+    },
+    containerStyle: {
+      description:
+        "📦 Style for the inner container wrapping the stepper content.",
+      type: "ViewStyle",
+    },
+    defaultValue: {
+      description: "🔢 Default numeric value of the stepper.",
+      type: "number",
+    },
+    value: {
+      description: "📍 Current value (from context).",
+      type: "number",
+    },
+    onChange: {
+      description: "🔄 Callback when the stepper value changes.",
+      type: "(newValue: number) => void",
+    },
+    min: {
+      description: "📉 Minimum allowed value.",
+      type: "number",
+    },
+    max: {
+      description: "📈 Maximum allowed value.",
+      type: "number",
+    },
+    step: {
+      description: "➕ Increment/decrement step size.",
+      type: "number",
+    },
+    disabled: {
+      description: "🚫 Disable all interactions.",
+      type: "boolean",
+    },
+    variant: {
+      description: "🌗 Visual style variant of the stepper.",
+      type: '"light" | "dark"',
+    },
+  }}
+/>
+
+---
+
+## 🧠 `StepperContextProps`
+
+<TypeTable
+  type={{
+    value: {
+      description: "🔢 Current value held by the stepper.",
+      type: "number",
+      required: true,
+    },
+    onChange: {
+      description:
+        "🎯 Called with the updated value on increment or decrement.",
+      type: "(newValue: number) => void",
+      required: true,
+    },
+    min: {
+      description: "📉 Minimum value.",
+      type: "number",
+    },
+    max: {
+      description: "📈 Maximum value.",
+      type: "number",
+    },
+    step: {
+      description: "🔁 Step interval.",
+      type: "number",
+    },
+    disabled: {
+      description: "🚫 If true, the stepper is disabled.",
+      type: "boolean",
+    },
+    variant: {
+      description: "🎨 Visual theme.",
+      type: '"light" | "dark"',
+    },
+  }}
+/>
+
+---
+
+## 🎛️ `StepperButtonProps`
+
+<TypeTable
+  type={{
+    type: {
+      description: "↕️ Whether this button increments or decrements.",
+      type: '"increment" | "decrement"',
+      required: true,
+    },
+    style: {
+      description: "📦 Style for the button container.",
+      type: "ViewStyle",
+    },
+    iconStyle: {
+      description: "🎨 Style for the icon inside the button.",
+      type: "TextStyle",
+    },
+    icon: {
+      description: "🔘 Optional custom icon to show in the button.",
+      type: "React.ReactNode",
+    },
+  }}
+/>
+
+---
+
+## 📄 `StepperContentProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📦 Content inside the stepper content wrapper.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    style: {
+      description: "🧱 Optional style for the wrapper view.",
+      type: "ViewStyle",
+    },
+  }}
+/>
+
+---
+
+## ✨ `StepperValueProps`
+
+<TypeTable
+  type={{
+    style: {
+      description: "🖋️ Style for the value text.",
+      type: "TextStyle",
+    },
+    animationConfig: {
+      description: "🎞️ Config for animating the value.",
+      type: "{ duration?: number; reduceMotion?: ReduceMotion; easing?: EasingFunction | EasingFunctionFactory; }",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Stepper.tsx">
+
+```tsx
+import React, { useMemo } from "react";
+import { StyleSheet } from "react-native";
+import { StepperContext } from "./context/StepperContext";
+
+import Animated, { LinearTransition } from "react-native-reanimated";
+import type { StepperProps } from "./Stepper.types";
+
+export const Stepper: React.FC<StepperProps> = ({
+  children,
+  value: controlledValue,
+  onChange: controlledOnChange,
+  defaultValue = 0,
+  min = 0,
+  max = Infinity,
+  step = 1,
+  disabled = false,
+  variant = "light",
+  style,
+  containerStyle,
+}: StepperProps): React.ReactNode => {
+  const [internalValue, setInternalValue] = React.useState(defaultValue);
+
+  const isControlled = controlledValue !== undefined;
+  const value = isControlled ? controlledValue : internalValue;
+
+  const handleChange = (newValue: number) => {
+    const clampedValue = Math.min(Math.max(newValue, min), max);
+
+    if (!isControlled) {
+      setInternalValue(clampedValue);
+    }
+
+    controlledOnChange?.(clampedValue);
+  };
+
+  const contextValue = useMemo(
+    () => ({
+      value,
+      onChange: handleChange,
+      min,
+      max,
+      step,
+      disabled,
+      variant,
+    }),
+    [value, handleChange, min, max, step, disabled, variant],
+  );
+
+  return (
+    <StepperContext.Provider value={contextValue}>
+      <Animated.View
+        style={[styles.container, containerStyle]}
+        layout={LinearTransition.springify().damping(14).stiffness(100)}
+      >
+        <Animated.View
+          layout={LinearTransition.springify().damping(14).stiffness(100)}
+          style={[styles.stepper, style, variant === "dark" && styles.darkMode]}
+        >
+          {children}
+        </Animated.View>
+      </Animated.View>
+    </StepperContext.Provider>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    overflow: "hidden",
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  darkMode: {
+    backgroundColor: "#121212",
+    borderColor: "rgba(255, 255, 255, 0.1)",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="StepperButton.tsx">
+
+```tsx
+import * as React from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  interpolateColor,
+} from "react-native-reanimated";
+import { useStepperContext } from "../../context/StepperContext";
+
+import type { StepperButtonProps } from "./types";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+export const StepperButton: React.FC<StepperButtonProps> = ({
+  type,
+  style,
+  iconStyle,
+  icon,
+}: StepperButtonProps): React.ReactNode => {
+  const { value, onChange, min, max, step, disabled, variant } =
+    useStepperContext();
+
+  const pressed = useSharedValue(0);
+
+  const canDecrement = value > (min || 0);
+  const canIncrement = value < (max || Infinity);
+
+  const isDisabled =
+    disabled ||
+    (type === "decrement" && !canDecrement) ||
+    (type === "increment" && !canIncrement);
+
+  const handlePress = () => {
+    if (isDisabled) return;
+
+    const newValue =
+      type === "increment" ? value + (step || 1) : value - (step || 1);
+
+    onChange(newValue);
+  };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      pressed.value,
+      [0, 1],
+      variant === "light"
+        ? ["transparent", "rgba(0, 0, 0, 0.05)"]
+        : ["transparent", "rgba(255, 255, 255, 0.1)"],
+    );
+
+    return {
+      backgroundColor,
+      opacity: isDisabled ? 0.4 : 1,
+    };
+  });
+
+  return (
+    <AnimatedPressable
+      style={[styles.button, animatedStyle, style]}
+      onPress={handlePress}
+      disabled={isDisabled}
+      onPressIn={() => {
+        pressed.value = withTiming(1, { duration: 150 });
+      }}
+      onPressOut={() => {
+        pressed.value = withTiming(0, { duration: 150 });
+      }}
+    >
+      {icon || (
+        <Text
+          style={[
+            styles.icon,
+            variant === "dark" && styles.darkIcon,
+            iconStyle,
+          ]}
+        >
+          {type === "increment" ? "+" : "−"}
+        </Text>
+      )}
+    </AnimatedPressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  icon: {
+    fontSize: 18,
+    color: "#000",
+    fontWeight: "500",
+  },
+  darkIcon: {
+    color: "#fff",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="StepperContent.tsx">
+
+```tsx
+import * as React from "react";
+import { View, StyleSheet } from "react-native";
+import type { StepperContentProps } from "./types";
+
+export const StepperContent: React.FC<StepperContentProps> = ({
+  children,
+  style,
+}: StepperContentProps): React.ReactNode => {
+  return <View style={[styles.content, style]}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+  content: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="StepperValue.tsx">
+
+```tsx
+import * as React from "react";
+import { StyleSheet } from "react-native";
+import { Easing, ReduceMotion } from "react-native-reanimated";
+import { useStepperContext } from "../../context/StepperContext";
+import type { StepperValueProps } from "./types";
+import { AnimatedRollingNumber } from "react-native-animated-rolling-numbers";
+
+export const StepperValue: React.FC<StepperValueProps> = ({
+  style,
+
+  animationConfig = {
+    duration: 500,
+    reduceMotion: ReduceMotion.Never,
+    easing: Easing.bounce,
+  },
+}: StepperValueProps): React.ReactNode => {
+  const { value, variant } = useStepperContext();
+
+  return (
+    <AnimatedRollingNumber
+      value={Number(value)}
+      useGrouping={false}
+      enableCompactNotation={false}
+      compactToFixed={2}
+      textStyle={[styles.value, style, variant === "dark" && styles.darkValue]}
+      spinningAnimationConfig={animationConfig}
+    />
+  );
+};
+
+const styles = StyleSheet.create({
+  value: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#000",
+
+    textAlign: "center",
+  },
+  darkValue: {
+    color: "#fff",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title='Stepper.types.ts'>
+
+```ts
+import { EasingFunctionFactory, ReduceMotion } from "react-native-reanimated";
+import type {
+  TextStyle,
+  ViewStyle,
+  EasingFunction,
+  TextStyle,
+} from "react-native";
+
+export interface StepperValueProps {
+  style?: TextStyle;
+
+  animationConfig?: {
+    duration?: number;
+    reduceMotion?: ReduceMotion;
+    easing?: EasingFunction | EasingFunctionFactory;
+  };
+}
+
+export interface StepperContentProps {
+  children: React.ReactNode;
+  style?: ViewStyle;
+}
+
+export interface StepperButtonProps {
+  type: "increment" | "decrement";
+  style?: ViewStyle;
+  iconStyle?: TextStyle;
+  icon?: React.ReactNode;
+}
+
+export interface StepperProps extends Partial<StepperContextProps> {
+  children: React.ReactNode;
+  style?: ViewStyle;
+  containerStyle?: ViewStyle;
+  defaultValue?: number;
+}
+
+export interface StepperContextProps {
+  value: number;
+  onChange: (newValue: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean;
+  variant?: "light" | "dark";
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Stepper,
+  StepperButton,
+  StepperContent,
+  StepperValue,
+} from "@/components";
+
+const StepperDemo: React.FC = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [temperature, setTemperature] = useState(20);
+  const [volume, setVolume] = useState(50);
+  const [rating, setRating] = useState(5);
+
+  return (
+    <ScrollView
+      className="flex-1 bg-background"
+      scrollEnabled={true}
+      contentContainerStyle={{ flexGrow: 1 }}
+      style={{ backgroundColor: "#0a0a0a" }}
+      contentInsetAdjustmentBehavior="always"
+    >
+      <SafeAreaView className="flex-1">
+        <View className="flex-1 px-6 py-8">
+          <View className="mb-12">
+            <Text
+              className="text-4xl font-bold text-foreground mb-2"
+              style={{ color: "#fafafa", fontSize: 32, fontWeight: "700" }}
+            >
+              Stepper Components
+            </Text>
+            <Text
+              className="text-muted-foreground text-lg"
+              style={{ color: "#a1a1aa", fontSize: 16 }}
+            >
+              Beautiful, accessible stepper components built with shadcn/ui
+              design principles.
+            </Text>
+          </View>
+
+          <View className="space-y-12" style={{ gap: 48 }}>
+            <View className="space-y-4" style={{ gap: 16 }}>
+              <View>
+                <Text
+                  className="text-xl font-semibold text-foreground mb-2"
+                  style={{ color: "#fafafa", fontSize: 20, fontWeight: "600" }}
+                >
+                  Quantity
+                </Text>
+                <Text
+                  className="text-muted-foreground"
+                  style={{ color: "#71717a", fontSize: 14 }}
+                >
+                  Select the number of items
+                </Text>
+              </View>
+
+              <Stepper
+                containerStyle={{
+                  backgroundColor: "#09090b",
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  borderColor: "#27272a",
+                  padding: 4,
+                }}
+                defaultValue={1}
+                disabled={false}
+                max={99}
+                min={1}
+                onChange={setQuantity}
+                step={1}
+                value={quantity}
+                variant="dark"
+              >
+                <StepperContent
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0,
+                  }}
+                >
+                  <StepperButton
+                    type="decrement"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+
+                  <StepperValue
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "600",
+                      color: "#fafafa",
+                      minWidth: 60,
+                      textAlign: "center",
+                      lineHeight: 44,
+                    }}
+                  />
+
+                  <StepperButton
+                    type="increment"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </StepperContent>
+              </Stepper>
+            </View>
+
+            <View className="space-y-4" style={{ gap: 16 }}>
+              <View>
+                <Text
+                  className="text-xl font-semibold text-foreground mb-2"
+                  style={{ color: "#fafafa", fontSize: 20, fontWeight: "600" }}
+                >
+                  Temperature
+                </Text>
+                <Text
+                  className="text-muted-foreground"
+                  style={{ color: "#71717a", fontSize: 14 }}
+                >
+                  Adjust the temperature in celsius
+                </Text>
+              </View>
+
+              <Stepper
+                containerStyle={{
+                  backgroundColor: "#09090b",
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  borderColor: "#27272a",
+                  padding: 6,
+                }}
+                defaultValue={20}
+                disabled={false}
+                max={35}
+                min={10}
+                onChange={setTemperature}
+                step={1}
+                value={temperature}
+                variant="dark"
+              >
+                <StepperContent
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0,
+                  }}
+                >
+                  <StepperButton
+                    type="decrement"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: 80,
+                      height: 40,
+                    }}
+                  >
+                    <StepperValue
+                      style={{
+                        fontSize: 24,
+                        fontWeight: "700",
+                        color: "#fafafa",
+                        textAlign: "center",
+                        lineHeight: 28,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "#71717a",
+                        marginTop: -2,
+                      }}
+                    >
+                      °C
+                    </Text>
+                  </View>
+
+                  <StepperButton
+                    type="increment"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </StepperContent>
+              </Stepper>
+            </View>
+
+            <View className="space-y-4" style={{ gap: 16 }}>
+              <View>
+                <Text
+                  className="text-xl font-semibold text-foreground mb-2"
+                  style={{ color: "#fafafa", fontSize: 20, fontWeight: "600" }}
+                >
+                  Volume
+                </Text>
+                <Text
+                  className="text-muted-foreground"
+                  style={{ color: "#71717a", fontSize: 14 }}
+                >
+                  Control audio volume level
+                </Text>
+              </View>
+
+              <Stepper
+                containerStyle={{
+                  backgroundColor: "#18181b",
+                  borderRadius: 16,
+                  borderWidth: 1,
+                  borderColor: "#3f3f46",
+                  padding: 8,
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 8,
+                }}
+                defaultValue={50}
+                disabled={false}
+                max={100}
+                min={0}
+                onChange={setVolume}
+                step={5}
+                value={volume}
+                variant="dark"
+              >
+                <StepperContent
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0,
+                  }}
+                >
+                  <StepperButton
+                    type="decrement"
+                    style={{
+                      width: 48,
+                      height: 48,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: 90,
+                      height: 48,
+                    }}
+                  >
+                    <StepperValue
+                      style={{
+                        fontSize: 28,
+                        fontWeight: "800",
+                        color: "#fafafa",
+                        textAlign: "center",
+                        lineHeight: 32,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "#71717a",
+                        fontWeight: "500",
+                        marginTop: -4,
+                      }}
+                    >
+                      Volume
+                    </Text>
+                  </View>
+
+                  <StepperButton
+                    type="increment"
+                    style={{
+                      width: 48,
+                      height: 48,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </StepperContent>
+              </Stepper>
+            </View>
+
+            <View className="space-y-4" style={{ gap: 16 }}>
+              <View>
+                <Text
+                  className="text-xl font-semibold text-foreground mb-2"
+                  style={{ color: "#fafafa", fontSize: 20, fontWeight: "600" }}
+                >
+                  Rating
+                </Text>
+                <Text
+                  className="text-muted-foreground"
+                  style={{ color: "#71717a", fontSize: 14 }}
+                >
+                  Rate from 1 to 10
+                </Text>
+              </View>
+
+              <Stepper
+                containerStyle={{
+                  backgroundColor: "#0f0f0f",
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: "#27272a",
+                  padding: 10,
+                }}
+                defaultValue={5}
+                disabled={false}
+                max={10}
+                min={1}
+                onChange={setRating}
+                step={1}
+                value={rating}
+                variant="dark"
+              >
+                <StepperContent
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0,
+                  }}
+                >
+                  <StepperButton
+                    type="decrement"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                  <StepperValue
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: "#fafafa",
+                      minWidth: 40,
+                      textAlign: "center",
+                      lineHeight: 36,
+                    }}
+                  />
+
+                  <StepperButton
+                    type="increment"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </StepperContent>
+              </Stepper>
+            </View>
+
+            <View
+              style={{
+                backgroundColor: "#18181b",
+                borderRadius: 12,
+                borderWidth: 1,
+                borderColor: "#27272a",
+                padding: 20,
+                marginTop: 32,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "600",
+                  color: "#fafafa",
+                  marginBottom: 16,
+                }}
+              >
+                Current Values
+              </Text>
+
+              <View style={{ gap: 8 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "#a1a1aa" }}>Quantity:</Text>
+                  <Text style={{ color: "#fafafa", fontWeight: "500" }}>
+                    {quantity}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "#a1a1aa" }}>Temperature:</Text>
+                  <Text style={{ color: "#fafafa", fontWeight: "500" }}>
+                    {temperature}°C
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "#a1a1aa" }}>Volume:</Text>
+                  <Text style={{ color: "#fafafa", fontWeight: "500" }}>
+                    {volume}%
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "#a1a1aa" }}>Rating:</Text>
+                  <Text style={{ color: "#fafafa", fontWeight: "500" }}>
+                    {rating}/10
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default StepperDemo;
+```

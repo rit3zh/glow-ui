@@ -1,0 +1,123 @@
+---
+title: Privacy Notice Text
+description: Privacy Notice Text component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add privacy-notice-text
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### 💻 Components
+#### PrivacyNoticeLink.tsx
+
+```tsx
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import React from "react";
+import type { IPrivacyNoticeLinkProps } from "./PrivacyNoticeLink.type";
+
+const DEFAULT_TINT = "#007AFF";
+const DEFAULT_SIZE = 14;
+
+export const PrivacyNoticeLink: React.FC<IPrivacyNoticeLinkProps> &
+  React.FunctionComponent<IPrivacyNoticeLinkProps> = ({
+  children,
+  ...props
+}: IPrivacyNoticeLinkProps): React.ReactNode => {
+  return (
+    <View style={[styles.container, props.style]}>
+      <TouchableOpacity onPress={props.onPress}>
+        <Text
+          style={[
+            styles.text,
+            {
+              color: props.tint ?? DEFAULT_TINT,
+              fontSize: props.size ?? DEFAULT_SIZE,
+            },
+          ]}
+        >
+          {children}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {},
+  text: {
+    color: "#007AFF",
+    fontSize: 14,
+  },
+});
+```
+
+### 📁 Other
+#### PrivacyNoticeLink.type.ts
+
+```ts
+import * as React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+
+export interface IPrivacyNoticeLinkProps {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+
+  onPress?: () => void;
+  size?: number | 14;
+  tint?: string;
+}
+```

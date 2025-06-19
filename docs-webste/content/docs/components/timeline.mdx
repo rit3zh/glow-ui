@@ -1,0 +1,1329 @@
+---
+title: Timeline
+description: Timeline component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add timeline
+```
+
+## 🕒 `TimelineItem`
+
+<TypeTable
+  type={{
+    id: {
+      description: "🆔 Unique identifier for the timeline item.",
+      type: "string | number",
+      required: true,
+    },
+    title: {
+      description: "📌 Main title for the timeline item.",
+      type: "string",
+      required: true,
+    },
+    description: {
+      description: "📝 Additional description of the item.",
+      type: "string",
+    },
+    timestamp: {
+      description: "⏰ Timestamp associated with the item.",
+      type: "string",
+    },
+    icon: {
+      description: "⭐ Icon name from `Feather` icon set.",
+      type: "keyof typeof Feather.glyphMap",
+    },
+    status: {
+      description: "📊 Status of the item in the timeline.",
+      type: '"complete" | "current" | "upcoming"',
+    },
+    meta: {
+      description: "🔖 Optional metadata string.",
+      type: "string",
+    },
+    children: {
+      description: "📦 Custom content inside the timeline item.",
+      type: "React.ReactNode",
+    },
+    childrenContainer: {
+      description: "🎨 Style applied to the container of `children`.",
+      type: "StyleProp<ViewStyle>",
+    },
+  }}
+/>
+
+---
+
+## 🧭 `TimelineProps`
+
+<TypeTable
+  type={{
+    items: {
+      description: "📋 Array of timeline items to render.",
+      type: "TimelineItem[]",
+      required: true,
+    },
+    activeColor: {
+      description: "🎨 Color for active (current/complete) items.",
+      type: "string",
+    },
+    inactiveColor: {
+      description: "🎨 Color for inactive (upcoming) items.",
+      type: "string",
+    },
+    animated: {
+      description: "🎞️ Enable animations for transitions.",
+      type: "boolean",
+    },
+    animationType: {
+      description: "🌀 Type of animation used when items appear.",
+      type: '"bounce" | "spring" | "rotate" | "fade" | "scale"',
+    },
+    onItemPress: {
+      description: "🖱️ Callback when a timeline item is pressed.",
+      type: "(item: TimelineItem) => void",
+    },
+    containerStyle: {
+      description: "📦 Style for the main timeline container.",
+      type: "ViewStyle",
+    },
+    metaContainerStyle: {
+      description: "🧱 Style for the metadata section.",
+      type: "StyleProp<ViewStyle>",
+    },
+    titleStyle: {
+      description: "🖋️ Style for the item title text.",
+      type: "TextStyle",
+    },
+    descriptionStyle: {
+      description: "🖋️ Style for the item description.",
+      type: "TextStyle",
+    },
+    timestampStyle: {
+      description: "🕓 Style for the timestamp text.",
+      type: "TextStyle",
+    },
+    lineWidth: {
+      description: "📏 Thickness of the timeline line.",
+      type: "number",
+    },
+    iconSize: {
+      description: "🔘 Size of the icon displayed in each item.",
+      type: "number",
+    },
+    metaTextStyle: {
+      description: "🖋️ Style for the metadata text.",
+      type: "StyleProp<TextStyle>",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Timeline.tsx">
+
+```tsx
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+  withSequence,
+  FadeInDown,
+  LinearTransition,
+  interpolateColor,
+} from "react-native-reanimated";
+import { Feather } from "@expo/vector-icons";
+import type { TimelineProps } from "./TimelineView.types";
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedFeather = Animated.createAnimatedComponent(Feather);
+
+export const Timeline: React.FC<TimelineProps> &
+  React.FunctionComponent<TimelineProps> = ({
+  items = [],
+  activeColor = "#6366f1",
+  inactiveColor = "#cbd5e1",
+  animated = true,
+  animationType = "bounce",
+  onItemPress,
+  containerStyle,
+  titleStyle,
+  descriptionStyle,
+  timestampStyle,
+  lineWidth = 2,
+  iconSize = 20,
+  metaContainerStyle,
+  metaTextStyle,
+}: TimelineProps): React.ReactNode & React.JSX.Element => {
+  const statusRefs = React.useRef<Record<string | number, string>>({});
+
+  useEffect(() => {
+    items.forEach((item) => {
+      statusRefs.current[item.id] = item.status || "upcoming";
+    });
+
+    return () => {
+      statusRefs.current = {};
+    };
+  }, []);
+
+  if (!items || items.length === 0) {
+    return null as unknown as React.ReactNode & React.JSX.Element;
+  }
+
+  return (
+    <Animated.View style={[styles.container, containerStyle]}>
+      {items.map((item, index) => {
+        const isFirst = index === 0;
+        const isLast = index === items.length - 1;
+        const isComplete = item.status === "complete";
+        const isCurrent = item.status === "current";
+        const isUpcoming = item.status === "upcoming" || !item.status;
+
+        const prevStatus = statusRefs.current[item.id];
+        const wasComplete = prevStatus === "complete";
+        const statusChanged = prevStatus && prevStatus !== item.status;
+        statusRefs.current[item.id] = item.status || "upcoming";
+
+        const dotScale = useSharedValue(statusChanged ? 1.5 : 1);
+        const dotColorAnimated = useSharedValue(
+          isComplete ? 1 : isCurrent ? 0.5 : 0,
+        );
+        const lineProgress = useSharedValue(isComplete ? 1 : 0);
+        const iconRotate = useSharedValue(statusChanged ? 0 : 1);
+
+        useEffect(() => {
+          if (statusChanged) {
+            switch (animationType) {
+              case "bounce":
+                dotScale.value = withSequence(
+                  withTiming(1.5, { duration: 200 }),
+                  withSpring(1),
+                );
+                break;
+              case "spring":
+                dotScale.value = withSpring(1.2, { damping: 2, stiffness: 80 });
+                break;
+              case "rotate":
+                iconRotate.value = withSequence(
+                  withTiming(0, { duration: 10 }),
+                  withTiming(4, { duration: 800 }),
+                );
+                dotScale.value = withSequence(
+                  withTiming(1.6, { duration: 200 }),
+                  withSpring(1),
+                );
+                dotColorAnimated.value = withSequence(
+                  withTiming(0, { duration: 200 }),
+                  withTiming(isComplete ? 1 : isCurrent ? 0.5 : 0, {
+                    duration: 400,
+                  }),
+                );
+                break;
+              case "fade":
+                dotColorAnimated.value = withSequence(
+                  withTiming(0, { duration: 200 }),
+                  withTiming(isComplete ? 1 : isCurrent ? 0.5 : 0, {
+                    duration: 400,
+                  }),
+                );
+                break;
+              case "scale":
+                dotScale.value = withSequence(
+                  withTiming(0.5, { duration: 200 }),
+                  withTiming(1.2, { duration: 200 }),
+                  withTiming(1, { duration: 200 }),
+                );
+                break;
+              default:
+                dotScale.value = withSequence(
+                  withTiming(1.5, { duration: 200 }),
+                  withSpring(1),
+                );
+            }
+
+            dotColorAnimated.value = withTiming(
+              isComplete ? 1 : isCurrent ? 0.5 : 0,
+              { duration: 400 },
+            );
+
+            iconRotate.value = withSequence(
+              withTiming(0, { duration: 10 }),
+              withTiming(1, { duration: 400 }),
+            );
+
+            if (isComplete) {
+              lineProgress.value = withTiming(1, { duration: 600 });
+            } else if (wasComplete) {
+              lineProgress.value = withTiming(0, { duration: 600 });
+            }
+          } else {
+            lineProgress.value = isComplete ? 1 : 0;
+          }
+        }, [item.status, isComplete, isCurrent, animationType]);
+
+        const dotAnimatedStyle = useAnimatedStyle(() => {
+          return {
+            transform: [{ scale: dotScale.value }],
+            backgroundColor: interpolateColor(
+              dotColorAnimated.value,
+              [0, 0.5, 1],
+              [inactiveColor, activeColor, activeColor],
+            ),
+          };
+        });
+
+        const lineAnimatedStyle = useAnimatedStyle(() => {
+          return {
+            backgroundColor: interpolateColor(
+              lineProgress.value,
+              [0, 1],
+              [inactiveColor, activeColor],
+            ),
+            width: lineWidth,
+            transform: [
+              { scaleY: lineProgress.value },
+              { translateY: -2 * (1 - lineProgress.value) },
+            ],
+            opacity: 0.6 + lineProgress.value * 0.4,
+          };
+        });
+
+        const iconAnimatedStyle = useAnimatedStyle(() => {
+          return {
+            transform: [
+              { rotateZ: `${iconRotate.value * 360}deg` },
+              { scale: 0.8 + iconRotate.value * 0.2 },
+            ],
+          };
+        });
+
+        const iconName =
+          item.icon ||
+          (isComplete ? "check" : isCurrent ? "activity" : "circle");
+
+        const textColor = isComplete || isCurrent ? "#0f172a" : "#64748b";
+
+        return (
+          <AnimatedTouchableOpacity
+            key={item.id}
+            style={styles.itemContainer}
+            activeOpacity={onItemPress ? 0.7 : 1}
+            onPress={() => onItemPress && onItemPress(item)}
+            entering={
+              animated ? FadeInDown.delay(index * 100).springify() : undefined
+            }
+            layout={LinearTransition.springify()}
+          >
+            <View style={styles.timelineColumn}>
+              <Animated.View style={[styles.dot, dotAnimatedStyle]}>
+                <Animated.View style={[{}, iconAnimatedStyle]}>
+                  <AnimatedFeather
+                    name={iconName as any}
+                    size={iconSize * 0.7}
+                    color="#fff"
+                  />
+                </Animated.View>
+              </Animated.View>
+
+              {!isLast && (
+                <Animated.View style={[styles.line, lineAnimatedStyle]} />
+              )}
+            </View>
+
+            <View style={styles.contentColumn}>
+              <View style={styles.itemHeader}>
+                <Text style={[styles.title, { color: textColor }, titleStyle]}>
+                  {item.title}
+                </Text>
+
+                {item.timestamp && (
+                  <Text style={[styles.timestamp, timestampStyle]}>
+                    {item.timestamp}
+                  </Text>
+                )}
+              </View>
+
+              {item.description && (
+                <Text style={[styles.description, descriptionStyle]}>
+                  {item.description}
+                </Text>
+              )}
+
+              {item.meta && (
+                <View style={[styles.metaContainer, metaContainerStyle]}>
+                  <Text style={[styles.metaText, metaTextStyle]}>
+                    {item.meta}
+                  </Text>
+                </View>
+              )}
+
+              {item.children && (
+                <View
+                  style={[styles.childrenContainer, item.childrenContainer]}
+                >
+                  {item.children}
+                </View>
+              )}
+            </View>
+          </AnimatedTouchableOpacity>
+        );
+      })}
+    </Animated.View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    marginBottom: 24,
+  },
+  timelineColumn: {
+    alignItems: "center",
+    width: 40,
+  },
+  contentColumn: {
+    flex: 1,
+    marginLeft: 12,
+    marginTop: -4,
+  },
+  dot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+  },
+  line: {
+    flex: 1,
+    marginTop: 4,
+  },
+  itemHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 6,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "600",
+    flex: 1,
+  },
+  description: {
+    fontSize: 14,
+    color: "#64748b",
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: "#94a3b8",
+    marginLeft: 8,
+  },
+  metaContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    alignSelf: "flex-start",
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  metaText: {
+    fontSize: 12,
+    color: "#475569",
+  },
+  childrenContainer: {
+    // marginTop: 12,
+    // backgroundColor: "#f8fafc",
+    // borderRadius: 8,
+    padding: 12,
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title='Timeline.types.ts'>
+
+```ts
+import { Feather } from "@expo/vector-icons";
+import { StyleProp, View, TextStyle, ViewStyle } from "react-native";
+
+export interface TimelineItem {
+  id: string | number;
+  title: string;
+  description?: string;
+  timestamp?: string;
+  icon?: keyof typeof Feather.glyphMap;
+  status?: "complete" | "current" | "upcoming";
+  meta?: string;
+  children?: React.ReactNode;
+  childrenContainer?: StyleProp<ViewStyle>;
+}
+
+export interface TimelineProps {
+  items: TimelineItem[];
+  activeColor?: string;
+  inactiveColor?: string;
+  animated?: boolean;
+  animationType?: "bounce" | "spring" | "rotate" | "fade" | "scale";
+  onItemPress?: (item: TimelineItem) => void;
+  containerStyle?: ViewStyle;
+  metaContainerStyle?: StyleProp<ViewStyle>;
+  titleStyle?: TextStyle;
+  descriptionStyle?: TextStyle;
+  timestampStyle?: TextStyle;
+  lineWidth?: number;
+  iconSize?: number;
+  metaTextStyle?: StyleProp<TextStyle>;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import { Timeline } from "@/components/molecules/index";
+import {
+  MaterialIcons,
+  Feather,
+  Ionicons,
+  FontAwesome5,
+  AntDesign,
+} from "@expo/vector-icons";
+import type { TimelineItem } from "@/components/molecules/Timeline/TimelineView.types";
+
+const ShippingDetailsComponent = () => (
+  <View style={styles.detailsCard}>
+    <Text style={styles.detailsTitle}>📦 Shipping Information</Text>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Carrier</Text>
+      <Text style={styles.detailsValue}>FedEx Express</Text>
+    </View>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Tracking ID</Text>
+      <Text style={styles.detailsValue}>1Z999AA1234567890</Text>
+    </View>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Est. Delivery</Text>
+      <Text style={styles.detailsValue}>May 10, 6:00 PM</Text>
+    </View>
+  </View>
+);
+
+const ProjectMilestoneComponent = () => (
+  <View style={styles.detailsCard}>
+    <Text style={styles.detailsTitle}>🎯 Milestone Details</Text>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Deliverables</Text>
+      <Text style={styles.detailsValue}>Design System v2.0</Text>
+    </View>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Team Size</Text>
+      <Text style={styles.detailsValue}>5 Designers</Text>
+    </View>
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailsLabel}>Budget</Text>
+      <Text style={styles.detailsValue}>$24,500</Text>
+    </View>
+  </View>
+);
+
+const DevelopmentStatusComponent = () => (
+  <View style={styles.detailsCard}>
+    <Text style={styles.detailsTitle}>⚡ Development Progress</Text>
+    <View style={styles.progressRow}>
+      <Text style={styles.progressLabel}>Frontend</Text>
+      <View style={styles.progressBar}>
+        <View style={[styles.progressFill, { width: "85%" }]} />
+      </View>
+      <Text style={styles.progressValue}>85%</Text>
+    </View>
+    <View style={styles.progressRow}>
+      <Text style={styles.progressLabel}>Backend</Text>
+      <View style={styles.progressBar}>
+        <View
+          style={[
+            styles.progressFill,
+            { width: "92%", backgroundColor: "#10b981" },
+          ]}
+        />
+      </View>
+      <Text style={styles.progressValue}>92%</Text>
+    </View>
+  </View>
+);
+
+const TimelineDemo = () => {
+  const orderTimelineItems: TimelineItem[] = [
+    {
+      id: 1,
+      title: "Order Placed",
+      description: "We've received your order and will begin processing it.",
+      timestamp: "May 7, 10:23 AM",
+      icon: "shopping-bag",
+      status: "complete",
+      meta: "Order #38492",
+    },
+    {
+      id: 2,
+      title: "Payment Confirmed",
+      description: "Your payment has been successfully processed.",
+      timestamp: "May 7, 10:25 AM",
+      icon: "credit-card",
+      status: "complete",
+      meta: "Processing: 2 mins",
+    },
+    {
+      id: 3,
+      title: "Order Confirmed",
+      description: "Your order is confirmed and ready to ship.",
+      timestamp: "May 7, 11:05 AM",
+      icon: "check-circle",
+      status: "complete",
+      meta: "Ready for shipment",
+    },
+    {
+      id: 4,
+      title: "Shipped",
+      description: "The package has left our facility and is on its way.",
+      timestamp: "May 8, 9:15 AM",
+      icon: "package",
+      status: "complete",
+      children: <ShippingDetailsComponent />,
+      childrenContainer: { marginTop: 0 },
+      meta: "In Transit",
+    },
+    {
+      id: 5,
+      title: "Out for Delivery",
+      description: "Your package is out for delivery and will arrive today.",
+      timestamp: "May 10, 8:30 AM",
+      icon: "truck",
+      status: "current",
+      meta: "Last mile delivery",
+    },
+    {
+      id: 6,
+      title: "Delivered",
+      timestamp: "Est. May 10, by 6:00 PM",
+      icon: "home",
+      status: "upcoming",
+      meta: "Pending delivery",
+      description: "Your order will be delivered to your doorstep.",
+    },
+  ];
+
+  const projectTimelineItems: TimelineItem[] = [
+    {
+      id: 1,
+      title: "Project Kickoff",
+      description: "Initial meeting with stakeholders and team formation.",
+      timestamp: "Jan 15, 2024",
+      icon: "play-circle",
+      status: "complete",
+      meta: "Team assembled",
+    },
+    {
+      id: 2,
+      title: "Research & Discovery",
+      description: "User research, market analysis, and requirement gathering.",
+      timestamp: "Jan 22, 2024",
+      icon: "search",
+      status: "complete",
+      meta: "3 weeks duration",
+    },
+    {
+      id: 3,
+      title: "Design Phase",
+      description: "UI/UX design, prototyping, and design system creation.",
+      timestamp: "Feb 12, 2024",
+      icon: "edit-3",
+      status: "complete",
+      children: <ProjectMilestoneComponent />,
+      childrenContainer: { marginTop: 0 },
+      meta: "Design system v2.0",
+    },
+    {
+      id: 4,
+      title: "Development Sprint",
+      description: "Frontend and backend development in parallel tracks.",
+      timestamp: "Mar 5, 2024",
+      icon: "code",
+      status: "current",
+      children: <DevelopmentStatusComponent />,
+      childrenContainer: { marginTop: 0 },
+      meta: "In Progress",
+    },
+    {
+      id: 5,
+      title: "Testing & QA",
+      description: "Comprehensive testing, bug fixes, and quality assurance.",
+      timestamp: "Apr 1, 2024",
+      icon: "check-square",
+      status: "upcoming",
+      meta: "Upcoming",
+    },
+    {
+      id: 6,
+      title: "Launch",
+      description: "Production deployment and go-live celebration.",
+      timestamp: "Apr 15, 2024",
+      icon: "zap",
+      status: "upcoming",
+      meta: "Launch day",
+    },
+  ];
+
+  const userJourneyItems: TimelineItem[] = [
+    {
+      id: 1,
+      title: "Account Created",
+      description: "User registered with email verification.",
+      timestamp: "2 hours ago",
+      icon: "user-plus",
+      status: "complete",
+      meta: "sarah.johnson@email.com",
+    },
+    {
+      id: 2,
+      title: "Profile Setup",
+      description: "Added personal information and preferences.",
+      timestamp: "1.5 hours ago",
+      icon: "settings",
+      status: "complete",
+      meta: "Profile 100% complete",
+    },
+    {
+      id: 3,
+      title: "First Purchase",
+      description: "Completed their first transaction successfully.",
+      timestamp: "45 minutes ago",
+      icon: "shopping-cart",
+      status: "complete",
+      meta: "$127.50",
+    },
+    {
+      id: 4,
+      title: "App Downloaded",
+      description: "Downloaded and logged into mobile application.",
+      timestamp: "12 minutes ago",
+      icon: "smartphone",
+      status: "current",
+      meta: "iOS App",
+    },
+  ];
+
+  const handleItemPress = (item: TimelineItem) => {
+    console.log("Timeline item pressed:", item.title);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="always"
+        scrollEnabled
+      >
+        <View style={styles.header}>
+          <View style={styles.iconContainer}>
+            <MaterialIcons name="timeline" size={32} color="#60a5fa" />
+          </View>
+          <Text style={styles.headerTitle}>Timeline Component Demo</Text>
+          <Text style={styles.subtitle}>
+            Beautiful timelines with various styles and interactive features
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Timeline Variations</Text>
+
+          <View style={styles.variationCard}>
+            <View style={styles.variationHeader}>
+              <View style={styles.variationIcon}>
+                <MaterialIcons
+                  name="local-shipping"
+                  size={20}
+                  color="#60a5fa"
+                />
+              </View>
+              <Text style={styles.variationTitle}>Order Tracking</Text>
+              <Text style={styles.variationBadge}>Interactive</Text>
+            </View>
+            <Text style={styles.variationDescription}>
+              Track package delivery with real-time updates and shipping details
+            </Text>
+          </View>
+
+          <View style={styles.variationCard}>
+            <View style={styles.variationHeader}>
+              <View style={styles.variationIcon}>
+                <Feather name="briefcase" size={20} color="#10b981" />
+              </View>
+              <Text style={styles.variationTitle}>Project Timeline</Text>
+              <Text
+                style={[styles.variationBadge, { backgroundColor: "#10b981" }]}
+              >
+                Active
+              </Text>
+            </View>
+            <Text style={styles.variationDescription}>
+              Project milestones with progress tracking and team collaboration
+            </Text>
+          </View>
+
+          <View style={styles.variationCard}>
+            <View style={styles.variationHeader}>
+              <View style={styles.variationIcon}>
+                <FontAwesome5 name="user-friends" size={18} color="#f59e0b" />
+              </View>
+              <Text style={styles.variationTitle}>User Journey</Text>
+              <Text
+                style={[styles.variationBadge, { backgroundColor: "#f59e0b" }]}
+              >
+                Live
+              </Text>
+            </View>
+            <Text style={styles.variationDescription}>
+              Real-time user activity and engagement tracking
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>🧾 Order Timeline</Text>
+            <Text style={styles.sectionSubtitle}>
+              Follow your delivery journey
+            </Text>
+          </View>
+
+          <View style={styles.timelineWrapper}>
+            <Timeline
+              metaContainerStyle={styles.metaContainer}
+              animationType="rotate"
+              items={orderTimelineItems}
+              onItemPress={handleItemPress}
+              activeColor="#60a5fa"
+              animated
+              titleStyle={styles.timelineTitle}
+              descriptionStyle={styles.timelineDescription}
+              timestampStyle={styles.timelineTimestamp}
+              metaTextStyle={styles.timelineMeta}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>🚀 Project Timeline</Text>
+            <Text style={styles.sectionSubtitle}>
+              Development milestones and progress
+            </Text>
+          </View>
+
+          <View style={styles.timelineWrapper}>
+            <Timeline
+              metaContainerStyle={[
+                styles.metaContainer,
+                { backgroundColor: "#0f172a" },
+              ]}
+              animationType="fade"
+              items={projectTimelineItems}
+              onItemPress={handleItemPress}
+              activeColor="#10b981"
+              animated
+              titleStyle={styles.timelineTitle}
+              descriptionStyle={styles.timelineDescription}
+              timestampStyle={styles.timelineTimestamp}
+              metaTextStyle={styles.timelineMeta}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>👤 User Journey</Text>
+            <Text style={styles.sectionSubtitle}>
+              Real-time user activity tracking
+            </Text>
+          </View>
+
+          <View style={styles.timelineWrapper}>
+            <Timeline
+              metaContainerStyle={[
+                styles.metaContainer,
+                { backgroundColor: "#451a03" },
+              ]}
+              animationType="scale"
+              items={userJourneyItems}
+              onItemPress={handleItemPress}
+              activeColor="#f59e0b"
+              animated
+              titleStyle={styles.timelineTitle}
+              descriptionStyle={styles.timelineDescription}
+              timestampStyle={styles.timelineTimestamp}
+              metaTextStyle={styles.timelineMeta}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Key Features</Text>
+
+          <View style={styles.featuresGrid}>
+            <View style={styles.featureCard}>
+              <View style={styles.featureIcon}>
+                <Feather name="zap" size={20} color="#f59e0b" />
+              </View>
+              <Text style={styles.featureTitle}>Animated</Text>
+              <Text style={styles.featureDescription}>
+                Smooth animations with customizable effects
+              </Text>
+            </View>
+
+            <View style={styles.featureCard}>
+              <View style={styles.featureIcon}>
+                <MaterialIcons name="touch-app" size={20} color="#60a5fa" />
+              </View>
+              <Text style={styles.featureTitle}>Interactive</Text>
+              <Text style={styles.featureDescription}>
+                Tap items for detailed views and actions
+              </Text>
+            </View>
+
+            <View style={styles.featureCard}>
+              <View style={styles.featureIcon}>
+                <Feather name="layers" size={20} color="#10b981" />
+              </View>
+              <Text style={styles.featureTitle}>Customizable</Text>
+              <Text style={styles.featureDescription}>
+                Flexible styling and custom content support
+              </Text>
+            </View>
+
+            <View style={styles.featureCard}>
+              <View style={styles.featureIcon}>
+                <AntDesign name="mobile1" size={20} color="#8b5cf6" />
+              </View>
+              <Text style={styles.featureTitle}>Responsive</Text>
+              <Text style={styles.featureDescription}>
+                Adapts beautifully to different screen sizes
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Status Types</Text>
+
+          <View style={styles.statusGrid}>
+            <View style={styles.statusCard}>
+              <View
+                style={[styles.statusDot, { backgroundColor: "#10b981" }]}
+              />
+              <View style={styles.statusInfo}>
+                <Text style={styles.statusTitle}>Complete</Text>
+                <Text style={styles.statusDescription}>Finished tasks</Text>
+              </View>
+            </View>
+
+            <View style={styles.statusCard}>
+              <View
+                style={[styles.statusDot, { backgroundColor: "#60a5fa" }]}
+              />
+              <View style={styles.statusInfo}>
+                <Text style={styles.statusTitle}>Current</Text>
+                <Text style={styles.statusDescription}>
+                  Currently in progress
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.statusCard,
+              {
+                marginTop: 15,
+              },
+            ]}
+          >
+            <View style={[styles.statusDot, { backgroundColor: "#71717a" }]} />
+            <View style={styles.statusInfo}>
+              <Text style={styles.statusTitle}>Upcoming</Text>
+              <Text style={styles.statusDescription}>Waiting to start</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.footerIcon}>
+            <MaterialIcons name="timeline" size={16} color="#71717a" />
+          </View>
+          <Text style={styles.footerText}>
+            The Timeline component provides a beautiful way to display
+            chronological information with rich interactions and customization
+            options
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 32,
+    paddingTop: 20,
+  },
+  iconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#18181b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fafafa",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 24,
+    maxWidth: 320,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#e4e4e7",
+    marginBottom: 16,
+    marginLeft: 4,
+  },
+  sectionHeader: {
+    marginBottom: 16,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    color: "#71717a",
+    marginTop: 4,
+    marginLeft: 4,
+  },
+  variationCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  variationHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  variationIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#09090b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  variationTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+    flex: 1,
+  },
+  variationBadge: {
+    backgroundColor: "#60a5fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    fontSize: 10,
+    color: "#fafafa",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  variationDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+    marginLeft: 44,
+  },
+  timelineWrapper: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+  },
+  metaContainer: {
+    backgroundColor: "#1a1a1a",
+    borderRadius: 8,
+    padding: 8,
+  },
+  timelineTitle: {
+    color: "#f1f5f9",
+    fontWeight: "600",
+  },
+  timelineDescription: {
+    color: "#94a3b8",
+  },
+  timelineTimestamp: {
+    color: "#71717a",
+  },
+  timelineMeta: {
+    color: "#cbd5e1",
+  },
+  detailsCard: {
+    backgroundColor: "#141414",
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 8,
+  },
+  detailsTitle: {
+    fontSize: 14,
+    color: "#f8fafc",
+    fontWeight: "500",
+    marginBottom: 8,
+  },
+  detailsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  detailsLabel: {
+    fontSize: 13,
+    color: "#cbd5e1",
+  },
+  detailsValue: {
+    fontSize: 13,
+    color: "#e2e8f0",
+    fontWeight: "500",
+  },
+  progressRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  progressLabel: {
+    fontSize: 12,
+    color: "#cbd5e1",
+    width: 60,
+  },
+  progressBar: {
+    flex: 1,
+    height: 6,
+    backgroundColor: "#27272a",
+    borderRadius: 3,
+    marginHorizontal: 12,
+  },
+  progressFill: {
+    height: 6,
+    backgroundColor: "#60a5fa",
+    borderRadius: 3,
+  },
+  progressValue: {
+    fontSize: 12,
+    color: "#e2e8f0",
+    fontWeight: "500",
+    width: 35,
+    textAlign: "right",
+  },
+  featuresGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  featureCard: {
+    flex: 1,
+    minWidth: "47%",
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+  },
+  featureIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#09090b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  featureDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 20,
+  },
+  statusGrid: {
+    gap: 12,
+  },
+  statusCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  statusDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 16,
+  },
+  statusInfo: {
+    flex: 1,
+  },
+  statusTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 4,
+  },
+  statusDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: "#18181b",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  footerIcon: {
+    marginRight: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+    flex: 1,
+    lineHeight: 20,
+  },
+});
+
+export default TimelineDemo;
+```

@@ -1,0 +1,661 @@
+---
+title: Breadcrumbs
+description: Breadcrumbs component for React Native.
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/moleclues/Breadcrumbs/BreadcrumbsList.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add breadcrumbs
+```
+
+### 🧭 `Breadcrumbs` Props
+
+| Prop       | Type        | Default      | Description                              |
+| ---------- | ----------- | ------------ | ---------------------------------------- |
+| `children` | `ReactNode` | **required** | Nested breadcrumb elements (items/list). |
+| `style`    | `any`       | `undefined`  | Custom style applied to the container.   |
+
+---
+
+### 📍 `BreadcrumbItem` Props
+
+| Prop          | Type         | Default      | Description                                                             |
+| ------------- | ------------ | ------------ | ----------------------------------------------------------------------- |
+| `children`    | `ReactNode`  | **required** | The text or element inside the breadcrumb item.                         |
+| `onPress`     | `() => void` | `undefined`  | Callback when the breadcrumb item is pressed (for navigable items).     |
+| `isCurrent`   | `boolean`    | `false`      | Marks the item as the current location in the breadcrumb trail.         |
+| `tint`        | `string`     | `undefined`  | Color for non-current items.                                            |
+| `currentTint` | `string`     | `undefined`  | Color specifically for the current item.                                |
+| `className`   | `string`     | `undefined`  | Optional class name for styling (if using Tailwind or utility classes). |
+
+---
+
+### 🧱 `BreadcrumbsList` Props
+
+| Prop       | Type        | Default      | Description                                  |
+| ---------- | ----------- | ------------ | -------------------------------------------- |
+| `children` | `ReactNode` | **required** | Wraps all breadcrumb items (and separators). |
+
+---
+
+### ➖ `BreadcrumbsSeparator` Props
+
+| Prop       | Type        | Default | Description                                |
+| ---------- | ----------- | ------- | ------------------------------------------ |
+| `children` | `ReactNode` | `"/"`   | Custom separator between breadcrumb items. |
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+  <Accordion title="BreadcrumbsList.tsx">
+      ```tsx
+      import React from "react";
+
+import { View, StyleSheet } from "react-native";
+import type { BreadcrumbsListProps } from "./Breadcrumbs.types";
+
+export const BreadcrumbsList: React.FC<BreadcrumbsListProps> = ({
+  children,
+}) => {
+  return <View style={styles.list}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+list: {
+flexDirection: "row",
+alignItems: "center",
+flexWrap: "wrap",
+},
+});
+
+````
+
+</Accordion>
+
+
+  <Accordion title="BreadcrumbsSeparator.tsx">
+      ```tsx
+import React from "react";
+import { Text, StyleSheet, View } from "react-native";
+import type { BreadcrumbsSeparatorProps } from "../Breadcrumbs.types";
+
+export const BreadcrumbsSeparator: React.FC<BreadcrumbsSeparatorProps> = ({
+  children = "/",
+}) => {
+  return (
+    <View style={styles.separator}>
+      {children ? children : <Text style={{ color: "#888" }}>{children}</Text>}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  separator: {
+    marginHorizontal: 4,
+    color: "#888",
+  },
+});
+````
+
+</Accordion>
+
+  <Accordion title="BreadcrumbsItem.tsx">
+      ```tsx
+
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import type { BreadcrumbItemProps } from "../Breadcrumbs.types";
+
+export const BreadcrumbsItem: React.FC<BreadcrumbItemProps> = ({
+  children,
+  onPress,
+  isCurrent,
+  tint = "#888",
+  currentTint = "#000",
+  className,
+}) => {
+  const content = (
+    <Text
+      className={`${className}`}
+      style={[
+        isCurrent
+          ? { color: currentTint, fontWeight: "500" }
+          : {
+              color: tint,
+            },
+      ]}
+    >
+      {children}
+    </Text>
+  );
+
+return onPress && !isCurrent ? (
+
+<TouchableOpacity onPress={onPress}>{content}</TouchableOpacity>) : ( content );
+};
+
+const styles = StyleSheet.create({
+item: {
+flexDirection: "row",
+alignItems: "center",
+},
+icon: {
+marginRight: 4,
+},
+link: {
+color: "#007AFF",
+},
+current: {
+fontWeight: "600",
+color: "#000",
+},
+});
+
+````
+
+</Accordion>
+
+  <Accordion title="BreadcrumbsIcon.tsx">
+      ```tsx
+   import React from "react";
+import { View, StyleSheet } from "react-native";
+import type { BreadcrumbsProps } from "../Breadcrumbs.types";
+
+export const BreadcrumbsIcon: React.FC<BreadcrumbsProps> = ({
+  children,
+  style,
+}) => {
+  return <View style={[styles.container, style]}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginRight: 4,
+  },
+});
+````
+
+</Accordion>
+
+  <Accordion title="BreadcrumbsIcon.tsx">
+
+      ```tsx
+
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import type { BreadcrumbsProps } from "../Breadcrumbs.types";
+
+export const BreadcrumbsIcon: React.FC<BreadcrumbsProps> = ({
+  children,
+  style,
+}) => {
+  return <View style={[styles.container, style]}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+container: {
+marginRight: 4,
+},
+});
+
+````
+
+</Accordion>
+
+
+ <Accordion title="BreadcrumbsView.tsx">
+
+      ```tsx
+      import React from "react";
+import { StyleSheet, View } from "react-native";
+import type { BreadcrumbsSeparatorProps } from "../Breadcrumbs.types";
+
+/**
+ *
+ * @deprecated
+ */
+export const BreadcrumbsView: React.FC<BreadcrumbsSeparatorProps> = ({
+  children,
+}) => {
+  return <View style={styles.item}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
+````
+
+</Accordion>
+
+<Accordion title='Breadcrumbs.types.ts'>
+```ts
+import type { ReactNode } from "react";
+
+export type BreadcrumbItemProps = {
+  children: ReactNode;
+  onPress?: () => void;
+  isCurrent?: boolean;
+  tint?: string;
+  currentTint?: string;
+  className?: string;
+};
+
+export type BreadcrumbsListProps = {
+  children: ReactNode;
+};
+
+export type BreadcrumbsSeparatorProps = {
+  children?: ReactNode;
+};
+
+export type BreadcrumbsProps = {
+  children: ReactNode;
+  style?: any;
+};
+```
+</Accordion>
+  </Accordions>
+  </TabsContent>
+</Tabs>
+
+### 🚀 Full Example
+
+```tsx
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  Alert,
+  Pressable,
+} from "react-native";
+import React, { useState, memo } from "react";
+import {
+  Breadcrumbs,
+  BreadcrumbsIcon,
+  BreadcrumbsItem,
+  BreadcrumbsList,
+  BreadcrumbsSeparator,
+} from "@/components";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+
+const BreadcrumbsDemo = () => {
+  const [activeDemo, setActiveDemo] = useState<any | null>(null);
+
+  const handlePress = (label: string) => {
+    Alert.alert(
+      "Navigation",
+      `Navigate to "${label}"`,
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Go", style: "default" },
+      ],
+      { userInterfaceStyle: "dark" },
+    );
+  };
+
+  const demos = [
+    {
+      id: "minimal",
+      title: "Minimal Path",
+      description: "Clean and simple navigation",
+      component: (
+        <Breadcrumbs>
+          <BreadcrumbsList>
+            <BreadcrumbsItem onPress={() => handlePress("Home")}>
+              <Text className="text-zinc-400 text-sm font-medium">Home</Text>
+            </BreadcrumbsItem>
+            <BreadcrumbsSeparator>
+              <View className="w-1 h-1 bg-zinc-600 rounded-full mx-3" />
+            </BreadcrumbsSeparator>
+            <BreadcrumbsItem onPress={() => handlePress("Projects")}>
+              <Text className="text-zinc-400 text-sm font-medium">
+                Projects
+              </Text>
+            </BreadcrumbsItem>
+            <BreadcrumbsSeparator>
+              <View className="w-1 h-1 bg-zinc-600 rounded-full mx-3" />
+            </BreadcrumbsSeparator>
+            <BreadcrumbsItem isCurrent>
+              <Text className="text-white text-sm font-semibold">
+                Dashboard
+              </Text>
+            </BreadcrumbsItem>
+          </BreadcrumbsList>
+        </Breadcrumbs>
+      ),
+    },
+    {
+      id: "icons",
+      title: "With Icons",
+      description: "Enhanced with subtle iconography",
+      component: (
+        <Breadcrumbs>
+          <BreadcrumbsList>
+            <BreadcrumbsItem
+              className="flex-row items-center"
+              onPress={() => handlePress("Dashboard")}
+            >
+              <BreadcrumbsIcon>
+                <Feather
+                  name="home"
+                  size={14}
+                  color="#71717A"
+                  style={{ marginRight: 6 }}
+                />
+              </BreadcrumbsIcon>
+              <Text className="text-zinc-400 text-sm font-medium">
+                Dashboard
+              </Text>
+            </BreadcrumbsItem>
+            <BreadcrumbsSeparator>
+              <Feather
+                name="chevron-right"
+                size={14}
+                color="#52525B"
+                style={{ marginHorizontal: 8 }}
+              />
+            </BreadcrumbsSeparator>
+            <BreadcrumbsItem
+              className="flex-row items-center"
+              onPress={() => handlePress("Analytics")}
+            >
+              <BreadcrumbsIcon>
+                <MaterialCommunityIcons
+                  name="chart-line"
+                  size={14}
+                  color="#71717A"
+                  style={{ marginRight: 6 }}
+                />
+              </BreadcrumbsIcon>
+              <Text className="text-zinc-400 text-sm font-medium">
+                Analytics
+              </Text>
+            </BreadcrumbsItem>
+            <BreadcrumbsSeparator>
+              <Feather
+                name="chevron-right"
+                size={14}
+                color="#52525B"
+                style={{ marginHorizontal: 8 }}
+              />
+            </BreadcrumbsSeparator>
+            <BreadcrumbsItem isCurrent className="flex-row items-center">
+              <BreadcrumbsIcon>
+                <MaterialCommunityIcons
+                  name="file-chart"
+                  size={14}
+                  color="#FFFFFF"
+                  style={{ marginRight: 6 }}
+                />
+              </BreadcrumbsIcon>
+              <Text className="text-white text-sm font-semibold">Reports</Text>
+            </BreadcrumbsItem>
+          </BreadcrumbsList>
+        </Breadcrumbs>
+      ),
+    },
+    {
+      id: "pill",
+      title: "Pill Style",
+      description: "Modern capsule design",
+      component: (
+        <Breadcrumbs>
+          <BreadcrumbsList>
+            {["Workspace", "Development", "Components"].map(
+              (item, index, arr) => (
+                <React.Fragment key={item}>
+                  <BreadcrumbsItem
+                    isCurrent={index === arr.length - 1}
+                    onPress={() => handlePress(item)}
+                  >
+                    <View
+                      className={`px-3 py-1.5 rounded-full transition-colors ${
+                        index === arr.length - 1
+                          ? "bg-white/10 border border-white/20"
+                          : "bg-zinc-800/60 hover:bg-zinc-700/60"
+                      }`}
+                    >
+                      <Text
+                        className={`text-xs font-medium ${
+                          index === arr.length - 1
+                            ? "text-white"
+                            : "text-zinc-300"
+                        }`}
+                      >
+                        {item}
+                      </Text>
+                    </View>
+                  </BreadcrumbsItem>
+                  {index !== arr.length - 1 && (
+                    <BreadcrumbsSeparator>
+                      <Feather
+                        name="chevron-right"
+                        size={12}
+                        color="#52525B"
+                        style={{ marginHorizontal: 6 }}
+                      />
+                    </BreadcrumbsSeparator>
+                  )}
+                </React.Fragment>
+              ),
+            )}
+          </BreadcrumbsList>
+        </Breadcrumbs>
+      ),
+    },
+    {
+      id: "compact",
+      title: "Compact",
+      description: "Space-efficient navigation",
+      component: (
+        <Breadcrumbs>
+          <BreadcrumbsList>
+            {["Home", "Docs", "API", "Reference"].map((item, index, arr) => (
+              <React.Fragment key={item}>
+                <BreadcrumbsItem
+                  isCurrent={index === arr.length - 1}
+                  onPress={() => handlePress(item)}
+                >
+                  <Text
+                    className={`text-xs font-medium px-2 py-1 rounded ${
+                      index === arr.length - 1
+                        ? "text-white bg-white/5"
+                        : "text-zinc-400 hover:text-zinc-200"
+                    }`}
+                  >
+                    {item}
+                  </Text>
+                </BreadcrumbsItem>
+                {index !== arr.length - 1 && (
+                  <BreadcrumbsSeparator>
+                    <Text className="text-zinc-600 mx-1 text-xs">/</Text>
+                  </BreadcrumbsSeparator>
+                )}
+              </React.Fragment>
+            ))}
+          </BreadcrumbsList>
+        </Breadcrumbs>
+      ),
+    },
+    {
+      id: "extended",
+      title: "Extended Path",
+      description: "Horizontally scrollable for long paths",
+      component: (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="flex-1"
+        >
+          <Breadcrumbs>
+            <BreadcrumbsList>
+              {[
+                "Root",
+                "Workspace",
+                "Projects",
+                "Mobile App",
+                "React Native",
+                "Components",
+                "Navigation",
+                "Breadcrumbs",
+              ].map((item, index, arr) => (
+                <React.Fragment key={item}>
+                  <BreadcrumbsItem
+                    isCurrent={index === arr.length - 1}
+                    onPress={() => handlePress(item)}
+                  >
+                    <Text
+                      className={`text-xs font-medium whitespace-nowrap ${
+                        index === arr.length - 1
+                          ? "text-white"
+                          : "text-zinc-400"
+                      }`}
+                    >
+                      {item}
+                    </Text>
+                  </BreadcrumbsItem>
+                  {index !== arr.length - 1 && (
+                    <BreadcrumbsSeparator>
+                      <View className="w-0.5 h-0.5 bg-zinc-600 rounded-full mx-2" />
+                    </BreadcrumbsSeparator>
+                  )}
+                </React.Fragment>
+              ))}
+            </BreadcrumbsList>
+          </Breadcrumbs>
+        </ScrollView>
+      ),
+    },
+  ];
+
+  return (
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      showsVerticalScrollIndicator={false}
+      className="flex-1"
+      contentContainerStyle={{ paddingBottom: 32 }}
+      scrollEnabled={true}
+    >
+      <View className="flex-1 bg-zinc-950">
+        <SafeAreaView className="flex-1">
+          <View className="px-6 pt-8 pb-6 border-b border-zinc-800/50">
+            <Text className="text-2xl font-bold text-white mb-2">
+              Breadcrumbs
+            </Text>
+            <Text className="text-zinc-400 text-sm leading-5">
+              Modern navigation paths with clean, minimalist design
+            </Text>
+          </View>
+
+          <View className="px-6 pt-8 space-y-8">
+            {demos.map((demo) => (
+              <Pressable
+                key={demo.id}
+                className={`p-5 rounded-xl border transition-colors ${
+                  activeDemo === demo.id
+                    ? "bg-zinc-900/80 border-zinc-700"
+                    : "bg-zinc-900/40 border-zinc-800/60"
+                }`}
+              >
+                {/* Demo Header */}
+                <View className="flex-row items-center justify-between mb-4">
+                  <View className="flex-1">
+                    <Text className="text-white font-semibold text-base mb-1">
+                      {demo.title}
+                    </Text>
+                    <Text className="text-zinc-400 text-sm">
+                      {demo.description}
+                    </Text>
+                  </View>
+                  <Feather
+                    name={
+                      activeDemo === demo.id ? "chevron-up" : "chevron-down"
+                    }
+                    size={18}
+                    color="#71717A"
+                  />
+                </View>
+
+                <View className="bg-zinc-950/60 p-4 rounded-lg border border-zinc-800/40">
+                  {demo.component}
+                </View>
+              </Pressable>
+            ))}
+          </View>
+
+          <View className="px-6 pt-12 pb-8">
+            <View className="p-4 bg-zinc-900/30 rounded-lg border border-zinc-800/30">
+              <Text className="text-zinc-400 text-xs text-center">
+                Tap any breadcrumb item to see the interaction
+              </Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      </View>
+    </ScrollView>
+  );
+};
+
+export default memo(BreadcrumbsDemo);
+```

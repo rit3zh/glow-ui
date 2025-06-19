@@ -1,0 +1,824 @@
+---
+title: List
+description: List component for React Native.
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/moleclues/Card/Card.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add list
+```
+
+### 🎬 `LeadingIconProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🧱 Icon or element to show at the start (leading).",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+### 📝 `SubTitleProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📄 Subtitle content to render.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    style: {
+      description: "🎨 Optional styling for the subtitle text.",
+      type: "StyleProp<TextStyle>",
+      required: false,
+    },
+  }}
+/>
+
+---
+
+### 🏷️ `TitleProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🔠 Title text content to display.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    destructive: {
+      description: "⚠️ Applies a destructive (danger) visual style.",
+      type: "boolean",
+      default: "false",
+      required: false,
+    },
+    style: {
+      description: "🎨 Optional styling for the title text.",
+      type: "StyleProp<TextStyle>",
+      required: false,
+    },
+  }}
+/>
+
+---
+
+### 📦 `TitleViewProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📦 Container for the main title and supporting elements.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+### 🎯 `TrailingIconProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "➡️ Icon or element to show at the end (trailing).",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+### 🧊 `WrapperProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🧊 Main wrapper content – can be any valid node.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+  <Accordion title="Wrapper.tsx">
+      ```tsx
+      import { View } from "react-native";
+import * as React from "react";
+
+interface WrapperProps {
+children: React.ReactNode;
+}
+
+export const Wrapper: React.FC<WrapperProps> &
+  React.FunctionComponent<WrapperProps> = ({
+  children,
+}): React.ReactNode & React.JSX.Element => {
+  return (
+    <View className="p-3">
+      <View className="flex-row items-center">{children}</View>
+    </View>
+  );
+};
+      ```
+
+</Accordion>
+
+  <Accordion title="TitleView.tsx">
+
+      ```tsx
+
+import { Text, View } from "react-native";
+import * as React from "react";
+
+interface TitleViewProps {
+children: React.ReactNode;
+}
+
+export const Title: React.FC<TitleViewProps> &
+  React.FunctionComponent<TitleViewProps> = ({
+  children,
+}): React.ReactNode & React.JSX.Element => {
+  return <View className="flex-1 justify-center ml-4">{children}</View>;
+};
+```
+
+</Accordion>
+
+  <Accordion title="SubTitle.tsx">
+      ```tsx
+      import { StyleProp, Text, TextStyle } from "react-native";
+import * as React from "react";
+
+interface SubTitleProps {
+children: React.ReactNode;
+style?: StyleProp<TextStyle>;
+}
+
+export const SubTitle: React.FC<SubTitleProps> &
+  React.FunctionComponent<SubTitleProps> = ({
+  children,
+  style = {},
+}): React.ReactNode & React.JSX.Element => {
+  return (
+    <Text
+      className="text-gray-300 text-sm"
+      style={[style as StyleProp<TextStyle>]}
+    >
+      {children as string}
+    </Text>
+  );
+};
+```
+
+</Accordion>
+
+  <Accordion title="Title.tsx">
+      ```tsx
+
+import { StyleProp, Text, TextStyle, View } from "react-native";
+import * as React from "react";
+
+interface TitleProps {
+children: React.ReactNode;
+destructive?: boolean;
+style?: StyleProp<TextStyle>;
+}
+
+export const Title: React.FC<TitleProps> &
+  React.FunctionComponent<TitleProps> = ({
+  children,
+  destructive,
+  style = {},
+  ...props
+}): React.ReactNode & React.JSX.Element => {
+  return (
+    <Text
+      className={
+        destructive
+          ? "text-[#3a3a3a] font-medium text-lg"
+          : "text-white font-medium text-lg"
+      }
+      style={[
+        style as TextStyle,
+        {
+          color: destructive ? "#EF4444" : "#ffffff",
+        },
+      ]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+};
+
+````
+
+</Accordion>
+
+
+<Accordion title="LeadingIcon.tsx">
+      ```tsx
+     import { Text } from "react-native";
+import * as React from "react";
+
+interface LeadingIconProps {
+  children: React.ReactNode;
+}
+export const LeadingIcon: React.FC<LeadingIconProps> &
+  React.FunctionComponent<LeadingIconProps> = ({
+  children,
+}): React.ReactNode & React.JSX.Element => {
+  return <React.Fragment>{children}</React.Fragment>;
+};
+
+````
+
+</Accordion>
+
+<Accordion title="TrailingIcon.tsx">
+      ```tsx
+     import { Text, View } from "react-native";
+import * as React from "react";
+
+interface TrailingIconProps {
+children: React.ReactNode;
+}
+
+export const TrailingIcon: React.FC<TrailingIconProps> &
+  React.FunctionComponent<TrailingIconProps> = ({
+  children,
+}): React.ReactNode & React.JSX.Element => {
+  return <View className="items-center justfy-center">{children}</View>;
+};
+
+````
+
+</Accordion>
+
+
+<Accordion title="ListItem.tsx">
+      ```tsx
+
+    import { Fragment, type ReactNode } from "react";
+import { ListItemType } from "./List.types";
+import { Text, View } from "react-native";
+
+export const ListItem: React.FC<ListItemType> &
+  React.FunctionComponent<ListItemType> = ({
+  _name,
+  leadingIcon,
+  onPress,
+  subtitle,
+  title,
+  trailingIcon,
+  destructive,
+}): JSX.Element & ReactNode => {
+  return (
+    <Fragment>
+      <View className="p-3">
+        <View className="flex-row items-center">
+          {leadingIcon && leadingIcon()}
+          <View className="flex-1 justify-center ml-4">
+            <Text
+              className={
+                destructive
+                  ? "text-red-500 font-medium text-lg"
+                  : "text-white font-medium text-lg"
+              }
+            >
+              {title}
+            </Text>
+            <Text className="text-gray-300 text-sm">{subtitle}</Text>
+          </View>
+          <View className="items-center justfy-center">
+            {trailingIcon && trailingIcon()}
+          </View>
+        </View>
+      </View>
+    </Fragment>
+  );
+};
+
+
+````
+
+</Accordion>
+
+<Accordion title="List.types.ts">
+```ts
+import type { ReactNode } from "react";
+
+export interface ListItemType {
+  _name?: string;
+  title?: string;
+  subtitle?: string;
+  leadingIcon?: () => ReactNode;
+  trailingIcon?: () => ReactNode;
+  onPress?: () => void;
+  destructive?: boolean;
+}
+```
+
+</Accordion>
+  </Accordions>
+  </TabsContent>
+</Tabs>
+
+### 🚀 Full Example
+
+```tsx
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import React, { useState } from "react";
+import {
+  Center,
+  ListItemLeadingIcon,
+  ListItemSubTitle,
+  ListItemTitle,
+  ListItemTitleView,
+  ListItemTrailingIcon,
+  ListItemWrapper,
+  Row,
+} from "@/components";
+import {
+  Feather,
+  MaterialIcons,
+  Ionicons,
+  MaterialCommunityIcons,
+  AntDesign,
+} from "@expo/vector-icons";
+
+interface ListItem {
+  id: string;
+  title: string;
+  subtitle?: string;
+  leadingIcon: React.ReactNode;
+  trailingIcon?: React.ReactNode;
+  onPress?: () => void;
+  type?: "default" | "danger" | "success" | "warning";
+  badge?: string | number;
+  isActive?: boolean;
+}
+
+const ListDemo = () => {
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+
+  const profileItems: ListItem[] = [
+    {
+      id: "profile",
+      title: "Profile",
+      subtitle: "Manage your personal information",
+      leadingIcon: <Feather name="user" size={20} color="#E5E7EB" />,
+      trailingIcon: <Feather name="chevron-right" size={20} color="#6B7280" />,
+      onPress: () => setActiveItem("profile"),
+    },
+    {
+      id: "notifications",
+      title: "Notifications",
+      subtitle: "Push notifications, email alerts",
+      leadingIcon: (
+        <Ionicons name="notifications-outline" size={20} color="#E5E7EB" />
+      ),
+      trailingIcon: <Feather name="chevron-right" size={20} color="#6B7280" />,
+      badge: "3",
+      onPress: () => setActiveItem("notifications"),
+    },
+    {
+      id: "privacy",
+      title: "Privacy & Security",
+      subtitle: "Data protection and security settings",
+      leadingIcon: <MaterialIcons name="security" size={20} color="#E5E7EB" />,
+      trailingIcon: <Feather name="chevron-right" size={20} color="#6B7280" />,
+      onPress: () => setActiveItem("privacy"),
+    },
+  ];
+
+  const appItems: ListItem[] = [
+    {
+      id: "theme",
+      title: "Appearance",
+      subtitle: "Dark mode, themes, display settings",
+      leadingIcon: <Feather name="moon" size={20} color="#8B5CF6" />,
+      trailingIcon: <Text style={styles.trailingText}>Dark</Text>,
+      onPress: () => setActiveItem("theme"),
+    },
+    {
+      id: "language",
+      title: "Language",
+      subtitle: "App language and region",
+      leadingIcon: (
+        <Ionicons name="language-outline" size={20} color="#06B6D4" />
+      ),
+      trailingIcon: <Text style={styles.trailingText}>English</Text>,
+      onPress: () => setActiveItem("language"),
+    },
+    {
+      id: "storage",
+      title: "Storage",
+      subtitle: "Manage app data and cache",
+      leadingIcon: <Feather name="hard-drive" size={20} color="#10B981" />,
+      trailingIcon: <Text style={styles.trailingText}>2.4 GB</Text>,
+      onPress: () => setActiveItem("storage"),
+    },
+  ];
+  const activityItems: ListItem[] = [
+    {
+      id: "login",
+      title: "Login Activity",
+      subtitle: "Signed in from iPhone • 2 hours ago",
+      leadingIcon: (
+        <MaterialCommunityIcons name="login" size={20} color="#10B981" />
+      ),
+      type: "success",
+      onPress: () => setActiveItem("login"),
+    },
+    {
+      id: "backup",
+      title: "Backup Completed",
+      subtitle: "All data backed up successfully • 1 day ago",
+      leadingIcon: <MaterialIcons name="backup" size={20} color="#3B82F6" />,
+      onPress: () => setActiveItem("backup"),
+    },
+    {
+      id: "warning",
+      title: "Storage Almost Full",
+      subtitle: "91% of storage used • 3 days ago",
+      leadingIcon: <Feather name="alert-triangle" size={20} color="#F59E0B" />,
+      type: "warning",
+      onPress: () => setActiveItem("warning"),
+    },
+    {
+      id: "error",
+      title: "Sync Failed",
+      subtitle: "Unable to sync data • 5 days ago",
+      leadingIcon: (
+        <MaterialIcons name="sync-problem" size={20} color="#EF4444" />
+      ),
+      type: "danger",
+      onPress: () => setActiveItem("error"),
+    },
+  ];
+
+  const supportItems: ListItem[] = [
+    {
+      id: "help",
+      title: "Help Center",
+      subtitle: "FAQs, guides, and tutorials",
+      leadingIcon: <Feather name="help-circle" size={20} color="#E5E7EB" />,
+      trailingIcon: <Feather name="external-link" size={18} color="#6B7280" />,
+      onPress: () => setActiveItem("help"),
+    },
+    {
+      id: "contact",
+      title: "Contact Support",
+      subtitle: "Get help from our support team",
+      leadingIcon: <Feather name="message-circle" size={20} color="#E5E7EB" />,
+      trailingIcon: <Feather name="chevron-right" size={20} color="#6B7280" />,
+      onPress: () => setActiveItem("contact"),
+    },
+    {
+      id: "feedback",
+      title: "Send Feedback",
+      subtitle: "Help us improve the app",
+      leadingIcon: <MaterialIcons name="feedback" size={20} color="#E5E7EB" />,
+      trailingIcon: <Feather name="chevron-right" size={20} color="#6B7280" />,
+      onPress: () => setActiveItem("feedback"),
+    },
+  ];
+
+  const dangerItems: ListItem[] = [
+    {
+      id: "logout",
+      title: "Sign Out",
+      subtitle: "Sign out of your account",
+      leadingIcon: (
+        <MaterialCommunityIcons name="logout" size={20} color="#EF4444" />
+      ),
+      type: "danger",
+      onPress: () => setActiveItem("logout"),
+    },
+    {
+      id: "delete",
+      title: "Delete Account",
+      subtitle: "Permanently delete your account",
+      leadingIcon: <AntDesign name="deleteuser" size={20} color="#EF4444" />,
+      type: "danger",
+      onPress: () => setActiveItem("delete"),
+    },
+  ];
+
+  const renderListItem = ({ item }: { item: ListItem }) => (
+    <TouchableOpacity
+      onPress={item.onPress}
+      style={[activeItem === item.id && styles.activeListItem]}
+      activeOpacity={0.7}
+    >
+      <ListItemWrapper>
+        <ListItemLeadingIcon>
+          <View className="ml-4">{item.leadingIcon}</View>
+        </ListItemLeadingIcon>
+        <ListItemTitleView>
+          <ListItemTitle
+            destructive={item.type === "danger"}
+            style={{ marginLeft: 0 }}
+          >
+            {item.title}
+          </ListItemTitle>
+          <ListItemSubTitle>{item.subtitle}</ListItemSubTitle>
+        </ListItemTitleView>
+        <ListItemTrailingIcon>
+          {item.trailingIcon && (
+            <View style={styles.trailingIconContainer}>
+              {item.trailingIcon}
+            </View>
+          )}
+        </ListItemTrailingIcon>
+      </ListItemWrapper>
+    </TouchableOpacity>
+  );
+
+  const renderSection = (
+    title: string,
+    data: ListItem[],
+    keyPrefix: string,
+  ) => (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={data}
+          renderItem={renderListItem}
+          keyExtractor={(item) => `${keyPrefix}-${item.id}`}
+          scrollEnabled={false}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          contentContainerStyle={styles.flatListContent}
+        />
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContentContainer}
+          showsVerticalScrollIndicator={false}
+          scrollEnabled
+          contentInsetAdjustmentBehavior="automatic"
+        >
+          <View style={styles.header}>
+            <View className="flex-row gap-4 items-center">
+              <Ionicons name="settings-sharp" color={"white"} size={30} />
+              <Text style={styles.title}>Settings</Text>
+            </View>
+            <Text style={styles.subtitle}>
+              Manage your account and app preferences
+            </Text>
+          </View>
+
+          {renderSection("Account", profileItems, "profile")}
+          {renderSection("Preferences", appItems, "app")}
+          {renderSection("Recent Activity", activityItems, "activity")}
+          {renderSection("Support", supportItems, "support")}
+          {renderSection("Account Actions", dangerItems, "danger")}
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              App Version 1.2.3 • Last updated 2 days ago
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0D1117",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+  },
+  header: {
+    paddingTop: 20,
+    paddingBottom: 32,
+    paddingHorizontal: 4,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#FFFFFF",
+
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    lineHeight: 24,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#F3F4F6",
+    marginBottom: 12,
+    paddingLeft: 4,
+  },
+
+  listContainer: {
+    backgroundColor: "#161B22",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#21262D",
+    overflow: "hidden",
+  },
+  flatListContent: {
+    flexGrow: 1,
+  },
+  listItemContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    minHeight: 64,
+  },
+  activeListItem: {
+    backgroundColor: "#21262D",
+  },
+  listItemContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  leadingIconContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 40,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 2,
+    gap: 8,
+  },
+  itemTitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#F9FAFB",
+    flex: 1,
+  },
+  dangerTitle: {
+    color: "#EF4444",
+  },
+  itemSubtitle: {
+    fontSize: 14,
+    color: "#9CA3AF",
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  warningSubtitle: {
+    color: "#D97706",
+  },
+  successSubtitle: {
+    color: "#059669",
+  },
+  dangerSubtitle: {
+    color: "#DC2626",
+  },
+  trailingIconContainer: {
+    marginLeft: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    minWidth: 24,
+  },
+  trailingText: {
+    fontSize: 14,
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  badge: {
+    backgroundColor: "#EF4444",
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    minWidth: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#21262D",
+    marginLeft: 60,
+  },
+  footer: {
+    paddingVertical: 32,
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+  },
+});
+
+export default ListDemo;
+```

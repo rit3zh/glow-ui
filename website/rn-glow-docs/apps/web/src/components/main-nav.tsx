@@ -17,13 +17,9 @@ export function MainNav({ messages }: MainNavProps) {
   const pathname = usePathname()
 
   return (
-    <div className="mr-4 hidden md:flex">
-      <Link href="/" className="mr-6 flex items-center space-x-2">
+    <div className="ml-5 mt-3 hidden md:flex">
+      <Link href="/" className="mr-2 flex items-center">
         <Image src={require('../../../web/public/logo_.png')} alt='logo' className='w-10 h-10'/>
-
-        <span className="hidden font-bold sm:inline-block">
-          {siteConfig.name}
-        </span>
       </Link>
 
       <nav className="flex items-center gap-4 text-sm lg:gap-6">

@@ -178,26 +178,26 @@ const FloatingSheetDemo = () => {
           }}
           isPresented={isSheetPresented}
           showImageWhenExpanded={true}
-          customImageAnimation={(animation, defaults) => ({
-            transform: [
-              {
-                scale: animation?.interpolate({
-                  inputRange: [80, height * 0.1],
-                  outputRange: [0.7, 0.8],
-                  extrapolate: "clamp",
-                }),
-              },
-              {
-                rotate: animation?.interpolate({
-                  inputRange: [85, height * 0.9],
-                  outputRange: ["0deg", "360deg"],
-                  extrapolate: "clamp",
-                }),
-              },
-            ],
-            width: defaults?.width,
-            height: defaults?.height,
-          })}
+          // customImageAnimation={(animation, defaults) => ({
+          //   transform: [
+          //     {
+          //       scale: animation?.interpolate({
+          //         inputRange: [80, height * 0.1],
+          //         outputRange: [0.7, 0.8],
+          //         extrapolate: "clamp",
+          //       }),
+          //     },
+          //     {
+          //       rotate: animation?.interpolate({
+          //         inputRange: [85, height * 0.9],
+          //         outputRange: ["0deg", "360deg"],
+          //         extrapolate: "clamp",
+          //       }),
+          //     },
+          //   ],
+          //   width: defaults?.width,
+          //   height: defaults?.height,
+          // })}
           renderMinimizedContent={renderMinimizedContent}
           renderMaximizedContent={renderMaximizedContent}
         />

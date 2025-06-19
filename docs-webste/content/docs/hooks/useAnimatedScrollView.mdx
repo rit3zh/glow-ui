@@ -1,0 +1,95 @@
+---
+title: 🌀 useAnimateScrollView
+description: Minimalist hook for animated parallax scroll effects in React Native Glow UI
+---
+
+## ⚡️ Quick Example
+
+```tsx
+import { useAnimateScrollView } from 'src/components/templates/headers/parallax/hooks/useAnimatedScrollView';
+import { Animated, ScrollView } from 'react-native';
+
+const imageHeight = 300;
+const [scroll, onScroll, scale, translateYDown, translateYUp] = useAnimateScrollView(imageHeight);
+
+<Animated.ScrollView
+  onScroll={onScroll}
+  scrollEventThrottle={16}
+>
+  <Animated.Image
+    source={...}
+    style={{
+      transform: [
+        { scale },
+        { translateY: translateYDown },
+      ],
+    }}
+  />
+  {/* ...content... */}
+</Animated.ScrollView>
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { useRef } from "react";
+import { Animated } from "react-native";
+import { HEADER_HEIGHT } from "../constants";
+
+export const useAnimateScrollView = (
+  imageHeight: number,
+  disableScale?: boolean,
+) => {
+  const scroll = useRef(new Animated.Value(0)).current;
+
+  const scale = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [2.5, 1, 1],
+    extrapolate: "clamp",
+  });
+
+  const translateYDown = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [-imageHeight * 0.6, 0, imageHeight * 0.5],
+    extrapolate: "clamp",
+  });
+
+  const translateYUp = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [imageHeight * 0.3, 0, 0],
+    extrapolate: "clamp",
+  });
+
+  const onScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scroll } } }],
+    { useNativeDriver: true },
+  );
+
+  return [
+    scroll,
+    onScroll,
+    disableScale ? 1 : scale,
+    translateYDown,
+    translateYUp,
+  ] as const;
+};
+```
+
+---
+
+## 🧩 What it does
+
+- Returns animated values and handlers for parallax header effects:
+  - `scroll`: The animated scroll value
+  - `onScroll`: The scroll event handler
+  - `scale`: Image scaling (disable with `disableScale`)
+  - `translateYDown`: Downward translation for parallax
+  - `translateYUp`: Upward translation for overlay/header
+
+---
+
+## 💡 Tip
+
+Use this hook to create smooth, interactive parallax headers and hero images in your Glow UI screens!

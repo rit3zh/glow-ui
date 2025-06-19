@@ -1,0 +1,79 @@
+---
+title: Colors
+description: Colors for React Native Glow UI
+---
+
+## Colors
+
+The `Colors` constants provide a comprehensive color system for the Glow UI library, supporting both light and dark themes, semantic colors, and utility functions for color manipulation.
+
+### Color System Structure
+
+The color system is organized into two main themes:
+
+- **Light**: Colors optimized for light backgrounds.
+- **Dark**: Colors optimized for dark backgrounds.
+
+Each theme includes:
+
+- **iOS System Colors**: Primary, secondary, and system colors (e.g., `systemRed`, `systemBlue`, etc.)
+- **Background Colors**: `background`, `secondaryBackground`, `tertiaryBackground`
+- **Label Colors**: `label`, `secondaryLabel`, `tertiaryLabel`, `quaternaryLabel`
+- **Custom Palettes**: Extended palettes (e.g., `slate`, `gray`, `zinc`, `red`, `blue`, etc.), each with shades from 100 to 900.
+
+#### Example (TypeScript):
+
+```ts
+import { Colors } from "src/constants/colors/Colors";
+
+const primary = Colors.light.primary; // Light theme primary color
+const darkRed = Colors.dark.red[700]; // Dark theme red shade
+```
+
+### Type Definitions
+
+- `ColorShade`: Represents a palette with shades 100–900.
+- `ThemeColors`: All system, background, label, and custom palette colors for a theme.
+- `ColorSystem`: The full color system, with `light` and `dark` themes.
+
+### Semantic Colors
+
+The `semanticColors` object provides easy access to common UI states:
+
+```ts
+semanticColors.success; // Green (success)
+semanticColors.warning; // Yellow (warning)
+semanticColors.error; // Red (error)
+semanticColors.info; // Blue (info)
+```
+
+### Utility Functions
+
+#### `getColors(isDarkMode: boolean): ThemeColors`
+
+Returns the appropriate color set for the current theme.
+
+```ts
+import { getColors } from "src/constants/colors/Colors";
+const themeColors = getColors(true); // Gets dark theme colors
+```
+
+#### `withOpacity(color: string, opacity: number): string`
+
+Returns an RGBA color string with the specified opacity.
+
+```ts
+import { withOpacity } from "src/constants/colors/Colors";
+const semiTransparent = withOpacity("#007AFF", 0.5); // 'rgba(0, 122, 255, 0.5)'
+```
+
+### Usage
+
+Use these constants to ensure consistent color usage across your application, supporting both light and dark modes, and leveraging semantic and custom palettes for design flexibility.
+
+---
+
+**See also:**
+
+- [Colors.type.ts](https://github.com/your-repo/src/constants/colors/Colors.type.ts) for type definitions
+- [Colors.ts](https://github.com/your-repo/src/constants/colors/Colors.ts) for implementation details

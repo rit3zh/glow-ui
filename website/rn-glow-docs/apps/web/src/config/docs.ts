@@ -7,16 +7,16 @@
  * - src/lib/opendocs/components/docs/pager.tsx
  */
 
-import type { DocsConfig } from '@/lib/opendocs/types/docs'
+import type { DocsConfig } from "@/lib/opendocs/types/docs";
 
 export const docsConfig: DocsConfig = {
   mainNav: [
     {
-      href: '/docs',
+      href: "/docs",
 
       title: {
-        en: 'Documentation',
-        pt: 'Documentação',
+        en: "Documentation",
+        pt: "Documentação",
       },
     },
   ],
@@ -24,39 +24,27 @@ export const docsConfig: DocsConfig = {
   sidebarNav: [
     {
       title: {
-        en: 'Getting Started',
-        pt: 'Começando',
+        en: "React Native Glow UI",
+        pt: "Começando",
       },
 
       items: [
         {
-          href: '/docs',
+          href: "/docs",
 
           title: {
-            en: 'Introduction',
-            pt: 'Introdução',
+            en: "Introduction",
+            pt: "Introdução",
           },
 
           items: [],
         },
-
         {
-          href: '/docs/adding-new-docs',
+          href: "/docs/getting-started",
 
           title: {
-            en: 'Adding new docs',
-            pt: 'Adicionando novos documentos',
-          },
-
-          items: [],
-        },
-
-        {
-          href: '/docs/customizing',
-
-          title: {
-            en: 'Customizing',
-            pt: 'Personalizando',
+            en: "Getting started",
+            pt: "Adicionando novos documentos",
           },
 
           items: [],
@@ -64,58 +52,235 @@ export const docsConfig: DocsConfig = {
 
         {
           title: {
-            en: 'MDX',
+            en: "Components",
           },
 
           label: {
-            en: 'New',
-            pt: 'Novo',
+            en: "New",
+            pt: "Novo",
           },
 
           items: [
             {
-              href: '/docs/mdx/frontmatter',
+              href: "/docs/components/avatar",
 
               title: {
-                en: 'Frontmatter',
-                pt: 'Cabeçalho de metadados',
+                en: "Avatar",
+                pt: "Cabeçalho de metadados",
               },
 
               label: {
-                en: 'New',
-                pt: 'Novo',
+                en: "New",
+                pt: "Novo",
               },
 
               items: [],
             },
 
             {
-              href: '/docs/mdx/code',
+              href: "/docs/components/avatar-group",
 
               title: {
-                en: 'Code',
-                pt: 'Código',
+                en: "Avatar Group",
+                pt: "Código",
               },
 
               label: {
-                en: 'New',
-                pt: 'Novo',
+                en: "New",
+                pt: "Novo",
               },
 
               items: [],
             },
 
             {
-              href: '/docs/mdx/components',
+              href: "/docs/components/action_card",
 
               title: {
-                en: 'Components',
-                pt: 'Componentes',
+                en: "Action Card",
+                pt: "Componentes",
               },
 
               label: {
-                en: 'New',
-                pt: 'Novo',
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/accordion",
+
+              title: {
+                en: "Accordion",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/badge",
+
+              title: {
+                en: "Badge",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/button",
+
+              title: {
+                en: "Button",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/breadcrumbs",
+
+              title: {
+                en: "Breadcrumbs",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/card",
+
+              title: {
+                en: "Card",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/chip",
+
+              title: {
+                en: "Chip",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/center",
+
+              title: {
+                en: "Center",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/checkbox",
+
+              title: {
+                en: "Check Box",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/dialog",
+              title: {
+                en: "Dialog",
+                pt: "Componentes",
+              },
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+              items: [],
+            },
+            {
+              href: "/docs/components/divider",
+
+              title: {
+                en: "Divider",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/floatingsheet",
+
+              title: {
+                en: "Floating Sheet",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
+              },
+
+              items: [],
+            },
+            {
+              href: "/docs/components/header",
+
+              title: {
+                en: "Header",
+                pt: "Componentes",
+              },
+
+              label: {
+                en: "New",
+                pt: "Novo",
               },
 
               items: [],
@@ -124,11 +289,11 @@ export const docsConfig: DocsConfig = {
         },
 
         {
-          href: '/docs/changelog',
+          href: "/docs/changelog",
 
           title: {
-            en: 'Changelog',
-            pt: 'Histórico de alterações',
+            en: "Changelog",
+            pt: "Histórico de alterações",
           },
 
           items: [],
@@ -136,4 +301,4 @@ export const docsConfig: DocsConfig = {
       ],
     },
   ],
-} as const
+} as const;

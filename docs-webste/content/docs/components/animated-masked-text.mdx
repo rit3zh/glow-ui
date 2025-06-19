@@ -1,0 +1,377 @@
+---
+title: Animated Masked Text
+description: Animated Masked Text component for React Native.
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar-group/ActionCard.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/static/media/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+  <TabsContent value="tab-1">
+
+```bash
+npx rn-glow add AnimatedMaskedText
+```
+
+## ✨ `AnimatedMaskedTextProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📝 The text content to animate.",
+      type: "string",
+      required: true,
+    },
+    speed: {
+      description: "⏱️ Speed of the animation in milliseconds.",
+      type: "number",
+    },
+    colors: {
+      description:
+        '🌈 Gradient colors array (first color should be "transparent").',
+      type: "string[]",
+    },
+    baseTextColor: {
+      description: "🎨 The base text color beneath the animation.",
+      type: "string",
+    },
+    style: {
+      description: "🎨 Style object for the animated text.",
+      type: "StyleProp<TextStyle>",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+<TabsContent value="tab-2">
+
+  <Accordions>
+  <Accordion title="AnimatedMaskedText.tsx">
+  ```tsx
+  import React, { useEffect, useRef } from "react";
+import { Animated, Text, StyleSheet, Easing, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
+import type { AnimatedMaskedTextProps } from "./AnimatedMaskedText.types";
+
+export const AnimatedMaskedText: React.FC<AnimatedMaskedTextProps> = ({
+  children,
+  style,
+  speed = 1,
+  colors = ["transparent", "rgba(255,255,255,1)", "transparent"],
+  baseTextColor = "#000000", // Add base text color prop
+}) => {
+  const shimmerTranslate = useRef(new Animated.Value(0)).current;
+  const [textWidth, setTextWidth] = React.useState(0);
+  const [textHeight, setTextHeight] = React.useState(0);
+
+useEffect(() => {
+const animate = () => {
+shimmerTranslate.setValue(-1);
+Animated.loop(
+Animated.timing(shimmerTranslate, {
+toValue: 1,
+duration: 2000 / speed,
+easing: Easing.inOut(Easing.ease),
+useNativeDriver: true,
+}),
+).start();
+};
+animate();
+}, [shimmerTranslate, speed]);
+
+const translateX = shimmerTranslate.interpolate({
+inputRange: [-1, 1],
+outputRange: [-textWidth * 2.2, textWidth * 2.5],
+});
+
+return (
+
+<View style={{ position: "relative" }}>
+{/* Base text layer - visible text */}
+<Text
+style={[styles.text, style, { color: baseTextColor }]}
+onTextLayout={(e) => {
+const { width, height } = e.nativeEvent.lines[0];
+setTextWidth(width);
+setTextHeight(height);
+}} >
+{children}
+</Text>
+
+      {/* Shimmer overlay */}
+      {textWidth > 0 && (
+        <MaskedView
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              width: textWidth,
+              height: textHeight || 50,
+            },
+          ]}
+          maskElement={
+            <Text style={[styles.text, style, { color: "white" }]}>
+              {children}
+            </Text>
+          }
+        >
+          <Animated.View
+            style={[
+              {
+                flexDirection: "row",
+                transform: [{ translateX }],
+                opacity: shimmerTranslate.interpolate({
+                  inputRange: [-1, 1],
+                  outputRange: [0.3, 1],
+                }),
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={colors as any}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                width: textWidth * 3,
+                height: textHeight || 50,
+              }}
+            />
+          </Animated.View>
+        </MaskedView>
+      )}
+    </View>
+
+);
+};
+
+const styles = StyleSheet.create({
+text: {
+fontSize: 20,
+fontWeight: "bold",
+},
+});
+
+````
+
+        </Accordion>
+</Accordions>
+
+<Accordions>
+<Accordion title="AnimatedMaskedText.types.ts">
+
+```ts
+import type { StyleProp, TextStyle } from "react-native";
+
+export interface AnimatedMaskedTextProps {
+children: string;
+speed?: number;
+/**
+ *
+ *
+ * @type {string[]}
+ * @memberof AnimatedMaskedTextProps
+ * @description The first color in the array is always going to be "transparent."
+ */
+colors?: string[];
+baseTextColor?: string;
+style?: StyleProp<TextStyle>;
+}
+````
+
+</Accordion>
+</Accordions>
+
+</TabsContent>
+
+  </Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView, Dimensions } from "react-native";
+import React from "react";
+import { AnimatedMaskedText } from "@/components/index";
+import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
+
+const AnimatedMaskedTextDemo = () => {
+  return (
+    <ScrollView
+      className="flex-1 bg-black"
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
+      contentInsetAdjustmentBehavior="always"
+      scrollEnabled
+      scrollToOverflowEnabled={false}
+      showsVerticalScrollIndicator={false}
+    >
+      <SafeAreaView className="flex-1">
+        <View className="px-6 pt-8 pb-6 border-b border-zinc-800">
+          <View className="flex-row items-center mb-2">
+            <Ionicons name="sparkles" size={24} color="#3b82f6" />
+            <Text className="text-zinc-400 text-sm ml-2 font-medium">
+              COMPONENT SHOWCASE
+            </Text>
+          </View>
+          <Text className="text-white text-3xl font-bold">
+            Animated Masked Text
+          </Text>
+          <Text className="text-zinc-400 text-base mt-2 leading-relaxed">
+            Beautiful shimmer effects with customizable animations
+          </Text>
+        </View>
+
+        <View className="flex-1 justify-center items-center px-6">
+          <View className="w-full max-w-sm">
+            <View className="bg-zinc-950 rounded-2xl p-8 mb-8 border border-zinc-800">
+              <View className="flex-row items-center justify-center mb-4">
+                <Ionicons name="flash" size={20} color="#10b981" />
+                <Text className="text-zinc-400 text-sm ml-2 font-medium">
+                  PRIMARY
+                </Text>
+              </View>
+              <View className="items-center">
+                <AnimatedMaskedText
+                  baseTextColor="#18181b"
+                  colors={[
+                    "transparent",
+                    "rgba(59, 130, 246, 0.9)",
+                    "transparent",
+                  ]}
+                  speed={0.6}
+                  style={{
+                    fontSize: 32,
+                    fontWeight: "800",
+                    textAlign: "center",
+                    lineHeight: 38,
+                  }}
+                >
+                  Beautiful Text
+                </AnimatedMaskedText>
+              </View>
+            </View>
+
+            <View className="bg-zinc-950 rounded-2xl p-8 mb-8 border border-zinc-800">
+              <View className="flex-row items-center justify-center mb-4">
+                <Ionicons name="color-palette" size={20} color="#f59e0b" />
+                <Text className="text-zinc-400 text-sm ml-2 font-medium">
+                  GRADIENT
+                </Text>
+              </View>
+              <View className="items-center">
+                <AnimatedMaskedText
+                  baseTextColor="#27272a"
+                  colors={[
+                    "transparent",
+                    "rgba(236, 72, 153, 0.8)",
+                    "rgba(59, 130, 246, 0.8)",
+                    "transparent",
+                  ]}
+                  speed={0.4}
+                  style={{
+                    fontSize: 28,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    lineHeight: 34,
+                  }}
+                >
+                  Shimmer Effect
+                </AnimatedMaskedText>
+              </View>
+            </View>
+
+            <View className="bg-zinc-950 rounded-2xl p-8 border border-zinc-800">
+              <View className="flex-row items-center justify-center mb-4">
+                <Ionicons name="star" size={20} color="#8b5cf6" />
+                <Text className="text-zinc-400 text-sm ml-2 font-medium">
+                  ACCENT
+                </Text>
+              </View>
+              <View className="items-center">
+                <AnimatedMaskedText
+                  baseTextColor="#1f2937"
+                  colors={[
+                    "transparent",
+                    "rgba(16, 185, 129, 0.9)",
+                    "transparent",
+                  ]}
+                  speed={0.8}
+                  style={{
+                    fontSize: 24,
+                    fontWeight: "600",
+                    textAlign: "center",
+                    lineHeight: 30,
+                  }}
+                >
+                  Smooth Animation
+                </AnimatedMaskedText>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View className="px-6 pt-6 border-t border-zinc-800">
+          <View className="flex-row items-center justify-center">
+            <Ionicons name="code-slash" size={16} color="#6b7280" />
+            <Text className="text-zinc-500 text-sm ml-2">
+              Made with ❤️ and glow-ui.
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default AnimatedMaskedTextDemo;
+```

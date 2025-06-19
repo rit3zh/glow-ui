@@ -7,15 +7,14 @@ const { width } = Dimensions.get("window");
 
 const ShimmerDemo: React.FC = (_$_): React.ReactNode => {
   const [isLoading] = useState<boolean>(true);
-
   const shimmerConfig: any = {
-    duration: 5000,
+    duration: 800,
     shimmerColors: [
       "rgba(0, 0, 0, 0.5)",
       "rgba(255, 255, 255, 0.2)",
       "rgba(0, 0, 0, 0.5)",
     ],
-    variant: "pulse",
+    variant: "shimmer",
     direction: "leftToRight",
   };
 

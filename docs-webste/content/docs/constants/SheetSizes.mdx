@@ -1,0 +1,45 @@
+---
+title: SheetSizes
+description: Constants for floating sheet snap points in React Native Glow UI
+---
+
+## ⚡️ What it is
+
+- An array of snap points for floating sheets
+- Used to determine minimized and expanded positions
+- Calculated based on the device window height
+
+---
+
+## 📝 Values
+
+- `sheetSizes[0]`: Minimized position (85 pixels from the top)
+- `sheetSizes[1]`: Expanded position (90% of the window height)
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { sheetSizes } from "src/components/templates/sheet/floating-sheet/constants/sizes/sheetSizes";
+
+const minimized = sheetSizes[0];
+const expanded = sheetSizes[1];
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { Dimensions } from "react-native";
+
+const { height } = Dimensions.get("window");
+export const sheetSizes = [85, height * 0.9];
+```
+
+---
+
+## 💡 Tip
+
+You can use these constants to snap your floating sheet to common positions for a consistent user experience!

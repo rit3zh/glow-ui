@@ -1,0 +1,1102 @@
+---
+title: Toast
+description: Toast component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add toast
+```
+
+## 🔔 `ToastProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📦 The toast content to render.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## ⚙️ `ToastOptions`
+
+<TypeTable
+  type={{
+    duration: {
+      description: "⏱️ Duration (in ms) before the toast auto-dismisses.",
+      type: "number",
+    },
+    type: {
+      description: "🔖 Visual type of the toast.",
+      type: '"default" | "success" | "error" | "warning" | "info"',
+    },
+    position: {
+      description: "📍 Position on screen.",
+      type: '"top" | "bottom"',
+    },
+    onClose: {
+      description: "❌ Callback when toast is dismissed.",
+      type: "() => void",
+    },
+    action: {
+      description: "🛠️ Optional action with label and callback.",
+      type: "{ label?: string; onPress?: () => void; }",
+    },
+  }}
+/>
+
+---
+
+## 📦 `Toast`
+
+<TypeTable
+  type={{
+    id: {
+      description: "🆔 Unique identifier for the toast.",
+      type: "string",
+      required: true,
+    },
+    content: {
+      description: "📝 Content of the toast (text or React node).",
+      type: "React.ReactNode | string",
+      required: true,
+    },
+    options: {
+      description: "⚙️ Fully resolved toast options.",
+      type: "Required<ToastOptions>",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🌐 `ToastContextValue`
+
+<TypeTable
+  type={{
+    toasts: {
+      description: "📋 List of all active toasts.",
+      type: "Toast[]",
+      required: true,
+    },
+    show: {
+      description: "📢 Show a new toast.",
+      type: "(content: React.ReactNode | string, options?: ToastOptions) => string",
+      required: true,
+    },
+    update: {
+      description: "🔄 Update an existing toast.",
+      type: "(id: string, content: React.ReactNode | string, options?: ToastOptions) => void",
+      required: true,
+    },
+    dismiss: {
+      description: "❌ Dismiss a specific toast.",
+      type: "(id: string) => void",
+      required: true,
+    },
+    dismissAll: {
+      description: "🚫 Dismiss all toasts.",
+      type: "() => void",
+      required: true,
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="ToastViewPort.tsx">
+
+```tsx
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useToast } from "./context/ToastContext";
+import { Toast } from "./Toast";
+
+export const ToastViewport: React.FC = () => {
+  const { toasts } = useToast();
+  const insets = useSafeAreaInsets();
+
+  const topToasts = toasts.filter((toast) => toast.options.position === "top");
+  const bottomToasts = toasts.filter(
+    (toast) => toast.options.position === "bottom",
+  );
+
+  return (
+    <>
+      <View
+        style={[
+          styles.viewport,
+          styles.topViewport,
+          {
+            paddingTop: insets.top + 10,
+          },
+        ]}
+      >
+        {topToasts.map((toast, index) => (
+          <Toast key={toast.id} toast={toast} index={index} />
+        ))}
+      </View>
+      <View
+        style={[
+          styles.viewport,
+          styles.bottomViewport,
+          {
+            paddingBottom: insets.bottom + 10,
+          },
+        ]}
+      >
+        {bottomToasts.map((toast, index) => (
+          <Toast key={toast.id} toast={toast} index={index} />
+        ))}
+      </View>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  toastContainer: {
+    width: "90%",
+    maxWidth: 400,
+    alignSelf: "center",
+    marginVertical: 4,
+    borderRadius: 8,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  toast: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+  },
+  icon: {
+    color: "#fff",
+    fontSize: 18,
+    marginRight: 12,
+    fontWeight: "bold",
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  text: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  actionButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    marginLeft: 8,
+  },
+  actionText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  viewport: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    zIndex: 9999,
+    paddingHorizontal: 16,
+    pointerEvents: "box-none",
+  },
+  topViewport: {
+    top: 0,
+  },
+  bottomViewport: {
+    bottom: 0,
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="index.tsx">
+
+```tsx
+import * as React from "react";
+import { ToastProvider, useToast } from "./context/ToastContext";
+import { ToastViewport } from "./ToastViewPort";
+import type { ToastOptions, ToastProps } from "./Toast.types";
+type ToastRef = {
+  show?: (content: React.ReactNode | string, options?: ToastOptions) => string;
+  update?: (
+    id: string,
+    content: React.ReactNode | string,
+    options?: ToastOptions,
+  ) => void;
+  dismiss?: (id: string) => void;
+  dismissAll?: () => void;
+};
+
+const toastRef: ToastRef = {};
+
+const ToastController: React.FC = () => {
+  const toast = useToast();
+
+  toastRef.show = toast.show;
+  toastRef.update = toast.update;
+  toastRef.dismiss = toast.dismiss;
+  toastRef.dismissAll = toast.dismissAll;
+
+  return null;
+};
+
+export const ToastProviderWithViewport: React.FC<ToastProps> = ({
+  children,
+}) => {
+  return (
+    <ToastProvider>
+      <ToastController />
+      {children}
+      <ToastViewport />
+    </ToastProvider>
+  );
+};
+
+export const Toast = {
+  show: (content: React.ReactNode | string, options?: ToastOptions): string => {
+    if (!toastRef.show) {
+      console.warn(
+        "Toast provider not initialized. Make sure you have wrapped your app with ToastProviderWithViewport.",
+      );
+      return "";
+    }
+    return toastRef.show(content, options);
+  },
+  update: (
+    id: string,
+    content: React.ReactNode | string,
+    options?: ToastOptions,
+  ): void => {
+    if (!toastRef.update) {
+      console.warn(
+        "Toast provider not initialized. Make sure you have wrapped your app with ToastProviderWithViewport.",
+      );
+      return;
+    }
+    return toastRef.update(id, content, options);
+  },
+  dismiss: (id: string): void => {
+    if (!toastRef.dismiss) {
+      console.warn(
+        "Toast provider not initialized. Make sure you have wrapped your app with ToastProviderWithViewport.",
+      );
+      return;
+    }
+    return toastRef.dismiss(id);
+  },
+  dismissAll: (): void => {
+    if (!toastRef.dismissAll) {
+      console.warn(
+        "Toast provider not initialized. Make sure you have wrapped your app with ToastProviderWithViewport.",
+      );
+      return;
+    }
+    return toastRef.dismissAll();
+  },
+};
+
+export { ToastProvider, useToast } from "./context/ToastContext";
+export type { ToastOptions, ToastType, ToastPosition } from "./Toast.types";
+```
+
+</Accordion>
+
+<Accordion title="Toast.tsx">
+
+```tsx
+import React, { useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  withSpring,
+  Easing,
+  interpolate,
+  runOnJS,
+  Layout,
+} from "react-native-reanimated";
+import type {
+  Toast as ToastType,
+  ToastType as ToastVariant,
+} from "./Toast.types";
+import { useToast } from "./context/ToastContext";
+
+if (Platform.OS === "android") {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
+interface ToastProps {
+  toast: ToastType;
+  index: number;
+  onHeightChange?: (id: string, height: number) => void;
+}
+
+const getBackgroundColor = (type: ToastVariant) => {
+  switch (type) {
+    case "success":
+      return "#10B981";
+    case "error":
+      return "#EF4444";
+    case "warning":
+      return "#F59E0B";
+    case "info":
+      return "#3B82F6";
+    default:
+      return "#262626";
+  }
+};
+
+const getIconForType = (type: ToastVariant) => {
+  switch (type) {
+    case "success":
+      return "✓";
+    case "error":
+      return "✗";
+    case "warning":
+      return "⚠";
+    case "info":
+      return "ℹ";
+    default:
+      return "";
+  }
+};
+
+export const Toast: React.FC<ToastProps> = ({ toast, index }) => {
+  const prevContentRef = useRef<string | React.ReactNode | null>(null);
+  const prevTypeRef = useRef<ToastVariant | null>(null);
+
+  const { dismiss } = useToast();
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(
+    toast.options.position === "top" ? -20 : 20,
+  );
+  const scale = useSharedValue(0.95);
+  const rotateZ = useSharedValue(toast.options.position === "top" ? -2 : 2);
+  const height = useSharedValue(0);
+  const viewRef = useRef<View>(null);
+
+  const getStackOffset = () => {
+    const baseOffset = 8;
+    const maxOffset = 20;
+    const offset = Math.min(index * baseOffset, maxOffset);
+    return toast.options.position === "top" ? -offset : offset;
+  };
+
+  const handleDismiss = () => {
+    LayoutAnimation.configureNext({
+      duration: 300,
+      create: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.opacity,
+      },
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+      delete: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.opacity,
+      },
+    });
+    dismiss(toast.id);
+    toast.options.onClose?.();
+  };
+
+  useEffect(() => {
+    const delay = index * 50;
+
+    LayoutAnimation.configureNext({
+      duration: 300,
+      create: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.opacity,
+      },
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+    });
+
+    setTimeout(() => {
+      opacity.value = withTiming(1, {
+        duration: 300,
+        easing: Easing.bezier(0.4, 0, 0.2, 1),
+      });
+
+      translateY.value = withSpring(getStackOffset(), {
+        damping: 20,
+        stiffness: 150,
+        mass: 0.6,
+        velocity: 0.5,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+
+      scale.value = withSpring(1, {
+        damping: 20,
+        stiffness: 150,
+        mass: 0.6,
+      });
+
+      rotateZ.value = withTiming(0, {
+        duration: 300,
+        easing: Easing.bezier(0.4, 0, 0.2, 1),
+      });
+    }, delay);
+
+    if (toast.options.duration > 0) {
+      const exitDelay = Math.max(0, toast.options.duration - 500);
+
+      const exitAnimations = () => {
+        opacity.value = withTiming(0, {
+          duration: 250,
+          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        });
+
+        translateY.value = withTiming(
+          toast.options.position === "top" ? -20 : 20,
+          {
+            duration: 250,
+            easing: Easing.bezier(0.4, 0, 0.2, 1),
+          },
+        );
+
+        scale.value = withTiming(0.95, {
+          duration: 250,
+          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        });
+
+        setTimeout(() => {
+          runOnJS(handleDismiss)();
+        }, 250);
+      };
+
+      setTimeout(exitAnimations, exitDelay);
+    }
+  }, [toast, opacity, translateY, scale, rotateZ, index]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [
+        { translateY: translateY.value },
+        { scale: scale.value },
+        { rotateZ: `${rotateZ.value}deg` },
+      ],
+      zIndex: 1000 - index,
+    };
+  });
+
+  const handlePress = () => {
+    opacity.value = withTiming(0, {
+      duration: 200,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+    });
+
+    translateY.value = withTiming(toast.options.position === "top" ? -20 : 20, {
+      duration: 200,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+    });
+
+    scale.value = withTiming(0.95, {
+      duration: 200,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+    });
+
+    setTimeout(() => {
+      handleDismiss();
+    }, 200);
+  };
+
+  const backgroundColor = getBackgroundColor(toast.options.type);
+  const icon = getIconForType(toast.options.type);
+
+  return (
+    <Animated.View
+      style={[
+        styles.toastContainer,
+        animatedStyle,
+        {
+          marginTop: index > 0 ? 8 : 0,
+          marginBottom: index > 0 ? 0 : 8,
+        },
+      ]}
+    >
+      <Pressable
+        style={[styles.toast, { backgroundColor }]}
+        onPress={handlePress}
+        android_ripple={{ color: "rgba(255, 255, 255, 0.1)" }}
+      >
+        {icon ? <Text style={styles.icon}>{icon}</Text> : null}
+        <View style={styles.contentContainer}>
+          {typeof toast.content === "string" ? (
+            <Text style={styles.text}>{toast.content}</Text>
+          ) : (
+            toast.content
+          )}
+        </View>
+        {toast.options.action && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => {
+              toast.options.action?.onPress!();
+              dismiss(toast.id);
+            }}
+          >
+            <Text style={styles.actionText}>{toast.options.action.label}</Text>
+          </TouchableOpacity>
+        )}
+      </Pressable>
+    </Animated.View>
+  );
+};
+
+const styles = StyleSheet.create({
+  toastContainer: {
+    width: "90%",
+    maxWidth: 400,
+    alignSelf: "center",
+    marginVertical: 4,
+    borderRadius: 12,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  toast: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 12,
+  },
+  icon: {
+    color: "#fff",
+    fontSize: 20,
+    marginRight: 12,
+    fontWeight: "bold",
+    textAlign: "center",
+    width: 24,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  text: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 20,
+  },
+  actionButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    marginLeft: 12,
+  },
+  actionText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title='Toast.types.ts'>
+
+```ts
+export type ToastType = "default" | "success" | "error" | "warning" | "info";
+
+export type ToastPosition = "top" | "bottom";
+
+export interface ToastProps {
+  children: React.ReactNode;
+}
+export interface ToastOptions {
+  duration?: number;
+  type?: ToastType;
+  position?: ToastPosition;
+  onClose?: () => void;
+  action?: {
+    label?: string;
+    onPress?: () => void;
+  };
+}
+
+export interface Toast {
+  id: string;
+  content: React.ReactNode | string;
+  options: Required<ToastOptions>;
+}
+
+export interface ToastContextValue {
+  toasts: Toast[];
+  show: (content: React.ReactNode | string, options?: ToastOptions) => string;
+  update: (
+    id: string,
+    content: React.ReactNode | string,
+    options?: ToastOptions,
+  ) => void;
+  dismiss: (id: string) => void;
+  dismissAll: () => void;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  ToastProviderWithViewport,
+  useToast,
+  Toast,
+} from "@/components/molecules";
+import {
+  Feather,
+  MaterialIcons,
+  Ionicons,
+  AntDesign,
+} from "@expo/vector-icons";
+
+function SuccessToast() {
+  return (
+    <View style={{}}>
+      <View
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <AntDesign name="checkcircle" size={18} color="#10B981" />
+        <Text style={styles.customToastTitle}>Success</Text>
+      </View>
+      <Text style={[styles.customToastMessage, { bottom: 10 }]}>
+        Your changes have been saved successfully.
+      </Text>
+    </View>
+  );
+}
+
+function LoadingToast() {
+  return (
+    <View style={styles.customToast}>
+      <View style={styles.customToastHeader}>
+        <MaterialIcons name="hourglass-empty" size={18} color="#8B5CF6" />
+        <Text style={styles.customToastTitle}>Processing</Text>
+      </View>
+      <Text style={styles.customToastMessage}>
+        Please wait while we process your request...
+      </Text>
+    </View>
+  );
+}
+
+function HookExampleScreen() {
+  const toast = useToast();
+
+  const showProgressToast = () => {
+    const id = toast.show(<LoadingToast />, {
+      duration: 0,
+      action: {
+        label: "Cancel",
+        onPress: () => {
+          toast.dismiss(id);
+          Toast.show("Operation cancelled", {
+            type: "warning",
+            action: {
+              label: "Retry",
+              onPress: () => console.log("Retry pressed"),
+            },
+          });
+        },
+      },
+    });
+
+    setTimeout(() => {
+      toast.update(id, <SuccessToast />, {
+        type: "success",
+        duration: 4000,
+        action: undefined,
+      });
+    }, 3000);
+  };
+
+  return (
+    <TouchableOpacity style={styles.button} onPress={showProgressToast}>
+      <Feather name="refresh-cw" size={16} color="#E5E7EB" />
+      <Text style={styles.buttonText}>Show Progress Toast</Text>
+    </TouchableOpacity>
+  );
+}
+
+function ToastDemoContent() {
+  const showDefaultToast = () => {
+    Toast.show("This is a default notification message.", {
+      duration: 4000,
+    });
+  };
+
+  const showSuccessToast = () => {
+    Toast.show("Your profile has been updated successfully!", {
+      type: "success",
+      duration: 4000,
+      action: {
+        label: "View",
+        onPress: () => console.log("View profile"),
+      },
+    });
+  };
+
+  const showErrorToast = () => {
+    Toast.show("Failed to save changes. Please try again.", {
+      type: "error",
+      duration: 5000,
+      action: {
+        label: "Retry",
+        onPress: () => console.log("Retry action"),
+      },
+    });
+  };
+
+  const showWarningToast = () => {
+    Toast.show("Your session will expire in 5 minutes.", {
+      type: "warning",
+      duration: 6000,
+      action: {
+        label: "Extend",
+        onPress: () => console.log("Extend session"),
+      },
+    });
+  };
+
+  const showInfoToast = () => {
+    Toast.show("New features are now available in settings.", {
+      type: "info",
+      duration: 4000,
+      action: {
+        label: "Learn more",
+        onPress: () => console.log("Learn more"),
+      },
+    });
+  };
+
+  const showCustomToast = () => {
+    Toast.show(<SuccessToast />, {
+      duration: 5000,
+      position: "top",
+    });
+  };
+
+  const showTopToast = () => {
+    Toast.show("This toast appears from the top!", {
+      position: "top",
+      duration: 3000,
+    });
+  };
+
+  const showPersistentToast = () => {
+    Toast.show("This toast stays until dismissed.", {
+      duration: 0,
+      action: {
+        label: "Dismiss",
+        onPress: () => console.log("Dismissed"),
+      },
+    });
+  };
+
+  return (
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Toast Notifications</Text>
+        <Text style={styles.subtitle}>
+          Beautifully designed toast components for React Native
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Basic Types</Text>
+        <Text style={styles.sectionDescription}>
+          Standard toast notifications with different semantic types
+        </Text>
+
+        <View style={styles.grid}>
+          <TouchableOpacity style={styles.button} onPress={showDefaultToast}>
+            <Feather name="message-circle" size={16} color="#E5E7EB" />
+            <Text style={styles.buttonText}>Default</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showSuccessToast}>
+            <AntDesign name="checkcircle" size={16} color="#10B981" />
+            <Text style={styles.buttonText}>Success</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showErrorToast}>
+            <MaterialIcons name="error-outline" size={16} color="#EF4444" />
+            <Text style={styles.buttonText}>Error</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showWarningToast}>
+            <Feather name="alert-triangle" size={16} color="#F59E0B" />
+            <Text style={styles.buttonText}>Warning</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showInfoToast}>
+            <Feather name="info" size={16} color="#3B82F6" />
+            <Text style={styles.buttonText}>Info</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Advanced Usage</Text>
+        <Text style={styles.sectionDescription}>
+          Custom components, positioning, and interactive features
+        </Text>
+
+        <View style={styles.grid}>
+          <TouchableOpacity style={styles.button} onPress={showCustomToast}>
+            <Feather name="code" size={16} color="#8B5CF6" />
+            <Text style={styles.buttonText}>Custom Component</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showTopToast}>
+            <Feather name="arrow-up" size={16} color="#06B6D4" />
+            <Text style={styles.buttonText}>Top Position</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={showPersistentToast}>
+            <Ionicons name="infinite" size={16} color="#EC4899" />
+            <Text style={styles.buttonText}>Persistent</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Hook Example</Text>
+        <Text style={styles.sectionDescription}>
+          Using the useToast hook for programmatic control
+        </Text>
+
+        <HookExampleScreen />
+      </View>
+
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          Tap any toast notification to dismiss it early
+        </Text>
+      </View>
+    </ScrollView>
+  );
+}
+
+export default function ToastDemo() {
+  return (
+    <SafeAreaProvider>
+      <ToastProviderWithViewport>
+        <ToastDemoContent />
+      </ToastProviderWithViewport>
+    </SafeAreaProvider>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0A0A0B",
+    paddingHorizontal: 20,
+  },
+  header: {
+    paddingTop: 60,
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 8,
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    lineHeight: 24,
+  },
+  section: {
+    marginBottom: 40,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#F3F4F6",
+    marginBottom: 8,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: "#9CA3AF",
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#111827",
+    borderWidth: 1,
+    borderColor: "#1F2937",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    minWidth: 140,
+    gap: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#E5E7EB",
+  },
+  customToast: {
+    padding: 4,
+  },
+  customToastHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+    gap: 8,
+  },
+  customToastTitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  customToastMessage: {
+    color: "#D1D5DB",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  footer: {
+    paddingVertical: 32,
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+  },
+});
+```

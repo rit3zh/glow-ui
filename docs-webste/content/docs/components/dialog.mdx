@@ -1,0 +1,1833 @@
+---
+title: Dialog
+description: Dialog component for React Native.
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/moleclues/Breadcrumbs/BreadcrumbsList.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add dialog
+```
+
+---
+
+### 💬 `Dialog` Component
+
+The `Dialog` is a compound component used to build custom modal-like overlays. It exposes subcomponents for trigger, content, title, description, and close.
+
+---
+
+### 📦 `DialogContent` Props
+
+| Prop       | Type        | Default      | Description                             |
+| ---------- | ----------- | ------------ | --------------------------------------- |
+| `children` | `ReactNode` | **required** | Content rendered inside the dialog box. |
+
+---
+
+### 🏷️ `DialogTitle` Props
+
+| Prop       | Type                   | Default      | Description                               |
+| ---------- | ---------------------- | ------------ | ----------------------------------------- |
+| `children` | `ReactNode`            | **required** | Title content shown at the top of dialog. |
+| `style`    | `StyleProp<TextStyle>` | `undefined`  | Optional text style for the title.        |
+
+---
+
+### 📝 `DialogDescription` Props
+
+| Prop       | Type                   | Default      | Description                                   |
+| ---------- | ---------------------- | ------------ | --------------------------------------------- |
+| `children` | `ReactNode`            | **required** | Supporting text or description of the dialog. |
+| `style`    | `StyleProp<TextStyle>` | `undefined`  | Custom styles for the description text.       |
+
+---
+
+### ✖️ `DialogClose` Props
+
+| Prop       | Type        | Default      | Description                       |
+| ---------- | ----------- | ------------ | --------------------------------- |
+| `children` | `ReactNode` | **required** | Element used to close the dialog. |
+
+---
+
+### 🚀 `DialogTrigger` Props
+
+| Prop       | Type        | Default      | Description                                |
+| ---------- | ----------- | ------------ | ------------------------------------------ |
+| `children` | `ReactNode` | **required** | Interactive element that opens the dialog. |
+
+---
+
+### 🧠 `DialogContextType`
+
+| Property  | Type                      | Description                                |
+| --------- | ------------------------- | ------------------------------------------ |
+| `open`    | `boolean`                 | Indicates if the dialog is currently open. |
+| `setOpen` | `(open: boolean) => void` | Function to manually control dialog state. |
+
+---
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Dialog.tsx">
+
+      ```tsx
+      import React, { createContext, useContext, useState, ReactNode } from "react";
+
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+  Animated,
+  Dimensions,
+  StyleProp,
+  TextStyle,
+} from "react-native";
+
+// Types
+interface DialogContextType {
+open: boolean;
+setOpen: (open: boolean) => void;
+}
+
+interface DialogProps {
+children: ReactNode;
+}
+
+interface DialogTriggerProps {
+children: ReactNode;
+asChild?: boolean;
+}
+
+interface DialogContentProps {
+children: ReactNode;
+className?: string;
+}
+
+interface DialogHeaderProps {
+children: ReactNode;
+}
+
+interface DialogTitleProps {
+children: ReactNode;
+style?: StyleProp<TextStyle>;
+}
+
+interface DialogDescriptionProps {
+children: ReactNode;
+style?: StyleProp<TextStyle>;
+}
+
+interface DialogFooterProps {
+children: ReactNode;
+}
+
+interface DialogCloseProps {
+children: ReactNode;
+asChild?: boolean;
+}
+
+// Context
+const DialogContext = createContext<DialogContextType | undefined>(undefined);
+
+const useDialog = () => {
+const context = useContext(DialogContext);
+if (!context) {
+throw new Error("Dialog components must be used within a Dialog");
+}
+return context;
+};
+
+// Styles
+const styles = StyleSheet.create({
+overlay: {
+flex: 1,
+backgroundColor: "rgba(0, 0, 0, 0.8)",
+justifyContent: "center",
+alignItems: "center",
+padding: 16,
+},
+content: {
+backgroundColor: "#09090b",
+borderRadius: 12,
+padding: 24,
+width: "100%",
+maxWidth: 400,
+borderWidth: 1,
+borderColor: "#27272a",
+shadowColor: "#000",
+shadowOffset: {
+width: 0,
+height: 10,
+},
+shadowOpacity: 0.3,
+shadowRadius: 20,
+elevation: 10,
+},
+header: {
+marginBottom: 16,
+},
+title: {
+fontSize: 18,
+fontWeight: "600",
+color: "#fafafa",
+marginBottom: 4,
+lineHeight: 24,
+},
+description: {
+fontSize: 14,
+color: "#a1a1aa",
+lineHeight: 20,
+},
+footer: {
+flexDirection: "row",
+justifyContent: "flex-end",
+gap: 8,
+marginTop: 24,
+},
+button: {},
+primaryButton: {
+backgroundColor: "#fafafa",
+borderColor: "#fafafa",
+},
+secondaryButton: {
+backgroundColor: "transparent",
+// borderColor: "#27272a",
+},
+primaryButtonText: {
+color: "#09090b",
+fontSize: 14,
+fontWeight: "500",
+},
+secondaryButtonText: {
+color: "#fafafa",
+fontSize: 14,
+fontWeight: "500",
+},
+});
+
+// Components
+export const Dialog: React.FC<DialogProps> = ({ children }) => {
+const [open, setOpen] = useState(false);
+
+return (
+
+<DialogContext.Provider value={{ open, setOpen }}>
+  {children}
+</DialogContext.Provider>
+); };
+
+export const DialogTrigger: React.FC<DialogTriggerProps> = ({
+  children,
+  asChild,
+}) => {
+  const { setOpen } = useDialog();
+
+if (asChild && React.isValidElement(children)) {
+return React.cloneElement(children, {
+onPress: () => setOpen(true),
+} as any);
+}
+
+return (
+
+<TouchableOpacity onPress={() => setOpen(true)}>{children}</TouchableOpacity>
+); };
+
+export const DialogContent: React.FC<DialogContentProps> = ({ children }) => {
+  const { open, setOpen } = useDialog();
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [scaleAnim] = useState(new Animated.Value(0.9));
+  const [translateYAnim] = useState(new Animated.Value(50));
+  const [overlayFadeAnim] = useState(new Animated.Value(0));
+
+React.useEffect(() => {
+if (open) {
+// Opening animation - fade in up
+Animated.parallel([
+Animated.timing(overlayFadeAnim, {
+toValue: 1,
+duration: 300,
+useNativeDriver: true,
+}),
+Animated.timing(fadeAnim, {
+toValue: 1,
+duration: 400,
+useNativeDriver: true,
+}),
+Animated.spring(scaleAnim, {
+toValue: 1,
+tension: 65,
+friction: 7,
+useNativeDriver: true,
+}),
+Animated.spring(translateYAnim, {
+toValue: 0,
+tension: 65,
+friction: 7,
+useNativeDriver: true,
+}),
+]).start();
+} else {
+// Closing animation - fade out down
+Animated.parallel([
+Animated.timing(overlayFadeAnim, {
+toValue: 0,
+duration: 200,
+useNativeDriver: true,
+}),
+Animated.timing(fadeAnim, {
+toValue: 0,
+duration: 200,
+useNativeDriver: true,
+}),
+Animated.timing(scaleAnim, {
+toValue: 0.9,
+duration: 200,
+useNativeDriver: true,
+}),
+Animated.timing(translateYAnim, {
+toValue: 30,
+duration: 200,
+useNativeDriver: true,
+}),
+]).start();
+}
+}, [open]);
+
+return (
+
+<Modal
+  visible={open}
+  transparent
+  animationType="fade"
+  onRequestClose={() => setOpen(false)}
+>
+  <Animated.View style={[styles.overlay, { opacity: overlayFadeAnim }]}>
+    <Pressable style={StyleSheet.absoluteFill} onPress={() => setOpen(false)} />
+    <Animated.View
+      style={[
+        styles.content,
+        {
+          opacity: fadeAnim,
+          transform: [{ scale: scaleAnim }, { translateY: translateYAnim }],
+        },
+      ]}
+    >
+      <Pressable>{children}</Pressable>
+    </Animated.View>
+  </Animated.View>
+</Modal>
+); };
+
+export const DialogHeader: React.FC<DialogHeaderProps> = ({ children }) => {
+  return <View style={styles.header}>{children}</View>;
+};
+
+export const DialogTitle: React.FC<DialogTitleProps> = ({
+  children,
+  style,
+}) => {
+  return <Text style={[styles.title, style]}>{children}</Text>;
+};
+
+export const DialogDescription: React.FC<DialogDescriptionProps> = ({
+  children,
+  style,
+}) => {
+  return <Text style={[styles.description, style]}>{children}</Text>;
+};
+
+export const DialogFooter: React.FC<DialogFooterProps> = ({ children }) => {
+  return <View style={styles.footer}>{children}</View>;
+};
+
+export const DialogClose: React.FC<DialogCloseProps> = ({
+  children,
+  asChild,
+}) => {
+  const { setOpen } = useDialog();
+
+if (asChild && React.isValidElement(children)) {
+return React.cloneElement(children, {
+onPress: () => setOpen(false),
+} as any);
+}
+
+return (
+
+<TouchableOpacity
+  style={[styles.button, styles.secondaryButton]}
+  onPress={() => setOpen(false)}
+>
+  {typeof children === "string" ? (
+    <Text style={styles.secondaryButtonText}>{children}</Text>
+  ) : (
+    children
+  )}
+</TouchableOpacity>
+); };
+
+````
+
+</Accordion>
+
+  <Accordion title="Trigger.tsx">
+
+      ```tsx
+      import { StyleSheet, Pressable } from "react-native";
+
+import React from "react";
+import { DialogTriggerProps } from "../Dialog.types";
+import { useDialog } from "../hooks/useDialog";
+
+export const DialogTrigger: React.FC<DialogTriggerProps> = ({
+  children,
+}: DialogTriggerProps): React.ReactNode & React.JSX.Element => {
+  const { setOpen } = useDialog();
+  return <Pressable onPress={() => setOpen(true)}>{children}</Pressable>;
+};
+
+const styles = StyleSheet.create({
+description: {
+fontSize: 16,
+color: "#babababa",
+marginBottom: 16,
+bottom: 2.5,
+},
+});
+
+````
+
+</Accordion>
+
+  <Accordion title="Title.tsx">
+
+      ```tsx
+      import { View, Text, StyleSheet } from "react-native";
+
+import React from "react";
+import { DialogTitleProps } from "../Dialog.types";
+
+export const DialogTitle: React.FC<DialogTitleProps> = ({
+  children,
+  style,
+}: DialogTitleProps): React.ReactNode & React.JSX.Element => {
+  return (
+    <View>
+      <Text style={[styles.title, style]} numberOfLines={2}>
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+title: {
+fontSize: 20,
+fontWeight: "bold",
+marginBottom: 10,
+},
+});
+
+````
+
+</Accordion>
+
+  <Accordion title="Description.tsx">
+
+      ```tsx
+
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { DialogDescriptionProps } from "../Dialog.types";
+
+export const DialogDescription: React.FC<DialogDescriptionProps> = ({
+  children,
+  style,
+}: DialogDescriptionProps): React.ReactNode & React.JSX.Element => {
+  return (
+    <View>
+      <Text style={[styles.description, style]} numberOfLines={2}>
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+description: {
+fontSize: 16,
+color: "#babababa",
+marginBottom: 16,
+bottom: 2.5,
+},
+});
+
+````
+
+</Accordion>
+
+  <Accordion title="Content.tsx">
+
+```tsx
+import { ReactNode, useContext, useEffect, useState } from "react";
+import { DialogContext } from "../context/DialogContext";
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
+import { DialogStyles as styles } from "../styles/styles";
+import { BlurView } from "expo-blur";
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+
+export function DialogContent({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const ctx = useContext(DialogContext);
+  if (!ctx) throw new Error("Dialog.Content must be used within <Dialog>");
+  const { open, setOpen } = ctx;
+
+  const [isMounted, setIsMounted] = useState(open);
+
+  // Shared animation values
+  const animationProgress = useSharedValue(0);
+  const translateY = useSharedValue(10); // Initial position slightly below target
+  const scale = useSharedValue(0.97);
+  const opacity = useSharedValue(0);
+  const blurOpacity = useSharedValue(0);
+
+  // Dialog animation style with more natural transitions
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }, { scale: scale.value }],
+  }));
+
+  // Blur animation style
+  const blurAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: blurOpacity.value,
+  }));
+
+  const springConfig = {
+    damping: 18,
+    mass: 1,
+    stiffness: 150,
+    overshootClamping: false,
+
+    restSpeedThreshold: 2,
+  };
+
+  const timingConfig = {
+    duration: 220,
+    easing: Easing.bezier(0.16, 1, 0.3, 1),
+  };
+
+  useEffect(() => {
+    if (open) {
+      setIsMounted(true);
+
+      blurOpacity.value = withTiming(1, {
+        duration: 250,
+        easing: Easing.out(Easing.ease),
+      });
+
+      opacity.value = withTiming(1, timingConfig);
+      translateY.value = withSpring(0, springConfig);
+      scale.value = withSpring(1, springConfig);
+    } else if (isMounted) {
+      opacity.value = withTiming(0, {
+        duration: 150,
+        easing: Easing.in(Easing.ease),
+      });
+
+      // Subtle exit animation
+      translateY.value = withTiming(8, {
+        duration: 150,
+        easing: Easing.in(Easing.ease),
+      });
+
+      scale.value = withTiming(0.96, {
+        duration: 150,
+        easing: Easing.in(Easing.ease),
+      });
+
+      blurOpacity.value = withTiming(
+        0,
+        {
+          duration: 200,
+          easing: Easing.in(Easing.ease),
+        },
+        () => {
+          runOnJS(setIsMounted)(false);
+        },
+      );
+    }
+  }, [open]);
+
+  if (!isMounted) return null;
+
+  return (
+    <View style={StyleSheet.absoluteFillObject}>
+      <Pressable onPress={() => setOpen(false)} style={styles.backdrop}>
+        <AnimatedBlurView
+          intensity={25}
+          tint="dark"
+          style={[StyleSheet.absoluteFill, blurAnimatedStyle]}
+        />
+      </Pressable>
+      <View style={[styles.centered, style]}>
+        <Animated.View style={[styles.modal, animatedStyle]}>
+          {children}
+        </Animated.View>
+      </View>
+    </View>
+  );
+}
+```
+
+</Accordion>
+
+ <Accordion title="Close.tsx">
+
+      ```tsx
+      import { Pressable } from "react-native";
+
+import { useDialog } from "../hooks/useDialog";
+import { ReactNode } from "react";
+
+export const DialogClose = ({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element => {
+  const { setOpen } = useDialog();
+  return <Pressable onPress={() => setOpen(false)}>{children}</Pressable>;
+};
+```
+
+</Accordion>
+
+<Accordion title="Dialog.types.ts">
+
+```ts
+import { ReactNode } from "react";
+import { StyleProp, TextStyle } from "react-native";
+
+export type DialogContextType = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+export type DialogComponent = {
+  ({ children }: { children: ReactNode }): JSX.Element;
+  Trigger: React.FC<DialogTriggerProps>;
+  Content: React.FC<DialogContentProps>;
+  Title: React.FC<DialogTitleProps>;
+  Description: React.FC<DialogDescriptionProps>;
+  Close: React.FC<DialogCloseProps>;
+};
+
+export type DialogContentProps = {
+  children: ReactNode;
+};
+export type DialogTitleProps = {
+  children: ReactNode;
+  style?: StyleProp<TextStyle>;
+};
+export type DialogDescriptionProps = {
+  children: ReactNode;
+  style?: StyleProp<TextStyle>;
+};
+export type DialogCloseProps = {
+  children: ReactNode;
+};
+export type DialogTriggerProps = {
+  children: ReactNode;
+};
+```
+
+</Accordion>
+
+  </Accordions>
+  </TabsContent>
+</Tabs>
+
+### 🚀 Full Example
+
+```tsx
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Pressable,
+  Animated,
+} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  MaterialIcons,
+  Feather,
+  Ionicons,
+  FontAwesome5,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+  AnimatedProgressBar,
+} from "@/components";
+
+const DialogDemo = () => {
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [value, setValue] = useState<number>(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.3)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+
+  const Button = ({
+    children,
+    variant = "primary",
+    size = "medium",
+    onPress,
+    style,
+  }: any) => {
+    const buttonStyles = [
+      styles.button,
+      variant === "primary" && styles.primaryButton,
+      variant === "secondary" && styles.secondaryButton,
+      variant === "destructive" && styles.destructiveButton,
+      variant === "outline" && styles.outlineButton,
+      size === "small" && styles.smallButton,
+      size === "large" && styles.largeButton,
+      style,
+    ];
+
+    const textStyles = [
+      styles.buttonText,
+      variant === "primary" && styles.primaryButtonText,
+      variant === "secondary" && styles.secondaryButtonText,
+      variant === "destructive" && styles.destructiveButtonText,
+      variant === "outline" && styles.outlineButtonText,
+      size === "small" && styles.smallButtonText,
+      size === "large" && styles.largeButtonText,
+    ];
+
+    return (
+      <View style={buttonStyles}>
+        <Text style={textStyles}>{children}</Text>
+      </View>
+    );
+  };
+  const [keepAccount, setKeepAccount] = useState(true);
+  const onDeletePress = () => {
+    setKeepAccount(false);
+    setIsFinished(false);
+  };
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (!keepAccount) {
+      setValue(0);
+      interval = setInterval(() => {
+        setValue((prev) => {
+          if (prev >= 1) {
+            clearInterval(interval);
+            setIsFinished(true);
+            return 1;
+          }
+          return Math.min(prev + 0.1, 1);
+        });
+      }, 800);
+    } else {
+      setValue(0);
+    }
+    return () => clearInterval(interval);
+  }, [keepAccount]);
+
+  useEffect(() => {
+    if (isFinished) {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          tension: 50,
+          friction: 3,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [isFinished]);
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+      scrollEnabled
+    >
+      <View style={styles.header}>
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons
+            name="card-text-outline"
+            size={32}
+            color="#60a5fa"
+          />
+        </View>
+        <Text style={styles.headerTitle}>Dialog Component Demo</Text>
+        <Text style={styles.subtitle}>
+          Beautiful modal dialogs with smooth animations and flexible layouts
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Basic Usage</Text>
+        <Text style={styles.sectionDescription}>
+          Simple dialogs for common interactions like confirmations and alerts
+        </Text>
+
+        <View style={styles.exampleGrid}>
+          <View style={styles.exampleCard}>
+            <View style={styles.exampleHeader}>
+              <MaterialIcons name="info" size={20} color="#60a5fa" />
+              <Text style={styles.exampleTitle}>Basic Confirmation</Text>
+            </View>
+            <Text style={styles.exampleDescription}>
+              Standard confirmation dialog with title and description
+            </Text>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline">Show Dialog</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  {!keepAccount ? (
+                    <>
+                      {isFinished ? (
+                        <Animated.View
+                          style={[
+                            {
+                              opacity: fadeAnim,
+                              transform: [
+                                { scale: scaleAnim },
+                                { translateY: slideAnim },
+                              ],
+                            },
+                          ]}
+                          className="items-center justify-center py-6"
+                        >
+                          <View className="w-20 h-20 bg-red-500/20 rounded-full items-center justify-center mb-4 border-2 border-red-500/30">
+                            <MaterialIcons
+                              name="check-circle"
+                              color="#ef4444"
+                              size={40}
+                            />
+                          </View>
+                          <Text className="font-bold text-2xl text-red-400 mb-2 text-center">
+                            Account Deleted
+                          </Text>
+                          <Text className="text-gray-400 text-center text-sm leading-relaxed">
+                            Your account has been permanently deleted.{"\n"}
+                            All data has been removed from our servers.
+                          </Text>
+                          <View className="mt-6 flex-row items-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+                            <Feather name="info" size={16} color="#ef4444" />
+                            <Text className="text-red-400 text-xs ml-2">
+                              This action cannot be undone
+                            </Text>
+                          </View>
+                        </Animated.View>
+                      ) : (
+                        <View>
+                          <View className="flex-row items-center justify-center mb-4">
+                            <View className="w-12 h-12 bg-red-500/20 rounded-full items-center justify-center mr-3 border border-red-500/30">
+                              <Ionicons
+                                name="trash-sharp"
+                                color="#ef4444"
+                                size={24}
+                              />
+                            </View>
+                            <Text className="font-bold text-xl text-white">
+                              Deleting your account…
+                            </Text>
+                          </View>
+
+                          <View className="bg-transparent rounded-lg p-4 border border-gray-900 ">
+                            <AnimatedProgressBar
+                              progress={value}
+                              containerStyle={{ marginBottom: 0, marginTop: 5 }}
+                              width={300}
+                              height={6}
+                              progressColor="#ef4444"
+                            />
+                            <View className="flex-row justify-between items-center">
+                              <Text className="text-gray-400 text-sm">
+                                {Math.round(value * 100)}% Complete
+                              </Text>
+                              <Text className="text-gray-400 text-sm">
+                                {value < 1 ? "Processing..." : "Finalizing..."}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </DialogDescription>
+                    </>
+                  )}
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Pressable onPress={onDeletePress}>
+                    <Button variant="destructive">Continue</Button>
+                  </Pressable>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </View>
+
+          {/* Simple Alert */}
+          <View style={styles.exampleCard}>
+            <View style={styles.exampleHeader}>
+              <AntDesign name="exclamationcircle" size={20} color="#f59e0b" />
+              <Text style={styles.exampleTitle}>Alert Dialog</Text>
+            </View>
+            <Text style={styles.exampleDescription}>
+              Information dialog with single action
+            </Text>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline">Show Alert</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Update Available</DialogTitle>
+                  <DialogDescription>
+                    A new version of the app is available. Update now to get the
+                    latest features and improvements.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose>
+                    <Button variant="primary">Update Now</Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Advanced Examples</Text>
+        <Text style={styles.sectionDescription}>
+          Real-world dialog implementations with complex layouts and
+          interactions
+        </Text>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.exampleHeader}>
+            <MaterialIcons name="delete-forever" size={20} color="#ef4444" />
+            <Text style={styles.exampleTitle}>Delete Account</Text>
+          </View>
+          <Text style={styles.exampleDescription}>
+            Destructive action with multiple confirmations and detailed
+            consequences
+          </Text>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="destructive">Delete Account</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>⚠️ Delete Account</DialogTitle>
+                <DialogDescription>
+                  This action is permanent and cannot be undone. All of your
+                  data, including:
+                  {"\n\n"}• Profile information and settings
+                  {"\n"}• Saved content and preferences
+                  {"\n"}• Account history and analytics
+                  {"\n"}• Associated subscriptions
+                  {"\n\n"}Will be permanently removed from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline">Keep Account</Button>
+                </DialogClose>
+                <Button
+                  variant="destructive"
+                  onPress={() => setDeleteConfirmed(true)}
+                >
+                  Yes, Delete Forever
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {deleteConfirmed && (
+            <Text style={styles.statusText}>✅ Account deletion confirmed</Text>
+          )}
+        </View>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.exampleHeader}>
+            <Feather name="user" size={20} color="#10b981" />
+            <Text style={styles.exampleTitle}>Edit Profile</Text>
+          </View>
+          <Text style={styles.exampleDescription}>
+            Form dialog with multiple fields and validation
+          </Text>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="primary">Edit Profile</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you're
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+              <View style={styles.formContent}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Display Name</Text>
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.inputValue}>Sarah Johnson</Text>
+                  </View>
+                </View>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Email</Text>
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.inputValue}>sarah@example.com</Text>
+                  </View>
+                </View>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Bio</Text>
+                  <View
+                    style={[styles.inputContainer, styles.textareaContainer]}
+                  >
+                    <Text style={styles.inputValue}>
+                      Senior Product Designer passionate about creating
+                      beautiful, functional interfaces.
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button variant="primary" onPress={() => setProfileSaved(true)}>
+                  Save Changes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {profileSaved && (
+            <Text style={styles.statusText}>
+              ✅ Profile updated successfully
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.exampleCard}>
+          <View style={styles.exampleHeader}>
+            <MaterialIcons name="star" size={20} color="#8b5cf6" />
+            <Text style={styles.exampleTitle}>Upgrade to Pro</Text>
+          </View>
+          <Text style={styles.exampleDescription}>
+            Pricing dialog with features comparison and call-to-action
+          </Text>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="primary">Upgrade Now</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>🚀 Upgrade to Pro</DialogTitle>
+                <DialogDescription>
+                  Unlock powerful features and take your productivity to the
+                  next level
+                </DialogDescription>
+              </DialogHeader>
+              <View style={styles.pricingContent}>
+                <View style={styles.priceHeader}>
+                  <Text style={styles.priceAmount}>$9.99</Text>
+                  <Text style={styles.pricePeriod}>/month</Text>
+                </View>
+                <View style={styles.featuresList}>
+                  <View style={styles.featureItem}>
+                    <Feather name="check" size={16} color="#10b981" />
+                    <Text style={styles.featureText}>Unlimited projects</Text>
+                  </View>
+                  <View style={styles.featureItem}>
+                    <Feather name="check" size={16} color="#10b981" />
+                    <Text style={styles.featureText}>Advanced analytics</Text>
+                  </View>
+                  <View style={styles.featureItem}>
+                    <Feather name="check" size={16} color="#10b981" />
+                    <Text style={styles.featureText}>Priority support</Text>
+                  </View>
+                  <View style={styles.featureItem}>
+                    <Feather name="check" size={16} color="#10b981" />
+                    <Text style={styles.featureText}>Team collaboration</Text>
+                  </View>
+                </View>
+              </View>
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline">Maybe Later</Button>
+                </DialogClose>
+                <Button variant="primary" onPress={() => setSubscribed(true)}>
+                  Subscribe Now
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {subscribed && (
+            <Text style={styles.statusText}>🎉 Welcome to Pro!</Text>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Dialog Variants</Text>
+        <Text style={styles.sectionDescription}>
+          Different dialog styles for various use cases and contexts
+        </Text>
+
+        <View style={styles.variantGrid}>
+          <View style={styles.variantCard}>
+            <View style={styles.variantHeader}>
+              <View
+                style={[styles.variantIcon, { backgroundColor: "#10b98120" }]}
+              >
+                <Feather name="check-circle" size={24} color="#10b981" />
+              </View>
+              <Text style={styles.variantTitle}>Success</Text>
+            </View>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" size="small">
+                  Show Success
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <View style={styles.centeredContent}>
+                  <View
+                    style={[styles.largeIcon, { backgroundColor: "#10b98120" }]}
+                  >
+                    <Feather name="check-circle" size={48} color="#10b981" />
+                  </View>
+                  <DialogHeader>
+                    <DialogTitle style={{ textAlign: "center" }}>
+                      Payment Successful!
+                    </DialogTitle>
+                    <DialogDescription style={{ textAlign: "center" }}>
+                      Your payment has been processed successfully. You'll
+                      receive a confirmation email shortly.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose>
+                      <Button variant="primary">Continue</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </View>
+              </DialogContent>
+            </Dialog>
+          </View>
+
+          <View style={styles.variantCard}>
+            <View style={styles.variantHeader}>
+              <View
+                style={[styles.variantIcon, { backgroundColor: "#f59e0b20" }]}
+              >
+                <Feather name="alert-triangle" size={24} color="#f59e0b" />
+              </View>
+              <Text style={styles.variantTitle}>Warning</Text>
+            </View>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" size="small">
+                  Show Warning
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <View style={styles.centeredContent}>
+                  <View
+                    style={[styles.largeIcon, { backgroundColor: "#f59e0b20" }]}
+                  >
+                    <Feather name="alert-triangle" size={48} color="#f59e0b" />
+                  </View>
+                  <DialogHeader>
+                    <DialogTitle style={{ textAlign: "center" }}>
+                      Unsaved Changes
+                    </DialogTitle>
+                    <DialogDescription style={{ textAlign: "center" }}>
+                      You have unsaved changes that will be lost if you leave
+                      this page.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose>
+                      <Button variant="outline">Stay Here</Button>
+                    </DialogClose>
+                    <Button variant="primary">Leave Anyway</Button>
+                  </DialogFooter>
+                </View>
+              </DialogContent>
+            </Dialog>
+          </View>
+
+          {/* Error Dialog */}
+          <View style={styles.variantCard}>
+            <View style={styles.variantHeader}>
+              <View
+                style={[styles.variantIcon, { backgroundColor: "#ef444420" }]}
+              >
+                <Feather name="x-circle" size={24} color="#ef4444" />
+              </View>
+              <Text style={styles.variantTitle}>Error</Text>
+            </View>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" size="small">
+                  Show Error
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <View style={styles.centeredContent}>
+                  <View
+                    style={[styles.largeIcon, { backgroundColor: "#ef444420" }]}
+                  >
+                    <Feather name="x-circle" size={48} color="#ef4444" />
+                  </View>
+                  <DialogHeader>
+                    <DialogTitle style={{ textAlign: "center" }}>
+                      Connection Failed
+                    </DialogTitle>
+                    <DialogDescription style={{ textAlign: "center" }}>
+                      Unable to connect to the server. Please check your
+                      internet connection and try again.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button variant="primary">Retry</Button>
+                  </DialogFooter>
+                </View>
+              </DialogContent>
+            </Dialog>
+          </View>
+
+          <View style={styles.variantCard}>
+            <View style={styles.variantHeader}>
+              <View
+                style={[styles.variantIcon, { backgroundColor: "#60a5fa20" }]}
+              >
+                <Feather name="info" size={24} color="#60a5fa" />
+              </View>
+              <Text style={styles.variantTitle}>Information</Text>
+            </View>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" size="small">
+                  Show Info
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <View style={styles.centeredContent}>
+                  <View
+                    style={[styles.largeIcon, { backgroundColor: "#60a5fa20" }]}
+                  >
+                    <Feather name="info" size={48} color="#60a5fa" />
+                  </View>
+                  <DialogHeader>
+                    <DialogTitle style={{ textAlign: "center" }}>
+                      New Feature Available
+                    </DialogTitle>
+                    <DialogDescription style={{ textAlign: "center" }}>
+                      We've added dark mode! You can now switch between light
+                      and dark themes in settings.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose>
+                      <Button variant="primary">Got it</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </View>
+              </DialogContent>
+            </Dialog>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Best Practices</Text>
+        <Text style={styles.sectionDescription}>
+          Guidelines for effective dialog usage and user experience
+        </Text>
+
+        <View style={styles.practicesList}>
+          <View style={styles.practiceItem}>
+            <View
+              style={[styles.practiceIcon, { backgroundColor: "#10b98120" }]}
+            >
+              <Feather name="check" size={16} color="#10b981" />
+            </View>
+            <View style={styles.practiceContent}>
+              <Text style={styles.practiceTitle}>Clear and Concise</Text>
+              <Text style={styles.practiceDescription}>
+                Keep dialog content brief and focused on the primary action
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.practiceItem}>
+            <View
+              style={[styles.practiceIcon, { backgroundColor: "#10b98120" }]}
+            >
+              <Feather name="check" size={16} color="#10b981" />
+            </View>
+            <View style={styles.practiceContent}>
+              <Text style={styles.practiceTitle}>Meaningful Actions</Text>
+              <Text style={styles.practiceDescription}>
+                Use descriptive button labels instead of generic "OK" or "Yes"
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.practiceItem}>
+            <View
+              style={[styles.practiceIcon, { backgroundColor: "#10b98120" }]}
+            >
+              <Feather name="check" size={16} color="#10b981" />
+            </View>
+            <View style={styles.practiceContent}>
+              <Text style={styles.practiceTitle}>Visual Hierarchy</Text>
+              <Text style={styles.practiceDescription}>
+                Make primary actions visually prominent and destructive actions
+                clearly marked
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.practiceItem}>
+            <View
+              style={[styles.practiceIcon, { backgroundColor: "#10b98120" }]}
+            >
+              <Feather name="check" size={16} color="#10b981" />
+            </View>
+            <View style={styles.practiceContent}>
+              <Text style={styles.practiceTitle}>Escape Routes</Text>
+              <Text style={styles.practiceDescription}>
+                Always provide a way to cancel or dismiss the dialog
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Component API</Text>
+        <Text style={styles.sectionDescription}>
+          Available components and their properties
+        </Text>
+
+        <View style={styles.apiCard}>
+          <Text style={styles.apiTitle}>Dialog Components</Text>
+          <View style={styles.apiList}>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>Dialog</Text> - Root container
+              component
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogTrigger</Text> - Element that
+              opens the dialog
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogContent</Text> - Modal content
+              container
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogHeader</Text> - Header section
+              wrapper
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogTitle</Text> - Dialog title
+              text
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogDescription</Text> -
+              Description text
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogFooter</Text> - Footer with
+              actions
+            </Text>
+            <Text style={styles.apiItem}>
+              <Text style={styles.apiName}>DialogClose</Text> - Element that
+              closes the dialog
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.footer}>
+        <View style={styles.footerIcon}>
+          <MaterialCommunityIcons
+            name="card-text-outline"
+            size={16}
+            color="#71717a"
+          />
+        </View>
+        <Text style={styles.footerText}>
+          The Dialog component provides accessible modal interactions with
+          smooth animations and flexible layouts
+        </Text>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 32,
+    paddingTop: 20,
+  },
+  iconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#18181b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  headerTitle: {
+    fontSize: 28,
+    color: "#fafafa",
+    textAlign: "center",
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 24,
+    maxWidth: 320,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#e4e4e7",
+    marginBottom: 8,
+    marginLeft: 4,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+    marginBottom: 20,
+    marginLeft: 4,
+  },
+  exampleGrid: {
+    gap: 16,
+  },
+  exampleCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  exampleHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    gap: 8,
+  },
+  exampleTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+  },
+  exampleDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  statusText: {
+    fontSize: 12,
+    color: "#10b981",
+    marginTop: 8,
+    fontWeight: "500",
+  },
+  formContent: {
+    gap: 16,
+    marginVertical: 16,
+  },
+  inputGroup: {
+    gap: 8,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#fafafa",
+  },
+  inputContainer: {
+    backgroundColor: "#09090b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 8,
+    padding: 12,
+  },
+  textareaContainer: {
+    minHeight: 80,
+  },
+  inputValue: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+  },
+  pricingContent: {
+    alignItems: "center",
+    marginVertical: 16,
+  },
+  priceHeader: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginBottom: 20,
+  },
+  priceAmount: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#fafafa",
+  },
+  pricePeriod: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    marginLeft: 4,
+  },
+  featuresList: {
+    gap: 12,
+    width: "100%",
+  },
+  featureItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  featureText: {
+    fontSize: 14,
+    color: "#a1a1aa",
+  },
+  centeredContent: {
+    alignItems: "center",
+  },
+  largeIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  variantGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  variantCard: {
+    flex: 1,
+    minWidth: "47%",
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+  },
+  variantHeader: {
+    alignItems: "center",
+    marginBottom: 16,
+    gap: 8,
+  },
+  variantIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  variantTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fafafa",
+  },
+  practicesList: {
+    gap: 16,
+  },
+  practiceItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+  },
+  practiceIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 2,
+  },
+  practiceContent: {
+    flex: 1,
+  },
+  practiceTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 4,
+  },
+  practiceDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+  },
+  apiCard: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    borderRadius: 12,
+    padding: 16,
+  },
+  apiTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 12,
+  },
+  apiList: {
+    gap: 8,
+  },
+  apiItem: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+  },
+  apiName: {
+    fontWeight: "600",
+    color: "#60a5fa",
+    fontFamily: "monospace",
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: "#18181b",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  footerIcon: {
+    marginRight: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+    flex: 1,
+    lineHeight: 20,
+  },
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  primaryButton: {
+    backgroundColor: "#fafafa",
+    borderColor: "#fafafa",
+  },
+  secondaryButton: {
+    backgroundColor: "#27272a",
+    borderColor: "#27272a",
+  },
+  destructiveButton: {
+    backgroundColor: "#ef4444",
+    borderColor: "#ef4444",
+  },
+  outlineButton: {
+    backgroundColor: "transparent",
+    borderColor: "#27272a",
+  },
+  smallButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  largeButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  primaryButtonText: {
+    color: "#09090b",
+  },
+  secondaryButtonText: {
+    color: "#fafafa",
+  },
+  destructiveButtonText: {
+    color: "#fafafa",
+  },
+  outlineButtonText: {
+    color: "#fafafa",
+  },
+  smallButtonText: {
+    fontSize: 12,
+  },
+  largeButtonText: {
+    fontSize: 16,
+  },
+});
+
+export default DialogDemo;
+```
+
+```
+
+```

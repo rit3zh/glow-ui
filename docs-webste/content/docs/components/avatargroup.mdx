@@ -1,0 +1,330 @@
+---
+title: Avatar Group
+description: Avatar Group component for React Native with a modern touch
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar-group/AvatarGroup.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add avatar-group
+```
+
+### ⚙️ Props
+
+| Prop      | Type                   | Default      | Description                                                          |
+| --------- | ---------------------- | ------------ | -------------------------------------------------------------------- |
+| `avatars` | `AvatarItem[]`         | **required** | Array of avatar items with `id`, optional `uri`, and `name`.         |
+| `size`    | `number`               | `40`         | Diameter of each avatar in the group.                                |
+| `max`     | `number`               | `5`          | Maximum number of avatars to display before showing `+N`.            |
+| `overlap` | `number`               | `-10`        | Amount of horizontal overlap between avatars (negative for overlap). |
+| `onPress` | `(id: string) => void` | `undefined`  | Called when an avatar is pressed, passing its `id`.                  |
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions>
+<Accordion title ='AvatarGroup.tsx'>
+
+```tsx
+import React from "react";
+import { View, Image, Text, Pressable, StyleSheet } from "react-native";
+
+export interface AvatarItem {
+  id: string;
+  uri?: string;
+  name?: string;
+}
+
+interface AvatarGroupProps {
+  avatars: AvatarItem[];
+  size?: number;
+  max?: number;
+  overlap?: number;
+  onPress?(id: string): void;
+}
+
+export const AvatarGroup: React.FC<AvatarGroupProps> = ({
+  avatars,
+  size = 40,
+  max = 5,
+  overlap = 10,
+  onPress,
+}) => {
+  const displayed = avatars.slice(0, max);
+  const extraCount = avatars.length - max;
+
+  return (
+    <View style={styles.container}>
+      {displayed.map((avatar, idx) => (
+        <Pressable
+          key={avatar.id}
+          onPress={() => onPress?.(avatar.id)}
+          style={{ marginLeft: idx === 0 ? 0 : -overlap }}
+        >
+          {avatar.uri ? (
+            <Image
+              source={{ uri: avatar.uri }}
+              style={[
+                styles.avatar,
+                { width: size, height: size, borderRadius: size / 2 },
+              ]}
+            />
+          ) : (
+            <View
+              style={[
+                styles.fallback,
+                { width: size, height: size, borderRadius: size / 2 },
+              ]}
+            >
+              <Text style={[styles.fallbackText, { fontSize: size / 2 }]}>
+                {avatar.name?.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      ))}
+
+      {extraCount > 0 && (
+        <View
+          style={[
+            styles.extra,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              marginLeft: -overlap,
+            },
+          ]}
+        >
+          <Text style={[styles.extraText, { fontSize: size / 2 }]}>
+            +{extraCount}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  avatar: {
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  fallback: {
+    backgroundColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  fallbackText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+  extra: {
+    backgroundColor: "#888",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  extraText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+});
+```
+
+</Accordion>
+</Accordions>
+
+<Accordions>
+<Accordion title='AvatarGroup.types.ts'>
+
+```ts
+export interface AvatarItem {
+  id: string;
+  uri?: string;
+  name?: string;
+}
+
+interface AvatarGroupProps {
+  avatars: AvatarItem[];
+  size?: number;
+  max?: number;
+  overlap?: number;
+  onPress?(id: string): void;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React from "react";
+import { AvatarGroup } from "@/components/index";
+
+const AvatarGroupDemo: React.FC = (): React.ReactNode => {
+  const teamMembers = [
+    {
+      name: "Alice Cooper",
+      uri: "https://i.pravatar.cc/150?img=1",
+      id: "1",
+    },
+    {
+      name: "Bob Martinez",
+      uri: "https://i.pravatar.cc/150?img=2",
+      id: "2",
+    },
+    {
+      name: "Charlie Davis",
+      uri: "https://i.pravatar.cc/150?img=3",
+      id: "3",
+    },
+    {
+      name: "David Wilson",
+      uri: "https://i.pravatar.cc/150?img=4",
+      id: "4",
+    },
+    {
+      name: "Emma Johnson",
+      uri: "https://i.pravatar.cc/150?img=5",
+      id: "5",
+    },
+  ];
+
+  const designTeam = [
+    {
+      name: "Sophie Chen",
+      uri: "https://i.pravatar.cc/150?img=6",
+      id: "6",
+    },
+    {
+      name: "Marcus Thompson",
+      uri: "https://i.pravatar.cc/150?img=7",
+      id: "7",
+    },
+    {
+      name: "Luna Rodriguez",
+      uri: "https://i.pravatar.cc/150?img=8",
+      id: "8",
+    },
+  ];
+
+  return (
+    <ScrollView
+      className="flex-1 bg-gray-900"
+      contentInsetAdjustmentBehavior="always"
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingVertical: 20,
+      }}
+      scrollEnabled={true}
+      showsVerticalScrollIndicator={false}
+    >
+      <SafeAreaView className="flex-1">
+        <View className="px-6 mb-8">
+          <Text className="text-white text-4xl font-bold text-center mb-3">
+            Team Avatars
+          </Text>
+          <Text className="text-gray-400 text-center text-base leading-6">
+            Interactive avatar groups with stunning dark aesthetics
+          </Text>
+        </View>
+
+        <View className="items-center mb-12">
+          <View className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-8 mx-6 shadow-2xl border border-gray-700">
+            <View className="absolute -top-3 -right-3 w-6 h-6 bg-blue-500 rounded-full opacity-70 blur-sm" />
+            <View className="absolute -bottom-2 -left-2 w-4 h-4 bg-purple-500 rounded-full opacity-60" />
+            <View className="absolute top-4 left-4 w-2 h-2 bg-cyan-400 rounded-full opacity-80" />
+
+            <View className="items-center">
+              <Text className="text-white text-xl font-semibold mb-6">
+                Development Team
+              </Text>
+
+              <View className="relative">
+                <View className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full blur-xl" />
+                <AvatarGroup
+                  size={80}
+                  max={4}
+                  onPress={(id) => console.log(`Avatar ${id} pressed`)}
+                  overlap={20}
+                  avatars={teamMembers}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default AvatarGroupDemo;
+```

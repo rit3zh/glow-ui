@@ -8,7 +8,7 @@ import Animated, {
   interpolateColor,
   withSpring,
 } from "react-native-reanimated";
-import type { AnimatedChipProps, ChipGroupProps, ChipItem } from "./Chip.types";
+import type { AnimatedChipProps } from "./Chip.types";
 
 export const AnimatedChip = ({
   label,
@@ -38,7 +38,7 @@ export const AnimatedChip = ({
       backgroundColor: interpolateColor(
         progress.value,
         [0, 1],
-        ["#333333", activeColor!]
+        ["#333333", activeColor!],
       ),
     };
   });

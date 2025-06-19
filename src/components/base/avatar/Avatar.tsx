@@ -40,12 +40,11 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
   const [hasError, setHasError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Reanimated values
   const shimmerProgress = useSharedValue(0);
   const pressScale = useSharedValue(1);
   const pressOpacity = useSharedValue(1);
+  const fadeOpacity = useSharedValue(loading ? 0 : 1);
 
-  // Start shimmer animation when loading
   useEffect(() => {
     if (loading) {
       shimmerProgress.value = withRepeat(
@@ -54,10 +53,15 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
           easing: Easing.linear,
         }),
         -1,
-        false
+        false,
       );
+      fadeOpacity.value = 0;
     } else {
       shimmerProgress.value = 0;
+      fadeOpacity.value = withTiming(1, {
+        duration: 400,
+        easing: Easing.out(Easing.quad),
+      });
     }
   }, [loading, shimmerSpeed]);
 
@@ -146,12 +150,12 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
     const translateX = interpolate(
       shimmerProgress.value,
       [0, 1],
-      [-size * 1.5, size * 1.5]
+      [-size * 1.5, size * 1.5],
     );
     const opacity = interpolate(
       shimmerProgress.value,
       [0, 0.5, 1],
-      [0.3, 0.8, 0.3]
+      [0.3, 0.8, 0.3],
     );
 
     return {
@@ -163,6 +167,10 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
   const pressAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pressScale.value }],
     opacity: pressOpacity.value,
+  }));
+
+  const fadeAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: fadeOpacity.value,
   }));
 
   const ShimmerEffect = () => (
@@ -182,7 +190,6 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
   );
 
   const AvatarContent = () => {
-    // Show shimmer only when manually loading
     if (loading) {
       return (
         <Animated.View layout={LinearTransition.springify()}>
@@ -212,10 +219,9 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
       );
     }
 
-    // Show image if it should be shown
     if (shouldShowImage) {
       return (
-        <View style={styles.imageContainer}>
+        <Animated.View style={[styles.imageContainer, fadeAnimatedStyle]}>
           <Image
             source={{ uri: image.uri }}
             style={[
@@ -250,13 +256,12 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
               ]}
             />
           )}
-        </View>
+        </Animated.View>
       );
     }
 
-    // Show fallback (initials)
     return (
-      <View style={styles.fallbackContainer}>
+      <Animated.View style={[styles.fallbackContainer, fadeAnimatedStyle]}>
         <View
           style={[
             styles.fallback,
@@ -296,7 +301,7 @@ export const Avatar: React.FC<AvatarGroupProps> = ({
             ]}
           />
         )}
-      </View>
+      </Animated.View>
     );
   };
 

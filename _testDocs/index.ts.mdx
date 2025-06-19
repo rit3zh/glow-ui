@@ -1,0 +1,125 @@
+---
+title: Index.ts
+description: Index.ts component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add index.ts
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### 📁 Other
+#### index.ts
+
+```ts
+export * from "./stacks/Row";
+export * from "./stacks/Center";
+export * from "./divider/vertical/Divider";
+export * from "./divider/horizontal/Divider";
+```
+
+#### index.ts
+
+```ts
+export * from "./button/ExpandableButton";
+export * from "./avatar-group/AvatarGroup";
+export * from "./badge/Badge";
+export * from "./action-card/ActionCard";
+export * from "./action-card/children/ActionCardSubtitle";
+export * from "./action-card/children/ActionCardTitle";
+export * from "./action-card/children/ActionCardWrapper";
+export * from "./touchable/Touchable";
+export * from "./ripple/Ripple";
+export * from "./avatar/Avatar";
+export * from "./title/Title";
+export * from "./subtitle/Subtitle";
+export * from "./privacy-notice-text/PrivacyNoticeLink";
+
+export * from "./touchable/Touchable";
+```
+
+#### index.ts
+
+```ts
+export * from "./Accordian";
+export * from "./AnimatedMaskedText";
+export * from "./BottomSheet";
+export * from "./Breadcrumbs";
+export * from "./Card";
+export * from "./List";
+export * from "./Loaders";
+export * from "./SearchBar/children/SearchBar";
+export * from "./Stepper";
+export * from "./Toast";
+export * from "./Timeline/TimelineView";
+export * from "./Pagination/Pagination";
+export * from "./Chip/Chip";
+export * from "./Shimmer/Shimmer";
+export * from "./SeekBar/SeekBar";
+```
+
+#### index.ts
+
+```ts
+export * from "./dialog/index";
+export * from "./segmented-control/index";
+export * from "./progress/AnimatedProgress";
+export * from "./check-box/CheckBox";
+```
+
+#### index.ts
+
+```ts
+export * from "./whats-new/index";
+export * from "./headers/parallax/index";
+export * from "./media-list/index";
+
+export * from "./sheet/floating-sheet/FloatingSheet";
+```

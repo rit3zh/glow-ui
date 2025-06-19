@@ -1,0 +1,732 @@
+---
+title: What's New
+description: What's New component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add whats-new
+```
+
+## 🆕 `WhatsNewProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📦 Content to render inside the WhatsNew component.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    blurTint: {
+      description: "🌫️ Tint color of the blur effect.",
+      type: "BlurTint",
+    },
+  }}
+/>
+
+---
+
+## 🚀 `WhatsNewTriggerProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🎯 Trigger button or element to open the WhatsNew panel.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 📄 `WhatsNewContentProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "📦 Content that appears inside the WhatsNew sheet.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 📝 `WhatsNewTitleProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🧾 Title text or element.",
+      type: "React.ReactNode",
+      required: true,
+    },
+    secondaryColor: {
+      description: "🎨 Optional secondary color for subtitle or accent.",
+      type: "string",
+    },
+  }}
+/>
+
+---
+
+## 📦 `WhatsNewWrapperProps`
+
+<TypeTable
+  type={{
+    children: {
+      description:
+        "🧩 Wrapper content, typically contains all inner components.",
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🔲 `WhatsNewItemContainerProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: '📦 Container for a single "What\'s New" item.',
+      type: "React.ReactNode",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🔘 `WhatsNewButtonProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "🖱️ Button content (e.g. text or icon).",
+      type: "React.ReactNode",
+      required: true,
+    },
+    tint: {
+      description: "🎨 Optional tint color for the button.",
+      type: "string",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="WhatsNew.tsx">
+
+```tsx
+import React, { useCallback, useRef, useState } from "react";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
+import { WhatsNewContext } from "./context/WhatsNewContext";
+import { WhatsNewProps } from "./WhatsNew.type";
+
+export const WhatsNew: React.FC<WhatsNewProps> &
+  React.FunctionComponent<WhatsNewProps> = ({
+  children,
+  blurTint,
+}: WhatsNewProps) => {
+  const sheetRef = useRef<TrueSheet>(null);
+
+  const [content, setContent] = useState<React.ReactNode>(null);
+
+  const open = useCallback(() => {
+    sheetRef.current?.present();
+  }, []);
+
+  const close = useCallback(() => {
+    sheetRef.current?.dismiss();
+  }, []);
+  return (
+    <WhatsNewContext.Provider value={{ open, close, setContent }}>
+      {children}
+      <TrueSheet ref={sheetRef} sizes={["100%"]} blurTint={blurTint}>
+        {content}
+      </TrueSheet>
+    </WhatsNewContext.Provider>
+  );
+};
+```
+
+</Accordion>
+
+<Accordion title="WhatsNewButton.tsx">
+
+```tsx
+import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
+import React from "react";
+import { WhatsNewButtonProps } from "../WhatsNew.type";
+import { useWhatsNew } from "../context/WhatsNewContext";
+
+const { width, height } = Dimensions.get("window");
+
+export const WhatsNewButton: React.FC<WhatsNewButtonProps> = ({
+  children,
+  tint = "#1084fc",
+}: WhatsNewButtonProps): React.ReactNode => {
+  const { close } = useWhatsNew();
+
+  return (
+    <Pressable className="flex-1" onPress={close}>
+      <View style={style.coreContainer}>
+        <View
+          style={[
+            style.container,
+            {
+              backgroundColor: tint,
+            },
+          ]}
+        >
+          <Text style={style.text}>{children}</Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+};
+const style = StyleSheet.create({
+  coreContainer: {
+    flex: 1,
+    height: height * 0.4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  container: {
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    height: 58,
+    width: width * 0.9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+});
+```
+
+<Accordion title="WhatsNewContent.tsx">
+
+```tsx
+import * as React from "react";
+import { StyleSheet } from "react-native";
+import type { WhatsNewContentProps } from "../WhatsNew.type";
+
+import { useWhatsNew } from "../context/WhatsNewContext";
+
+export const WhatsNewContent: React.FC<WhatsNewContentProps> &
+  React.FunctionComponent<WhatsNewContentProps> = ({
+  children,
+}: WhatsNewContentProps): React.ReactNode => {
+  const { setContent } = useWhatsNew();
+
+  React.useEffect(() => {
+    setContent(children);
+  }, [children]);
+  return null;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="WhatsNewItemContainer.tsx">
+
+```tsx
+import React from "react";
+import { View, Dimensions, StyleSheet } from "react-native";
+import type { WhatsNewItemContainerProps } from "../WhatsNew.type";
+
+const { width } = Dimensions.get("window");
+const dynamicGap = width * 0.03;
+
+export const WhatsNewItemContainer: React.FC<WhatsNewItemContainerProps> = ({
+  children,
+}) => {
+  const childrenArray = React.Children.toArray(children);
+  const first = childrenArray[0];
+  const rest = childrenArray.slice(1);
+
+  return (
+    <View style={[styles.wrapper]}>
+      <View style={[styles.row, { columnGap: dynamicGap + 5 }]}>
+        {first}
+        <View style={styles.rest}>{rest}</View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  wrapper: {
+    justifyContent: "center",
+    paddingHorizontal: dynamicGap,
+    paddingVertical: dynamicGap,
+    marginBottom: dynamicGap,
+    marginLeft: dynamicGap,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  rest: {},
+});
+```
+
+</Accordion>
+
+<Accordion title="WhatsNewTitle.tsx">
+
+```tsx
+import * as React from "react";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
+import type { WhatsNewTitleProps } from "../WhatsNew.type";
+
+export const WhatsNewTitle: React.FC<WhatsNewTitleProps> = ({
+  children,
+  secondaryColor = "#5cbeff",
+}) => {
+  if (typeof children !== "string") return null;
+
+  const shouldSplit = children.length > 22;
+
+  let firstLine = children;
+  let secondLine = "";
+
+  if (shouldSplit) {
+    const words = children.trim().split(" ");
+    const midpoint = Math.ceil(words.length / 1.4);
+    firstLine = words.slice(0, midpoint).join(" ");
+    secondLine = words.slice(midpoint).join(" ");
+  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.textPrimary}>{firstLine}</Text>
+      {secondLine ? (
+        <Text
+          style={[
+            styles.textSecondary,
+            {
+              color: secondaryColor,
+            },
+          ]}
+        >
+          {secondLine}
+        </Text>
+      ) : null}
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  textPrimary: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#ffffff",
+    lineHeight: 44,
+    textAlign: "center",
+  },
+  textSecondary: {
+    fontSize: 38,
+    fontWeight: "bold",
+    color: "red",
+    lineHeight: 36,
+    textAlign: "center",
+    top: 2.5,
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="WhatsNewTrigger.tsx">
+
+```tsx
+import * as React from "react";
+import { useWhatsNew } from "../context/WhatsNewContext";
+import type { WhatsNewTriggerProps } from "../WhatsNew.type";
+
+export const WhatsNewTrigger: React.FC<WhatsNewTriggerProps> &
+  React.FunctionComponent<WhatsNewTriggerProps> = ({
+  children,
+}: WhatsNewTriggerProps): React.ReactNode => {
+  const { open } = useWhatsNew();
+  return React.cloneElement(children as any, {
+    onPress: open,
+  });
+};
+```
+
+</Accordion>
+
+<Accordion title="WhatsNewWrapper.tsx">
+
+```tsx
+import * as React from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import type { WhatsNewWrapperProps } from "../WhatsNew.type";
+
+export const WhatsNewWrapper: React.FC<WhatsNewWrapperProps> &
+  React.FunctionComponent<WhatsNewWrapperProps> = ({
+  children,
+}: WhatsNewWrapperProps): React.ReactNode => {
+  return (
+    <React.Fragment>
+      <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+    </React.Fragment>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 30,
+    marginLeft: 10,
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#000000",
+    marginBottom: 16,
+    bottom: 2.5,
+  },
+});
+```
+
+</Accordion>
+
+</Accordion>
+
+<Accordion title='WhatsNew.types.ts'>
+
+```ts
+import type { BlurTint } from "@lodev09/react-native-true-sheet";
+import * as React from "react";
+
+export interface WhatsNewProps {
+  children: React.ReactNode;
+  /**
+   * @interface BlurTint
+   * @optional
+   * The tint color of the blur effect.
+   */
+  blurTint?: BlurTint;
+}
+export interface WhatsNewTriggerProps {
+  children: React.ReactNode;
+}
+export interface WhatsNewContentProps {
+  children: React.ReactNode;
+}
+
+export interface WhatsNewTitleProps {
+  children: React.ReactNode;
+  secondaryColor?: string;
+}
+
+export interface WhatsNewWrapperProps {
+  children: React.ReactNode;
+}
+
+export interface WhatsNewItemContainerProps {
+  children: React.ReactNode;
+}
+export interface WhatsNewButtonProps {
+  children: React.ReactNode;
+  tint?: string;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import React from "react";
+import {
+  WhatsNew,
+  WhatsNewButton,
+  WhatsNewItemContainer,
+} from "@/components/templates";
+import { PrivacyNoticeLink, Subtitle, Title } from "@/components";
+import { SymbolView } from "expo-symbols";
+import { MediaList } from "@/components/templates/media-list";
+
+export const WHATS_NEW = [
+  {
+    title: "Dark Mode Support",
+    description: "Enjoy a sleek new look that’s easier on the eyes at night.",
+    icon: "moon.fill",
+    color: "#8e8e93",
+  },
+  {
+    title: "Faster Performance",
+    description:
+      "We’ve optimized loading and improved smoothness across the app.",
+    icon: "speedometer",
+    color: "#34c759",
+  },
+  {
+    title: "New Onboarding Flow",
+    description: "A refreshed experience to help you get started quickly.",
+    icon: "sparkles",
+    color: "#5e5ce6",
+  },
+  {
+    title: "Bug Fixes",
+    description: "Squashed a bunch of bugs to make things more reliable.",
+    icon: "checkmark.seal.fill",
+    color: "#ff9500",
+  },
+  {
+    title: "Offline Mode",
+    description: "Use the app without an internet connection.",
+    icon: "wifi.slash",
+    color: "#ff3b30",
+  },
+  {
+    title: "New Themes",
+    description: "Personalize your experience with custom themes.",
+    icon: "paintbrush.fill",
+    color: "#af52de",
+  },
+  {
+    title: "Improved Search",
+    description: "Find what you need faster with smarter search.",
+    icon: "magnifyingglass.circle.fill",
+    color: "#007aff",
+  },
+  {
+    title: "Favorites",
+    description: "Mark and quickly access your favorite items.",
+    icon: "star.fill",
+    color: "#ffd60a",
+  },
+  {
+    title: "Cloud Sync",
+    description: "Sync your data securely across devices.",
+    icon: "icloud.fill",
+    color: "#5ac8fa",
+  },
+  {
+    title: "Multi-Language Support",
+    description: "Now available in 10+ languages.",
+    icon: "globe",
+    color: "#34c759",
+  },
+  {
+    title: "Push Notifications",
+    description: "Stay up to date with real-time alerts.",
+    icon: "bell.badge.fill",
+    color: "#ff375f",
+  },
+  {
+    title: "New Widgets",
+    description: "Add app widgets to your home screen.",
+    icon: "square.grid.2x2.fill",
+    color: "#5e5ce6",
+  },
+  {
+    title: "Gesture Support",
+    description: "Navigate faster with intuitive gestures.",
+    icon: "hand.draw.fill",
+    color: "#ff9500",
+  },
+  {
+    title: "Accessibility Enhancements",
+    description: "Improved support for screen readers and larger text.",
+    icon: "figure.wave",
+    color: "#8e8e93",
+  },
+  {
+    title: "App Lock",
+    description: "Secure your app with Face ID or Passcode.",
+    icon: "lock.shield.fill",
+    color: "#34c759",
+  },
+  {
+    title: "Download Manager",
+    description: "Easily manage and track file downloads.",
+    icon: "arrow.down.circle.fill",
+    color: "#007aff",
+  },
+  {
+    title: "In-App Feedback",
+    description: "Share feedback directly from the app.",
+    icon: "bubble.left.and.bubble.right.fill",
+    color: "#af52de",
+  },
+  {
+    title: "Live Chat Support",
+    description: "Get instant help through live chat.",
+    icon: "message.fill",
+    color: "#ff9500",
+  },
+  {
+    title: "Custom Notifications",
+    description: "Choose what alerts you want to receive.",
+    icon: "bell.circle.fill",
+    color: "#ffcc00",
+  },
+  {
+    title: "Enhanced Security",
+    description: "We've added new protections to keep your data safe.",
+    icon: "shield.lefthalf.fill",
+    color: "#ff3b30",
+  },
+];
+
+export default function WhatsNewDemo() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <WhatsNew blurTint="dark">
+        <WhatsNew.Trigger>
+          <Text style={styles.text}>Show What's New</Text>
+        </WhatsNew.Trigger>
+        <WhatsNew.Content>
+          <WhatsNew.Title>What's New In Translate</WhatsNew.Title>
+          <WhatsNew.Wrapper>
+            <MediaList
+              data={WHATS_NEW}
+              keyExtractor={(item) => item.title}
+              renderItem={(item, index) => (
+                <React.Fragment key={index.toString() + "_"}>
+                  <WhatsNewItemContainer>
+                    <SymbolView
+                      name={item.icon as any}
+                      size={50}
+                      tintColor={item.color}
+                    />
+                    <Title key={index.toString()}>{item.title}</Title>
+                    <Subtitle
+                      key={index.toString() + "_subtitle"}
+                      className="max-w-14"
+                    >
+                      {item.description}
+                    </Subtitle>
+                  </WhatsNewItemContainer>
+                </React.Fragment>
+              )}
+              chunkSize={4}
+            />
+
+            <PrivacyNoticeLink style={styles.tosContainer}>
+              About Translation & Privacy
+            </PrivacyNoticeLink>
+            <WhatsNewButton>Continue</WhatsNewButton>
+          </WhatsNew.Wrapper>
+        </WhatsNew.Content>
+      </WhatsNew>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1a1a1a",
+  },
+  text: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: "black",
+  },
+  tosContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height * 0.54,
+  },
+});
+```

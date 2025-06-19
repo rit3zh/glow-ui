@@ -1,0 +1,513 @@
+---
+title: Chip
+description: Chip component for React Native with a modern touch
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar-group/AvatarGroup.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add chip
+```
+
+---
+
+### 🟦 `ChipItem` (Shared)
+
+| Prop          | Type       | Default      | Description                                                         |
+| ------------- | ---------- | ------------ | ------------------------------------------------------------------- |
+| `label`       | `string`   | **required** | Text label displayed on the chip.                                   |
+| `icon`        | `SFSymbol` | **required** | SF Symbol icon shown when inactive.                                 |
+| `activeIcon`  | `SFSymbol` | `undefined`  | SF Symbol icon shown when the chip is active (fallbacks to `icon`). |
+| `activeColor` | `string`   | `undefined`  | Color used for the chip when active.                                |
+
+---
+
+### 🎛️ `ChipGroup<T>` Props
+
+| Prop             | Type                      | Default      | Description                                                 |
+| ---------------- | ------------------------- | ------------ | ----------------------------------------------------------- |
+| `chips`          | `T[]`                     | **required** | Array of chip items (must conform to `ChipItem` structure). |
+| `selectedIndex`  | `number`                  | `undefined`  | Index of the currently selected chip.                       |
+| `onChange`       | `(index: number) => void` | `undefined`  | Callback when a chip is selected.                           |
+| `containerStyle` | `StyleProp<ViewStyle>`    | `undefined`  | Custom style for the chip group container.                  |
+
+---
+
+### ⚡ `AnimatedChip` Props
+
+| Prop          | Type         | Default      | Description                                               |
+| ------------- | ------------ | ------------ | --------------------------------------------------------- |
+| `label`       | `string`     | **required** | Text label for the chip.                                  |
+| `icon`        | `SFSymbol`   | **required** | Icon shown when the chip is inactive.                     |
+| `activeIcon`  | `SFSymbol`   | `undefined`  | Icon shown when the chip is active (fallbacks to `icon`). |
+| `activeColor` | `string`     | `undefined`  | Tint color when the chip is active.                       |
+| `isActive`    | `boolean`    | **required** | Whether the chip is currently active/selected.            |
+| `onPress`     | `() => void` | **required** | Function to call when the chip is pressed.                |
+
+---
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 20,
+  }}
+>
+  <FaCode size={28} />
+  <h3 style={{ fontWeight: "bold" }}>AnimatedChip.tsx</h3>
+</div>
+
+```tsx
+import { SymbolView } from "expo-symbols";
+import React, { useEffect } from "react";
+import { Pressable, StyleSheet, ViewStyle } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolateColor,
+  withSpring,
+} from "react-native-reanimated";
+import type { AnimatedChipProps } from "./Chip.types";
+
+export const AnimatedChip = ({
+  label,
+  icon,
+  isActive,
+  onPress,
+  activeIcon,
+  activeColor,
+}: AnimatedChipProps) => {
+  const progress = useSharedValue<number>(isActive ? 1 : 0);
+  const iconOpacity = useSharedValue<number>(isActive ? 1 : 0);
+  useEffect(() => {
+    progress.value = withTiming<number>(isActive ? 1 : 0, { duration: 500 });
+    iconOpacity.value = withTiming<number>(isActive ? 1 : 0.5, {
+      duration: 500,
+    });
+  }, [isActive]);
+
+  const animatedContainerStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      width: withSpring(isActive ? 140 : 50, {
+        damping: 90,
+        velocity: 2,
+        stiffness: 180,
+      }),
+
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        ["#333333", activeColor!],
+      ),
+    };
+  });
+
+  const animatedIconOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: iconOpacity.value,
+    };
+  });
+
+  const animatedTextStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      transform: [
+        {
+          translateX: withTiming(isActive ? 0 : -8, { duration: 200 }),
+        },
+      ],
+    };
+  });
+
+  return (
+    <Pressable onPress={onPress}>
+      <Animated.View style={[styles.chip, animatedContainerStyle]}>
+        <Animated.View style={[animatedIconOpacityStyle]}>
+          <SymbolView
+            size={18}
+            name={isActive && activeIcon ? activeIcon : icon}
+            tintColor={isActive ? "#FFFFFF" : "#AAAAAA"}
+          />
+        </Animated.View>
+        {isActive && (
+          <Animated.View>
+            <Animated.View style={[styles.labelWrapper, animatedTextStyle]}>
+              <Animated.Text style={styles.label}>{label}</Animated.Text>
+            </Animated.View>
+          </Animated.View>
+        )}
+      </Animated.View>
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    gap: 8,
+    // padding: 12,
+  },
+  chip: {
+    height: 40,
+    borderRadius: 100,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  labelWrapper: {
+    marginLeft: 8,
+    minWidth: 60,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#FFFFFF",
+  },
+});
+```
+
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 20,
+  }}
+>
+  <FaCode size={28} />
+  <h3 style={{ fontWeight: "bold" }}>Chip.tsx</h3>
+</div>
+
+```tsx
+import { SFSymbol, SymbolView } from "expo-symbols";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import type { ChipGroupProps, ChipItem } from "./Chip.types";
+import { AnimatedChip } from "./AnimatedChip";
+
+export const ChipGroup: React.FC<ChipGroupProps<ChipItem>> = ({
+  chips,
+  onChange,
+  containerStyle,
+  selectedIndex,
+}) => {
+  const [internalIndex, setInternalIndex] = useState(0);
+  const activeIndex = selectedIndex ?? internalIndex;
+
+  const handlePress = (index: number) => {
+    if (selectedIndex === undefined) {
+      setInternalIndex(index);
+    }
+    onChange?.(index);
+  };
+  return (
+    <Animated.View
+      style={[styles.container, containerStyle]}
+      layout={LinearTransition}
+    >
+      {chips.map((item, index) => (
+        <AnimatedChip
+          key={index}
+          label={item.label}
+          activeColor={item.activeColor}
+          activeIcon={item.activeIcon}
+          icon={item.icon}
+          b
+          isActive={activeIndex === index}
+          onPress={() => handlePress(index)}
+        />
+      ))}
+    </Animated.View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    gap: 8,
+  },
+});
+```
+
+---
+
+<div
+  style={{
+    display: "flex",
+  alignItems:"center",
+    gap: 8,
+}}
+
+>
+
+  <SiTypescript  />
+  <h3 style={{ fontWeight: "bold"}}>Chip.types.ts</h3>
+</div>
+
+```ts
+import type { SFSymbol } from "expo-symbols";
+import type { StyleProp, ViewStyle } from "react-native";
+
+export interface ChipItem {
+  label: string;
+  icon: SFSymbol;
+  activeIcon?: SFSymbol;
+  activeColor?: string;
+}
+
+export interface ChipGroupProps<T> {
+  chips: T[];
+  selectedIndex?: number;
+  onChange?: (index: number) => void;
+  containerStyle?: StyleProp<ViewStyle>;
+}
+
+export interface AnimatedChipProps extends ChipItem {
+  isActive: boolean;
+  onPress: () => void;
+}
+```
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import * as React from "react";
+import { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  type ViewStyle,
+} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  runOnJS,
+} from "react-native-reanimated";
+import { ChipGroup } from "@/components";
+
+const ChipDemo: React.FunctionComponent = (_$_): React.ReactNode => {
+  const [index, setIndex] = useState<number>(0);
+  const [displayedLabel, setDisplayedLabel] = useState<string>("Primary");
+  const [displayedCount, setDisplayedCount] = useState<number>(42);
+
+  const fadeAnim = useSharedValue<number>(1);
+  const chipData = [
+    {
+      label: "Primary",
+      icon: "person",
+      activeIcon: "person.fill",
+      activeColor: "#0A84FF",
+    },
+    {
+      label: "Notification",
+      icon: "cart",
+      activeIcon: "cart.fill",
+      activeColor: "#FF453A",
+    },
+    {
+      label: "Messages",
+      icon: "bubble.left",
+      activeIcon: "bubble.left.fill",
+      activeColor: "#FF9F0A",
+    },
+    {
+      label: "Promotions",
+      icon: "megaphone",
+      activeIcon: "megaphone.fill",
+      activeColor: "#30D158",
+    },
+  ];
+
+  const updateDisplayedContent = (newIndex: number) => {
+    setDisplayedLabel(chipData[newIndex].label);
+    setDisplayedCount(Math.floor(Math.random() * 100) + 1);
+  };
+
+  const handleChipChange = (newIndex: number) => {
+    if (newIndex !== index) {
+      fadeAnim.value = withTiming(0, { duration: 150 }, (finished) => {
+        if (finished) {
+          runOnJS(updateDisplayedContent)(newIndex);
+          fadeAnim.value = withTiming(1, { duration: 150 });
+        }
+      });
+      setIndex(newIndex);
+    }
+  };
+
+  const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      opacity: fadeAnim.value,
+      transform: [
+        {
+          translateY: interpolate(fadeAnim.value, [0, 1], [4, 0]),
+        },
+      ],
+    };
+  });
+
+  useEffect(() => {
+    updateDisplayedContent(0);
+  }, []);
+
+  return (
+    <GestureHandlerRootView style={styles.root}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Filter</Text>
+            <Text style={styles.subtitle}>Choose your view</Text>
+          </View>
+
+          <View style={styles.chipContainer}>
+            <ChipGroup
+              chips={chipData as any}
+              selectedIndex={index}
+              onChange={handleChipChange}
+              containerStyle={styles.chipGroupContainer}
+            />
+          </View>
+
+          <Animated.View style={[styles.selectedInfo, animatedStyle]}>
+            <Text style={styles.selectedText}>{displayedLabel}</Text>
+            <View style={styles.dot} />
+            <Text style={styles.selectedCount}>{displayedCount} items</Text>
+          </Animated.View>
+        </View>
+      </SafeAreaView>
+    </GestureHandlerRootView>
+  );
+};
+
+export default ChipDemo;
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: "#0A0A0A",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#0A0A0A",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 48,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: -0.5,
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#71717A",
+    fontWeight: "400",
+  },
+  chipContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  chipGroupContainer: {
+    paddingHorizontal: 4,
+  },
+  selectedInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#18181B",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#27272A",
+  },
+  selectedText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#FFFFFF",
+  },
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: "#52525B",
+    marginHorizontal: 8,
+  },
+  selectedCount: {
+    fontSize: 14,
+    color: "#71717A",
+    fontWeight: "400",
+  },
+});
+```

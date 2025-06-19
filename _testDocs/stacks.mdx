@@ -1,0 +1,123 @@
+---
+title: Stacks
+description: Stacks component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add stacks
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### Center.types.ts
+
+```ts
+import type { ViewProps } from "react-native";
+
+export interface CenterTypes extends ViewProps {
+  children: React.ReactNode;
+  className?: string;
+}
+```
+
+#### Row.types.ts
+
+```ts
+import { StyleProp, ViewStyle } from "react-native";
+
+export interface RowProps {
+  children: React.ReactNode;
+  spacing?: number;
+  style?: StyleProp<ViewStyle>;
+}
+```
+
+### 💻 Components
+#### Center.tsx
+
+```tsx
+import { View, Text } from "react-native";
+import React from "react";
+import type { CenterTypes } from "./Center.types";
+
+export const Center: React.FC<CenterTypes> = ({
+  children,
+  ...props
+}): React.ReactNode & React.JSX.Element => {
+  return (
+    <View
+      {...props}
+      className={"items-center justify-center" + props.className}
+    >
+      {children}
+    </View>
+  );
+};
+```
+
+#### Row.tsx
+
+```tsx
+import { View, Text } from "react-native";
+import React from "react";
+import { RowProps } from "./Row.types";
+
+export const Row: React.FC<RowProps> = ({
+  children,
+  spacing = 5,
+  style,
+}): React.JSX.Element & React.ReactNode => {
+  return (
+    <View className="flex-row" style={[{ gap: spacing }, style]}>
+      {children}
+    </View>
+  );
+};
+```

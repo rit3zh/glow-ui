@@ -1,0 +1,1194 @@
+---
+title: Loader
+description: Loader component for React Native with a modern touch
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar-group/AvatarGroup.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add loaders
+```
+
+## 🔵 `CircleLoadingIndicatorProps`
+
+<TypeTable
+  type={{
+    dotColor: {
+      description: "🎨 Color of the dots.",
+      type: "string",
+    },
+    dotRadius: {
+      description: "⚪ Radius of each dot.",
+      type: "number",
+    },
+    dotSpacing: {
+      description: "📏 Spacing between each dot.",
+      type: "number",
+    },
+    duration: {
+      description: "⏱️ Duration of the animation cycle (ms).",
+      type: "number",
+    },
+    style: {
+      description: "🧱 Style applied to the container.",
+      type: "ViewStyle",
+    },
+  }}
+/>
+
+---
+
+## 🪐 `OrbitDotLoaderProps`
+
+<TypeTable
+  type={{
+    dotColor: {
+      description: "🎨 Color of the orbiting dots.",
+      type: "string",
+    },
+    dotRadius: {
+      description: "⚪ Radius of each orbiting dot.",
+      type: "number",
+    },
+    centerRadius: {
+      description: "🎯 Radius of the center point.",
+      type: "number",
+    },
+    size: {
+      description: "📐 Overall size of the loader.",
+      type: "number",
+    },
+    duration: {
+      description: "⏱️ Duration of one orbit cycle (ms).",
+      type: "number",
+    },
+    numDots: {
+      description: "🔢 Number of dots in the orbit.",
+      type: "number",
+    },
+    style: {
+      description: "🧱 Style applied to the loader.",
+      type: "ViewStyle",
+    },
+  }}
+/>
+
+---
+
+## 💫 `PulsingDotsProps`
+
+<TypeTable
+  type={{
+    dotCount: {
+      description: "🔢 Number of pulsing dots.",
+      type: "number",
+    },
+    radius: {
+      description: "⚪ Radius of each dot.",
+      type: "number",
+    },
+    spacing: {
+      description: "📏 Spacing between dots.",
+      type: "number",
+    },
+    duration: {
+      description: "⏱️ Time for one pulse cycle (ms).",
+      type: "number",
+    },
+    color: {
+      description: "🎨 Color of the dots.",
+      type: "string",
+    },
+    gradient: {
+      description: "🌈 Gradient colors for the pulsing effect.",
+      type: "Gradient[]",
+    },
+  }}
+/>
+
+---
+
+## 🔄 `SpinnerArcProps`
+
+<TypeTable
+  type={{
+    size: {
+      description: "📏 Size of the spinner.",
+      type: "number",
+    },
+    colorStart: {
+      description: "🎨 Starting color of the arc.",
+      type: "string",
+    },
+    colorEnd: {
+      description: "🎨 Ending color of the arc.",
+      type: "string",
+    },
+    strokeWidth: {
+      description: "🖌️ Width of the spinner stroke.",
+      type: "number",
+    },
+    speed: {
+      description: "⚡ Speed of the spinning animation.",
+      type: "number",
+    },
+    backgroundColor: {
+      description: "🎨 Background color of the spinner.",
+      type: "string",
+    },
+    arcLength: {
+      description: "🌀 Length of the spinner arc.",
+      type: "number",
+    },
+  }}
+/>
+
+---
+
+## 🧩 `SpinnerSegmentsProps`
+
+<TypeTable
+  type={{
+    size: {
+      description: "📏 Overall size of the spinner.",
+      type: "number",
+    },
+    color: {
+      description: "🎨 Main color of the spinner.",
+      type: "string",
+    },
+    segmentColor: {
+      description: "🧱 Color for each segment.",
+      type: "string",
+    },
+    centerColor: {
+      description: "🎯 Color at the center of the spinner.",
+      type: "string",
+    },
+    speed: {
+      description: "⚡ Speed of the animation.",
+      type: "number",
+    },
+    segmentCount: {
+      description: "🔢 Number of segments in the spinner.",
+      type: "number",
+    },
+    pulseSize: {
+      description: "💥 Size of the pulsing effect.",
+      type: "number",
+    },
+  }}
+/>
+
+---
+
+## 🌀 `RotatingSquaresSpinnerProps`
+
+<TypeTable
+  type={{
+    color: {
+      description: "🎨 Color of the rotating squares.",
+      type: "string",
+    },
+    squareSize: {
+      description: "🔳 Size of each square.",
+      type: "number",
+    },
+    spacing: {
+      description: "📏 Space between each square.",
+      type: "number",
+    },
+    size: {
+      description: "📐 Overall size of the spinner.",
+      type: "number",
+    },
+    duration: {
+      description: "⏱️ Duration of one full rotation.",
+      type: "number",
+    },
+    repeatCount: {
+      description: "🔁 Number of times the animation repeats.",
+      type: "number",
+    },
+    style: {
+      description: "🧱 Style for the spinner container.",
+      type: "ViewStyle",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+<Accordions type="multiple">
+<Accordion title="Circle.Indicator.tsx">
+
+```tsx
+// components/LoadingIndicator.tsx
+import React, { useEffect } from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import Svg, { Circle } from "react-native-svg";
+import Animated, {
+  useSharedValue,
+  useAnimatedProps,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+export interface CircleLoadingIndicatorProps {
+  dotColor?: string;
+  dotRadius?: number;
+  dotSpacing?: number;
+  duration?: number;
+  style?: ViewStyle;
+}
+
+export const CircleLoadingIndicator: React.FC<CircleLoadingIndicatorProps> = ({
+  dotColor = "#007AFF",
+  dotRadius = 6,
+  dotSpacing = 20,
+  duration = 450,
+  style,
+}) => {
+  const progress1 = useSharedValue(0);
+  const progress2 = useSharedValue(0);
+  const progress3 = useSharedValue(0);
+
+  useEffect(() => {
+    progress1.value = withRepeat(
+      withTiming(1, {
+        duration,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true,
+    );
+
+    setTimeout(() => {
+      progress2.value = withRepeat(
+        withTiming(1, {
+          duration,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        -1,
+        true,
+      );
+    }, duration / 3);
+
+    setTimeout(
+      () => {
+        progress3.value = withRepeat(
+          withTiming(1, {
+            duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          -1,
+          true,
+        );
+      },
+      (2 * duration) / 3,
+    );
+  }, [duration]);
+
+  const jumpHeight = dotRadius * 0.85;
+
+  const animatedProps1 = useAnimatedProps(() => ({
+    cy: 12 - progress1.value * jumpHeight,
+  }));
+  const animatedProps2 = useAnimatedProps(() => ({
+    cy: 12 - progress2.value * jumpHeight,
+  }));
+  const animatedProps3 = useAnimatedProps(() => ({
+    cy: 12 - progress3.value * jumpHeight,
+  }));
+
+  return (
+    <View style={[styles.container, style]}>
+      <Svg width={(dotRadius * 2 + dotSpacing) * 3} height={24}>
+        <AnimatedCircle
+          cx={dotRadius}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
+          animatedProps={animatedProps1}
+        />
+        <AnimatedCircle
+          cx={dotRadius + dotSpacing + dotRadius * 2}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
+          animatedProps={animatedProps2}
+        />
+        <AnimatedCircle
+          cx={dotRadius + (dotSpacing + dotRadius * 2) * 2}
+          cy={12}
+          r={dotRadius}
+          fill={dotColor}
+          animatedProps={animatedProps3}
+        />
+      </Svg>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="OrbitingDots.Indicator.tsx">
+
+```tsx
+// SpinnerSegments.tsx
+import React, { useEffect } from "react";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import Svg, { Circle } from "react-native-svg";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedProps,
+  withTiming,
+  withRepeat,
+  withSequence,
+  Easing,
+} from "react-native-reanimated";
+
+const AnimatedView = Animated.createAnimatedComponent(View);
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+export interface OrbitDotLoaderProps {
+  dotColor?: string;
+  dotRadius?: number;
+  centerRadius?: number;
+  size?: number;
+  duration?: number;
+  numDots?: number;
+  style?: ViewStyle;
+}
+
+export const OrbitDotLoader: React.FC<OrbitDotLoaderProps> = ({
+  dotColor = "#fff",
+  dotRadius = 4,
+  centerRadius = 5,
+  size = 40,
+  duration = 900,
+  numDots = 4,
+  style,
+}) => {
+  const rotation = useSharedValue(0);
+  const centerScale = useSharedValue(1);
+
+  useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration,
+        easing: Easing.linear,
+      }),
+      -1,
+    );
+  }, [duration]);
+
+  useEffect(() => {
+    centerScale.value = withRepeat(
+      withSequence(
+        withTiming(1.3, { duration: 400, easing: Easing.out(Easing.ease) }),
+        withTiming(1, { duration: 400, easing: Easing.in(Easing.ease) }),
+      ),
+      -1,
+    );
+  }, []);
+
+  const rotateStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const centerProps = useAnimatedProps(() => ({
+    r: centerRadius * centerScale.value,
+  }));
+
+  const center = size / 2;
+  const orbitY = center - size * 0.3;
+
+  return (
+    <View style={[styles.container, { width: size, height: size }, style]}>
+      <Svg width={size} height={size}>
+        {/* Pulsing center circle */}
+        <AnimatedCircle
+          cx={center}
+          cy={center}
+          r={centerRadius}
+          fill={dotColor}
+          animatedProps={centerProps}
+        />
+      </Svg>
+
+      {/* Rotating orbiting dots */}
+      <AnimatedView style={[styles.spinner, rotateStyle]}>
+        <Svg width={size} height={size}>
+          {Array.from({ length: numDots }).map((_, i) => {
+            const angle = (360 / numDots) * i;
+            return (
+              <Circle
+                key={i}
+                cx={center}
+                cy={orbitY}
+                r={dotRadius}
+                fill={dotColor}
+                transform={`rotate(${angle}, ${center}, ${center})`}
+              />
+            );
+          })}
+        </Svg>
+      </AnimatedView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  spinner: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="PulsingDots.Indicator.tsx">
+
+```tsx
+// PulsingDots.tsx
+import React, { useEffect } from "react";
+import { View, StyleSheet } from "react-native";
+import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
+import Animated, {
+  useSharedValue,
+  useAnimatedProps,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import type { PulsingDotsProps } from "./PlusingDots.types";
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+export const PulsingDots: React.FC<PulsingDotsProps> = ({
+  dotCount = 3,
+  radius = 6,
+  spacing = 25,
+  duration = 800,
+  color = "#00C896",
+  gradient,
+}): React.ReactNode & React.JSX.Element => {
+  const opacities = Array.from({ length: dotCount }, () => useSharedValue(0.3));
+
+  useEffect(() => {
+    opacities.forEach((opacity, i) => {
+      setTimeout(() => {
+        opacity.value = withRepeat(
+          withTiming(1, {
+            duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          -1,
+          true,
+        );
+      }, i * 200);
+    });
+  }, []);
+
+  const animatedProps = opacities.map((val) =>
+    useAnimatedProps(() => ({ opacity: val.value })),
+  );
+
+  const totalWidth = radius * 2 + (dotCount - 1) * spacing;
+
+  return (
+    <View style={styles.container}>
+      <Svg width={totalWidth} height={radius * 3}>
+        <Defs>
+          {gradient?.map((g, i) => (
+            <LinearGradient
+              key={i}
+              id={`grad-${i}`}
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1"
+            >
+              <Stop offset="0%" stopColor={g.from} />
+              <Stop offset="100%" stopColor={g.to} />
+            </LinearGradient>
+          ))}
+        </Defs>
+
+        {animatedProps.map((props, i) => {
+          const gradientId = gradient?.[i]
+            ? `url(#grad-${i})`
+            : gradient?.[0]
+              ? `url(#grad-0)`
+              : color;
+
+          return (
+            <AnimatedCircle
+              key={i}
+              cx={radius + i * spacing}
+              cy={radius * 1.5}
+              r={radius}
+              fill={gradientId}
+              animatedProps={props}
+            />
+          );
+        })}
+      </Svg>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="SpinnerArc.Indicator.tsx">
+
+```tsx
+import React from "react";
+import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import { View, StyleSheet } from "react-native";
+
+const AnimatedView = Animated.createAnimatedComponent(View);
+
+interface SpinnerArcProps {
+  size?: number;
+  colorStart?: string;
+  colorEnd?: string;
+  strokeWidth?: number;
+  speed?: number;
+  backgroundColor?: string;
+  arcLength?: number; // Customizable arc length (stroke dash array)
+}
+
+export const SpinnerArc: React.FC<SpinnerArcProps> = ({
+  size = 40,
+  colorStart = "#FF4E4E",
+  colorEnd = "#FF7A00",
+  strokeWidth = 4,
+  speed = 1000,
+  backgroundColor = "#ddd",
+  arcLength = 90,
+}) => {
+  const rotation = useSharedValue(0);
+
+  // Rotation animation for spinner
+  rotation.value = withRepeat(
+    withTiming(360, {
+      duration: speed,
+      easing: Easing.linear,
+    }),
+    -1,
+  );
+
+  // Animated style for rotating the arc
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  return (
+    <AnimatedView
+      style={[styles.loader, { width: size, height: size }, animatedStyle]}
+    >
+      <Svg width={size} height={size}>
+        {/* Background Circle */}
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={size / 2 - strokeWidth}
+          stroke={backgroundColor}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+
+        {/* Arc with Gradient */}
+        <Defs>
+          <LinearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor={colorStart} />
+            <Stop offset="100%" stopColor={colorEnd} />
+          </LinearGradient>
+        </Defs>
+
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={size / 2 - strokeWidth}
+          stroke="url(#gradient)"
+          strokeWidth={strokeWidth}
+          strokeDasharray={arcLength}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </Svg>
+    </AnimatedView>
+  );
+};
+
+const styles = StyleSheet.create({
+  loader: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="SpinnerSegments.Indicator.tsx">
+
+```tsx
+import React, { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedProps,
+  withTiming,
+  withRepeat,
+  withSequence,
+  Easing,
+} from "react-native-reanimated";
+import type { SpinnerSegmentsProps } from "./SegmentSpinner.types";
+
+// Animated components
+const AnimatedView = Animated.createAnimatedComponent(View);
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+export const SpinnerSegments: React.FC<SpinnerSegmentsProps> = ({
+  size = 40,
+  color = "#fff",
+  segmentColor = "#fff",
+  centerColor = "#fff",
+  speed = 900,
+  segmentCount = 4,
+  pulseSize = 1.3,
+}) => {
+  const rotation = useSharedValue(0);
+  const centerScale = useSharedValue(1);
+
+  // Rotation animation
+  useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration: speed,
+        easing: Easing.linear,
+      }),
+      -1,
+    );
+  }, [speed]);
+
+  // Center pulse animation
+  useEffect(() => {
+    centerScale.value = withRepeat(
+      withSequence(
+        withTiming(pulseSize, {
+          duration: 400,
+          easing: Easing.out(Easing.ease),
+        }),
+        withTiming(1, { duration: 400, easing: Easing.in(Easing.ease) }),
+      ),
+      -1,
+    );
+  }, [pulseSize]);
+
+  const rotateStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const centerProps = useAnimatedProps(() => ({
+    r: 5 * centerScale.value,
+  }));
+
+  const segmentArray = Array.from({ length: segmentCount });
+
+  return (
+    <View style={[styles.container, { width: size, height: size }]}>
+      <Svg width={size} height={size}>
+        {/* Pulsing center circle */}
+        <AnimatedCircle
+          cx={size / 2}
+          cy={size / 2}
+          r={5}
+          fill={centerColor}
+          animatedProps={centerProps}
+        />
+      </Svg>
+
+      {/* Rotating segments */}
+      <AnimatedView style={[styles.spinner, rotateStyle]}>
+        <Svg width={size} height={size}>
+          {segmentArray.map((_, i) => {
+            const angle = (360 / segmentCount) * i;
+            return (
+              <Circle
+                key={i}
+                cx={size / 2}
+                cy={size / 8}
+                r={4}
+                fill={segmentColor}
+                transform={`rotate(${angle}, ${size / 2}, ${size / 2})`}
+              />
+            );
+          })}
+        </Svg>
+      </AnimatedView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  spinner: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="RotatingSquaresSpinner.Indicator.tsx">
+
+```tsx
+import React, { useEffect } from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import Svg, { Rect } from "react-native-svg";
+
+const AnimatedSvg = Animated.createAnimatedComponent(Svg);
+
+interface RotatingSquaresSpinnerProps {
+  color?: string;
+  squareSize?: number;
+  spacing?: number;
+  size?: number;
+  duration?: number;
+  repeatCount?: number;
+  style?: ViewStyle;
+}
+
+export const RotatingSquaresSpinner: React.FC<RotatingSquaresSpinnerProps> = ({
+  color = "#FF5722",
+  squareSize = 10,
+  spacing = 20,
+  size = 60,
+  duration = 1000,
+  repeatCount = -1,
+  style,
+}) => {
+  const rotation = useSharedValue<number>(0);
+
+  useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration,
+        easing: Easing.linear,
+      }),
+      repeatCount,
+    );
+  }, [duration, repeatCount]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const half = size / 2;
+  const offset = squareSize / 2;
+
+  return (
+    <View style={[styles.container, style]}>
+      <AnimatedSvg width={size} height={size} style={animatedStyle}>
+        <Rect
+          x={half - spacing - offset}
+          y={half - spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half + spacing - offset}
+          y={half - spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half - spacing - offset}
+          y={half + spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+        <Rect
+          x={half + spacing - offset}
+          y={half + spacing - offset}
+          width={squareSize}
+          height={squareSize}
+          fill={color}
+        />
+      </AnimatedSvg>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+</Accordion>
+
+<Accordion title="Loaders.types.ts">
+```ts
+export interface CircleLoadingIndicatorProps {
+  dotColor?: string;
+  dotRadius?: number;
+  dotSpacing?: number;
+  duration?: number;
+  style?: ViewStyle;
+}
+
+export interface OrbitDotLoaderProps {
+  dotColor?: string;
+  dotRadius?: number;
+  centerRadius?: number;
+  size?: number;
+  duration?: number;
+  numDots?: number;
+  style?: ViewStyle;
+}
+
+interface Gradient {
+from?: string;
+to?: string;
+}
+
+export interface PulsingDotsProps {
+  dotCount?: number;
+  radius?: number;
+  spacing?: number;
+  duration?: number;
+  color?: string;
+  gradient?: Gradient[];
+}
+
+export interface SpinnerArcProps {
+  size?: number;
+  colorStart?: string;
+  colorEnd?: string;
+  strokeWidth?: number;
+  speed?: number;
+  backgroundColor?: string;
+  arcLength?: number;
+}
+
+export interface SpinnerSegmentsProps {
+  size?: number;
+  color?: string;
+  segmentColor?: string;
+  centerColor?: string;
+  speed?: number;
+  segmentCount?: number;
+  pulseSize?: number;
+}
+
+interface RotatingSquaresSpinnerProps {
+color?: string;
+squareSize?: number;
+spacing?: number;
+size?: number;
+duration?: number;
+repeatCount?: number;
+style?: ViewStyle;
+}
+
+````
+</Accordion>
+  </Accordions>
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  SpinnerArc,
+  SpinnerSegments,
+  RotatingSquaresSpinner,
+  PulsingDots,
+  OrbitDotLoader,
+  CircleLoadingIndicator,
+} from "@/components";
+
+const SpinnerCard: React.FC<{
+  title: string;
+  description: string;
+  children: React.ReactNode;
+  icon?: keyof typeof Ionicons.glyphMap;
+}> = ({ title, description, children, icon }) => (
+  <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-4 backdrop-blur">
+    <View className="flex-row items-center mb-3">
+      {icon && (
+        <Ionicons
+          name={icon}
+          size={18}
+          color="#a1a1aa"
+          style={{ marginRight: 8 }}
+        />
+      )}
+      <Text className="text-zinc-100 font-semibold text-lg">{title}</Text>
+    </View>
+    <Text className="text-zinc-400 text-sm mb-6 leading-5">{description}</Text>
+    <View className="items-center justify-center py-8">{children}</View>
+  </View>
+);
+
+const LoaderDemo: React.FC = () => {
+  return (
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEnabled={true}
+      contentInsetAdjustmentBehavior="always"
+    >
+      <View className="flex-1 bg-zinc-950">
+        <SafeAreaView className="flex-1">
+          <View className="px-6 pt-6 pb-4 border-b border-zinc-800/50">
+            <View className="flex-row items-center mb-2">
+              <Ionicons name="refresh" size={24} color="#fafafa" />
+              <Text className="text-zinc-50 font-bold text-2xl ml-3">
+                Loading Components
+              </Text>
+            </View>
+            <Text className="text-zinc-400 text-base">
+              Beautiful, accessible loading indicators built for React Native
+            </Text>
+          </View>
+
+          <View className="px-6 py-6">
+            <SpinnerCard
+              title="Arc Spinner"
+              description="Elegant circular progress indicator with customizable arc length and gradient colors"
+              icon="pie-chart"
+            >
+              <SpinnerArc
+                arcLength={270}
+                colorEnd="#6366f1"
+                colorStart="#8b5cf6"
+                backgroundColor="transparent"
+                size={64}
+                speed={500}
+                strokeWidth={3}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Segments Spinner"
+              description="Dynamic segmented loader with pulsing animation and customizable segment count"
+              icon="radio-button-on"
+            >
+              <SpinnerSegments
+                centerColor="#18181b"
+                color="#71717a"
+                pulseSize={1.5}
+                segmentColor="#f4f4f5"
+                segmentCount={12}
+                size={64}
+                speed={1500}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Rotating Squares"
+              description="Smooth rotating geometric pattern with configurable timing and spacing"
+              icon="square"
+            >
+              <RotatingSquaresSpinner
+                color="#10b981"
+                squareSize={8}
+                spacing={14}
+                size={64}
+                duration={1000}
+                repeatCount={-1}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Pulsing Dots"
+              description="Rhythmic dot animation with gradient support and flexible positioning"
+              icon="ellipse"
+            >
+              <PulsingDots
+                color="#ef4444"
+                dotCount={3}
+                duration={1800}
+                gradient={[{ from: "#ef4444", to: "#f97316" }]}
+                radius={32}
+                spacing={16}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Orbit Loader"
+              description="Planetary motion inspired loader with orbiting dots around a central point"
+              icon="planet"
+            >
+              <OrbitDotLoader
+                dotColor="#06b6d4"
+                dotRadius={4}
+                centerRadius={8}
+                size={64}
+                duration={2000}
+                numDots={8}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Circle Indicator"
+              description="Classic dot-based circular loading pattern with smooth transitions"
+              icon="refresh-circle"
+            >
+              <CircleLoadingIndicator
+                dotColor="#8b5cf6"
+                dotRadius={3}
+                duration={600}
+                dotSpacing={6}
+              />
+            </SpinnerCard>
+
+            <SpinnerCard
+              title="Compact Squares"
+              description="Minimalist square rotation with faster timing for quick feedback scenarios"
+              icon="grid"
+            >
+              <RotatingSquaresSpinner
+                squareSize={6}
+                color="#f59e0b"
+                spacing={8}
+                size={48}
+                duration={800}
+                repeatCount={-1}
+              />
+            </SpinnerCard>
+
+            <View className="mt-8 pt-6 border-t border-zinc-800/50">
+              <Text className="text-zinc-500 text-center text-sm">
+                Choose the right loading indicator for your use case
+              </Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      </View>
+    </ScrollView>
+  );
+};
+
+export default LoaderDemo;
+````

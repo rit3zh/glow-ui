@@ -132,6 +132,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-icons:
+        specifier: ^5.5.0
+        version: 5.5.0(react@18.3.1)
       react-wrap-balancer:
         specifier: ^1.1.1
         version: 1.1.1(react@18.3.1)
@@ -3842,6 +3845,11 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-icons@5.5.0:
+    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
+    peerDependencies:
+      react: '*'
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -7038,7 +7046,7 @@ snapshots:
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.0)
       eslint-plugin-react: 7.37.4(eslint@8.57.0)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.0)
@@ -7083,7 +7091,7 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -7159,7 +7167,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -9077,6 +9085,10 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-icons@5.5.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-is@16.13.1: {}
 

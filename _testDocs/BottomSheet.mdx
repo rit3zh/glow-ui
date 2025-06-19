@@ -1,0 +1,194 @@
+---
+title: BottomSheet
+description: BottomSheet component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add BottomSheet
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### BottomSheet.types.ts
+
+```ts
+import { ReactNode } from "react";
+
+export interface BottomSheetProps {
+  children: ReactNode;
+  backgroundColor?: string;
+  indicatorColor?: string;
+  // isVisible: boolean;
+  // onClose: () => void;
+  // snapPoints?: number[];
+  // initialSnapPoint?: number;
+}
+```
+
+### 💻 Components
+#### BottomSheet.tsx
+
+```tsx
+import React, { useEffect, useRef } from "react";
+import { StyleSheet, Text } from "react-native";
+import BottomSheetGorhom, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetProps } from "./BottomSheet.types";
+
+export const BottomSheet: React.FC<BottomSheetProps> = ({
+  children,
+  backgroundColor,
+  indicatorColor,
+}) => {
+  const ref = useRef<BottomSheetGorhom>(null);
+  useEffect(() => {
+    ref.current?.expand();
+  }, []);
+
+  return (
+    <>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+        }}
+      >
+        <BottomSheetGorhom
+          backgroundStyle={{
+            backgroundColor,
+          }}
+          ref={ref}
+          index={0}
+          snapPoints={["10%", "50%"]}
+          handleIndicatorStyle={{
+            backgroundColor: indicatorColor,
+            width: 60,
+            height: 4.5,
+          }}
+          handleStyle={{
+            backgroundColor,
+          }}
+        >
+          <BottomSheetView
+            style={[
+              [
+                styles.contentContainer,
+                {
+                  backgroundColor,
+                },
+              ],
+            ]}
+          >
+            {children}
+          </BottomSheetView>
+        </BottomSheetGorhom>
+      </GestureHandlerRootView>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  contentContainer: { flex: 1 },
+});
+```
+
+### 📁 Other
+#### constants.ts
+
+```ts
+import type { SFSymbol } from "expo-symbols";
+
+type WalletAction = {
+  title: string;
+  sfSymbol: SFSymbol;
+  overlayIcon?: SFSymbol;
+  description: string;
+  tint: string;
+  descrutive?: boolean;
+};
+
+export const walletActions: WalletAction[] = [
+  {
+    title: "Block the card",
+    sfSymbol: "wallet.pass",
+    overlayIcon: "lock.circle",
+    description: "Block the card to prevent unauthorized use.",
+    tint: "gray",
+  },
+  {
+    title: "Change PIN",
+    sfSymbol: "wallet.pass",
+    overlayIcon: "magnifyingglass.circle",
+    description: "Change the PIN code of your card.",
+    tint: "gray",
+  },
+  {
+    title: "Card settings",
+    sfSymbol: "wallet.pass",
+    overlayIcon: "pencil.circle",
+    description: "Manage your card settings.",
+    tint: "gray",
+  },
+  {
+    title: "Deactivate card",
+    sfSymbol: "wallet.pass",
+    overlayIcon: "creditcard.circle",
+    description: "Deactivate the card completely.",
+    tint: "red",
+    descrutive: true,
+  },
+];
+```
+
+#### index.ts
+
+```ts
+export { BottomSheet } from "./BottomSheet";
+export type { BottomSheetProps } from "./BottomSheet.types";
+```

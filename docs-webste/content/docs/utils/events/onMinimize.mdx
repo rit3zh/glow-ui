@@ -1,0 +1,91 @@
+---
+title: ➖ onHandleMinimize
+description: Utility to handle minimizing and restoring floating sheets in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Toggles the minimized state of a floating sheet
+- Animates the sheet to minimized or expanded position
+- Updates the animation and minimized animation values
+- Sets the sheet's position accordingly
+
+---
+
+## 📝 Parameters
+
+- `animation` (`Animated.Value`): The main animation value for the sheet
+- `minimizeAnimation` (`Animated.Value`): Animation value for minimized state
+- `setIsMinimized` (`(isMinimized: boolean) => void`): Callback to set minimized state
+- `isMinimized` (`boolean`): Whether the sheet is currently minimized
+- `height` (`number`): The full height of the sheet
+- `setSheetPosition` (`(sheetPosition: number) => void`): Callback to set the sheet's position
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { onHandleMinimize } from "src/components/templates/sheet/floating-sheet/utils/animation-utils/events/onMinimize";
+
+onHandleMinimize({
+  animation,
+  minimizeAnimation,
+  setIsMinimized,
+  isMinimized,
+  height,
+  setSheetPosition,
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { Animated } from "react-native";
+
+interface OnHandleMinimizeProps {
+  animation: Animated.Value;
+  minimizeAnimation: Animated.Value;
+  setIsMinimized: (isMinimized: boolean) => void;
+  isMinimized: boolean;
+  height: number;
+  setSheetPosition: (sheetPosition: number) => void;
+}
+
+export const onHandleMinimize = ({
+  animation,
+  minimizeAnimation,
+  setIsMinimized,
+  isMinimized,
+  height,
+  setSheetPosition,
+}: OnHandleMinimizeProps) => {
+  const newMinimizedState = !isMinimized;
+  setIsMinimized(newMinimizedState);
+
+  const targetValue = newMinimizedState ? 85 : height * 0.9;
+  setSheetPosition(targetValue);
+
+  Animated.spring(animation, {
+    toValue: targetValue,
+    friction: 8,
+    tension: 40,
+
+    useNativeDriver: false,
+  }).start();
+
+  Animated.timing(minimizeAnimation, {
+    toValue: newMinimizedState ? 1 : 0,
+    duration: 500,
+    useNativeDriver: false,
+  }).start();
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this utility to smoothly minimize or restore your floating sheet with animation!

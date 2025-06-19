@@ -1,0 +1,954 @@
+---
+title: Card
+description: Card component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add Card
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### Card.types.ts
+
+```ts
+import type { StyleProp, ViewStyle } from "react-native";
+/**
+ *
+ * @export
+ * @interface CardProps
+ */
+export interface CardProps {
+  /**
+   * The content of the card.
+   */
+  children: React.ReactNode;
+
+  /**
+   * The style of the card.
+   */
+  style?: StyleProp<ViewStyle>;
+
+  /**
+   * The class name of the card.
+   */
+  className?: string;
+  /**
+   * The radius of the card.
+   */
+  /**
+   * The image of the card wrapper.
+   */
+  image?: string;
+
+  /**
+   * Wthether to use the image or not.
+   * @type {boolean}
+   */
+  useImage?: boolean;
+}
+
+export interface CardWrapperProps {
+  /**
+   * The content of the card wrapper.
+   */
+  children: React.ReactNode;
+
+  /**
+   * The style of the card wrapper.
+   */
+  style?: StyleProp<ViewStyle>;
+
+  /**
+   * The class name of the card wrapper.
+   */
+  className?: string;
+}
+```
+
+### 💻 Components
+#### Card.tsx
+
+```tsx
+import React, { forwardRef } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle,
+  StyleSheet,
+  Pressable,
+} from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  withRepeat,
+  Easing,
+} from "react-native-reanimated";
+
+interface CardProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: ViewStyle;
+  variant?: "default" | "elevated" | "outlined" | "ghost";
+  size?: "sm" | "md" | "lg" | "xl";
+  interactive?: boolean;
+  pressable?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  onPress?: () => void;
+  onLongPress?: () => void;
+  animationType?: "scale" | "fade" | "slide" | "bounce" | "none";
+  animationDuration?: number;
+  borderRadius?: number;
+  shadow?: boolean;
+  shadowIntensity?: "sm" | "md" | "lg" | "xl";
+  backgroundColor?: string;
+  borderColor?: string;
+  borderWidth?: number;
+}
+
+interface CardHeaderProps {
+  children?: React.ReactNode;
+  style?: ViewStyle;
+  spacing?: "sm" | "md" | "lg";
+  align?: "left" | "center" | "right";
+}
+
+interface CardTitleProps {
+  children: React.ReactNode;
+  style?: TextStyle;
+  size?: "sm" | "md" | "lg" | "xl";
+  weight?: "normal" | "medium" | "semibold" | "bold";
+  color?: string;
+  numberOfLines?: number;
+}
+
+interface CardDescriptionProps {
+  children: React.ReactNode;
+  style?: TextStyle;
+  size?: "xs" | "sm" | "md";
+  color?: string;
+  numberOfLines?: number;
+}
+
+interface CardContentProps {
+  children?: React.ReactNode;
+  style?: ViewStyle;
+  spacing?: "sm" | "md" | "lg";
+}
+
+interface CardFooterProps {
+  children?: React.ReactNode;
+  style?: ViewStyle;
+  spacing?: "sm" | "md" | "lg";
+  justify?: "start" | "center" | "end" | "between" | "around";
+}
+
+const theme = {
+  colors: {
+    background: "#0a0a0a",
+    card: "#1a1a1a",
+    cardElevated: "#262626",
+    cardOutlined: "#1a1a1a",
+    cardGhost: "transparent",
+    border: "#333333",
+    borderLight: "#404040",
+    text: "#ffffff",
+    textMuted: "#a3a3a3",
+    textSecondary: "#737373",
+    primary: "#3b82f6",
+    primaryForeground: "#ffffff",
+    destructive: "#ef4444",
+    destructiveForeground: "#ffffff",
+  },
+  spacing: {
+    sm: 12,
+    md: 16,
+    lg: 20,
+    xl: 24,
+  },
+  borderRadius: {
+    sm: 6,
+    md: 8,
+    lg: 12,
+    xl: 16,
+  },
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 18,
+    xl: 20,
+    "2xl": 24,
+  },
+  fontWeight: {
+    normal: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+  },
+  shadows: {
+    sm: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    md: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 6,
+      elevation: 3,
+    },
+    lg: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.15,
+      shadowRadius: 15,
+      elevation: 5,
+    },
+    xl: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 20 },
+      shadowOpacity: 0.2,
+      shadowRadius: 25,
+      elevation: 8,
+    },
+  },
+};
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+export const Card = forwardRef<View, CardProps>(
+  (
+    {
+      children,
+      style,
+      variant = "default",
+      size = "md",
+      interactive = false,
+      pressable = false,
+      disabled = false,
+      loading = false,
+      onPress,
+      onLongPress,
+      animationType = "scale",
+      animationDuration = 150,
+      borderRadius,
+      shadow = true,
+      shadowIntensity = "md",
+      backgroundColor,
+      borderColor,
+      borderWidth,
+      ...props
+    },
+    ref,
+  ) => {
+    const scale = useSharedValue(1);
+    const opacity = useSharedValue(1);
+    const translateY = useSharedValue(0);
+
+    const getVariantStyles = () => {
+      switch (variant) {
+        case "elevated":
+          return {
+            backgroundColor: backgroundColor || theme.colors.cardElevated,
+            ...theme.shadows[shadowIntensity],
+          };
+        case "outlined":
+          return {
+            backgroundColor: backgroundColor || theme.colors.cardOutlined,
+            borderWidth: borderWidth || 1,
+            borderColor: borderColor || theme.colors.border,
+          };
+        case "ghost":
+          return {
+            backgroundColor: backgroundColor || theme.colors.cardGhost,
+            borderWidth: 0,
+          };
+        default:
+          return {
+            backgroundColor: backgroundColor || theme.colors.card,
+            ...(shadow ? theme.shadows[shadowIntensity] : {}),
+          };
+      }
+    };
+
+    const getSizeStyles = () => {
+      switch (size) {
+        case "sm":
+          return { padding: theme.spacing.sm };
+        case "lg":
+          return { padding: theme.spacing.lg };
+        case "xl":
+          return { padding: theme.spacing.xl };
+        default:
+          return { padding: theme.spacing.md };
+      }
+    };
+
+    const animatedStyle = useAnimatedStyle(() => {
+      const scaleValue = animationType === "scale" ? scale.value : 1;
+      const opacityValue = animationType === "fade" ? opacity.value : 1;
+      const translateYValue =
+        animationType === "slide" || animationType === "bounce"
+          ? translateY.value
+          : 0;
+
+      return {
+        transform: [{ scale: scaleValue }, { translateY: translateYValue }],
+        opacity: opacityValue,
+      };
+    });
+
+    const handlePressIn = () => {
+      if (disabled || loading) return;
+
+      switch (animationType) {
+        case "scale":
+          scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
+          break;
+        case "fade":
+          opacity.value = withTiming(0.7, { duration: animationDuration });
+          break;
+        case "slide":
+          translateY.value = withSpring(2, { damping: 15, stiffness: 300 });
+          break;
+        case "bounce":
+          scale.value = withSpring(0.98, { damping: 10, stiffness: 400 });
+          translateY.value = withSpring(1, { damping: 10, stiffness: 400 });
+          break;
+      }
+    };
+
+    const handlePressOut = () => {
+      if (disabled || loading) return;
+
+      switch (animationType) {
+        case "scale":
+          scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+          break;
+        case "fade":
+          opacity.value = withTiming(1, { duration: animationDuration });
+          break;
+        case "slide":
+          translateY.value = withSpring(0, { damping: 15, stiffness: 300 });
+          break;
+        case "bounce":
+          scale.value = withSpring(1, { damping: 10, stiffness: 400 });
+          translateY.value = withSpring(0, { damping: 10, stiffness: 400 });
+          break;
+      }
+    };
+
+    const cardStyles = [
+      styles.card,
+      getVariantStyles(),
+      getSizeStyles(),
+      {
+        borderRadius: borderRadius || theme.borderRadius.lg,
+        opacity: disabled ? 0.5 : 1,
+      },
+      style,
+    ];
+
+    if (pressable || onPress || onLongPress) {
+      return (
+        <AnimatedPressable
+          ref={ref}
+          style={[cardStyles, animatedStyle]}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onPress={onPress}
+          onLongPress={onLongPress}
+          disabled={disabled || loading}
+          {...props}
+        >
+          {loading && <LoadingOverlay />}
+          {children}
+        </AnimatedPressable>
+      );
+    }
+
+    if (interactive) {
+      return (
+        <AnimatedTouchableOpacity
+          ref={ref}
+          style={[cardStyles, animatedStyle]}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onPress={onPress}
+          onLongPress={onLongPress}
+          disabled={disabled || loading}
+          activeOpacity={1}
+          {...props}
+        >
+          {loading && <LoadingOverlay />}
+          {children}
+        </AnimatedTouchableOpacity>
+      );
+    }
+
+    return (
+      <Animated.View ref={ref} style={[cardStyles, animatedStyle]} {...props}>
+        {loading && <LoadingOverlay />}
+        {children}
+      </Animated.View>
+    );
+  },
+);
+
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  children,
+  style,
+  spacing = "md",
+  align = "left",
+}) => {
+  const spacingValue = theme.spacing[spacing];
+  const alignItems =
+    align === "center"
+      ? "center"
+      : align === "right"
+        ? "flex-end"
+        : "flex-start";
+
+  return (
+    <View
+      style={[
+        styles.cardHeader,
+        { paddingBottom: spacingValue, alignItems },
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  );
+};
+
+export const CardTitle: React.FC<CardTitleProps> = ({
+  children,
+  style,
+  size = "lg",
+  weight = "semibold",
+  color,
+  numberOfLines,
+}) => {
+  return (
+    <Text
+      style={[
+        styles.cardTitle,
+        {
+          fontSize: theme.fontSize[size],
+          fontWeight: theme.fontWeight[weight],
+          color: color || theme.colors.text,
+        } as any,
+        style,
+      ]}
+      numberOfLines={numberOfLines}
+    >
+      {children}
+    </Text>
+  );
+};
+
+export const CardDescription: React.FC<CardDescriptionProps> = ({
+  children,
+  style,
+  size = "sm",
+  color,
+  numberOfLines,
+}) => {
+  return (
+    <Text
+      style={[
+        styles.cardDescription,
+        {
+          fontSize: theme.fontSize[size],
+          color: color || theme.colors.textMuted,
+        },
+        style,
+      ]}
+      numberOfLines={numberOfLines}
+    >
+      {children}
+    </Text>
+  );
+};
+
+export const CardContent: React.FC<CardContentProps> = ({
+  children,
+  style,
+  spacing = "md",
+}) => {
+  const spacingValue = theme.spacing[spacing];
+
+  return (
+    <View
+      style={[styles.cardContent, { paddingVertical: spacingValue }, style]}
+    >
+      {children}
+    </View>
+  );
+};
+
+export const CardFooter: React.FC<CardFooterProps> = ({
+  children,
+  style,
+  spacing = "md",
+  justify = "start",
+}) => {
+  const spacingValue = theme.spacing[spacing];
+  const justifyContent = {
+    start: "flex-start",
+    center: "center",
+    end: "flex-end",
+    between: "space-between",
+    around: "space-around",
+  }[justify] as any;
+
+  return (
+    <View
+      style={[
+        styles.cardFooter,
+        {
+          paddingTop: spacingValue,
+          justifyContent,
+        },
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  );
+};
+
+const LoadingOverlay: React.FC = () => {
+  const rotation = useSharedValue(0);
+
+  React.useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration: 1000,
+        easing: Easing.bezier(0.4, 0, 0.2, 1),
+      }),
+      -1,
+      false,
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  return (
+    <View style={styles.loadingOverlay}>
+      <Animated.View style={[styles.spinner, animatedStyle]} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.card,
+  },
+  cardHeader: {
+    marginBottom: 0,
+  },
+  cardTitle: {
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme?.fontWeight?.semibold as any,
+    color: theme?.colors?.text,
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textMuted,
+    lineHeight: theme.fontSize.sm * 1.4,
+  },
+  cardContent: {
+    flex: 1,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 0,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: theme.borderRadius.lg,
+  },
+  spinner: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    borderTopColor: "transparent",
+  },
+});
+export { theme };
+```
+
+#### Sparkle.tsx
+
+```tsx
+import React, { useEffect } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  withRepeat,
+  interpolate,
+} from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import Svg, { Circle } from "react-native-svg";
+
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width - 40;
+const CARD_HEIGHT = 140;
+
+const Sparkles = () => {
+  const sparkleY = useSharedValue(0);
+  const sparkleOpacity = useSharedValue(1);
+
+  useEffect(() => {
+    sparkleY.value = withRepeat(withTiming(1, { duration: 3000 }), -1, false);
+    sparkleOpacity.value = withRepeat(
+      withTiming(0, { duration: 1500 }),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(sparkleY.value, [0, 1], [CARD_HEIGHT, -20]);
+    return {
+      transform: [{ translateY }],
+      opacity: sparkleOpacity.value,
+    };
+  });
+
+  return (
+    <Animated.View
+      style={[StyleSheet.absoluteFill, animatedStyle, { left: CARD_WIDTH / 2 }]}
+      pointerEvents="none"
+    >
+      <Svg height="20" width="20">
+        <Circle cx="10" cy="10" r="2" fill="#fff" />
+        <Circle cx="6" cy="14" r="1.5" fill="#aaa" />
+        <Circle cx="14" cy="6" r="1" fill="#ccc" />
+      </Svg>
+    </Animated.View>
+  );
+};
+
+export const ShimmerCard = () => {
+  const shimmerTranslate = useSharedValue(-1);
+
+  useEffect(() => {
+    shimmerTranslate.value = withRepeat(
+      withTiming(1.5, { duration: 2000 }),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedShimmerStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(
+      shimmerTranslate.value,
+      [-1, 1],
+      [-CARD_WIDTH, CARD_WIDTH]
+    );
+
+    return {
+      transform: [{ translateX }],
+    };
+  });
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.card}>
+        {/* Shimmer Layer */}
+        <Animated.View style={[StyleSheet.absoluteFill, animatedShimmerStyle]}>
+          <LinearGradient
+            colors={["transparent", "rgba(255,255,255,0.4)", "transparent"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[
+              StyleSheet.absoluteFill,
+              { width: CARD_WIDTH, height: CARD_HEIGHT },
+            ]}
+          />
+        </Animated.View>
+
+        {/* Sparkles Layer */}
+        <Sparkles />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  card: {
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 20,
+    backgroundColor: "#1e1e1e",
+    overflow: "hidden",
+    flexDirection: "row",
+    padding: 16,
+    alignItems: "center",
+  },
+  iconPlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#333",
+    marginRight: 16,
+  },
+  textBlock: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  line: {
+    height: 12,
+    backgroundColor: "#333",
+    borderRadius: 6,
+    marginBottom: 10,
+  },
+});
+```
+
+### 🧩 Children
+#### CardWrapper.tsx
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { CardWrapperProps } from "../Card.types";
+
+export const CardWrapper: React.FC<CardWrapperProps> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode => {
+  return (
+    <View className="" style={[styles.container, style]}>
+      <View className="justify-cente">{children}</View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+
+    padding: 15,
+    marginTop: 5,
+  },
+});
+```
+
+#### Footer.tsx
+
+```tsx
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  useWindowDimensions,
+} from "react-native";
+
+interface FooterProps {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+}
+
+export const Footer: React.FC<FooterProps> = ({
+  children,
+
+  style,
+}) => {
+  const { height: windowHeight } = useWindowDimensions();
+
+  return (
+    <View
+      style={[
+        styles.contentContainer,
+        { position: "absolute", bottom: 20, width: "100%" },
+      ]}
+    >
+      <View
+        style={[
+          styles.container,
+          style,
+          {
+            height: windowHeight * 0.1,
+          },
+        ]}
+      >
+        {children}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    padding: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    width: "100%",
+  },
+});
+```
+
+#### Subtitle.tsx
+
+```tsx
+import { View, Text, StyleSheet, TextStyle, StyleProp } from "react-native";
+import React from "react";
+
+interface SubTitleProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: StyleProp<TextStyle>;
+}
+
+export const SubTitle: React.FunctionComponent<SubTitleProps> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode => {
+  return (
+    <Text
+      className="font-medium text-gray-300 text-sm"
+      numberOfLines={2}
+      style={style}
+    >
+      {children}
+    </Text>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: "#fff",
+    height: 80,
+  },
+});
+```
+
+#### Title.tsx
+
+```tsx
+import { View, Text, StyleSheet, StyleProp, TextStyle } from "react-native";
+import React from "react";
+
+interface TitleProps {
+  children: React.ReactNode;
+  style?: StyleProp<TextStyle>;
+}
+
+export const Title: React.FunctionComponent<TitleProps> = ({
+  children,
+  style,
+}): React.ReactNode => {
+  return (
+    <Text
+      className={"font-bold text-gray-100 text-2xl"}
+      numberOfLines={2}
+      style={style}
+    >
+      {children}
+    </Text>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: "#fff",
+    height: 80,
+  },
+});
+```
+
+### 📁 Other
+#### index.ts
+
+```ts
+export * from "./Card";
+// export { Title as CardTitle } from "./children/Title";
+// export { CardWrapper as CardWrapper } from "./children/CardWrapper";
+// export { SubTitle as CardSubtitle } from "./children/Subtitle";
+// export { Footer as CardFooter } from "./children/Footer";
+```

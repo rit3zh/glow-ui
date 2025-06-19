@@ -1,0 +1,391 @@
+---
+title: Badge
+description: Badge component for React Native
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/badge/Badge.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add badge
+```
+
+### ⚙️ Props
+
+| Prop        | Type                                                                             | Default      | Description                                                  |
+| ----------- | -------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------ |
+| `label`     | `string`                                                                         | **required** | The text to display inside the badge.                        |
+| `variant`   | `"default" \| "success" \| "warning" \| "error" \| "notifications" \| "pending"` | `"default"`  | Visual style of the badge (color and intent).                |
+| `size`      | `"sm" \| "md" \| "lg"`                                                           | `"md"`       | Controls the overall size (padding, font size) of the badge. |
+| `radius`    | `"none" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "full"`             | `"md"`       | Adjusts the border radius using predefined scale values.     |
+| `style`     | `ViewStyle`                                                                      | `undefined`  | Custom style object for the badge container.                 |
+| `textStyle` | `TextStyle`                                                                      | `undefined`  | Custom style object for the label text.                      |
+| `icon`      | `React.ReactNode`                                                                | `undefined`  | Optional icon (left of label) to display inside the badge.   |
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 20,
+  }}
+>
+  <FaCode size={28} />
+  <h3 style={{ fontWeight: "bold" }}>Badge.tsx</h3>
+</div>
+
+```tsx
+/**
+ * ╔════════════════════════════════════════════════════════╗
+ * ║                                                        ║
+ * ║   ✦ Badge Component  ✦                                ║
+ * ║                                                        ║
+ * ╠════════════════════════════════════════════════════════╣
+ * ║  Author      : Ritesh “rit3zh”                        ║
+ * ║  Created On  : April 27, 2025                          ║
+ * ║  A versatile badge for status indicators,              ║
+ * ║  notifications, and contextual labels in your UI       ║
+ * ╚════════════════════════════════════════════════════════╝
+ */
+
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import * as constants from "@/constants/components/index";
+
+export type BorderRadiusKey =
+  | "none"
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "full";
+
+export const borderRadiusStyles: Record<
+  BorderRadiusKey,
+  { borderRadius: number }
+> = {
+  none: { borderRadius: 0 },
+  sm: { borderRadius: 2 },
+  md: { borderRadius: 6 },
+  lg: { borderRadius: 8 },
+  xl: { borderRadius: 16 },
+  "2xl": { borderRadius: 24 },
+  "3xl": { borderRadius: 32 },
+  full: { borderRadius: 9999 },
+};
+
+export type BadgeVariant =
+  | "default"
+  | "success"
+  | "warning"
+  | "error"
+  | "notifications"
+  | "pending";
+
+export interface BadgeProps {
+  label: string;
+  variant?: BadgeVariant;
+  size?: "sm" | "md" | "lg";
+  radius?: BorderRadiusKey;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+  icon?: React.ReactNode;
+}
+
+const variantStyles: Record<
+  BadgeVariant,
+  {
+    backgroundColor: string;
+    textColor: string;
+    borderColor?: string;
+    borderWidth?: number;
+  }
+> = {
+  default: { backgroundColor: "#c6e8c5", textColor: "#374151" },
+  success: { backgroundColor: "#D1FAE5", textColor: "#065F46" },
+  warning: { backgroundColor: "#FEF3C7", textColor: "#92400E" },
+  error: { backgroundColor: "#FEE2E2", textColor: "#991B1B" },
+  pending: {
+    backgroundColor: "#edeef8",
+    textColor: "#312db8",
+  },
+  notifications: {
+    backgroundColor: "transparent",
+    textColor: "#dbdbdb",
+    borderColor: "#e6e6e6",
+    borderWidth: 0.3,
+  },
+};
+
+const sizeStyles: Record<
+  "sm" | "md" | "lg",
+  { paddingVertical: number; paddingHorizontal: number; fontSize: number }
+> = {
+  sm: { paddingVertical: 4, paddingHorizontal: 8, fontSize: 10 },
+  md: { paddingVertical: 7, paddingHorizontal: 15, fontSize: 16 },
+  lg: { paddingVertical: 12, paddingHorizontal: 20, fontSize: 25 },
+};
+
+export const Badge: React.FC<BadgeProps> = ({
+  label,
+  variant = "default",
+  size = "md",
+  style,
+  textStyle,
+  icon,
+  radius = "md",
+}) => {
+  const vs = variantStyles[variant];
+  const ss = sizeStyles[size];
+  const rs = constants.borderRadiusStyles[radius];
+
+  return (
+    <View
+      style={[
+        styles.badge,
+        {
+          backgroundColor: vs.backgroundColor,
+          paddingVertical: ss.paddingVertical,
+          paddingHorizontal: ss.paddingHorizontal,
+          borderRadius: rs.borderRadius,
+          borderColor: vs.borderColor,
+          borderWidth: vs.borderWidth,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        style,
+      ]}
+    >
+      {icon}
+      {label ? (
+        <Text
+          style={[
+            styles.text,
+            { color: vs.textColor, fontSize: ss.fontSize },
+            textStyle,
+          ]}
+        >
+          {label}
+        </Text>
+      ) : null}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  badge: {},
+  text: {
+    fontWeight: "500",
+    marginLeft: 5,
+  },
+});
+```
+
+---
+
+<div
+  style={{
+    display: "flex",
+  alignItems:"center",
+    gap: 8,
+}}
+
+>
+
+  <SiTypescript  />
+  <h3 style={{ fontWeight: "bold"}}>Badge.types.ts</h3>
+</div>
+
+```ts
+export type BorderRadiusKey =
+  | "none"
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "full";
+
+export const borderRadiusStyles: Record<
+  BorderRadiusKey,
+  { borderRadius: number }
+> = {
+  none: { borderRadius: 0 },
+  sm: { borderRadius: 2 },
+  md: { borderRadius: 6 },
+  lg: { borderRadius: 8 },
+  xl: { borderRadius: 16 },
+  "2xl": { borderRadius: 24 },
+  "3xl": { borderRadius: 32 },
+  full: { borderRadius: 9999 },
+};
+
+export type BadgeVariant =
+  | "default"
+  | "success"
+  | "warning"
+  | "error"
+  | "notifications"
+  | "pending";
+
+export interface BadgeProps {
+  label: string;
+  variant?: BadgeVariant;
+  size?: "sm" | "md" | "lg";
+  radius?: BorderRadiusKey;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+  icon?: React.ReactNode;
+}
+```
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React from "react";
+import { Badge } from "@/components";
+import { SymbolView } from "expo-symbols";
+import {
+  FontAwesome5,
+  FontAwesome6,
+  Fontisto,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+const BadgeDemo: React.FC = (): React.ReactNode => {
+  return (
+    <ScrollView
+      className="flex-1 bg-gray-950"
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingVertical: 24,
+      }}
+      scrollEnabled={true}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      contentInsetAdjustmentBehavior="always"
+    >
+      <SafeAreaView className="flex-1">
+        <View className="px-6 mb-12 mt-5">
+          <Text className="text-white text-2xl font-semibold text-center mb-2">
+            Badge Components
+          </Text>
+          <Text className="text-gray-400 text-center text-sm">
+            Status indicators and labels
+          </Text>
+        </View>
+
+        <View className="px-6 mb-10">
+          <Text className="text-white text-lg font-medium mb-6">
+            Status Indicators
+          </Text>
+          <View className="flex-row flex-wrap gap-4">
+            <Badge
+              label="Online"
+              radius="full"
+              size="md"
+              variant="notifications"
+              icon={
+                <SymbolView
+                  name="circle.fill"
+                  size={12}
+                  tintColor={"lightgreen"}
+                />
+              }
+            />
+            <Badge
+              label="Away"
+              radius="full"
+              size="md"
+              variant="notifications"
+              icon={
+                <SymbolView name="moon.fill" size={12} tintColor={"#FFFF00"} />
+              }
+            />
+            <Badge
+              label="Busy"
+              radius="full"
+              size="md"
+              variant="notifications"
+              icon={
+                <SymbolView
+                  name="minus.circle.fill"
+                  size={12}
+                  tintColor={"#DF0000"}
+                />
+              }
+            />
+            <Badge
+              label="Offline"
+              radius="full"
+              size="md"
+              variant="notifications"
+              icon={
+                <SymbolView name="circle.fill" size={12} tintColor={"gray"} />
+              }
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+export default BadgeDemo;
+```

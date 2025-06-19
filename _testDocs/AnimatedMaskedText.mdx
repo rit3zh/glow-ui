@@ -1,0 +1,208 @@
+---
+title: AnimatedMaskedText
+description: AnimatedMaskedText component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add AnimatedMaskedText
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### AnimatedMaskedText.types.ts
+
+```ts
+import type { StyleProp, TextStyle } from "react-native";
+
+export interface AnimatedMaskedTextProps {
+  children: string;
+  speed?: number;
+  /**
+   *
+   *
+   * @type {string[]}
+   * @memberof AnimatedMaskedTextProps
+   * @description The first color in the array is always going to be "transparent."
+   */
+  colors?: string[];
+  baseTextColor?: string;
+  style?: StyleProp<TextStyle>;
+}
+```
+
+### 💻 Components
+#### AnimatedMaskedText.tsx
+
+```tsx
+import React, { useEffect, useRef } from "react";
+import { Animated, Text, StyleSheet, Easing, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
+import type { AnimatedMaskedTextProps } from "./AnimatedMaskedText.types";
+
+export const AnimatedMaskedText: React.FC<AnimatedMaskedTextProps> = ({
+  children,
+  style,
+  speed = 1,
+  colors = ["transparent", "rgba(255,255,255,1)", "transparent"],
+  baseTextColor = "#000000", // Add base text color prop
+}) => {
+  const shimmerTranslate = useRef(new Animated.Value(0)).current;
+  const [textWidth, setTextWidth] = React.useState(0);
+  const [textHeight, setTextHeight] = React.useState(0);
+
+  useEffect(() => {
+    const animate = () => {
+      shimmerTranslate.setValue(-1);
+      Animated.loop(
+        Animated.timing(shimmerTranslate, {
+          toValue: 1,
+          duration: 2000 / speed,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ).start();
+    };
+    animate();
+  }, [shimmerTranslate, speed]);
+
+  const translateX = shimmerTranslate.interpolate({
+    inputRange: [-1, 1],
+    outputRange: [-textWidth * 2.2, textWidth * 2.5],
+  });
+
+  return (
+    <View style={{ position: "relative" }}>
+      {/* Base text layer - visible text */}
+      <Text
+        style={[styles.text, style, { color: baseTextColor }]}
+        onTextLayout={(e) => {
+          const { width, height } = e.nativeEvent.lines[0];
+          setTextWidth(width);
+          setTextHeight(height);
+        }}
+      >
+        {children}
+      </Text>
+
+      {/* Shimmer overlay */}
+      {textWidth > 0 && (
+        <MaskedView
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              width: textWidth,
+              height: textHeight || 50,
+            },
+          ]}
+          maskElement={
+            <Text style={[styles.text, style, { color: "white" }]}>
+              {children}
+            </Text>
+          }
+        >
+          <Animated.View
+            style={[
+              {
+                flexDirection: "row",
+                transform: [{ translateX }],
+                opacity: shimmerTranslate.interpolate({
+                  inputRange: [-1, 1],
+                  outputRange: [0.3, 1],
+                }),
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={colors as any}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                width: textWidth * 3,
+                height: textHeight || 50,
+              }}
+            />
+          </Animated.View>
+        </MaskedView>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});
+```
+
+### 🧩 Children
+#### ShimmerTextWrapper.tsx
+
+```tsx
+import { View, Text } from "react-native";
+import React from "react";
+
+export const ShimmerTextWrapper = () => {
+  return (
+    <View>
+      <Text>ShimmerTextWrapper</Text>
+    </View>
+  );
+};
+```
+
+### 📁 Other
+#### index.ts
+
+```ts
+export * from "./AnimatedMaskedText";
+```

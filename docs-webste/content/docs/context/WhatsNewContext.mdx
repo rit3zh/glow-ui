@@ -1,0 +1,77 @@
+---
+title: 🆕 WhatsNewContext
+description: Context and hook for managing "What's New" modals in React Native Glow UI
+---
+
+## ⚡️ What it is
+
+- A React context for managing "What's New" modal state and content
+- Provides methods to open, close, and set the modal content
+- Includes a hook (`useWhatsNew`) for easy access
+
+---
+
+## 📝 Context Shape
+
+```ts
+type WhatsNewContextType = {
+  open: () => void;
+  close: () => void;
+  setContent: (c: React.ReactNode) => void;
+};
+```
+
+---
+
+## 🚀 Usage Example
+
+```tsx
+import { useWhatsNew } from "src/components/templates/whats-new/context/WhatsNewContext";
+import { Button } from "react-native";
+
+function WhatsNewButton() {
+  const { open, setContent } = useWhatsNew();
+  return (
+    <Button
+      title="Show What's New"
+      onPress={() => {
+        setContent(<div>✨ New features available!</div>);
+        open();
+      }}
+    />
+  );
+}
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import { createContext, useContext } from "react";
+
+type WhatsNewContextType = {
+  open: () => void;
+  close: () => void;
+  setContent: (c: React.ReactNode) => void;
+};
+
+export const WhatsNewContext = createContext<WhatsNewContextType | undefined>(
+  undefined,
+);
+
+export const useWhatsNew = <T extends WhatsNewContextType>(): T => {
+  const context = useContext(WhatsNewContext);
+  if (!context)
+    throw new Error(
+      "WhatsNew.Trigger or Content must be used inside <WhatsNew>",
+    );
+  return context as T;
+};
+```
+
+---
+
+## 💡 Tip
+
+Wrap your "What's New" modal and triggers in a `WhatsNewContext.Provider` to share state and content easily!

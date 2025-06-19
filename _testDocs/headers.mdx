@@ -1,0 +1,1093 @@
+---
+title: Headers
+description: Headers component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add headers
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### 💻 Components
+#### AnimatedHeader.tsx
+
+```tsx
+import {
+  Animated,
+  ImageBackground,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import React from "react";
+import type { AnimatedHeaderProps } from "../types";
+
+export const AnimatedHeader = ({
+  HeaderComponent,
+  headerImage,
+  imageHeight,
+  translateYUp,
+  translateYDown,
+  scale,
+  imageStyle,
+  OverlayHeaderContent,
+}: AnimatedHeaderProps) => {
+  const { width } = useWindowDimensions();
+  const AnimatedImageBackground =
+    Animated.createAnimatedComponent(ImageBackground);
+  const opacity = translateYDown.interpolate({
+    inputRange: [-imageHeight * 0.3, 0, imageHeight * 0.3],
+    outputRange: [0, 1, 0],
+    extrapolate: "clamp",
+  });
+
+  const headerOpacity = translateYDown.interpolate({
+    inputRange: [0, 100],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
+  return (
+    <View
+      style={[
+        styles.imgContainer,
+        {
+          marginTop: -imageHeight * 4,
+          paddingTop: imageHeight * 4,
+        },
+      ]}
+    >
+      {HeaderComponent ? (
+        <>
+          {headerImage ? (
+            <AnimatedImageBackground
+              source={headerImage}
+              style={[
+                { height: imageHeight, width: width * 1.2 },
+                {
+                  transform: [
+                    { scale: scale },
+                    { translateY: translateYUp },
+                    { translateY: translateYDown },
+                  ],
+                },
+                imageStyle,
+              ]}
+            >
+              {HeaderComponent}
+            </AnimatedImageBackground>
+          ) : (
+            <>
+              <Animated.View
+                style={[
+                  { height: imageHeight, width },
+                  {
+                    transform: [
+                      { scale },
+                      { translateY: translateYUp },
+                      { translateY: translateYDown },
+                    ],
+                    opacity: headerOpacity,
+                  },
+                ]}
+              >
+                {HeaderComponent}
+
+                {/*
+                   <Animated.View
+            style={[
+              {
+                position: "absolute",
+                bottom: 0,
+
+                width: "100%",
+              },
+            ]}
+          >
+            <Animated.View style={[{}]}>{OverlayHeaderContent}</Animated.View>
+          </Animated.View> */}
+              </Animated.View>
+
+              <Animated.View
+                style={[
+                  {
+                    position: "absolute",
+                    bottom: 0,
+
+                    width: "100%",
+                  },
+                ]}
+              >
+                <Animated.View
+                  style={[
+                    {
+                      opacity,
+                    },
+                  ]}
+                >
+                  {OverlayHeaderContent}
+                </Animated.View>
+              </Animated.View>
+            </>
+          )}
+        </>
+      ) : (
+        <Animated.Image
+          source={headerImage}
+          style={[
+            { height: imageHeight, width: width * 1.2 },
+            {
+              transform: [
+                { scale },
+                { translateY: translateYUp },
+                { translateY: translateYDown },
+              ],
+            },
+            imageStyle,
+          ]}
+        />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  imgContainer: {
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  overlayContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
+    pointerEvents: "box-none", // allows scroll under overlay
+  },
+});
+```
+
+#### AnimatedNavBar.tsx
+
+```tsx
+import React from "react";
+import { StyleSheet, Animated } from "react-native";
+import { useAnimateNavbar } from "../hooks/useAnimatedNavBar";
+import type { AnimatedNavbarProps } from "../types/index";
+
+const AnimatedNavbar = ({
+  scroll,
+  imageHeight,
+  OverflowHeaderComponent,
+  TopNavbarComponent,
+  headerHeight,
+  headerElevation,
+}: AnimatedNavbarProps) => {
+  const [headerOpacity, overflowHeaderOpacity] = useAnimateNavbar(
+    scroll,
+    imageHeight,
+    headerHeight,
+  );
+
+  return (
+    <>
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            zIndex: headerOpacity,
+            height: headerHeight,
+            opacity: headerOpacity,
+            elevation: headerElevation,
+          },
+        ]}
+      >
+        {TopNavbarComponent}
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.container,
+          styles.overflowHeader,
+          {
+            zIndex: overflowHeaderOpacity,
+            height: headerHeight,
+            opacity: overflowHeaderOpacity,
+          },
+        ]}
+      >
+        {OverflowHeaderComponent}
+      </Animated.View>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    backgroundColor: "transparent",
+  },
+  overflowHeader: {
+    backgroundColor: "transparent",
+  },
+});
+
+export default AnimatedNavbar;
+```
+
+#### AnimatedScrollView.tsx
+
+```tsx
+import { Animated, ScrollView } from "react-native";
+import React, { forwardRef } from "react";
+import { HEADER_HEIGHT, IMG_HEADER_HEIGHT } from "../constants";
+import { useAnimateScrollView } from "../hooks/useAnimatedScrollView";
+import { AnimatedHeader } from "./AnimatedHeader";
+import AnimatedNavbar from "./AnimatedNavBar";
+
+import type { AnimatedScrollViewProps } from "../types/index";
+
+export const AnimatedScrollView = forwardRef<
+  ScrollView,
+  AnimatedScrollViewProps
+>(
+  (
+    {
+      TopNavBarComponent,
+      HeaderNavbarComponent,
+      HeaderComponent,
+      headerMaxHeight,
+      topBarHeight,
+      topBarElevation,
+      headerImage,
+      disableScale,
+      children,
+      imageStyle,
+      renderHeaderComponent,
+      OverlayHeaderContent,
+      renderOveralComponent,
+      renderTopNavBarComponent,
+      renderToHardwareTextureAndroid,
+      renderHeaderNavBarComponent,
+      ...props
+    }: AnimatedScrollViewProps,
+    ref,
+  ) => {
+    const imageHeight = headerMaxHeight || IMG_HEADER_HEIGHT;
+    const headerNavHeight = topBarHeight || HEADER_HEIGHT;
+    const headerElevation = topBarElevation || 0;
+    const [scroll, onScroll, scale, translateYDown, translateYUp] =
+      useAnimateScrollView(imageHeight, disableScale);
+
+    return (
+      <>
+        <Animated.ScrollView
+          ref={ref}
+          scrollEnabled
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          {...props}
+        >
+          <AnimatedHeader
+            HeaderComponent={
+              renderHeaderComponent ? renderHeaderComponent!() : HeaderComponent
+            }
+            headerImage={headerImage}
+            imageStyle={imageStyle}
+            imageHeight={imageHeight}
+            translateYDown={translateYDown}
+            translateYUp={translateYUp}
+            scale={scale}
+            OverlayHeaderContent={
+              renderOveralComponent
+                ? renderOveralComponent!()
+                : OverlayHeaderContent
+            }
+          />
+          {children}
+        </Animated.ScrollView>
+        <AnimatedNavbar
+          headerElevation={headerElevation}
+          headerHeight={headerNavHeight}
+          scroll={scroll}
+          imageHeight={imageHeight}
+          OverflowHeaderComponent={
+            renderHeaderNavBarComponent
+              ? renderHeaderNavBarComponent!()
+              : HeaderNavbarComponent
+          }
+          TopNavbarComponent={
+            renderTopNavBarComponent
+              ? renderTopNavBarComponent()
+              : TopNavBarComponent
+          }
+        />
+      </>
+    );
+  },
+);
+```
+
+#### AnimatedScrollViewTitle.tsx
+
+```tsx
+import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import React from "react";
+import { AnimatedScrollViewTitleProps } from "../types";
+
+export const AnimatedScrollViewTitle: React.FC<
+  AnimatedScrollViewTitleProps
+> = ({
+  children,
+  size,
+  style,
+}: AnimatedScrollViewTitleProps): React.ReactNode => {
+  const { width } = useWindowDimensions();
+  const maxWidth = 0.5 * width;
+
+  return (
+    <View
+      style={[
+        {
+          ...styles.container,
+        },
+      ]}
+    >
+      <Text
+        numberOfLines={2}
+        style={[
+          styles.text,
+          {
+            maxWidth: maxWidth,
+            fontSize: size ? size : 35,
+          },
+          style,
+        ]}
+      >
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 10,
+  },
+  text: {
+    color: "white",
+
+    fontWeight: "700",
+
+    textAlign: "left",
+  },
+});
+```
+
+#### HeaderNavBar.tsx
+
+```tsx
+import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
+import React, { isValidElement } from "react";
+import type { HeaderNavBarProps } from "../../types";
+import { BlurView } from "expo-blur";
+
+const WIDTH = Dimensions.get("window").width;
+
+export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
+  children,
+  headerHeight = 100,
+  intensity = 50,
+  tint = "systemUltraThinMaterialDark",
+  // @ts-ignore
+  ...props
+}) => {
+  const childrenArray = React.Children.toArray(children).filter((child) =>
+    isValidElement(child)
+  );
+  const childCount = childrenArray.length;
+
+  const renderChildren = () => {
+    if (childCount === 0) {
+      return null;
+    }
+
+    if (childCount === 1) {
+      return <View style={styles.centerContainer}>{childrenArray[0]}</View>;
+    }
+
+    if (childCount === 2) {
+      return (
+        <>
+          <View style={styles.leftContainer}>{childrenArray[0]}</View>
+          <View style={styles.rightContainer}>{childrenArray[1]}</View>
+        </>
+      );
+    }
+
+    if (childCount === 3) {
+      return (
+        <>
+          <View style={styles.leftContainer}>{childrenArray[0]}</View>
+          <View style={styles.centerContainer}>{childrenArray[1]}</View>
+          <View style={styles.rightContainer}>{childrenArray[2]}</View>
+        </>
+      );
+    }
+
+    const leftItem = childrenArray[0];
+    const rightItem = childrenArray[childCount - 1];
+    const centerItems = childrenArray.slice(1, childCount - 1);
+
+    return (
+      <>
+        <View style={styles.leftContainer}>{leftItem}</View>
+        <View style={styles.centerContainer}>{centerItems}</View>
+        <View style={styles.rightContainer}>{rightItem}</View>
+      </>
+    );
+  };
+
+  return (
+    <BlurView
+      style={[
+        styles.container,
+        {
+          height: headerHeight,
+          backgroundColor: "transparent",
+        },
+      ]}
+      intensity={intensity}
+      tint={tint}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.contentContainer}>{renderChildren()}</View>
+      </SafeAreaView>
+    </BlurView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: WIDTH,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 100,
+  },
+  safeArea: {
+    width: "100%",
+    height: "100%",
+  },
+  contentContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  leftContainer: {
+    flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  centerContainer: {
+    flex: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rightContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+});
+```
+
+#### AnimatedScrollViewTitleWrapper.tsx
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { AnimatedScrollViewTitleProps } from "../../types";
+
+export const AnimatedScrollViewTitleWrapper: React.FC<
+  AnimatedScrollViewTitleProps
+> = ({ children }): React.ReactNode => {
+  return <View style={styles.container}>{children}</View>;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center", // This centers items vertically
+    position: "relative", // Make the container relative for absolute positioning
+  },
+});
+```
+
+#### HeaderComponentWrapper.tsx
+
+```tsx
+import { View, Text, StyleSheet, ViewStyle, SafeAreaView } from "react-native";
+import React from "react";
+import type { HeaderComponentWrapperProps } from "../../types";
+import { LinearGradient } from "expo-linear-gradient";
+
+export const HeaderComponentWrapper: React.FC<HeaderComponentWrapperProps> = ({
+  children,
+  useGradient,
+  gradientColors,
+  gradientHeight,
+  ...props
+}: HeaderComponentWrapperProps): React.ReactNode & React.JSX.Element => {
+  return (
+    <View style={[styles.container, props as ViewStyle]}>
+      {children}
+      {useGradient && (
+        <LinearGradient
+          colors={gradientColors as any}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: gradientHeight,
+          }}
+        />
+      )}
+
+      {/* <LinearGradient
+        colors={["transparent", "black"]}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 400,
+        }}
+      /> */}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+```
+
+### 📁 Other
+#### ParallaxHeader.props.ts
+
+```ts
+import {
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
+import { ReactNode } from "react";
+
+/**
+ * Types for the ParallaxHeader component props
+ */
+export interface ParallaxHeaderProps {
+  /**
+   * Title to display in the header
+   */
+  title: string;
+
+  /**
+   * Subtitle text (artist name, album info)
+   */
+  subtitle?: string;
+
+  /**
+   * Additional information line (year, song count, etc)
+   */
+  infoText?: string;
+
+  /**
+   * Main cover image displayed in the header
+   */
+  coverImage: ImageSourcePropType;
+
+  /**
+   * Background image for the top of the header (will have blur applied)
+   * If not provided, coverImage will be used
+   */
+  backgroundImage?: ImageSourcePropType;
+
+  /**
+   * Custom height for the header when fully expanded
+   * @default 380
+   */
+  expandedHeight?: number;
+
+  /**
+   * Custom height for the header when fully collapsed
+   * @default 90
+   */
+  collapsedHeight?: number;
+
+  /**
+   * Sticky header title that appears when scrolling
+   * Defaults to the title if not provided
+   */
+  navbarTitle?: string;
+
+  /**
+   * Children to render below the header (usually a ScrollView or FlatList)
+   */
+  children: ReactNode;
+
+  /**
+   * Background color of the header and status bar
+   * @default '#000000'
+   */
+  headerBackgroundColor?: string;
+
+  /**
+   * Text color for the header titles
+   * @default '#FFFFFF'
+   */
+  headerTextColor?: string;
+
+  /**
+   * Whether to enable the blur effect on the background
+   * @default true
+   */
+  enableBlur?: boolean;
+
+  /**
+   * Intensity of the blur effect (1-100)
+   * @default 60
+   */
+  blurIntensity?: number;
+
+  /**
+   * Tint color for the blur effect
+   * @default 'rgba(0, 0, 0, 0.6)'
+   */
+  blurTint?: "light" | "dark" | "default";
+
+  /**
+   * Custom style for the title text
+   */
+  titleStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Custom style for the subtitle text
+   */
+  subtitleStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Custom style for the info text
+   */
+  infoTextStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Custom style for the cover image container
+   */
+  coverImageContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Custom style for the cover image
+   */
+  coverImageStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Actions to display in the header (like play, shuffle, favorites)
+   */
+  actions?: {
+    icon: ReactNode;
+    onPress: () => void;
+  }[];
+
+  /**
+   * Left icon in the navbar
+   */
+  leftNavIcon?: ReactNode;
+
+  /**
+   * Right icon in the navbar
+   */
+  rightNavIcon?: ReactNode;
+
+  /**
+   * Function to call when the left navbar icon is pressed
+   */
+  onLeftNavIconPress?: () => void;
+
+  /**
+   * Function to call when the right navbar icon is pressed
+   */
+  onRightNavIconPress?: () => void;
+
+  /**
+   * Extra spacing at the bottom of the scrollable content
+   * @default 0
+   */
+  bottomSpacing?: number;
+
+  /**
+   * Animation spring configuration for parallax effects
+   */
+  animationConfig?: {
+    dampingRatio?: number;
+    stiffness?: number;
+    overshootClamping?: boolean;
+    restDisplacementThreshold?: number;
+    restSpeedThreshold?: number;
+  };
+
+  /**
+   * Customize the shadow applied to the cover image
+   */
+  coverImageShadow?: {
+    shadowColor?: string;
+    shadowOffset?: { width: number; height: number };
+    shadowOpacity?: number;
+    shadowRadius?: number;
+    elevation?: number;
+  };
+
+  /**
+   * Enable or disable the floating effect on the cover image during scroll
+   * @default true
+   */
+  enableFloatingCover?: boolean;
+
+  /**
+   * Amount of scaling applied to the cover when fully expanded
+   * @default 1.0
+   */
+  coverScaleAmount?: number;
+
+  /**
+   * Opacity of the header background when fully collapsed
+   * @default 1.0
+   */
+  collapsedBackgroundOpacity?: number;
+
+  /**
+   * Whether to show a gradient overlay on the header
+   * @default true
+   */
+  showGradientOverlay?: boolean;
+
+  /**
+   * Colors for the gradient overlay
+   * @default ['transparent', 'rgba(0,0,0,0.7)']
+   */
+  gradientColors?: [string, string, ...string[]];
+
+  /**
+   * Callback fired when scroll position changes
+   */
+  onScroll?: (position: number) => void;
+
+  /**
+   * Custom renderer for the header content
+   */
+  renderHeaderContent?: (animatedProps: {
+    scrollY: any;
+    titleOpacity: any;
+    coverScale: any;
+    coverTranslateY: any;
+    headerHeight: any;
+  }) => ReactNode;
+}
+
+/**
+ * Default props for the ParallaxHeader component
+ */
+export const DEFAULT_PARALLAX_HEADER_PROPS = {
+  expandedHeight: 380,
+  collapsedHeight: 90,
+  headerBackgroundColor: "#000000",
+  headerTextColor: "#FFFFFF",
+  enableBlur: true,
+  blurIntensity: 60,
+  blurTint: "dark" as const,
+  bottomSpacing: 0,
+  enableFloatingCover: true,
+  coverScaleAmount: 1.0,
+  collapsedBackgroundOpacity: 1.0,
+  showGradientOverlay: true,
+  gradientColors: ["transparent", "rgba(0,0,0,0.7)"],
+  animationConfig: {
+    dampingRatio: 1,
+    stiffness: 300,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+  coverImageShadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 15,
+  },
+};
+```
+
+#### index.ts
+
+```ts
+export const IMG_HEADER_HEIGHT = 400;
+export const HEADER_HEIGHT = 90;
+```
+
+#### useAnimatedNavBar.ts
+
+```ts
+import type { Animated } from "react-native";
+
+export const useAnimateNavbar = (
+  scroll: Animated.Value,
+  imageHeight: number,
+  headerHeight: number
+) => {
+  const HEADER_HEIGHT_DIFFERENCE = imageHeight - headerHeight;
+  const headerOpacity = scroll.interpolate({
+    inputRange: [0, HEADER_HEIGHT_DIFFERENCE * 0.75, HEADER_HEIGHT_DIFFERENCE],
+    outputRange: [0, 0, 1],
+    extrapolate: "clamp",
+  });
+  const overflowHeaderOpacity = scroll.interpolate({
+    inputRange: [0, HEADER_HEIGHT_DIFFERENCE * 0.75, HEADER_HEIGHT_DIFFERENCE],
+    outputRange: [1, 1, 0],
+    extrapolate: "clamp",
+  });
+
+  return [headerOpacity, overflowHeaderOpacity];
+};
+```
+
+#### useAnimatedScrollView.ts
+
+```ts
+import { useRef } from "react";
+import { Animated } from "react-native";
+import { HEADER_HEIGHT } from "../constants";
+
+export const useAnimateScrollView = (
+  imageHeight: number,
+  disableScale?: boolean
+) => {
+  const scroll = useRef(new Animated.Value(0)).current;
+
+  const scale = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [2.5, 1, 1],
+    extrapolate: "clamp",
+  });
+
+  const translateYDown = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [-imageHeight * 0.6, 0, imageHeight * 0.5],
+    extrapolate: "clamp",
+  });
+
+  const translateYUp = scroll.interpolate({
+    inputRange: [-imageHeight, 0, imageHeight],
+    outputRange: [imageHeight * 0.3, 0, 0],
+    extrapolate: "clamp",
+  });
+
+  const onScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scroll } } }],
+    { useNativeDriver: true }
+  );
+
+  return [
+    scroll,
+    onScroll,
+    disableScale ? 1 : scale,
+    translateYDown,
+    translateYUp,
+  ] as const;
+};
+```
+
+#### index.ts
+
+```ts
+export * from "./components/AnimatedScrollView";
+export * from "./components/AnimatedScrollViewTitle";
+export * from "./helpers/wrapper/HeaderComponentWrapper";
+export * from "./helpers/wrapper/AnimatedScrollViewTitleWrapper";
+export * from "./helpers/header/HeaderNavBar";
+```
+
+#### index.ts
+
+```ts
+import { BlurTint } from "expo-blur";
+import type {
+  FlatListProps,
+  ImageStyle,
+  ScrollViewProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
+import { Animated, ImageSourcePropType } from "react-native";
+
+type AnimatedViewProps = {
+  renderHeaderNavBarComponent?: () => JSX.Element;
+  renderTopNavBarComponent?: () => JSX.Element;
+  renderOveralComponent?: () => JSX.Element;
+
+  OverlayHeaderContent?: React.ReactNode;
+  /**
+   * Rendered on top of the screen as a navbar when scrolling to the top
+   */
+  TopNavBarComponent?: JSX.Element;
+
+  /**
+   * A component to use on top of header image. It can also be used
+   * without header image to render a custom component as header.
+   */
+  HeaderComponent?: JSX.Element;
+
+  /**
+   *
+   * @returns A component to use on top of header image. It can also be used
+   * @function renderHeaderComponent
+   * without header image to render a custom component as header.
+   */
+
+  renderHeaderComponent?: () => JSX.Element;
+
+  /**
+   * Rendered on top of the header. Transitions to TopNavbarComponent as you scroll
+   */
+  HeaderNavbarComponent?: JSX.Element;
+
+  /**
+   * Height of the header (headerImage or HeaderComponent). Default value is 300
+   */
+  headerMaxHeight?: number;
+
+  /**
+   * Height of the top navbar. Default value is 90
+   */
+  topBarHeight?: number;
+
+  /**
+   * [ANDROID ONLY] Elevation of the top navbar. Default value is 0
+   */
+  topBarElevation?: number;
+
+  /**
+   * @see https://reactnative.dev/docs/image#source
+   */
+  headerImage?: ImageSourcePropType;
+
+  /**
+   * Disables header scaling when scrolling
+   */
+  disableScale?: boolean;
+
+  /**
+   * Image styles
+   */
+  imageStyle?: StyleProp<ImageStyle>;
+};
+
+export type AnimatedScrollViewProps = AnimatedViewProps & ScrollViewProps;
+
+export type AnimatedFlatListViewProps = AnimatedViewProps;
+
+export type AnimatedNavbarProps = {
+  scroll: Animated.Value;
+  OverflowHeaderComponent?: JSX.Element;
+  TopNavbarComponent?: JSX.Element;
+  imageHeight: number;
+  headerHeight: number;
+  headerElevation: number;
+};
+
+export type AnimatedHeaderProps = {
+  imageHeight: number;
+  OverlayHeaderContent?: React.ReactNode;
+  translateYUp: Animated.AnimatedInterpolation<string | number> | 0;
+  translateYDown: Animated.AnimatedInterpolation<string | number> | 0 | any;
+  scale: Animated.AnimatedInterpolation<string | number> | 1;
+
+  imageStyle?: StyleProp<ImageStyle>;
+  HeaderComponent?: JSX.Element;
+  headerImage?: ImageSourcePropType;
+};
+
+export interface AnimatedScrollViewTitleProps {
+  children: React.ReactNode;
+  size?: number;
+  style?: StyleProp<TextStyle>;
+}
+
+export interface HeaderComponentWrapperProps extends ViewStyle {
+  children: React.ReactNode;
+  useGradient?: boolean;
+  gradientColors?: string[];
+  gradientHeight?: number;
+}
+
+export interface HeaderNavBarProps extends ViewStyle {
+  children: React.ReactNode;
+  headerHeight?: number | 100;
+  intensity?: number | 50;
+  tint?: BlurTint;
+}
+```

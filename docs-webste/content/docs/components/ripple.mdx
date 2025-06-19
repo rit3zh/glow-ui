@@ -1,0 +1,671 @@
+---
+title: Ripple
+description: Ripple component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add ripple
+```
+
+## 🌊 `TouchableRippleProps`
+
+<TypeTable
+  type={{
+    children: {
+      description: "👶 A single child element to receive the ripple effect.",
+      type: "React.ReactElement",
+      required: true,
+    },
+    onPress: {
+      description: "🖱️ Function called when the component is pressed.",
+      type: "() => void",
+    },
+    onLongPress: {
+      description: "⏳ Function called on long press.",
+      type: "() => void",
+    },
+    rippleColor: {
+      description: "🌈 Color of the ripple effect.",
+      type: "string",
+    },
+    duration: {
+      description: "⏱️ Duration of the ripple animation in milliseconds.",
+      type: "number",
+    },
+    borderRadius: {
+      description: "🌀 Border radius for the ripple boundary.",
+      type: "number",
+    },
+    style: {
+      description: "🎨 Style for the wrapper view.",
+      type: "StyleProp<ViewStyle>",
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Ripple.tsx">
+
+```tsx
+import React, { useState, cloneElement, isValidElement } from "react";
+import { View, LayoutChangeEvent } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import type { TouchableRippleProps } from "./Ripple.types";
+
+export const TouchableRipple: React.FC<TouchableRippleProps> = ({
+  children,
+  onPress,
+  onLongPress,
+  rippleColor = "rgba(0,0,0,0.2)",
+  duration = 400,
+  borderRadius = 0,
+  style = {},
+}) => {
+  const [layout, setLayout] = useState({ width: 0, height: 0 });
+
+  const scale = useSharedValue(0);
+  const opacity = useSharedValue(0);
+  const rippleX = useSharedValue(0);
+  const rippleY = useSharedValue(0);
+  const isLongPressing = useSharedValue(false);
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setLayout({ width, height });
+  };
+
+  const gesture = Gesture.Tap()
+    .onStart((e) => {
+      // Detect the press position
+      rippleX.value = e.x;
+      rippleY.value = e.y;
+      scale.value = 0;
+      opacity.value = 1;
+
+      // Start the ripple animation from the press point
+      scale.value = withTiming(1, { duration });
+      opacity.value = withTiming(0, { duration });
+    })
+    .onEnd(() => {
+      if (onPress) runOnJS(onPress)();
+    });
+
+  // Long press gesture logic
+  const longPressGesture = Gesture.LongPress()
+    .onStart(() => {
+      isLongPressing.value = true;
+      // Maintain ripple starting position and scale up for long press
+      scale.value = withTiming(1.5, { duration }); // Increase size during long press
+      opacity.value = withTiming(0.3, { duration }); // Adjust opacity
+
+      if (onLongPress) runOnJS(onLongPress)();
+    })
+    .onEnd(() => {
+      isLongPressing.value = false;
+      // Restore the animation when the press is released
+      scale.value = withTiming(0, { duration });
+      opacity.value = withTiming(0, { duration });
+    });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const size = Math.max(layout.width, layout.height) * 2;
+    return {
+      position: "absolute",
+      width: size,
+      height: size,
+      top: rippleY.value - size / 2,
+      left: rippleX.value - size / 2,
+      backgroundColor: rippleColor,
+      borderRadius: size / 2,
+      transform: [{ scale: scale.value }],
+      opacity: opacity.value,
+    };
+  });
+
+  if (!isValidElement(children)) {
+    console.error(
+      "TouchableRipple expects a single valid React element as child.",
+    );
+    return null;
+  }
+
+  return (
+    <GestureDetector gesture={Gesture.Race(gesture, longPressGesture)}>
+      <View onLayout={onLayout}>
+        <View
+          style={
+            [
+              {
+                overflow: "hidden",
+                borderRadius,
+              },
+              style,
+            ] as any
+          }
+        >
+          {cloneElement(children, {
+            ...(children.props as any),
+          })}
+
+          <Animated.View pointerEvents="none" style={animatedStyle} />
+        </View>
+      </View>
+    </GestureDetector>
+  );
+};
+```
+
+</Accordion>
+
+<Accordion title='Ripple.types.ts'>
+
+```ts
+import type { StyleProp, ViewStyle } from "react-native";
+
+export type TouchableRippleProps = {
+  children: React.ReactElement;
+  onPress?: () => void;
+  onLongPress?: () => void;
+  rippleColor?: string;
+  duration?: number;
+  borderRadius?: number;
+  style?: StyleProp<ViewStyle>;
+};
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import React from "react";
+import {
+  MaterialIcons,
+  Feather,
+  Ionicons,
+  AntDesign,
+} from "@expo/vector-icons";
+import { TouchableRipple } from "@/components/index";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+const RippleDemo: React.FC = (): React.ReactNode => {
+  const handlePress = (action: string) => {
+    console.log(`${action} pressed`);
+    Alert.alert("Action", `${action} was pressed!`);
+  };
+
+  const handleLongPress = (action: string) => {
+    console.log(`${action} long pressed`);
+    Alert.alert("Long Press", `${action} was long pressed!`);
+  };
+
+  return (
+    <GestureHandlerRootView
+      style={{
+        flex: 1,
+      }}
+    >
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        scrollEnabled
+        contentInsetAdjustmentBehavior="always"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <View style={styles.iconContainer}>
+            <MaterialIcons name="touch-app" size={32} color="#60a5fa" />
+          </View>
+          <Text style={styles.title}>TouchableRipple Demo</Text>
+          <Text style={styles.subtitle}>
+            Interactive ripple effects with beautiful animations
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Basic Buttons</Text>
+
+          <View style={styles.buttonRow}>
+            <TouchableRipple
+              borderRadius={8}
+              onPress={() => handlePress("Primary Button")}
+              duration={300}
+              rippleColor="rgba(96, 165, 250, 0.3)"
+              onLongPress={() => handleLongPress("Primary Button")}
+              style={styles.primaryButton}
+            >
+              <View style={styles.buttonContent}>
+                <Feather name="zap" size={18} color="#fafafa" />
+                <Text style={styles.primaryButtonText}>Primary</Text>
+              </View>
+            </TouchableRipple>
+
+            <TouchableRipple
+              borderRadius={8}
+              onPress={() => handlePress("Secondary Button")}
+              duration={300}
+              rippleColor="rgba(161, 161, 170, 0.3)"
+              onLongPress={() => handleLongPress("Secondary Button")}
+              style={styles.secondaryButton}
+            >
+              <View style={styles.buttonContent}>
+                <Feather name="settings" size={18} color="#a1a1aa" />
+                <Text style={styles.secondaryButtonText}>Secondary</Text>
+              </View>
+            </TouchableRipple>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Action Cards</Text>
+
+          <TouchableRipple
+            borderRadius={12}
+            onPress={() => handlePress("Profile Card")}
+            duration={400}
+            rippleColor="rgba(16, 185, 129, 0.2)"
+            onLongPress={() => handleLongPress("Profile Card")}
+            style={styles.card}
+          >
+            <View style={styles.cardContent}>
+              <View style={styles.cardIcon}>
+                <Feather name="user" size={24} color="#10b981" />
+              </View>
+              <View style={styles.cardText}>
+                <Text style={styles.cardTitle}>Profile Settings</Text>
+                <Text style={styles.cardDescription}>
+                  Manage your account and preferences
+                </Text>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={16}
+                color="#71717a"
+              />
+            </View>
+          </TouchableRipple>
+
+          <TouchableRipple
+            borderRadius={12}
+            onPress={() => handlePress("Notifications Card")}
+            duration={400}
+            rippleColor="rgba(245, 158, 11, 0.2)"
+            onLongPress={() => handleLongPress("Notifications Card")}
+            style={styles.card}
+          >
+            <View style={styles.cardContent}>
+              <View style={styles.cardIcon}>
+                <Ionicons
+                  name="notifications-outline"
+                  size={24}
+                  color="#f59e0b"
+                />
+              </View>
+              <View style={styles.cardText}>
+                <Text style={styles.cardTitle}>Notifications</Text>
+                <Text style={styles.cardDescription}>
+                  Configure your notification preferences
+                </Text>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={16}
+                color="#71717a"
+              />
+            </View>
+          </TouchableRipple>
+
+          <TouchableRipple
+            borderRadius={12}
+            onPress={() => handlePress("Security Card")}
+            duration={400}
+            rippleColor="rgba(239, 68, 68, 0.2)"
+            onLongPress={() => handleLongPress("Security Card")}
+            style={styles.card}
+          >
+            <View style={styles.cardContent}>
+              <View style={styles.cardIcon}>
+                <Feather name="shield" size={24} color="#ef4444" />
+              </View>
+              <View style={styles.cardText}>
+                <Text style={styles.cardTitle}>Security</Text>
+                <Text style={styles.cardDescription}>
+                  Privacy and security settings
+                </Text>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={16}
+                color="#71717a"
+              />
+            </View>
+          </TouchableRipple>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Icon Buttons</Text>
+
+          <View style={styles.iconButtonRow}>
+            <TouchableRipple
+              borderRadius={24}
+              onPress={() => handlePress("Like")}
+              duration={250}
+              rippleColor="rgba(239, 68, 68, 0.4)"
+              onLongPress={() => handleLongPress("Like")}
+              style={styles.iconButton}
+            >
+              <AntDesign name="heart" size={20} color="#ef4444" />
+            </TouchableRipple>
+
+            <TouchableRipple
+              borderRadius={24}
+              onPress={() => handlePress("Share")}
+              duration={250}
+              rippleColor="rgba(96, 165, 250, 0.4)"
+              onLongPress={() => handleLongPress("Share")}
+              style={styles.iconButton}
+            >
+              <Feather name="share-2" size={20} color="#60a5fa" />
+            </TouchableRipple>
+
+            <TouchableRipple
+              borderRadius={24}
+              onPress={() => handlePress("Bookmark")}
+              duration={250}
+              rippleColor="rgba(245, 158, 11, 0.4)"
+              onLongPress={() => handleLongPress("Bookmark")}
+              style={styles.iconButton}
+            >
+              <Feather name="bookmark" size={20} color="#f59e0b" />
+            </TouchableRipple>
+
+            <TouchableRipple
+              borderRadius={24}
+              onPress={() => handlePress("More")}
+              duration={250}
+              rippleColor="rgba(139, 92, 246, 0.4)"
+              onLongPress={() => handleLongPress("More")}
+              style={styles.iconButton}
+            >
+              <Feather name="more-horizontal" size={20} color="#8b5cf6" />
+            </TouchableRipple>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Floating Action Button</Text>
+
+          <View style={styles.fabContainer}>
+            <TouchableRipple
+              borderRadius={28}
+              onPress={() => handlePress("Add New Item")}
+              duration={300}
+              rippleColor="rgba(255, 255, 255, 0.3)"
+              onLongPress={() => handleLongPress("Add New Item")}
+              style={styles.fab}
+            >
+              <Feather name="plus" size={24} color="#fafafa" />
+            </TouchableRipple>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.footerIcon}>
+            <Feather name="info" size={16} color="#71717a" />
+          </View>
+          <Text style={styles.footerText}>
+            Try tapping and long-pressing the buttons to see different ripple
+            effects
+          </Text>
+        </View>
+      </ScrollView>
+    </GestureHandlerRootView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 32,
+    paddingTop: 20,
+  },
+  iconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#18181b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fafafa",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 24,
+    maxWidth: 320,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#e4e4e7",
+    marginBottom: 16,
+    marginLeft: 4,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  primaryButton: {
+    flex: 1,
+    backgroundColor: "#2563eb",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  primaryButtonText: {
+    color: "#fafafa",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  secondaryButtonText: {
+    color: "#a1a1aa",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  card: {
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    marginBottom: 12,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+  },
+  cardIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#09090b",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 16,
+  },
+  cardText: {
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    lineHeight: 20,
+  },
+  iconButtonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    gap: 16,
+  },
+  iconButton: {
+    width: 48,
+    height: 48,
+    backgroundColor: "#18181b",
+    borderWidth: 1,
+    borderColor: "#27272a",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fabContainer: {
+    alignItems: "center",
+  },
+  fab: {
+    width: 56,
+    height: 56,
+    backgroundColor: "#2563eb",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: "#18181b",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#27272a",
+  },
+  footerIcon: {
+    marginRight: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#a1a1aa",
+    textAlign: "center",
+    flex: 1,
+    lineHeight: 20,
+  },
+});
+
+export default RippleDemo;
+```

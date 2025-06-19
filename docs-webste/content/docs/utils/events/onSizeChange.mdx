@@ -1,0 +1,95 @@
+---
+title: 📏 onHandleSizeChange
+description: Utility to handle size changes for floating sheets in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Handles size change events for floating sheets
+- Updates the animation value and expanded/minimized state
+- Animates the sheet to the new size
+
+---
+
+## 📝 Parameters
+
+- `animation?` (`Animated.Value`): The animated value for the sheet position
+- `event?` (`SizeChangeEvent`): The size change event containing the new value
+- `setIsExpanded?` (`(isExpanded: boolean) => void`): Callback to set expanded state
+- `setSheetPosition?` (`(sheetPosition: number) => void`): Callback to set the sheet's position
+- `isMinimized?` (`boolean`): Whether the sheet is minimized
+- `setIsMinimized?` (`(isMinimized: boolean) => void`): Callback to set minimized state
+- `sheetSizes?` (`number[]`): Array of possible sheet sizes
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { onHandleSizeChange } from "src/components/templates/sheet/floating-sheet/utils/animation-utils/events/onSizeChange";
+
+onHandleSizeChange({
+  animation,
+  event,
+  setIsExpanded,
+  setSheetPosition,
+  isMinimized,
+  setIsMinimized,
+  sheetSizes,
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import type { SizeChangeEvent } from "@lodev09/react-native-true-sheet";
+import { Animated } from "react-native";
+
+interface SizeChangeEventProps {
+  animation?: Animated.Value;
+  event?: SizeChangeEvent;
+  setIsExpanded?: (isExpanded: boolean) => void;
+  setSheetPosition?: (sheetPosition: number) => void;
+  isMinimized?: boolean;
+  setIsMinimized?: (isMinimized: boolean) => void;
+  sheetSizes?: number[];
+}
+
+export const onHandleSizeChange = ({
+  event,
+  animation,
+  setIsExpanded,
+  setSheetPosition,
+  isMinimized,
+  sheetSizes,
+  setIsMinimized,
+}: SizeChangeEventProps) => {
+  const newValue = event!.nativeEvent.value;
+  if (isMinimized) {
+    setIsExpanded!(newValue >= sheetSizes![1] - 10);
+    setSheetPosition!(newValue);
+    Animated.spring(animation!, {
+      toValue: newValue,
+      friction: 12,
+      tension: 25,
+      useNativeDriver: false,
+    }).start();
+    setIsMinimized!(false);
+  } else {
+    Animated.spring(animation!, {
+      toValue: newValue,
+      friction: 12,
+      tension: 25,
+      useNativeDriver: false,
+    }).start();
+  }
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this utility to smoothly animate your floating sheet when its size changes!

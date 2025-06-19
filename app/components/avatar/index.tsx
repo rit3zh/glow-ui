@@ -1,8 +1,14 @@
 import { View, Text, ScrollView, SafeAreaView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "@/components/index";
 
-const AvatarDemo: React.FunctionComponent = (): React.ReactNode => {
+const AvatarDemo: React.FunctionComponent = (_$_): React.ReactNode => {
+  const [isAvatarLoading, setIsAvatarLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setInterval(() => setIsAvatarLoading(false), 5000);
+  }, []);
+
   return (
     <ScrollView
       className="flex-1 bg-gray-900"
@@ -32,8 +38,8 @@ const AvatarDemo: React.FunctionComponent = (): React.ReactNode => {
                     uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400",
                     name: "John Doe",
                   }}
-                  showAvatar={false}
-                  loading={true}
+                  showAvatar={isAvatarLoading ? false : true}
+                  loading={isAvatarLoading}
                   showOnlineIndicator={true}
                   size={80}
                 />

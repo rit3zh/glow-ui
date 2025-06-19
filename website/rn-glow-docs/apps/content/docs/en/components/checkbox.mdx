@@ -1,0 +1,646 @@
+---
+title: Check Box
+description: Check Box component for React Native with a modern touch
+
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar-group/AvatarGroup.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add check-box
+```
+
+---
+
+### ✅ `AnimatedCheckbox` Props
+
+| Prop                | Type                         | Default         | Description                                                       |
+| ------------------- | ---------------------------- | --------------- | ----------------------------------------------------------------- |
+| `checked`           | `boolean`                    | **required**    | Whether the checkbox is currently selected.                       |
+| `onPress`           | `(checked: boolean) => void` | **required**    | Callback when checkbox is pressed, returns the new checked state. |
+| `size`              | `number`                     | `24`            | Width and height of the checkbox.                                 |
+| `borderRadius`      | `number`                     | `4`             | Corner radius of the checkbox.                                    |
+| `activeColor`       | `string`                     | `"#4CAF50"`     | Fill color when checkbox is checked.                              |
+| `inactiveColor`     | `string`                     | `"transparent"` | Fill color when checkbox is unchecked.                            |
+| `borderColor`       | `string`                     | `"#ccc"`        | Border color when checkbox is unchecked.                          |
+| `borderWidth`       | `number`                     | `1.5`           | Border thickness of the checkbox.                                 |
+| `checkMarkColor`    | `string`                     | `"#fff"`        | Color of the checkmark icon.                                      |
+| `animationDuration` | `number`                     | `200`           | Duration of the check animation in milliseconds.                  |
+| `label`             | `string`                     | `undefined`     | Optional label displayed next to the checkbox.                    |
+| `labelPosition`     | `"left" \| "right"`          | `"right"`       | Position of the label relative to the checkbox.                   |
+| `containerStyle`    | `StyleProp<ViewStyle>`       | `undefined`     | Custom styles for the outer container.                            |
+| `checkboxStyle`     | `StyleProp<ViewStyle>`       | `undefined`     | Custom styles for the checkbox box.                               |
+| `labelStyle`        | `StyleProp<TextStyle>`       | `undefined`     | Style for the label text.                                         |
+| `disabled`          | `boolean`                    | `false`         | If true, disables interaction and changes visual opacity.         |
+| `bounceEffect`      | `boolean`                    | `true`          | Enables a bounce animation when toggled.                          |
+| `rippleEffect`      | `boolean`                    | `true`          | Enables a ripple/touch feedback effect on press.                  |
+
+---
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 20,
+  }}
+>
+  <FaCode size={28} />
+  <h3 style={{ fontWeight: "bold" }}>CheckBox.tsx</h3>
+</div>
+
+```tsx
+import React, { useEffect } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+  StyleProp,
+  View,
+  Text,
+  TextStyle,
+} from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolateColor,
+  Easing,
+  withSequence,
+  withSpring,
+  interpolate,
+  Extrapolate,
+  Extrapolation,
+} from "react-native-reanimated";
+import { Path, Svg } from "react-native-svg";
+
+interface AnimatedCheckboxProps {
+  /** Whether the checkbox is checked */
+  checked: boolean;
+  /** Function called when checkbox is pressed */
+  onPress: (checked: boolean) => void;
+  /** Size of the checkbox (width and height) */
+  size?: number;
+  /** Border radius of the checkbox */
+  borderRadius?: number;
+  /** Color when checkbox is checked */
+  activeColor?: string;
+  /** Color when checkbox is unchecked */
+  inactiveColor?: string;
+  /** Border color when checkbox is unchecked */
+  borderColor?: string;
+  /** Border width */
+  borderWidth?: number;
+  /** Check mark color */
+  checkMarkColor?: string;
+  /** Animation duration in milliseconds */
+  animationDuration?: number;
+  /** Label to display next to checkbox */
+  label?: string;
+  /** Position of the label relative to checkbox */
+  labelPosition?: "left" | "right";
+  /** Additional styling for the container */
+  containerStyle?: StyleProp<ViewStyle>;
+  /** Additional styling for the checkbox */
+  checkboxStyle?: StyleProp<ViewStyle>;
+  /** Style for the label text */
+  labelStyle?: StyleProp<TextStyle>;
+  /** Whether checkbox is disabled */
+  disabled?: boolean;
+  /** Whether to use bounce animation */
+  bounceEffect?: boolean;
+  /** Whether to use ripple effect when pressing */
+  rippleEffect?: boolean;
+}
+
+export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
+  checked,
+  onPress,
+  size = 24,
+  borderRadius,
+  activeColor = "#2196F3",
+  inactiveColor = "transparent",
+  borderColor = "#757575",
+  borderWidth = 2,
+  checkMarkColor = "white",
+  animationDuration = 300,
+  label,
+  labelPosition = "right",
+  containerStyle,
+  checkboxStyle,
+  labelStyle,
+  disabled = false,
+  bounceEffect = true,
+  rippleEffect = true,
+}) => {
+  const progress = useSharedValue(checked ? 1 : 0);
+  const scale = useSharedValue(1);
+  const rippleOpacity = useSharedValue(0);
+  const rippleScale = useSharedValue(0);
+
+  useEffect(() => {
+    progress.value = withTiming(checked ? 1 : 0, {
+      duration: animationDuration,
+      easing: Easing.bezier(0.16, 1, 0.3, 1),
+    });
+
+    if (checked && bounceEffect) {
+      scale.value = withSequence(
+        withTiming(0.8, { duration: animationDuration / 2 }),
+        withSpring(1, {
+          mass: 1,
+          stiffness: 500,
+          damping: 15,
+        }),
+      );
+    }
+  }, [checked, animationDuration, progress, scale, bounceEffect]);
+
+  const handlePress = () => {
+    if (disabled) return;
+
+    onPress(!checked);
+
+    if (rippleEffect) {
+      rippleOpacity.value = withSequence(
+        withTiming(0.3, { duration: 100 }),
+        withTiming(0, { duration: 300 }),
+      );
+
+      rippleScale.value = withSequence(
+        withTiming(0, { duration: 0 }),
+        withTiming(1, { duration: 400 }),
+      );
+    }
+  };
+
+  const animatedBoxStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [inactiveColor, activeColor],
+      ),
+      borderColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [borderColor, activeColor],
+      ),
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const animatedCheckStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      transform: [
+        {
+          scale: interpolate(
+            progress.value,
+            [0, 0.5, 1],
+            [0, 1.2, 1],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    };
+  });
+
+  const animatedRippleStyle = useAnimatedStyle(() => {
+    return {
+      opacity: rippleOpacity.value,
+      transform: [{ scale: rippleScale.value }],
+    };
+  });
+
+  const actualBorderRadius =
+    borderRadius !== undefined ? borderRadius : size / 4;
+
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      activeOpacity={0.8}
+      disabled={disabled}
+      style={[
+        styles.container,
+        labelPosition === "left" ? styles.rowReverse : styles.row,
+        { opacity: disabled ? 0.6 : 1 },
+        containerStyle,
+      ]}
+    >
+      <View style={{ position: "relative" }}>
+        <Animated.View
+          style={[
+            styles.checkbox,
+            {
+              width: size,
+              height: size,
+              borderRadius: actualBorderRadius,
+              borderWidth,
+            },
+            animatedBoxStyle,
+            checkboxStyle,
+          ]}
+        />
+
+        {rippleEffect && (
+          <Animated.View
+            style={[
+              styles.ripple,
+              {
+                width: size * 2.5,
+                height: size * 2.5,
+                borderRadius: size * 2.5,
+                top: -size * 0.75,
+                left: -size * 0.75,
+              },
+              animatedRippleStyle,
+            ]}
+          />
+        )}
+
+        <Animated.View
+          style={[
+            styles.checkMarkContainer,
+            {
+              width: size,
+              height: size,
+            },
+            animatedCheckStyle,
+          ]}
+        >
+          <Svg width={size * 0.6} height={size * 0.4} viewBox="0 0 18 13">
+            <Path
+              d="M1 5.5L6 11L17 1"
+              stroke={checkMarkColor}
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </Svg>
+        </Animated.View>
+      </View>
+
+      {label && (
+        <Text
+          style={[
+            styles.label,
+            {
+              marginLeft: labelPosition === "right" ? 10 : 0,
+              marginRight: labelPosition === "left" ? 10 : 0,
+            },
+            labelStyle,
+          ]}
+        >
+          {label}
+        </Text>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  rowReverse: {
+    flexDirection: "row-reverse",
+  },
+  checkbox: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "solid",
+  },
+  ripple: {
+    position: "absolute",
+    backgroundColor: "#000",
+    zIndex: -1,
+  },
+  checkMarkContainer: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  label: {
+    fontSize: 16,
+  },
+});
+```
+
+---
+
+<div
+  style={{
+    display: "flex",
+  alignItems:"center",
+    gap: 8,
+}}
+
+>
+
+  <SiTypescript  />
+  <h3 style={{ fontWeight: "bold"}}>CheckBox.types.ts</h3>
+</div>
+
+```ts
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
+
+export interface AnimatedCheckboxProps {
+  /** Whether the checkbox is checked */
+  checked: boolean;
+  /** Function called when checkbox is pressed */
+  onPress: (checked: boolean) => void;
+  /** Size of the checkbox (width and height) */
+  size?: number;
+  /** Border radius of the checkbox */
+  borderRadius?: number;
+  /** Color when checkbox is checked */
+  activeColor?: string;
+  /** Color when checkbox is unchecked */
+  inactiveColor?: string;
+  /** Border color when checkbox is unchecked */
+  borderColor?: string;
+  /** Border width */
+  borderWidth?: number;
+  /** Check mark color */
+  checkMarkColor?: string;
+  /** Animation duration in milliseconds */
+  animationDuration?: number;
+  /** Label to display next to checkbox */
+  label?: string;
+  /** Position of the label relative to checkbox */
+  labelPosition?: "left" | "right";
+  /** Additional styling for the container */
+  containerStyle?: StyleProp<ViewStyle>;
+  /** Additional styling for the checkbox */
+  checkboxStyle?: StyleProp<ViewStyle>;
+  /** Style for the label text */
+  labelStyle?: StyleProp<TextStyle>;
+  /** Whether checkbox is disabled */
+  disabled?: boolean;
+  /** Whether to use bounce animation */
+  bounceEffect?: boolean;
+  /** Whether to use ripple effect when pressing */
+  rippleEffect?: boolean;
+}
+```
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { AnimatedCheckbox } from "@/components/index";
+
+const CheckBoxDemo: React.FC = (): React.ReactNode => {
+  const [agreements, setAgreements] = useState({
+    terms: false,
+    privacy: false,
+    marketing: false,
+    biometric: false,
+  });
+
+  const updateAgreement =
+    (key: keyof typeof agreements) => (checked: boolean) => {
+      setAgreements((prev) => ({ ...prev, [key]: checked }));
+    };
+
+  const canProceed = agreements.terms && agreements.privacy;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Welcome to React Native Glow</Text>
+        <Text style={styles.subtitle}>
+          Please review and accept our policies to continue
+        </Text>
+
+        <View style={styles.agreementsList}>
+          <AnimatedCheckbox
+            checked={agreements.terms}
+            onPress={updateAgreement("terms")}
+            label="I agree to the Terms of Service"
+            size={20}
+            borderRadius={4}
+            activeColor="#3b82f6"
+            inactiveColor="transparent"
+            borderColor="#3f3f46"
+            borderWidth={1}
+            checkMarkColor="#ffffff"
+            animationDuration={200}
+            bounceEffect={true}
+            containerStyle={styles.checkboxRow}
+            labelStyle={styles.labelRequired}
+          />
+
+          <AnimatedCheckbox
+            checked={agreements.privacy}
+            onPress={updateAgreement("privacy")}
+            label="I accept the Privacy Policy"
+            size={20}
+            borderRadius={4}
+            activeColor="#3b82f6"
+            inactiveColor="transparent"
+            borderColor="#3f3f46"
+            borderWidth={1}
+            checkMarkColor="#ffffff"
+            animationDuration={200}
+            bounceEffect={true}
+            containerStyle={styles.checkboxRow}
+            labelStyle={styles.labelRequired}
+          />
+
+          <View style={styles.divider} />
+
+          <AnimatedCheckbox
+            checked={agreements.marketing}
+            onPress={updateAgreement("marketing")}
+            label="Send me promotional emails"
+            size={18}
+            borderRadius={4}
+            activeColor="#10b981"
+            inactiveColor="transparent"
+            borderColor="#3f3f46"
+            borderWidth={1}
+            checkMarkColor="#ffffff"
+            animationDuration={250}
+            rippleEffect={true}
+            containerStyle={styles.checkboxRow}
+            labelStyle={styles.labelOptional}
+          />
+
+          <AnimatedCheckbox
+            checked={agreements.biometric}
+            onPress={updateAgreement("biometric")}
+            label="Enable biometric authentication"
+            size={18}
+            borderRadius={4}
+            activeColor="#8b5cf6"
+            inactiveColor="transparent"
+            borderColor="#3f3f46"
+            borderWidth={1}
+            checkMarkColor="#ffffff"
+            animationDuration={250}
+            rippleEffect={true}
+            containerStyle={styles.checkboxRow}
+            labelStyle={styles.labelOptional}
+          />
+        </View>
+
+        <View style={styles.footer}>
+          <View style={[styles.button, !canProceed && styles.buttonDisabled]}>
+            <Text
+              style={[
+                styles.buttonText,
+                !canProceed && styles.buttonTextDisabled,
+              ]}
+            >
+              Continue
+            </Text>
+          </View>
+          <Text style={styles.footerNote}>
+            Required fields must be accepted to proceed
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 80,
+    paddingBottom: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#fafafa",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#a1a1aa",
+    lineHeight: 22,
+    marginBottom: 40,
+  },
+  agreementsList: {
+    flex: 1,
+  },
+  checkboxRow: {
+    paddingVertical: 16,
+  },
+  labelRequired: {
+    fontSize: 15,
+    color: "#fafafa",
+    fontWeight: "400",
+    marginLeft: 12,
+    lineHeight: 20,
+  },
+  labelOptional: {
+    fontSize: 15,
+    color: "#d4d4d8",
+    fontWeight: "400",
+    marginLeft: 12,
+    lineHeight: 20,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#27272a",
+    marginVertical: 8,
+  },
+  footer: {
+    marginTop: 32,
+  },
+  button: {
+    backgroundColor: "#3b82f6",
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  buttonDisabled: {
+    backgroundColor: "#27272a",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  buttonTextDisabled: {
+    color: "#71717a",
+  },
+  footerNote: {
+    fontSize: 13,
+    color: "#71717a",
+    textAlign: "center",
+    lineHeight: 18,
+  },
+});
+
+export default CheckBoxDemo;
+```

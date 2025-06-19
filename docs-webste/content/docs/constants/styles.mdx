@@ -1,0 +1,223 @@
+---
+title: Styles
+description: Styles for React Native Glow UI
+---
+
+# 🖌️ Style Constants & Utilities
+
+Glow UI provides a robust, consistent, and themeable design system for React Native. Use these constants and utilities to build beautiful, maintainable UIs with ease.
+
+---
+
+## 📏 Spacing System
+
+Predefined spacing values for margin, padding, width, and height.
+
+| Key  | Value (px) |
+| ---- | ---------- |
+| none | 0          |
+| xs   | 2          |
+| sm   | 4          |
+| base | 8          |
+| md   | 12         |
+| lg   | 16         |
+| xl   | 20         |
+| 2xl  | 24         |
+| 3xl  | 32         |
+| 4xl  | 40         |
+| 5xl  | 48         |
+| 6xl  | 56         |
+| 7xl  | 64         |
+| 8xl  | 80         |
+| 9xl  | 96         |
+| 10xl | 128        |
+
+```ts
+import { spacingStyles } from 'src/constants/components/styles';
+<View style={{ padding: spacingStyles.lg }} />
+```
+
+---
+
+## 🟦 Border Radius System
+
+Easily apply rounded corners with these keys.
+
+| Key  | Value | Visual |
+| ---- | ----- | ------ |
+| none | 0     | ◻️     |
+| xs   | 1     | 🟦     |
+| sm   | 2     | 🟩     |
+| base | 4     | 🟪     |
+| md   | 6     | 🟫     |
+| lg   | 8     | 🟧     |
+| xl   | 12    | 🟨     |
+| 2xl  | 16    | 🟠     |
+| 3xl  | 24    | 🟣     |
+| 4xl  | 32    | 🟤     |
+| 5xl  | 40    | ⚪️     |
+| 6xl  | 48    | ⚫️    |
+| 7xl  | 56    | 🔵     |
+| 8xl  | 64    | 🟡     |
+| 9xl  | 80    | 🟤     |
+| 10xl | 96    | 🟠     |
+| full | 9999  | 🥚     |
+| pill | 500   | 💊     |
+
+```ts
+import { borderRadiusStyles } from 'src/constants/components/styles';
+<View style={{ borderRadius: borderRadiusStyles.full }} />
+```
+
+---
+
+## 🔤 Typography System
+
+Font sizes and weights for consistent text.
+
+### Font Sizes
+
+| Key  | px  |
+| ---- | --- |
+| xs   | 10  |
+| sm   | 12  |
+| base | 14  |
+| lg   | 16  |
+| xl   | 18  |
+| 2xl  | 20  |
+| 3xl  | 24  |
+| 4xl  | 28  |
+| 5xl  | 32  |
+| 6xl  | 36  |
+| 7xl  | 42  |
+| 8xl  | 48  |
+| 9xl  | 56  |
+
+### Font Weights
+
+| Key        | Weight |
+| ---------- | ------ |
+| thin       | 100    |
+| extralight | 200    |
+| light      | 300    |
+| normal     | 400    |
+| medium     | 500    |
+| semibold   | 600    |
+| bold       | 700    |
+| extrabold  | 800    |
+| black      | 900    |
+
+```ts
+import { fontSizeStyles, fontWeightStyles } from 'src/constants/components/styles';
+<Text style={{ fontSize: fontSizeStyles.lg, fontWeight: fontWeightStyles.bold }} />
+```
+
+---
+
+## 🎨 Color System
+
+A palette of named colors for backgrounds, borders, and text.
+
+```ts
+import { colorStyles } from 'src/constants/components/styles';
+<View style={{ backgroundColor: colorStyles['blue-500'] }} />
+```
+
+---
+
+## 🌫️ Shadow System
+
+Apply elevation and shadow for depth.
+
+| Key  | Example     |
+| ---- | ----------- |
+| none | No shadow   |
+| xs   | Subtle      |
+| sm   | Small       |
+| base | Base        |
+| md   | Medium      |
+| lg   | Large       |
+| xl   | Extra Large |
+| 2xl  | Ultra       |
+
+```ts
+import { shadowStyles } from 'src/constants/components/styles';
+<View style={shadowStyles.lg} />
+```
+
+---
+
+## 💧 Opacity System
+
+| Key | Value |
+| --- | ----- |
+| 0   | 0     |
+| 5   | 0.05  |
+| 10  | 0.1   |
+| 20  | 0.2   |
+| 25  | 0.25  |
+| 30  | 0.3   |
+| 40  | 0.4   |
+| 50  | 0.5   |
+| 60  | 0.6   |
+| 70  | 0.7   |
+| 75  | 0.75  |
+| 80  | 0.8   |
+| 90  | 0.9   |
+| 95  | 0.95  |
+| 100 | 1     |
+
+```ts
+import { opacityStyles } from 'src/constants/components/styles';
+<View style={{ opacity: opacityStyles[50] }} />
+```
+
+---
+
+## ➖ Border Width System
+
+| Key  | Value (px) |
+| ---- | ---------- |
+| none | 0          |
+| xs   | 0.5        |
+| sm   | 1          |
+| base | 1.5        |
+| md   | 2          |
+| lg   | 3          |
+| xl   | 4          |
+
+```ts
+import { borderWidthStyles } from 'src/constants/components/styles';
+<View style={{ borderWidth: borderWidthStyles.lg }} />
+```
+
+---
+
+# 🛠️ Utility Functions
+
+Glow UI provides many helpers to generate styles dynamically:
+
+- `generatePadding`, `generateMargin`, `generatePaddingX`, `generatePaddingY`, `generateMarginX`, `generateMarginY`
+- `generateBorderRadius`, `generateCornerRadius`
+- `generateTextStyle`
+- `generateBackgroundColor`, `generateBorderColor`, `generateBorder`
+- `generateFlex`, `generateFlexDirection`, `generateJustifyContent`, `generateAlignItems`
+- `generatePosition`, `generateTop`, `generateBottom`, `generateLeft`, `generateRight`
+- `generateWidth`, `generateHeight`, `generateOpacity`, `generateShadow`
+- `generateViewStyle` (combine multiple configs)
+
+### Example
+
+```ts
+import { generateViewStyle } from 'src/constants/components/styles';
+
+const style = generateViewStyle({
+  padding: 'lg',
+  backgroundColor: 'blue-100',
+  borderRadius: 'xl',
+  shadow: 'md',
+  opacity: 80,
+});
+
+<View style={style} />
+```

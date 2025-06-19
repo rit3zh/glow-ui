@@ -1,0 +1,1247 @@
+---
+title: Switch
+description: Switch component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add switch
+```
+
+## 🔁 `AnimatedSwitchProps`
+
+<TypeTable
+  type={{
+    value: {
+      description: "✅ Current boolean value of the switch.",
+      type: "boolean",
+      required: true,
+    },
+    onValueChange: {
+      description: "🔄 Callback when the switch value changes.",
+      type: "(value: boolean) => void",
+      required: true,
+    },
+    disabled: {
+      description: "🚫 Whether the switch is disabled.",
+      type: "boolean",
+    },
+    width: {
+      description: "📏 Width of the switch container.",
+      type: "number",
+    },
+    height: {
+      description: "📐 Height of the switch container.",
+      type: "number",
+    },
+    onColor: {
+      description: "🎨 Color of the track when switch is ON.",
+      type: "string",
+    },
+    offColor: {
+      description: "🎨 Color of the track when switch is OFF.",
+      type: "string",
+    },
+    thumbColor: {
+      description: "🔘 Color of the thumb.",
+      type: "string",
+    },
+    thumbSize: {
+      description: "📦 Size of the thumb.",
+      type: "number",
+    },
+    thumbInset: {
+      description: "📐 Inset distance for the thumb from edges.",
+      type: "number",
+    },
+    springConfig: {
+      description: "🌟 Spring animation config: damping, stiffness, mass.",
+      type: "{ damping?: number; stiffness?: number; mass?: number; }",
+    },
+    style: {
+      description: "🧱 Container style.",
+      type: "ViewStyle",
+    },
+    testID: {
+      description: "🧪 Test ID for testing.",
+      type: "string",
+    },
+    thumbOnIcon: {
+      description: "🌟 Icon displayed on the thumb when ON.",
+      type: "React.ReactNode",
+    },
+    thumbOffIcon: {
+      description: "🌟 Icon displayed on the thumb when OFF.",
+      type: "React.ReactNode",
+    },
+    trackOnIcon: {
+      description: "🎯 Icon displayed on the track when ON.",
+      type: "React.ReactNode",
+    },
+    trackOffIcon: {
+      description: "🎯 Icon displayed on the track when OFF.",
+      type: "React.ReactNode",
+    },
+    backgroundImage: {
+      description: "🖼️ Optional background image for the switch.",
+      type: "ImageSourcePropType",
+    },
+    backgroundImageStyle: {
+      description: "🎨 Style for the background image.",
+      type: "ImageStyle",
+    },
+    animateIcons: {
+      description: "✨ Whether to animate icons on value change.",
+      type: "boolean",
+    },
+    iconAnimationType: {
+      description: "🎞️ Type of icon animation.",
+      type: '"fade" | "rotate" | "scale" | "bounce"',
+    },
+  }}
+/>
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="Switch.tsx">
+
+```tsx
+import React, { useEffect } from "react";
+import { StyleSheet, Pressable } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  interpolateColor,
+  useDerivedValue,
+  withTiming,
+  withSequence,
+} from "react-native-reanimated";
+import { AnimatedSwitchProps } from "./AnimatedSwitch.types";
+
+export const AnimatedSwitch: React.FC<AnimatedSwitchProps> = ({
+  value,
+  onValueChange,
+  disabled = false,
+  width = 56,
+  height = 32,
+  onColor = "#4CD964",
+  offColor = "#E9E9EA",
+  thumbColor = "#FFFFFF",
+  thumbSize,
+  thumbInset = 2,
+  springConfig = {
+    damping: 15,
+    stiffness: 120,
+    mass: 1,
+  },
+  style,
+  testID,
+
+  thumbOnIcon,
+  thumbOffIcon,
+  trackOnIcon,
+  trackOffIcon,
+
+  backgroundImage,
+  backgroundImageStyle,
+
+  animateIcons = true,
+
+  iconAnimationType = "fade",
+}) => {
+  const finalThumbSize = thumbSize ?? height - thumbInset * 2;
+  const moveDistance = width - finalThumbSize - thumbInset * 2;
+
+  const position = useSharedValue(value ? 1 : 0);
+  const iconOpacity = useSharedValue(value ? 1 : 0);
+  const iconRotation = useSharedValue(value ? 1 : 0);
+  const iconScale = useSharedValue(value ? 1 : 0);
+  const iconBounce = useSharedValue(value ? 1 : 0);
+
+  useEffect(() => {
+    position.value = value ? 1 : 0;
+
+    if (animateIcons) {
+      if (iconAnimationType === "fade") {
+        iconOpacity.value = withTiming(value ? 1 : 0, { duration: 200 });
+      } else if (iconAnimationType === "rotate") {
+        iconRotation.value = withTiming(value ? 1 : 0, { duration: 300 });
+      } else if (iconAnimationType === "scale") {
+        iconScale.value = withTiming(value ? 1 : 0, { duration: 200 });
+      } else if (iconAnimationType === "bounce") {
+        iconBounce.value = withSequence(
+          withTiming(1.2, { duration: 100 }),
+          withTiming(1, { duration: 100 }),
+        );
+      }
+    }
+  }, [
+    value,
+    position,
+    iconOpacity,
+    iconRotation,
+    iconScale,
+    iconBounce,
+    animateIcons,
+    iconAnimationType,
+  ]);
+
+  const backgroundColor = useDerivedValue(() => {
+    return interpolateColor(position.value, [0, 1], [offColor, onColor]);
+  });
+
+  const thumbStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withSpring(position.value * moveDistance, springConfig),
+        },
+      ],
+    };
+  });
+
+  const backgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: backgroundColor.value,
+    };
+  });
+
+  const thumbIconStyle = useAnimatedStyle(() => {
+    switch (iconAnimationType) {
+      case "fade":
+        return {
+          opacity: iconOpacity.value,
+        };
+      case "rotate":
+        return {
+          transform: [{ rotate: `${iconRotation.value * 180}deg` }],
+        };
+      case "scale":
+        return {
+          transform: [{ scale: iconScale.value * 0.6 + 0.4 }],
+        };
+      case "bounce":
+        return {
+          transform: [{ scale: iconBounce.value }],
+        };
+      default:
+        return {};
+    }
+  });
+
+  const handlePress = () => {
+    if (disabled) return;
+
+    const newValue = !value;
+    onValueChange(newValue);
+  };
+
+  const trackIconStyle = useAnimatedStyle(() => {
+    switch (iconAnimationType) {
+      case "fade":
+        return {
+          opacity: value ? iconOpacity.value : 1 - iconOpacity.value,
+        };
+      case "scale":
+        return {
+          transform: [
+            {
+              scale: value
+                ? iconScale.value * 0.5 + 0.5
+                : (1 - iconScale.value) * 0.5 + 0.5,
+            },
+          ],
+        };
+      case "rotate":
+        return {
+          transform: [
+            {
+              rotate: value
+                ? `${iconRotation.value * 90}deg`
+                : `${(1 - iconRotation.value) * 90}deg`,
+            },
+          ],
+        };
+      case "bounce":
+        return {
+          transform: [{ scale: iconBounce.value }],
+        };
+      default:
+        return {};
+    }
+  });
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      disabled={disabled}
+      testID={testID}
+      style={({ pressed }) => [
+        { opacity: pressed || disabled ? 0.7 : 1 },
+        style,
+      ]}
+    >
+      <Animated.View
+        style={[
+          styles.track,
+          backgroundStyle,
+          {
+            width,
+            height,
+            borderRadius: height / 2,
+            overflow: "hidden",
+          },
+        ]}
+      >
+        {backgroundImage && (
+          <Animated.Image
+            source={backgroundImage}
+            style={[styles.backgroundImage, backgroundImageStyle]}
+            resizeMode="cover"
+          />
+        )}
+
+        {value && trackOnIcon && (
+          <Animated.View
+            style={[
+              styles.trackIconContainer,
+              { justifyContent: "flex-start", alignItems: "flex-start" },
+              trackIconStyle,
+            ]}
+          >
+            {trackOnIcon}
+          </Animated.View>
+        )}
+
+        {!value && trackOffIcon && (
+          <Animated.View
+            style={[
+              styles.trackIconContainer,
+              { justifyContent: "flex-end", alignItems: "flex-end" },
+              trackIconStyle,
+            ]}
+          >
+            {trackOffIcon}
+          </Animated.View>
+        )}
+
+        <Animated.View
+          style={[
+            styles.thumb,
+            thumbStyle,
+            {
+              width: finalThumbSize,
+              height: finalThumbSize,
+              borderRadius: finalThumbSize / 2,
+              backgroundColor: thumbColor,
+              left: thumbInset,
+              top: thumbInset,
+            },
+          ]}
+        >
+          {value && thumbOnIcon && (
+            <Animated.View style={[styles.thumbIconContainer, thumbIconStyle]}>
+              {thumbOnIcon}
+            </Animated.View>
+          )}
+
+          {!value && thumbOffIcon && (
+            <Animated.View style={[styles.thumbIconContainer, thumbIconStyle]}>
+              {thumbOffIcon}
+            </Animated.View>
+          )}
+        </Animated.View>
+      </Animated.View>
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  track: {
+    justifyContent: "center",
+  },
+  thumb: {
+    position: "absolute",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+  },
+  backgroundImage: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
+  trackIconContainer: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    padding: 8,
+    zIndex: 1,
+  },
+  thumbIconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+});
+
+export default AnimatedSwitch;
+```
+
+</Accordion>
+
+<Accordion title='Switch.types.ts'>
+
+```ts
+import type { ImageSourcePropType, ImageStyle, ViewStyle } from "react-native";
+
+export interface AnimatedSwitchProps {
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  disabled?: boolean;
+  width?: number;
+  height?: number;
+  onColor?: string;
+  offColor?: string;
+  thumbColor?: string;
+  thumbSize?: number;
+  thumbInset?: number;
+  springConfig?: {
+    damping?: number;
+    stiffness?: number;
+    mass?: number;
+  };
+  style?: ViewStyle;
+  testID?: string;
+  // Icon properties
+  thumbOnIcon?: React.ReactNode;
+  thumbOffIcon?: React.ReactNode;
+  trackOnIcon?: React.ReactNode;
+  trackOffIcon?: React.ReactNode;
+  // Background properties
+  backgroundImage?: ImageSourcePropType;
+  backgroundImageStyle?: ImageStyle;
+  // Animation properties
+  animateIcons?: boolean;
+  iconAnimationType?: "fade" | "rotate" | "scale" | "bounce";
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
+import { AnimatedSwitch } from "@/components/base/switch/AnimatedSwitch";
+import {
+  Feather,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  AntDesign,
+} from "@expo/vector-icons";
+
+export default function AnimatedSwitchShowcase<T extends React.FC>(
+  _$_: T,
+): React.ReactNode {
+  const [basicSwitch, setBasicSwitch] = useState(false);
+  const [customSizeSwitch, setCustomSizeSwitch] = useState(true);
+  const [customColorSwitch, setCustomColorSwitch] = useState(false);
+  const [disabledOnSwitch] = useState<boolean>(true);
+  const [disabledOffSwitch] = useState<boolean>(false);
+
+  const [iconSwitch, setIconSwitch] = useState<boolean>(true);
+  const [dualIconSwitch, setDualIconSwitch] = useState<boolean>(false);
+  const [trackIconSwitch, setTrackIconSwitch] = useState<boolean>(true);
+  const [fullIconSwitch, setFullIconSwitch] = useState<boolean>(false);
+
+  const [fadeSwitch, setFadeSwitch] = useState<boolean>(true);
+  const [rotateSwitch, setRotateSwitch] = useState<boolean>(false);
+  const [scaleSwitch, setScaleSwitch] = useState<boolean>(true);
+  const [bounceSwitch, setBounceSwitch] = useState<boolean>(false);
+
+  const [springSwitch, setSpringSwitch] = useState<boolean>(true);
+  const [styledSwitch, setStyledSwitch] = useState<boolean>(false);
+
+  const [allSwitches, setAllSwitches] = useState<boolean>(false);
+
+  const handleToggleAll = () => {
+    const newValue = !allSwitches;
+    setAllSwitches(newValue);
+    setBasicSwitch(newValue);
+    setCustomSizeSwitch(newValue);
+    setCustomColorSwitch(newValue);
+    setIconSwitch(newValue);
+    setDualIconSwitch(newValue);
+    setTrackIconSwitch(newValue);
+    setFullIconSwitch(newValue);
+    setFadeSwitch(newValue);
+    setRotateSwitch(newValue);
+    setScaleSwitch(newValue);
+    setBounceSwitch(newValue);
+    setSpringSwitch(newValue);
+    setStyledSwitch(newValue);
+  };
+
+  const handleRandomize = () => {
+    setBasicSwitch(Math.random() > 0.5);
+    setCustomSizeSwitch(Math.random() > 0.5);
+    setCustomColorSwitch(Math.random() > 0.5);
+    setIconSwitch(Math.random() > 0.5);
+    setDualIconSwitch(Math.random() > 0.5);
+    setTrackIconSwitch(Math.random() > 0.5);
+    setFullIconSwitch(Math.random() > 0.5);
+    setFadeSwitch(Math.random() > 0.5);
+    setRotateSwitch(Math.random() > 0.5);
+    setScaleSwitch(Math.random() > 0.5);
+    setBounceSwitch(Math.random() > 0.5);
+    setSpringSwitch(Math.random() > 0.5);
+    setStyledSwitch(Math.random() > 0.5);
+  };
+
+  const renderSection = (
+    title: string,
+    icon: string,
+    iconLib: string,
+    iconColor: string,
+    children: React.ReactNode,
+  ) => (
+    <View style={styles.section}>
+      <View style={styles.sectionHeader}>
+        {iconLib === "Feather" && (
+          <Feather name={icon as any} size={20} color={iconColor} />
+        )}
+        {iconLib === "Ionicons" && (
+          <Ionicons name={icon as any} size={20} color={iconColor} />
+        )}
+        {iconLib === "MaterialIcons" && (
+          <MaterialIcons name={icon as any} size={20} color={iconColor} />
+        )}
+        {iconLib === "MaterialCommunityIcons" && (
+          <MaterialCommunityIcons
+            name={icon as any}
+            size={20}
+            color={iconColor}
+          />
+        )}
+        {iconLib === "AntDesign" && (
+          <AntDesign name={icon as any} size={20} color={iconColor} />
+        )}
+        <Text style={styles.sectionTitle}>{title}</Text>
+      </View>
+      <View style={styles.sectionContent}>{children}</View>
+    </View>
+  );
+
+  const renderSwitchRow = (
+    label: string,
+    value: boolean,
+    onValueChange: (value: boolean) => void,
+    switchProps: any = {},
+    description?: string,
+    badgeText?: string,
+    badgeColor?: string,
+  ) => (
+    <View style={styles.switchRow}>
+      <View style={styles.switchInfo}>
+        <View style={styles.switchLabelContainer}>
+          <Text style={styles.switchLabel}>{label}</Text>
+          {badgeText && (
+            <View
+              style={[
+                styles.badge,
+                { backgroundColor: badgeColor || "#374151" },
+              ]}
+            >
+              <Text style={styles.badgeText}>{badgeText}</Text>
+            </View>
+          )}
+        </View>
+        {description && (
+          <Text style={styles.switchDescription}>{description}</Text>
+        )}
+      </View>
+      <View style={styles.switchContainer}>
+        <AnimatedSwitch
+          value={value}
+          onValueChange={onValueChange}
+          {...switchProps}
+        />
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0a0a0a" />
+
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled
+      >
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <MaterialIcons name="toggle-on" size={32} color="#8b5cf6" />
+            <Text style={styles.title}>Switch Components</Text>
+          </View>
+          <Text style={styles.subtitle}>
+            Beautifully designed animated switches with rich customization
+          </Text>
+        </View>
+
+        <View style={styles.controlsCard}>
+          <View style={styles.controlsHeader}>
+            <Ionicons name="settings" size={20} color="#ffffff" />
+            <Text style={styles.controlsTitle}>Demo Controls</Text>
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonPrimary]}
+              onPress={handleToggleAll}
+            >
+              <MaterialCommunityIcons
+                name={allSwitches ? "toggle-switch-off" : "toggle-switch"}
+                size={16}
+                color="#000000"
+              />
+              <Text style={styles.buttonTextPrimary}>
+                {allSwitches ? "Turn All Off" : "Turn All On"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.button, styles.buttonSecondary]}
+              onPress={handleRandomize}
+            >
+              <Ionicons name="shuffle" size={16} color="#ffffff" />
+              <Text style={styles.buttonText}>Randomize</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {renderSection(
+          "Basic Usage",
+          "toggle-left",
+          "Feather",
+          "#ffffff",
+          <>
+            {renderSwitchRow(
+              "Default Switch",
+              basicSwitch,
+              setBasicSwitch,
+              {},
+              "Standard switch with default styling",
+              "Default",
+            )}
+
+            {renderSwitchRow(
+              "Custom Size",
+              customSizeSwitch,
+              setCustomSizeSwitch,
+              {
+                width: 70,
+                height: 25,
+                thumbSize: 21,
+                backgroundImage: {
+                  uri: "https://img.freepik.com/premium-vector/abstract-background-with-waves-vector-illustration_648489-99.jpg",
+                },
+              },
+              "Custom width, height, and thumb size",
+              "Large",
+              "#059669",
+            )}
+
+            {renderSwitchRow(
+              "Custom Colors",
+              customColorSwitch,
+              setCustomColorSwitch,
+              {
+                onColor: "#10B981",
+                offColor: "#374151",
+                thumbColor: "#F3F4F6",
+              },
+              "Custom on/off and thumb colors",
+              "Styled",
+              "#10B981",
+            )}
+
+            {renderSwitchRow(
+              "Disabled (On)",
+              disabledOnSwitch,
+              () => {},
+              {
+                disabled: true,
+                onColor: "#6B7280",
+              },
+              "Disabled switch in on state",
+              "Disabled",
+              "#6B7280",
+            )}
+
+            {renderSwitchRow(
+              "Disabled (Off)",
+              disabledOffSwitch,
+              () => {},
+              {
+                disabled: true,
+              },
+              "Disabled switch in off state",
+              "Disabled",
+              "#6B7280",
+            )}
+          </>,
+        )}
+
+        {renderSection(
+          "Icon Features",
+          "star",
+          "Feather",
+          "#f59e0b",
+          <>
+            {renderSwitchRow(
+              "Thumb Icons Only",
+              iconSwitch,
+              setIconSwitch,
+              {
+                thumbOnIcon: <Feather name="check" size={16} color="#10B981" />,
+                thumbOffIcon: <Feather name="x" size={16} color="#6B7280" />,
+                onColor: "#10B981",
+              },
+              "Different icons for on/off states",
+              "Icons",
+              "#10B981",
+            )}
+
+            {renderSwitchRow(
+              "Dual Icon System",
+              dualIconSwitch,
+              setDualIconSwitch,
+              {
+                thumbOnIcon: (
+                  <MaterialIcons name="wifi" size={16} color="#3B82F6" />
+                ),
+                thumbOffIcon: (
+                  <MaterialIcons name="wifi-off" size={16} color="#6B7280" />
+                ),
+                trackOnIcon: (
+                  <Feather name="cloud-lightning" size={12} color="#FFFFFF" />
+                ),
+                trackOffIcon: (
+                  <Feather name="wifi-off" size={12} color="#6B7280" />
+                ),
+                onColor: "#3B82F6",
+              },
+              "Icons on both thumb and track",
+              "Dual",
+              "#3B82F6",
+            )}
+
+            {renderSwitchRow(
+              "Track Icons",
+              trackIconSwitch,
+              setTrackIconSwitch,
+              {
+                trackOnIcon: (
+                  <Ionicons name="volume-high" size={12} color="#FFFFFF" />
+                ),
+                trackOffIcon: (
+                  <Ionicons name="volume-mute" size={12} color="#6B7280" />
+                ),
+                onColor: "#8B5CF6",
+              },
+              "Icons displayed on track only",
+              "Track",
+              "#8B5CF6",
+            )}
+
+            {renderSwitchRow(
+              "Complete Icon Set",
+              fullIconSwitch,
+              setFullIconSwitch,
+              {
+                thumbOnIcon: (
+                  <MaterialCommunityIcons
+                    name="shield-check"
+                    size={16}
+                    color="#EF4444"
+                  />
+                ),
+                thumbOffIcon: (
+                  <MaterialCommunityIcons
+                    name="shield-off"
+                    size={16}
+                    color="#6B7280"
+                  />
+                ),
+                trackOnIcon: (
+                  <MaterialIcons name="security" size={12} color="#FFFFFF" />
+                ),
+                trackOffIcon: (
+                  <MaterialIcons
+                    name="no-encryption"
+                    size={12}
+                    color="#6B7280"
+                  />
+                ),
+                onColor: "#EF4444",
+                width: 65,
+              },
+              "All four icon positions used",
+              "Full",
+              "#EF4444",
+            )}
+          </>,
+        )}
+
+        {renderSection(
+          "Animation Types",
+          "zap",
+          "Feather",
+          "#06b6d4",
+          <>
+            {renderSwitchRow(
+              "Fade Animation",
+              fadeSwitch,
+              setFadeSwitch,
+              {
+                thumbOnIcon: (
+                  <AntDesign name="star" size={16} color="#F59E0B" />
+                ),
+                thumbOffIcon: (
+                  <AntDesign name="staro" size={16} color="#6B7280" />
+                ),
+                iconAnimationType: "fade",
+                onColor: "#F59E0B",
+              },
+              "Icons fade in/out smoothly",
+              "Fade",
+              "#F59E0B",
+            )}
+
+            {renderSwitchRow(
+              "Rotate Animation",
+              rotateSwitch,
+              setRotateSwitch,
+              {
+                thumbOnIcon: (
+                  <MaterialCommunityIcons
+                    name="sync"
+                    size={16}
+                    color="#06B6D4"
+                  />
+                ),
+                thumbOffIcon: (
+                  <MaterialCommunityIcons
+                    name="sync-off"
+                    size={16}
+                    color="#6B7280"
+                  />
+                ),
+                trackOnIcon: (
+                  <Feather name="refresh-cw" size={10} color="#FFFFFF" />
+                ),
+                iconAnimationType: "rotate",
+                onColor: "#06B6D4",
+              },
+              "Icons rotate during transition",
+              "Rotate",
+              "#06B6D4",
+            )}
+
+            {renderSwitchRow(
+              "Scale Animation",
+              scaleSwitch,
+              setScaleSwitch,
+              {
+                thumbOnIcon: (
+                  <Ionicons name="heart" size={16} color="#EC4899" />
+                ),
+                thumbOffIcon: (
+                  <Ionicons name="heart-outline" size={16} color="#6B7280" />
+                ),
+                iconAnimationType: "scale",
+                onColor: "#EC4899",
+              },
+              "Icons scale up/down",
+              "Scale",
+              "#EC4899",
+            )}
+
+            {renderSwitchRow(
+              "Bounce Animation",
+              bounceSwitch,
+              setBounceSwitch,
+              {
+                thumbOnIcon: (
+                  <MaterialIcons
+                    name="notifications-active"
+                    size={16}
+                    color="#8B5CF6"
+                  />
+                ),
+                thumbOffIcon: (
+                  <MaterialIcons
+                    name="notifications-off"
+                    size={16}
+                    color="#6B7280"
+                  />
+                ),
+                iconAnimationType: "bounce",
+                onColor: "#8B5CF6",
+              },
+              "Icons bounce during transition",
+              "Bounce",
+              "#8B5CF6",
+            )}
+          </>,
+        )}
+
+        {renderSection(
+          "Advanced Features",
+          "settings",
+          "Feather",
+          "#14b8a6",
+          <>
+            {renderSwitchRow(
+              "Custom Spring Animation",
+              springSwitch,
+              setSpringSwitch,
+              {
+                springConfig: {
+                  damping: 8,
+                  stiffness: 200,
+                  mass: 1.2,
+                },
+                thumbOnIcon: (
+                  <MaterialCommunityIcons
+                    name="speedometer"
+                    size={16}
+                    color="#14B8A6"
+                  />
+                ),
+                thumbOffIcon: (
+                  <MaterialCommunityIcons
+                    name="speedometer"
+                    size={16}
+                    color="#6B7280"
+                  />
+                ),
+                onColor: "#14B8A6",
+              },
+              "Custom spring physics configuration",
+              "Spring",
+              "#14B8A6",
+            )}
+
+            {renderSwitchRow(
+              "Styled Switch",
+              styledSwitch,
+              setStyledSwitch,
+              {
+                style: {
+                  borderWidth: 2,
+                  borderColor: "#4F46E5",
+                  borderRadius: 25,
+                },
+                thumbInset: 4,
+                thumbColor: "#4F46E5",
+                offColor: "#1E293B",
+                onColor: "#4F46E5",
+                thumbOnIcon: (
+                  <AntDesign name="check" size={14} color="#FFFFFF" />
+                ),
+                thumbOffIcon: (
+                  <AntDesign name="close" size={14} color="#FFFFFF" />
+                ),
+                testID: "styled-switch",
+              },
+              "Custom styling with border and testID",
+              "Custom",
+              "#4F46E5",
+            )}
+          </>,
+        )}
+
+        <View style={styles.footer}>
+          <View style={styles.footerContent}>
+            <Feather name="check-circle" size={16} color="#10b981" />
+            <Text style={styles.footerText}>
+              All AnimatedSwitch features demonstrated above
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 30,
+  },
+  header: {
+    marginBottom: 32,
+    paddingTop: 20,
+    alignItems: "center",
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#a1a1aa",
+    textAlign: "center",
+    lineHeight: 24,
+    paddingHorizontal: 20,
+  },
+  controlsCard: {
+    backgroundColor: "#111111",
+    borderRadius: 16,
+    padding: 24,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: "#1f1f1f",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  controlsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginBottom: 20,
+  },
+  controlsTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    flexDirection: "row",
+    gap: 8,
+  },
+  buttonPrimary: {
+    backgroundColor: "#ffffff",
+  },
+  buttonSecondary: {
+    backgroundColor: "#262626",
+    borderWidth: 1,
+    borderColor: "#404040",
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
+  buttonTextPrimary: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#000000",
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 16,
+    paddingLeft: 4,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  sectionContent: {
+    gap: 12,
+  },
+  switchRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#111111",
+    borderRadius: 12,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#1f1f1f",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  switchInfo: {
+    flex: 1,
+    marginRight: 16,
+  },
+  switchLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  switchLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+    alignSelf: "flex-start",
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#ffffff",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  switchDescription: {
+    fontSize: 13,
+    color: "#71717a",
+    lineHeight: 18,
+  },
+  switchContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footer: {
+    marginTop: 24,
+    alignItems: "center",
+    paddingVertical: 20,
+    backgroundColor: "#111111",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#1f1f1f",
+  },
+  footerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#71717a",
+    fontWeight: "500",
+  },
+});
+```

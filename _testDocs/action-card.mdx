@@ -1,0 +1,204 @@
+---
+title: Action Card
+description: Action Card component for React Native.
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+</div>
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+<TabsContent value="tab-1">
+  
+```bash
+npx rn-glow add action-card
+```
+
+
+### ⚙️ Props
+
+
+
+  </TabsContent>
+</Tabs>
+
+### ⚙️ Types
+#### ActionCard.types.ts
+
+```ts
+import * as React from "react";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
+
+export interface ActionCardTypes {
+  children: React.ReactNode;
+  className?: string;
+  style?: StyleProp<ViewStyle>;
+}
+
+export interface ActionCardWrapperTypes {
+  children: React.ReactNode;
+  className?: string;
+  style?: StyleProp<ViewStyle>;
+}
+
+export interface ActionCardTitleTypes {
+  children: React.ReactNode;
+  className?: string;
+  style?: StyleProp<TextStyle>;
+}
+export interface ActionCardSubtitleTypes {
+  children: React.ReactNode;
+  className?: string;
+  style?: StyleProp<TextStyle>;
+}
+```
+
+### 💻 Components
+#### ActionCard.tsx
+
+```tsx
+import * as React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import type { ActionCardTypes } from "./ActionCard.types";
+
+export const ActionCard: React.FunctionComponent<ActionCardTypes> &
+  React.FC<ActionCardTypes> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode & React.JSX.Element => {
+  return (
+    <View className={className} style={[styles.container, style]}>
+      {children}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#262626",
+    borderRadius: 10,
+    padding: 25,
+    marginBottom: 20,
+    marginTop: 15,
+  },
+});
+```
+
+### 🧩 Children
+#### ActionCardSubtitle.tsx
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import type { ActionCardSubtitleTypes } from "../ActionCard.types";
+
+export const ActionCardSubtitle: React.FC<ActionCardSubtitleTypes> &
+  React.FunctionComponent<ActionCardSubtitleTypes> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode => {
+  return (
+    <View className="mt-1">
+      <Text
+        className={`${className} text-[#737373] text-[12.9px] text-center`}
+        style={style}
+      >
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({});
+```
+
+#### ActionCardTitle.tsx
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { ActionCardTitleTypes } from "../ActionCard.types";
+
+export const ActionCardTitle: React.FC<ActionCardTitleTypes> &
+  React.FunctionComponent<ActionCardTitleTypes> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode => {
+  return (
+    <View className="mt-3">
+      <Text
+        className={`${className} text-white font-bold text-xl`}
+        style={style}
+      >
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({});
+```
+
+#### ActionCardWrapper.tsx
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import type { ActionCardSubtitleTypes } from "../ActionCard.types";
+
+export const ActionCardWrapper: React.FC<ActionCardSubtitleTypes> &
+  React.FunctionComponent<ActionCardSubtitleTypes> = ({
+  children,
+  className,
+  style,
+}): React.ReactNode => {
+  return (
+    <View className={className} style={[styles.container, style]}>
+      {children}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 5,
+    marginBottom: 13.5,
+  },
+});
+```

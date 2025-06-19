@@ -1,0 +1,660 @@
+---
+title: Button
+description: Button component for React Native
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/button/Button.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add button
+```
+
+### ⚙️ Props
+
+| Prop                    | Type                                                           | Default      | Description                                                               |
+| ----------------------- | -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------- |
+| `title`                 | `string`                                                       | **required** | Text to display on the button.                                            |
+| `isLoading`             | `boolean`                                                      | **required** | Whether the button is in a loading state.                                 |
+| `onPress`               | `() => void`                                                   | **required** | Function to call when the button is pressed.                              |
+| `width`                 | `number`                                                       | `undefined`  | Width of the button in its expanded state.                                |
+| `height`                | `number`                                                       | `undefined`  | Height of the button.                                                     |
+| `backgroundColor`       | `string`                                                       | `undefined`  | Background color of the button (ignored if `gradientColors` is provided). |
+| `textColor`             | `string`                                                       | `undefined`  | Color of the button text.                                                 |
+| `fontSize`              | `number`                                                       | `undefined`  | Font size of the button text.                                             |
+| `icon`                  | `keyof typeof Feather.glyphMap`                                | `undefined`  | Optional Feather icon name to display before the text.                    |
+| `iconSize`              | `number`                                                       | `undefined`  | Size of the icon.                                                         |
+| `iconColor`             | `string`                                                       | `textColor`  | Color of the icon. Defaults to `textColor`.                               |
+| `borderRadius`          | `number`                                                       | auto         | Border radius of the button. Automatically calculated if not provided.    |
+| `gradientColors`        | `string[]`                                                     | `undefined`  | Gradient color array (overrides `backgroundColor` if present).            |
+| `style`                 | `ViewStyle`                                                    | `undefined`  | Custom style for the button container.                                    |
+| `textStyle`             | `TextStyle`                                                    | `undefined`  | Custom style for the button text.                                         |
+| `withPressAnimation`    | `boolean`                                                      | `false`      | Whether to apply a press animation effect.                                |
+| `loadingComponent`      | `React.ReactNode`                                              | `undefined`  | Custom loading component (overrides default spinner).                     |
+| `loadingIndicatorColor` | `string`                                                       | `undefined`  | Color of the default loading spinner (if used).                           |
+| `animationConfig`       | `{ damping?: number; stiffness?: number; duration?: number; }` | `{}`         | Optional animation configuration for expansion/press effects.             |
+| `disabled`              | `boolean`                                                      | `false`      | Whether the button is disabled.                                           |
+
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+<Accordion title="Button.tsx">
+```tsx
+import React, { useEffect } from "react";
+import { Feather } from "@expo/vector-icons";
+import {
+  Pressable,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  ViewStyle,
+  Platform,
+} from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import type { ExpandableButtonProps } from "./ExpandableButton.types";
+import { LinearGradient } from "expo-linear-gradient";
+
+export const ExpandableButton: React.FC<ExpandableButtonProps> = ({
+  title,
+  isLoading,
+  onPress,
+  width = 200,
+  height = 48,
+  backgroundColor = "#3B82F6",
+  textColor = "white",
+  fontSize = 16,
+  icon,
+  iconSize = 18,
+  iconColor,
+  borderRadius,
+  gradientColors,
+  style,
+  textStyle,
+  withPressAnimation = true,
+  loadingComponent,
+  loadingIndicatorColor = "white",
+  animationConfig = {
+    damping: 15,
+    stiffness: 150,
+    duration: 300,
+  },
+  disabled = false,
+}): React.JSX.Element => {
+  const animatedWidth = useSharedValue<number>(width);
+  const animatedScale = useSharedValue<number>(1);
+  const animatedOpacity = useSharedValue<number>(1);
+
+useEffect(() => {
+animatedWidth.value = withSpring<number>(isLoading ? height : width, {
+damping: animationConfig.damping,
+stiffness: animationConfig.stiffness,
+});
+}, [isLoading, width, height, animatedWidth, animationConfig]);
+
+const calculatedBorderRadius = borderRadius ?? height / 2;
+
+const animatedStyle = useAnimatedStyle<ViewStyle>(() => ({
+width: animatedWidth.value,
+borderRadius: withTiming(isLoading ? height / 2 : calculatedBorderRadius, {
+duration: animationConfig.duration,
+}),
+transform: [{ scale: animatedScale.value }],
+opacity: animatedOpacity.value,
+}));
+
+const handlePressIn = () => {
+if (withPressAnimation && !disabled && !isLoading) {
+animatedScale.value = withTiming(0.95, { duration: 100 });
+}
+};
+
+const handlePressOut = () => {
+if (withPressAnimation && !disabled && !isLoading) {
+animatedScale.value = withTiming(1, { duration: 200 });
+}
+};
+
+const renderContent = () => {
+if (isLoading) {
+return (
+loadingComponent || (
+
+<ActivityIndicator color={loadingIndicatorColor} size="small" />) ); }
+
+    return (
+      <>
+        {icon && (
+          <Feather
+            name={icon}
+            size={iconSize}
+            color={iconColor || textColor}
+            style={{ marginRight: 8 }}
+          />
+        )}
+        <Text
+          style={[styles.text, { color: textColor, fontSize }, textStyle]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {title}
+        </Text>
+      </>
+    );
+
+};
+
+const wrappedButton = gradientColors ? (
+
+<Animated.View style={[animatedStyle]}>
+<LinearGradient
+colors={gradientColors as [string, string, ...string[]]}
+start={{ x: 0, y: 0 }}
+end={{ x: 1, y: 0 }}
+style={[
+styles.gradientContainer,
+{
+height,
+width: "100%",
+borderRadius: isLoading ? height / 2 : calculatedBorderRadius,
+},
+style,
+]} >
+{renderContent()}
+</LinearGradient>
+</Animated.View>
+) : (
+<Animated.View
+style={[
+styles.button,
+{
+height,
+backgroundColor: backgroundColor,
+},
+animatedStyle,
+style,
+]} >
+{renderContent()}
+</Animated.View>
+);
+
+return (
+
+<Pressable
+  onPress={onPress}
+  disabled={isLoading || disabled}
+  onPressIn={handlePressIn}
+  onPressOut={handlePressOut}
+  style={({ pressed }) => [
+    styles.pressable,
+    Platform.OS === "ios" && pressed && styles.pressed,
+  ]}
+  accessible={true}
+  accessibilityRole="button"
+  accessibilityLabel={title}
+  accessibilityState={{ disabled: isLoading || disabled }}
+>
+  {wrappedButton}
+</Pressable>
+); };
+
+const styles = StyleSheet.create({
+pressable: {
+alignSelf: "flex-start",
+},
+pressed: {
+opacity: 0.9,
+},
+button: {
+justifyContent: "center",
+alignItems: "center",
+flexDirection: "row",
+overflow: "hidden",
+},
+gradientContainer: {
+justifyContent: "center",
+alignItems: "center",
+flexDirection: "row",
+overflow: "hidden",
+height: "100%",
+width: "100%",
+},
+text: {
+fontWeight: "600",
+},
+});
+
+````
+
+</Accordion>
+
+<Accordion title="Button.types.ts">
+
+```ts
+import { Feather } from "@expo/vector-icons";
+import { TextStyle, ViewStyle } from "react-native";
+
+export interface ExpandableButtonProps {
+  /** Text to display on the button */
+  title: string;
+  /** Whether the button is in a loading state */
+  isLoading: boolean;
+  /** Function to call when button is pressed */
+  onPress: () => void;
+  /** Width of the button in its expanded state */
+  width?: number;
+  /** Height of the button */
+  height?: number;
+  /** Background color of the button (ignored if gradient is provided) */
+  backgroundColor?: string;
+  /** Text color */
+  textColor?: string;
+  /** Font size of the button text */
+  fontSize?: number;
+  /** Optional icon to display before text */
+  icon?: keyof typeof Feather.glyphMap;
+  /** Icon size */
+  iconSize?: number;
+  /** Icon color (defaults to text color) */
+  iconColor?: string;
+  /** Button border radius (automatically calculated by default) */
+  borderRadius?: number;
+  /** Gradient colors to use (if provided) */
+  gradientColors?: string[];
+  /** Button style */
+  style?: ViewStyle;
+  /** Text style override */
+  textStyle?: TextStyle;
+  /** Whether to add a press animation effect */
+  withPressAnimation?: boolean;
+  /** Custom loading component */
+  loadingComponent?: React.ReactNode;
+  /** Loading indicator color */
+  loadingIndicatorColor?: string;
+  /** Animation configuration */
+  animationConfig?: {
+    damping?: number;
+    stiffness?: number;
+    duration?: number;
+  };
+  /** Whether to disable the button */
+  disabled?: boolean;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+// @glow-ui - React Native
+// @button/demo-usage example
+
+// @ts-check
+import React, { useCallback, useState, memo } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  useWindowDimensions,
+  StyleSheet,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { ExpandableButton } from "@/components";
+
+const ButtonDemo: React.FC = (_$_): React.ReactNode => {
+  const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
+  const [gradientLoading, setGradientLoading] = useState<boolean>(false);
+  const [githubLoading, setGithubLoading] = useState<boolean>(false);
+  const [dangerLoading, setDangerLoading] = useState<boolean>(false);
+  const [outlineLoading, setOutlineLoading] = useState<boolean>(false);
+  const [disabledExample, setDisabledExample] = useState<boolean>(false);
+
+  const width = useWindowDimensions().width;
+  const handlePrimaryPress = useCallback<() => any | Function>(() => {
+    setPrimaryLoading(true);
+    setTimeout(() => {
+      setPrimaryLoading(false);
+    }, 2000);
+  }, []);
+
+  const handleGradientPress = useCallback<() => any | Function>(() => {
+    setGradientLoading(true);
+    setTimeout(() => {
+      setGradientLoading(false);
+    }, 2500);
+  }, []);
+
+  const handleGithubPress = useCallback<() => any | Function>(() => {
+    setGithubLoading(true);
+    setTimeout(() => {
+      setGithubLoading(false);
+    }, 3000);
+  }, []);
+
+  const handleDangerPress = useCallback<() => any | Function>(() => {
+    setDangerLoading(true);
+    setTimeout(() => {
+      setDangerLoading(false);
+    }, 1500);
+  }, []);
+
+  const handleOutlinePress = useCallback<() => any | Function>(() => {
+    setOutlineLoading(true);
+    setTimeout(() => {
+      setOutlineLoading(false);
+    }, 2000);
+  }, []);
+
+  const toggleDisabled = useCallback<() => any | Function>(() => {
+    setDisabledExample(!disabledExample);
+  }, [disabledExample]);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled
+        contentInsetAdjustmentBehavior="always"
+      >
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Ionicons name="radio-button-on" size={24} color="#6366f1" />
+            <Text style={styles.title}>Button</Text>
+          </View>
+
+          <Text style={styles.subtitle}>
+            Comprehensive examples demonstrating all button variants and
+            configurations
+          </Text>
+
+          <View style={styles.exampleSection}>
+            <Text style={styles.exampleTitle}>Primary Button</Text>
+            <Text style={styles.exampleDescription}>
+              Standard button with custom styling, icon, and loading state
+            </Text>
+            <ExpandableButton
+              title="Launch Application"
+              isLoading={primaryLoading}
+              onPress={handlePrimaryPress}
+              width={width - 80}
+              height={52}
+              backgroundColor="#6366f1"
+              textColor="#ffffff"
+              fontSize={16}
+              icon="aperture"
+              iconSize={18}
+              iconColor="#ffffff"
+              borderRadius={12}
+              style={styles.primaryButtonStyle}
+              textStyle={styles.primaryTextStyle}
+              withPressAnimation={true}
+              loadingIndicatorColor="#ffffff"
+              animationConfig={{
+                damping: 15,
+                stiffness: 150,
+                duration: 300,
+              }}
+              disabled={false}
+            />
+          </View>
+
+          <View style={styles.exampleSection}>
+            <Text style={styles.exampleTitle}>Gradient Button</Text>
+            <Text style={styles.exampleDescription}>
+              Beautiful gradient background with custom animation timing
+            </Text>
+            <ExpandableButton
+              title="Start Journey"
+              isLoading={gradientLoading}
+              onPress={handleGradientPress}
+              width={width - 80}
+              height={56}
+              gradientColors={["#667eea", "#764ba2"]}
+              textColor="#ffffff"
+              fontSize={17}
+              icon="compass"
+              iconSize={20}
+              iconColor="#ffffff"
+              borderRadius={28}
+              style={styles.gradientButtonStyle}
+              textStyle={styles.gradientTextStyle}
+              withPressAnimation={true}
+              loadingIndicatorColor="#ffffff"
+              animationConfig={{
+                damping: 20,
+                stiffness: 200,
+                duration: 250,
+              }}
+              disabled={false}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    gap: 32,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#6b7280",
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  exampleSection: {
+    gap: 12,
+    paddingVertical: 8,
+  },
+  exampleTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#ffffff",
+    marginBottom: 4,
+  },
+  exampleDescription: {
+    fontSize: 14,
+    color: "#9ca3af",
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  disabledContainer: {
+    gap: 16,
+    alignItems: "center",
+  },
+  features: {
+    gap: 16,
+    marginTop: 24,
+  },
+  featuresTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#ffffff",
+    marginBottom: 8,
+  },
+  feature: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 8,
+  },
+  featureText: {
+    fontSize: 15,
+    color: "#9ca3af",
+    fontWeight: "500",
+    flex: 1,
+  },
+  primaryButtonStyle: {
+    shadowColor: "#6366f1",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  primaryTextStyle: {
+    fontWeight: "600",
+    letterSpacing: 0.3,
+  },
+  gradientButtonStyle: {
+    shadowColor: "#667eea",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  gradientTextStyle: {
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+  githubButtonStyle: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  githubTextStyle: {
+    fontWeight: "500",
+    letterSpacing: 0.2,
+  },
+  dangerButtonStyle: {
+    shadowColor: "#ef4444",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  dangerTextStyle: {
+    fontWeight: "600",
+    letterSpacing: 0.3,
+  },
+  outlineButtonStyle: {
+    borderWidth: 2,
+    borderColor: "#6366f1",
+    shadowColor: "#6366f1",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  outlineTextStyle: {
+    fontWeight: "600",
+    letterSpacing: 0.4,
+  },
+  disabledButtonStyle: {
+    opacity: 0.6,
+  },
+  disabledTextStyle: {
+    fontWeight: "500",
+  },
+  toggleButtonStyle: {
+    shadowColor: "#10b981",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  bounceButtonStyle: {
+    shadowColor: "#f093fb",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  bounceTextStyle: {
+    fontWeight: "700",
+    letterSpacing: 0.6,
+  },
+});
+
+export default memo(ButtonDemo);
+```
+````

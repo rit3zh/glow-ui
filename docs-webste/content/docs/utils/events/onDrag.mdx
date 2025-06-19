@@ -1,0 +1,77 @@
+---
+title: ✋ onHandleDragChange
+description: Utility to handle drag events for floating sheets in React Native Glow UI
+---
+
+## ⚡️ What it does
+
+- Handles drag events for floating sheets
+- Updates the animation value as the user drags
+- Expands or collapses the sheet based on a threshold
+- Handles both minimized and expanded states
+
+---
+
+## 📝 Parameters
+
+- `animation` (`Animated.Value`): The animated value for the sheet position
+- `event` (`DragChangeEvent`): The drag event containing the new value
+- `setIsExpanded` (`(isExpanded: boolean) => void`): Callback to set expanded state
+- `isMinimized` (`boolean`): Whether the sheet is minimized
+
+---
+
+## 🚀 Usage Example
+
+```ts
+import { onHandleDragChange } from "cli/components/templates/sheet/floating-sheet/utils/animation-utils/events/onDrag";
+
+onHandleDragChange({
+  animation,
+  event,
+  setIsExpanded,
+  isMinimized,
+});
+```
+
+---
+
+## 🧩 Full Implementation
+
+```ts
+import type { DragChangeEvent } from "@lodev09/react-native-true-sheet";
+import { Animated } from "react-native";
+import { sheetSizes } from "../../../constants/sizes/sheetSizes";
+
+interface DragChangeEventProps {
+  animation: Animated.Value;
+  event: DragChangeEvent;
+  setIsExpanded: (isExpanded: boolean) => void;
+  isMinimized: boolean;
+}
+
+const THRESHOLD = sheetSizes[1] - 10;
+
+export const onHandleDragChange = ({
+  animation,
+  event,
+  isMinimized,
+  setIsExpanded,
+}: DragChangeEventProps) => {
+  if (isMinimized) {
+    const newValue = event.nativeEvent.value;
+    // setIsExpanded(newValue >= THRESHOLD);
+  } else {
+    const newValue = event.nativeEvent.value;
+    setIsExpanded(newValue >= THRESHOLD);
+
+    animation.setValue(newValue);
+  }
+};
+```
+
+---
+
+## 💡 Tip
+
+Use this utility to smoothly update your floating sheet's state and animation as the user drags!

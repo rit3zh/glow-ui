@@ -1,0 +1,49 @@
+---
+title: 💬 DialogContext
+description: Context and value shape for managing dialogs in React Native Glow UI
+---
+
+## ⚡️ What it is
+
+- A React context for managing dialog (modal) open/close state
+- Provides methods to open and close dialogs
+- Used by dialog components and hooks
+
+---
+
+## 📝 Context Shape
+
+```ts
+export type DialogContextType = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+```
+
+---
+
+## 🚀 Usage Example
+
+```tsx
+import { useContext } from "react";
+import { DialogContext } from "cli/components/organisms/dialog/context/DialogContext";
+import { Button } from "react-native";
+
+function MyDialogTrigger() {
+  const dialog = useContext(DialogContext);
+  return <Button title="Open" onPress={() => dialog?.setOpen(true)} />;
+}
+```
+
+---
+
+## 🧩 Dialog Component Types
+
+- `DialogComponent`: The main dialog component with subcomponents (Trigger, Content, Title, Description, Close)
+- `DialogContentProps`, `DialogTitleProps`, `DialogDescriptionProps`, `DialogCloseProps`, `DialogTriggerProps`: Props for each dialog subcomponent
+
+---
+
+## 💡 Tip
+
+Use the DialogContext to control dialogs from anywhere in your app, and wrap dialog-related components in a provider for shared state!

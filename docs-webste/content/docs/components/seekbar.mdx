@@ -1,0 +1,692 @@
+---
+title: Seek Bar
+description: Seek Bar component for React Native.
+links:
+  source: https://raw.githubusercontent.com/rit3zh/glow-ui/refs/heads/main/src/components/base/avatar/Avatar.tsx
+---
+
+import { FaReact } from "react-icons/fa";
+import { SiTypescript } from "react-icons/si";
+import { SiNpm } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { FaCode } from "react-icons/fa6";
+import {
+  Tab,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+<div className="flex justify-center items-center my-8">
+  <video
+    src="/avatar.mp4"
+    autoPlay
+    muted
+    loop
+    className="rounded-2xl"
+    style={{ width: "80%", maxWidth: "960px", height: "auto" }}
+  />
+
+</div>
+
+### Installation
+
+<Tabs defaultValue="tab-1">
+<TabsList>
+    <TabsTrigger value="tab-1">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SiNpm />
+        <span>NPM</span>
+      </div>
+
+    </TabsTrigger>
+
+    <TabsTrigger value="tab-2">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+      <TbManualGearbox />
+      <span>
+        Manual
+        </span>
+      </div>
+    </TabsTrigger>
+
+  </TabsList>
+
+{" "}
+
+<TabsContent value="tab-1">
+
+```bash
+npx rn-glow add seekbar
+```
+
+## 🎚️ `SeekBarProps`
+
+<TypeTable
+  type={{
+    value: {
+      description: '📍 Current value of the seek bar (between 0 and 1).',
+      type: 'number',
+      required: true,
+    },
+    onValueChange: {
+      description: '🎯 Callback when the value is changed by the user.',
+      type: '(value: number) => void',
+      required: true,
+    },
+    width: {
+      description: '📏 Width of the seek bar.',
+      type: 'number',
+    },
+    height: {
+      description: '📐 Height of the seek bar track.',
+      type: 'number',
+    },
+    activeHeight: {
+      description: '📏 Height of the active portion of the bar.',
+      type: 'number',
+    },
+    activeColor: {
+      description: '🎨 Color of the active (played) portion.',
+      type: 'string',
+    },
+    inactiveColor: {
+      description: '🎨 Color of the inactive (remaining) portion.',
+      type: 'string',
+    },
+    disabled: {
+      description: '🚫 Whether the seek bar is disabled.',
+      type: 'boolean',
+    },
+    tapToSeek: {
+      description: '👆 Enable seeking by tapping the track.',
+      type: 'boolean',
+    },
+  }}
+/>
+      </TabsContent>
+
+  <TabsContent value="tab-2">
+
+<Accordions type="multiple">
+
+<Accordion title="SeekBar.tsx">
+
+```tsx
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedGestureHandler,
+  runOnJS,
+  withSpring,
+  withSequence,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+  TapGestureHandler,
+  TapGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
+import type { SeekBarProps } from "./SeekBar.types";
+
+export const SeekBar: React.FC<SeekBarProps> = ({
+  value,
+  onValueChange,
+  width = 300,
+  height = 2,
+  activeHeight = 4,
+  activeColor = "#FFFFFF",
+  inactiveColor = "rgba(255, 255, 255, 0.3)",
+  disabled = false,
+  tapToSeek = true,
+}) => {
+  const initialValue = Math.max(0, Math.min(1, value));
+  const progress = useSharedValue(initialValue);
+  const isActive = useSharedValue(false);
+  const trackScale = useSharedValue(1);
+
+  const customEasing = Easing.bezier(0.25, 0.1, 0.25, 1);
+
+  React.useEffect(() => {
+    const clampedValue = Math.max(0, Math.min(1, value));
+    if (!isActive.value) {
+      progress.value = withTiming(clampedValue, {
+        duration: 300,
+        easing: customEasing,
+      });
+    }
+  }, [value]);
+
+  const panGestureHandler = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    { startProgress: number }
+  >({
+    onStart: (_, context) => {
+      if (disabled) return;
+      context.startProgress = progress.value;
+      isActive.value = true;
+      trackScale.value = withTiming(activeHeight / height, {
+        duration: 200,
+        easing: customEasing,
+      });
+    },
+    onActive: (event, context) => {
+      if (disabled) return;
+
+      const progressDelta = event.translationX / width;
+      const newProgress = Math.max(
+        0,
+        Math.min(1, context.startProgress + progressDelta),
+      );
+
+      progress.value = newProgress;
+      runOnJS(onValueChange)(newProgress);
+    },
+    onFinish: () => {
+      if (disabled) return;
+      isActive.value = false;
+      trackScale.value = withTiming(1, {
+        duration: 200,
+        easing: customEasing,
+      });
+    },
+  });
+
+  const tapGestureHandler =
+    useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+      onStart: (event) => {
+        if (disabled || !tapToSeek) return;
+
+        const newProgress = Math.max(0, Math.min(1, event.x / width));
+        progress.value = withTiming(newProgress, {
+          duration: 300,
+          easing: customEasing,
+        });
+
+        trackScale.value = withSequence(
+          withTiming(activeHeight / height, {
+            duration: 200,
+            easing: customEasing,
+          }),
+          withTiming(1, {
+            duration: 200,
+            easing: customEasing,
+          }),
+        );
+
+        runOnJS(onValueChange)(newProgress);
+      },
+    });
+
+  const containerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleY: trackScale.value }],
+      borderRadius: 100,
+    };
+  });
+
+  const activeTrackAnimatedStyle = useAnimatedStyle(() => {
+    const progressWidth = Math.max(0, Math.min(width, progress.value * width));
+    return {
+      width: progressWidth,
+      borderRadius: 99,
+    };
+  });
+
+  return (
+    <View style={[styles.wrapper, { width, height: activeHeight }]}>
+      <TapGestureHandler onGestureEvent={tapGestureHandler}>
+        <Animated.View>
+          <PanGestureHandler onGestureEvent={panGestureHandler}>
+            <Animated.View
+              style={[
+                styles.container,
+                {
+                  width,
+                  height,
+                },
+                containerAnimatedStyle,
+              ]}
+            >
+              <View
+                style={[
+                  styles.track,
+                  {
+                    width,
+                    height,
+                    backgroundColor: inactiveColor,
+                  },
+                ]}
+              />
+
+              <Animated.View
+                style={[
+                  styles.activeTrack,
+                  {
+                    height,
+                    backgroundColor: activeColor,
+                  },
+                  activeTrackAnimatedStyle,
+                ]}
+              />
+            </Animated.View>
+          </PanGestureHandler>
+        </Animated.View>
+      </TapGestureHandler>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  wrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  track: {
+    borderRadius: 90,
+  },
+  activeTrack: {
+    borderRadius: 200,
+    position: "absolute",
+  },
+});
+
+export default SeekBar;
+```
+
+</Accordion>
+
+<Accordion title='SeekBar.types.ts'>
+
+```ts
+export interface SeekBarProps {
+  value: number;
+  onValueChange: (value: number) => void;
+  width?: number;
+  height?: number;
+  activeHeight?: number;
+  activeColor?: string;
+  inactiveColor?: string;
+  disabled?: boolean;
+  tapToSeek?: boolean;
+}
+```
+
+</Accordion>
+</Accordions>
+
+  </TabsContent>
+</Tabs>
+
+### 🚀 Example
+
+```tsx
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Row, SeekBar } from "@/components/index";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+
+const SeekBarDemo: React.FC = (_$_): React.ReactNode => {
+  const [progress1, setProgress1] = useState<number>(0.3);
+  const [progress2, setProgress2] = useState<number>(0.65);
+  const [progress3, setProgress3] = useState<number>(0);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isAnimating) {
+      interval = setInterval<[]>(() => {
+        setProgress3((prev) => {
+          const newProgress = prev + 0.02;
+          return newProgress >= 1 ? 0 : newProgress;
+        });
+      }, 100);
+    }
+    return () => clearInterval(interval);
+  }, [isAnimating]);
+
+  const resetValues = () => {
+    setProgress1(0.3);
+    setProgress2(0.65);
+    setProgress3(0);
+    setIsAnimating(false);
+  };
+
+  return (
+    <ScrollView
+      className="flex-1"
+      contentContainerStyle={{ flexGrow: 1 }}
+      contentInsetAdjustmentBehavior="always"
+      showsVerticalScrollIndicator={false}
+      scrollEnabled
+    >
+      <SafeAreaView style={styles.container}>
+        <GestureHandlerRootView style={styles.wrapper}>
+          <View style={styles.header}>
+            <Row style={{ alignItems: "center" }}>
+              <FontAwesome name="sliders" size={30} color="white" />
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    top: 5,
+                  },
+                ]}
+              >
+                SeekBar Component
+              </Text>
+            </Row>
+            <Text style={styles.subtitle}>Interactive progress controls</Text>
+          </View>
+
+          <View style={styles.examples}>
+            <View style={styles.example}>
+              <View style={styles.exampleHeader}>
+                <View style={styles.iconContainer}>
+                  <Ionicons name="play-circle" size={18} color="#f4f4f5" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.exampleTitle}>Media Progress</Text>
+                  <Text style={styles.exampleDescription}>
+                    Standard progress indicator
+                  </Text>
+                </View>
+                <Text style={styles.valueText}>
+                  {Math.round(progress1 * 100)}%
+                </Text>
+              </View>
+              <SeekBar
+                value={progress1}
+                onValueChange={setProgress1}
+                activeHeight={8}
+                activeColor="#f4f4f5"
+                disabled={false}
+                width={320}
+                height={4}
+                inactiveColor="#27272a"
+                tapToSeek={false}
+              />
+            </View>
+
+            <View style={styles.example}>
+              <View style={styles.exampleHeader}>
+                <View style={styles.iconContainer}>
+                  <Ionicons name="volume-high" size={18} color="#f4f4f5" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.exampleTitle}>Volume Control</Text>
+                  <Text style={styles.exampleDescription}>
+                    Audio level adjustment
+                  </Text>
+                </View>
+                <Text style={styles.valueText}>
+                  {Math.round(progress2 * 100)}%
+                </Text>
+              </View>
+              <SeekBar
+                value={progress2}
+                onValueChange={setProgress2}
+                activeHeight={6}
+                activeColor="#a1a1aa"
+                disabled={false}
+                width={320}
+                height={6}
+                inactiveColor="#18181b"
+                tapToSeek={false}
+              />
+            </View>
+
+            <View style={styles.example}>
+              <View style={styles.exampleHeader}>
+                <View style={styles.iconContainer}>
+                  <Ionicons name="timer" size={18} color="#f4f4f5" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.exampleTitle}>Loading Progress</Text>
+                  <Text style={styles.exampleDescription}>
+                    Animated progress tracking
+                  </Text>
+                </View>
+                <Text style={styles.valueText}>
+                  {Math.round(progress3 * 100)}%
+                </Text>
+              </View>
+              <SeekBar
+                value={progress3}
+                onValueChange={setProgress3}
+                activeHeight={10}
+                activeColor="#d4d4d8"
+                disabled={false}
+                width={320}
+                height={5}
+                inactiveColor="#27272a"
+                tapToSeek={false}
+              />
+            </View>
+
+            <View style={styles.example}>
+              <View style={styles.exampleHeader}>
+                <View style={[styles.iconContainer, styles.disabledIcon]}>
+                  <Ionicons name="lock-closed" size={18} color="#52525b" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={[styles.exampleTitle, styles.disabledText]}>
+                    Disabled State
+                  </Text>
+                  <Text style={styles.exampleDescription}>
+                    Read-only progress
+                  </Text>
+                </View>
+                <Text style={styles.valueText}>45%</Text>
+              </View>
+              <SeekBar
+                value={0.45}
+                onValueChange={() => {}}
+                activeHeight={4}
+                activeColor="#3f3f46"
+                disabled={true}
+                width={320}
+                height={4}
+                inactiveColor="#18181b"
+                tapToSeek={false}
+              />
+            </View>
+          </View>
+
+          <View style={styles.controls}>
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={() => setIsAnimating(!isAnimating)}
+              activeOpacity={0.8}
+            >
+              <Ionicons
+                name={isAnimating ? "pause" : "play"}
+                size={16}
+                color="#09090b"
+              />
+              <Text style={styles.primaryButtonText}>
+                {isAnimating ? "Pause" : "Start"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={resetValues}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="refresh" size={16} color="#a1a1aa" />
+              <Text style={styles.secondaryButtonText}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#09090b",
+  },
+  wrapper: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  header: {
+    marginBottom: 40,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#27272a",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fafafa",
+    marginBottom: 6,
+    letterSpacing: -0.5,
+    marginLeft: 5,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#71717a",
+    fontWeight: "400",
+  },
+  examples: {
+    flex: 1,
+    gap: 20,
+  },
+  example: {
+    backgroundColor: "#18181b",
+    borderRadius: 16,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: "#27272a",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  exampleHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    gap: 16,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#27272a",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#3f3f46",
+  },
+  disabledIcon: {
+    backgroundColor: "#18181b",
+    borderColor: "#27272a",
+  },
+  textContainer: {
+    flex: 1,
+  },
+  exampleTitle: {
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#f4f4f5",
+    marginBottom: 4,
+    letterSpacing: -0.2,
+  },
+  disabledText: {
+    color: "#71717a",
+  },
+  exampleDescription: {
+    fontSize: 13,
+    color: "#71717a",
+    lineHeight: 16,
+  },
+  valueText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#a1a1aa",
+    fontFamily: "monospace",
+    minWidth: 40,
+    textAlign: "right",
+  },
+  controls: {
+    flexDirection: "row",
+    gap: 12,
+    paddingVertical: 24,
+    borderTopWidth: 1,
+    borderTopColor: "#27272a",
+  },
+  primaryButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fafafa",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  primaryButtonText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#09090b",
+  },
+  secondaryButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#3f3f46",
+    gap: 8,
+  },
+  secondaryButtonText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#a1a1aa",
+  },
+});
+
+export default SeekBarDemo;
+```
