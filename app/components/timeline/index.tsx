@@ -178,7 +178,7 @@ const TimelineDemo = () => {
       description: "Comprehensive testing, bug fixes, and quality assurance.",
       timestamp: "Apr 1, 2024",
       icon: "check-square",
-      status: "upcoming",
+      status: "complete",
       meta: "Upcoming",
     },
     {

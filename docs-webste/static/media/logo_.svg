@@ -1,0 +1,54 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Dark background gradient -->
+    <radialGradient id="darkBg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#1a1a2e" />
+      <stop offset="100%" style="stop-color:#0f0f1a" />
+    </radialGradient>
+    
+    <!-- Main glow gradient -->
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#00f5ff;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#61dafb;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#9d4edd;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Ring gradient -->
+    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00f5ff" />
+      <stop offset="50%" style="stop-color:#61dafb" />
+      <stop offset="100%" style="stop-color:#c77dff" />
+    </linearGradient>
+    
+    <!-- Soft glow filter -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dark background circle -->
+  <circle cx="60" cy="60" r="55" fill="url(#darkBg)"/>
+  
+  <!-- React Native atom rings (simplified) -->
+  <ellipse cx="60" cy="60" rx="30" ry="12" fill="none" stroke="url(#ringGradient)" stroke-width="1.5" opacity="0.6" transform="rotate(60 60 60)"/>
+  <ellipse cx="60" cy="60" rx="30" ry="12" fill="none" stroke="url(#ringGradient)" stroke-width="1.5" opacity="0.6" transform="rotate(-60 60 60)"/>
+  <ellipse cx="60" cy="60" rx="30" ry="12" fill="none" stroke="url(#ringGradient)" stroke-width="1.5" opacity="0.6"/>
+  
+  <!-- Central glow core -->
+  <circle cx="60" cy="60" r="16" fill="url(#glowGradient)" filter="url(#softGlow)"/>
+  
+  <!-- Bright center nucleus -->
+  <circle cx="60" cy="60" r="4" fill="#00f5ff" opacity="0.9"/>
+  
+  <!-- Subtle "G" dot pattern -->
+  <circle cx="52" cy="54" r="1" fill="#61dafb" opacity="0.5"/>
+  <circle cx="68" cy="54" r="1" fill="#c77dff" opacity="0.5"/>
+  <circle cx="68" cy="60" r="1" fill="#00f5ff" opacity="0.7"/>
+  <circle cx="68" cy="66" r="1" fill="#9d4edd" opacity="0.5"/>
+  <circle cx="60" cy="66" r="1" fill="#61dafb" opacity="0.6"/>
+</svg>

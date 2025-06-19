@@ -144,7 +144,7 @@ const StatsSection: React.FC = () => (
   </div>
 );
 
-export default async function IndexPage() {
+export default function IndexPage() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
       <GridBackground />
@@ -197,7 +197,7 @@ export default async function IndexPage() {
             <Link
               target="_blank"
               rel="noreferrer"
-              href="https://github.com"
+              href="https://github.com/rit3zh/glow-ui"
               className={cn(
                 buttonVariants({ variant: "outline" }),
                 "group border-slate-600 hover:border-blue-500 bg-slate-800/80 backdrop-blur-sm hover:bg-slate-700/80",
@@ -210,16 +210,6 @@ export default async function IndexPage() {
           </PageActions>
 
           {/* Installation Command */}
-          <div className="inline-flex items-center gap-4 px-6 py-3 bg-slate-950 text-green-400 rounded-xl font-mono text-sm shadow-lg mb-16 border border-slate-800">
-            <Code className="w-4 h-4" />
-            <span>npx rn-glow add button</span>
-            <button className="p-1 hover:bg-slate-800 rounded transition-colors duration-200">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-              </svg>
-            </button>
-          </div>
         </PageHeader>
 
         {/* Stats Section */}
