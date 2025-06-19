@@ -25,7 +25,6 @@ import type {
 } from "./Toast.types";
 import { useToast } from "./context/ToastContext";
 
-// Enable LayoutAnimation for Android
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -82,10 +81,9 @@ export const Toast: React.FC<ToastProps> = ({ toast, index }) => {
   const height = useSharedValue(0);
   const viewRef = useRef<View>(null);
 
-  // Calculate the offset based on index for stacking effect
   const getStackOffset = () => {
-    const baseOffset = 8; // Base offset between toasts
-    const maxOffset = 20; // Maximum offset
+    const baseOffset = 8;
+    const maxOffset = 20;
     const offset = Math.min(index * baseOffset, maxOffset);
     return toast.options.position === "top" ? -offset : offset;
   };
@@ -110,10 +108,8 @@ export const Toast: React.FC<ToastProps> = ({ toast, index }) => {
   };
 
   useEffect(() => {
-    // Stagger the entrance animation based on index
     const delay = index * 50;
 
-    // Configure layout animation for height changes
     LayoutAnimation.configureNext({
       duration: 300,
       create: {
@@ -191,7 +187,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, index }) => {
         { scale: scale.value },
         { rotateZ: `${rotateZ.value}deg` },
       ],
-      zIndex: 1000 - index, // Higher index toasts appear behind
+      zIndex: 1000 - index,
     };
   });
 
