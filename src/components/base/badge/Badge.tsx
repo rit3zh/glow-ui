@@ -89,7 +89,7 @@ export const Badge: React.FC<BadgeProps> = ({
           backgroundColor: vs.backgroundColor,
           paddingVertical: ss.paddingVertical,
           paddingHorizontal: ss.paddingHorizontal,
-          borderRadius: rs.borderRadius,
+          borderRadius: rs,
           borderColor: vs.borderColor,
           borderWidth: vs.borderWidth,
           flexDirection: "row",
