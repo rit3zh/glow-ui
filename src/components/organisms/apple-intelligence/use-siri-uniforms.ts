@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useSharedValue, useDerivedValue } from "react-native-reanimated";
+import { useSharedValue, useDerivedValue, useFrameCallback } from "react-native-reanimated";
 import type {
   ISiriToggleOptions,
   IUseSiriUniformsOptions,
@@ -27,6 +27,10 @@ function useSiriUniforms<T extends IUseSiriUniformsOptions>({
 }: T): IUseSiriUniformsResult {
   const iTime = useSharedValue<number>(0);
   const intensity = useSharedValue<number>(0);
+
+  const frameCallback = useFrameCallback((frameInfo) => {
+    iTime.value = frameInfo.timeSinceFirstFrame / 1000;
+  }, false);
 
   const uMargin = useSharedValue<number>(DEFAULT_BORDER.margin);
   const uExcess = useSharedValue<number>(DEFAULT_BORDER.spread);
@@ -173,6 +177,6 @@ function useSiriUniforms<T extends IUseSiriUniformsOptions>({
     ],
   );
 
-  return { iTime, intensity, uniforms, applyConfig };
+  return { iTime, intensity, uniforms, applyConfig, frameCallback };
 }
 export { useSiriUniforms };

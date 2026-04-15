@@ -46,14 +46,12 @@ export const SiriProvider: React.FC<IAppleIntelligenceProvider> &
       height: 0,
     });
     const busyRef = useRef<boolean>(false);
-    const startTimeRef = useRef<number>(0);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const [overlayContent, setOverlayContent] = useState<React.ReactNode>(null);
 
     const overlayOpacity = useSharedValue<number>(0);
 
-    const { iTime, intensity, uniforms, applyConfig } = useSiriUniforms({
+    const { iTime, intensity, uniforms, applyConfig, frameCallback } = useSiriUniforms({
       layout,
       defaultWave,
       defaultNoise,
@@ -68,27 +66,13 @@ export const SiriProvider: React.FC<IAppleIntelligenceProvider> &
       opacity: overlayOpacity.value,
     }));
 
-    const stopClock = useCallback(() => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }, []);
-
     const dismiss = useCallback(() => {
-      stopClock();
+      frameCallback.setActive(false);
       busyRef.current = false;
       setActive(false);
       setSnapshot(null);
       setOverlayContent(null);
-    }, [stopClock]);
-
-    const startClock = useCallback(() => {
-      startTimeRef.current = Date.now();
-      intervalRef.current = setInterval(() => {
-        iTime.value = (Date.now() - startTimeRef.current) / 1000;
-      }, 16);
-    }, [iTime]);
+    }, [frameCallback]);
 
     const toggle = useCallback(
       async (options?: ISiriToggleOptions) => {
@@ -135,7 +119,7 @@ export const SiriProvider: React.FC<IAppleIntelligenceProvider> &
 
           setSnapshot(image);
           setActive(true);
-          startClock();
+          frameCallback.setActive(true);
           busyRef.current = false;
 
           intensity.value = withTiming(1, {
@@ -153,7 +137,7 @@ export const SiriProvider: React.FC<IAppleIntelligenceProvider> &
         introDuration,
         outroDuration,
         applyConfig,
-        startClock,
+        frameCallback,
         dismiss,
         intensity,
         overlayOpacity,
