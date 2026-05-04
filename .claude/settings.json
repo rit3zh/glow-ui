@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wrangler r2 *)",
+      "Bash(env)"
+    ]
+  }
+}

@@ -1,4 +1,3 @@
-"sync-r2:watch": "npx chokidar 'react-native/**' 'react-native-usage/**' 'react-native-types/**' --event add --event change -c './scripts/sync-r2.sh {path}'"
 #!/bin/bash
 # Syncs react-native source files to Cloudflare R2 bucket.
 #
