@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "totalComponents": 127,
+  "totalComponents": 128,
   "categories": [
     "ai",
     "atoms",
@@ -1127,6 +1127,19 @@
         "conf.ts",
         "index.tsx",
         "types.ts"
+      ]
+    },
+    "shockwave": {
+      "name": "shockwave",
+      "category": "organisms",
+      "path": "src/components/organisms/shockwave",
+      "folders": [],
+      "files": [
+        "conf.ts",
+        "const.ts",
+        "index.tsx",
+        "types.ts",
+        "utils.ts"
       ]
     },
     "sign-up-v1": {

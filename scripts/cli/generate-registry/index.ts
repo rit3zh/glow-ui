@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 const COMPONENTS_DIR = "./src/components";
-const OUTPUT_FILE = "./registry.json";
+const OUTPUT_FILES = ["./registry.json", `${COMPONENTS_DIR}/registry.json`];
 
 const CATEGORY_FOLDERS = [
   "ai",
@@ -208,9 +208,11 @@ function generateRegistry() {
     ),
   };
 
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(registry, null, 2));
+  for (const outputFile of OUTPUT_FILES) {
+    fs.writeFileSync(outputFile, JSON.stringify(registry, null, 2));
+  }
 
-  console.log(`\n✅ Generated registry.json`);
+  console.log(`\n✅ Generated ${OUTPUT_FILES.join(", ")}`);
   console.log(`📦 Total components: ${uniqueComponents.length}`);
   console.log(`📁 Categories: ${registry.categories.join(", ")}\n`);
 
