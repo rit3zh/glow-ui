@@ -23,6 +23,10 @@ import { ComponentSource } from "@/components/docs/component-source";
 import { ExampleComponentSource } from "@/components/docs/example-component-source";
 import { AutoTypeTable } from "@/components/docs/auto-type";
 import { BundleSizeBadge } from "@/components/bundle-size-badge";
+import { LazyVideo } from "@/components/docs/lazy-video";
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -81,6 +85,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             ...defaultMdxComponents,
             ...TabsComponents,
             a: createRelativeLink(source, page) as any,
+            video: LazyVideo as any,
             PreviewClient,
             PreviewComment,
             ComponentSource,

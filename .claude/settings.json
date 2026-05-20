@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(wrangler r2 *)",
-      "Bash(env)"
+      "Bash(env)",
+      "Bash(awk 'NR<=14 || NR>=10' /Users/rit3zhcx/Desktop/reacticx/src/components/organisms/material-shape-loader/config.ts)",
+      "Bash(awk '{print NR\": \"substr\\($0,1,80\\)}')",
+      "Bash(node -e ' *)",
+      "Bash(git -C /Users/rit3zhcx/Desktop/reacticx diff --stat src/components examples)",
+      "Bash(xargs -n1 dirname)",
+      "Bash(xargs -n1 basename)",
+      "Bash(bun scripts/sync-website.ts --dry)",
+      "Bash(./scripts/sync-r2.sh react-native-types/morph-loader.ts)",
+      "Bash(bash -c ' *)",
+      "Bash(xargs -I {} sh -c 'echo \"=== {} ===\"; grep -E \"export \\(type|interface\\)\" {}')"
     ]
   }
 }

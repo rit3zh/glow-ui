@@ -1,5 +1,5 @@
+import * as React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import React from "react";
 import { CinematicCarouselItemProps, CinematicCarouselProps } from "./types";
 import { BlurView } from "@sbaiahmed1/react-native-blur";
 import Animated, {

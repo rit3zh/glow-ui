@@ -7,7 +7,7 @@ import { DisclosureGroup } from "@/components/molecules/disclosure-group";
 import DynamicText from "@/components/molecules/dynamic-text";
 import { DynamicTextItem } from "@/components/molecules/dynamic-text/types";
 import GooeyText from "@/components/molecules/gooey-text";
-import { CircleLoadingIndicator } from "@/components";
+import { CircleLoadingIndicator } from "@/components/molecules/circle-loader";
 
 export default function App() {
   const [fontLoaded] = useFonts({

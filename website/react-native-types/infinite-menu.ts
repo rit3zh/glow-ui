@@ -1,18 +1,18 @@
 import type { SkImage } from "@shopify/react-native-skia";
 import type { StyleProp, ViewStyle } from "react-native";
 
-export interface IMenuItem {
+interface IMenuItem {
   image: string;
 }
 
-export interface IInfiniteMenu {
+interface IInfiniteMenu {
   items: IMenuItem[];
   readonly scale?: number;
   readonly backgroundColor?: string;
   readonly style?: StyleProp<ViewStyle>;
 }
 
-export interface IDisc {
+interface IDisc {
   screenX: number;
   screenY: number;
   radius: number;
@@ -21,10 +21,12 @@ export interface IDisc {
   itemIndex: number;
 }
 
-export interface IDiscComponent {
+interface IDiscComponent {
   x: number;
   y: number;
   radius: number;
   alpha: number;
   image: SkImage | null;
 }
+
+export type { IMenuItem, IInfiniteMenu, IDisc, IDiscComponent };

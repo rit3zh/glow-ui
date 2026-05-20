@@ -26,7 +26,6 @@ import type {
   IStaggeredText,
   ITransitionCharacter,
 } from "./types";
-import { useAutoPlay } from "./hooks";
 import { withBuildCharacterMetrics } from "./helper";
 import { merge } from "./base";
 import {

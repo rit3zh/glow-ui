@@ -1,11 +1,13 @@
-import { ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
-export interface OrbitDotLoaderProps {
+interface IOrbitDotLoader {
   dotColor?: string;
   dotRadius?: number;
   centerRadius?: number;
   size?: number;
   duration?: number;
   numDots?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
+
+export type { IOrbitDotLoader };

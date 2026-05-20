@@ -1,9 +1,18 @@
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import { SymbolView } from "expo-symbols";
 import { useState } from "react";
-import { SeekBar } from "@/components";
+import { CircularCarousel } from "@/components/molecules/circular-carousel";
+import { LinearGradient } from "expo-linear-gradient";
+import MaterialCarousel from "@/components/molecules/material-carousel";
+import { MorphicTabBar } from "@/components/molecules/morphing-tabbar";
+import { ParallaxCarousel } from "@/components/molecules/parallax-carousel";
+import { RotateCarousel } from "@/components/molecules/rotate-carousel";
+import { SearchBar, SeekBar } from "@/components";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function App() {
   const [fontLoaded] = useFonts({

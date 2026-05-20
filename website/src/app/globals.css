@@ -242,8 +242,8 @@ button {
     --gradient-angle: 360deg;
   }
 }
-a[href="/docs/components/shockwave"]::after,
-a[href="/docs/components/shockwave"]::after {
+a[href="/docs/components/morph-loader"]::after,
+a[href="/docs/components/morph-loader"]::after {
   content: "New";
   position: absolute;
   right: 0.2rem;
@@ -270,7 +270,7 @@ a[href="/docs/components/shockwave"]::after {
 
   animation: gradient-angle 3s linear infinite;
 }
-.dark a[href="/docs/components/shockwave"]::after {
+.dark a[href="/docs/components/morph-loader"]::after {
   color: rgb(255, 255, 255);
   background:
     linear-gradient(rgb(20, 20, 20), rgb(20, 20, 20)) padding-box,

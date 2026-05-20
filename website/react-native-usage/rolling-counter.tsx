@@ -41,7 +41,8 @@ export default function App() {
             damping: 14,
             mass: 0.5,
           }}
-          digitStyle={{ fontSize: 52, color: "#fff" }}
+          fontSize={52}
+          color="#fff"
         />
       </Pressable>
     </GestureHandlerRootView>

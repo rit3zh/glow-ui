@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
-import { ViewTransitions } from "next-view-transitions";
 import { META_THEME_COLORS, siteConfig } from "@/app/config/site";
 import { cn } from "#/lib/utils";
 import { TooltipProvider } from "@/components/tooltip";
@@ -82,25 +80,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html
-        lang="en"
-        className="dark"
-        style={{ colorScheme: "dark" }}
-        suppressHydrationWarning
-      >
-        <body className={cn(geist.variable, geist.className, "antialiased")}>
-          <RootProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              disableTransitionOnChange
-            >
-              <TooltipProvider>{children}</TooltipProvider>
-            </ThemeProvider>
-          </RootProvider>
-        </body>
-      </html>
-    </ViewTransitions>
+    <html
+      lang="en"
+      className="dark"
+      style={{ colorScheme: "dark" }}
+      suppressHydrationWarning
+    >
+      <body className={cn(geist.variable, geist.className, "antialiased")}>
+        <RootProvider
+          theme={{
+            attribute: "class",
+            defaultTheme: "dark",
+            disableTransitionOnChange: true,
+          }}
+        >
+          <TooltipProvider>{children}</TooltipProvider>
+        </RootProvider>
+      </body>
+    </html>
   );
 }

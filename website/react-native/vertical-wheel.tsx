@@ -16,7 +16,6 @@ import Animated, {
   type SharedValue,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
-import type { VerticalWheelProps } from "./types";
 
 const AnimatedBlur = Animated.createAnimatedComponent<BlurViewProps>(BlurView);
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -128,14 +127,20 @@ const VerticalWheelItem: FC<{
   );
 };
 
+type VerticalWheelProps = {
+  inputs: string[];
+};
+
 const VerticalWheel: FC<VerticalWheelProps> = ({ inputs }) => {
   const scrollY = useSharedValue(0);
   const previousIndex = useSharedValue(-1);
 
+  // Function to trigger haptic feedback
   const triggerHaptic = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  // Track current index and trigger haptics when it changes
   useDerivedValue(() => {
     const currentIndex = Math.round(scrollY.value / ITEM_HEIGHT);
 

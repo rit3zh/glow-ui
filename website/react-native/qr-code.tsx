@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, Text, type ViewStyle } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  type ViewStyle,
+} from "react-native";
 import React, { memo } from "react";
 import Animated, {
   interpolate,
@@ -6,13 +12,13 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import QRCodeStyled from "react-native-qrcode-styled";
 import { BlurView, type BlurViewProps } from "expo-blur";
 import type { QRCodeProps } from "./types";
-import { BACKGROUND_COLOR, QR_URL, SPRING_CONFIG } from "./const";
+import { BACKGROUND_COLOR, QR_URL, TIMING_CONFIG } from "./const";
 const AnimatedQRCodeStyled = Animated.createAnimatedComponent(QRCodeStyled);
 const AnimatedBlurView =
   Animated.createAnimatedComponent<BlurViewProps>(BlurView);
@@ -21,7 +27,7 @@ const QRCode: React.FC<QRCodeProps> & React.FunctionComponent<QRCodeProps> =
   memo<QRCodeProps>(
     ({
       QRCodevalue,
-      springConfig = SPRING_CONFIG,
+      timingConfig = TIMING_CONFIG,
       textStyle,
       backgroundColorFocused = BACKGROUND_COLOR,
     }: QRCodeProps):
@@ -73,25 +79,19 @@ const QRCode: React.FC<QRCodeProps> & React.FunctionComponent<QRCodeProps> =
       });
       const onPress = () => {
         if (progress.value === 1) {
-          progress.value = withSpring<number>(0, springConfig);
+          progress.value = withTiming<number>(0, timingConfig);
           return;
         }
-        progress.value = withSpring<number>(1, {
-          ...springConfig,
-        });
+        progress.value = withTiming<number>(1, timingConfig);
       };
       const handleCopy = async () => {};
       const handleClose = () => {
-        progress.value = withSpring<number>(0, {
-          ...springConfig,
-        });
+        progress.value = withTiming<number>(0, timingConfig);
       };
       const animatedBlurViewPropz = useAnimatedProps<
         Pick<BlurViewProps, "intensity">
       >(() => {
-        const intensity = withSpring<number>(
-          interpolate(progress.value, [0, 1], [20, 1]),
-        );
+        const intensity = interpolate(progress.value, [0, 1], [20, 1]);
         return {
           intensity,
         };
@@ -112,9 +112,7 @@ const QRCode: React.FC<QRCodeProps> & React.FunctionComponent<QRCodeProps> =
       const animatedBlurViewPropsBottom = useAnimatedProps<
         Pick<BlurViewProps, "intensity">
       >(() => {
-        const intensity = withSpring<number>(
-          interpolate(progress.value, [0, 0.5, 1], [0, 50, 0]),
-        );
+        const intensity = interpolate(progress.value, [0, 0.5, 1], [0, 50, 0]);
         return {
           intensity,
         };
@@ -160,18 +158,21 @@ const QRCode: React.FC<QRCodeProps> & React.FunctionComponent<QRCodeProps> =
                 <Feather name="x" size={20} color="black" />
               </Pressable>
             </Animated.View>
-            <AnimatedBlurView
-              pointerEvents={"none"}
-              tint="systemUltraThinMaterialLight"
-              animatedProps={animatedBlurViewPropsBottom}
-              style={[
-                StyleSheet.absoluteFillObject,
-                {
-                  overflow: "hidden",
-                  borderRadius: 30,
-                },
-              ]}
-            />
+
+            {Platform.OS === "ios" && (
+              <AnimatedBlurView
+                pointerEvents={"none"}
+                tint="systemUltraThinMaterialLight"
+                animatedProps={animatedBlurViewPropsBottom}
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  {
+                    overflow: "hidden",
+                    borderRadius: 30,
+                  },
+                ]}
+              />
+            )}
           </Animated.View>
         </Pressable>
       );

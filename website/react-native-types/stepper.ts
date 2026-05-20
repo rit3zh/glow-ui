@@ -1,3 +1,4 @@
+// types.ts
 import { ViewStyle } from "react-native";
 import { ReactNode } from "react";
 

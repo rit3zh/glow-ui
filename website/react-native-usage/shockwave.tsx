@@ -18,13 +18,9 @@ import type {
   IShockwaveOrigin,
   ShockwaveValue,
 } from "@/components/organisms/shockwave";
-import CardUI1 from "./components/card-ui-1";
-import CardUI2 from "./components/card-ui-2";
-import Animated, {
-  FadeInLeft,
-  FadeInRight,
-  FadeInUp,
-} from "react-native-reanimated";
+import CardUI1 from "../app/components/card-ui-1";
+import CardUI2 from "../app/components/card-ui-2";
+import Animated, { FadeInLeft, FadeInUp } from "react-native-reanimated";
 
 const SCREEN_W = Dimensions.get("window").width;
 const SCREEN_H = Dimensions.get("window").height;

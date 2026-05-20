@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "totalComponents": 128,
+  "totalComponents": 129,
   "categories": [
     "ai",
     "atoms",
@@ -799,6 +799,18 @@
         "index.tsx",
         "types.ts",
         "utils.ts"
+      ]
+    },
+    "morph-loader": {
+      "name": "morph-loader",
+      "category": "organisms",
+      "path": "src/components/organisms/morph-loader",
+      "folders": [],
+      "files": [
+        "config.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
       ]
     },
     "morphing-tabbar": {

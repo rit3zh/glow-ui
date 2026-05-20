@@ -70,7 +70,8 @@ export const DynamicIslandProvider: React.FC<
     onCollapse,
     haptics = true,
     style,
-  }: React.PropsWithChildren<IProvider>): React.ReactNode & JSX.Element => {
+  }: React.PropsWithChildren<IProvider>): React.ReactNode &
+    React.JSX.Element => {
     const config: IDynamicIslandConfig = useMemo<IDynamicIslandConfig>(
       () => ({
         ...DEFAULT_CONFIG,
@@ -274,7 +275,10 @@ export const DynamicIslandProvider: React.FC<
 );
 
 export const DynamicIslandTrigger: React.FC<ITrigger> = memo(
-  ({ children, style }: ITrigger): (React.ReactNode & JSX.Element) | null => {
+  ({
+    children,
+    style,
+  }: ITrigger): (React.ReactNode & React.JSX.Element) | null => {
     const context = useContext(DynamicIslandContext);
     const id: string = useId();
 
@@ -305,7 +309,10 @@ export const DynamicIslandTrigger: React.FC<ITrigger> = memo(
 );
 
 export const DynamicIslandContent: React.FC<IContent> = memo(
-  ({ children, style }: IContent): (React.ReactNode & JSX.Element) | null => {
+  ({
+    children,
+    style,
+  }: IContent): (React.ReactNode & React.JSX.Element) | null => {
     const context = useContext(DynamicIslandContext);
     const id: string = useId();
 

@@ -86,7 +86,7 @@ interface CharacterProps {
   readonly exitFinal: CharacterAnimationParams;
 }
 
-export type {
+export {
   SpinButtonProps,
   AnimationConfig,
   ButtonColors,

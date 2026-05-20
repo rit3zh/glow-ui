@@ -38,7 +38,7 @@ export const SquircleView: React.FC<ISquircleView> &
 
     const handleLayout = useCallback(<T extends LayoutChangeEvent>(e: T) => {
       const { width, height } = e.nativeEvent.layout;
-      setMeasured((prev) =>
+      setMeasured((prev: { w: number; h: number }) =>
         prev.w === width && prev.h === height ? prev : { w: width, h: height },
       );
     }, []);

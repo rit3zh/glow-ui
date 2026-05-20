@@ -1,14 +1,11 @@
-import { Platform } from "react-native";
-import type { WithSpringConfig } from "react-native-reanimated";
+import { Easing, type WithTimingConfig } from "react-native-reanimated";
 
 const BACKGROUND_COLOR = "#eeedf4";
 const QR_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-const SPRING_CONFIG: WithSpringConfig = {
-  ...Platform.select({
-    android: { damping: 18, stiffness: 230, mass: 0.6 },
-    ios: { damping: 18, stiffness: 250, mass: 0.9 },
-  }),
+const TIMING_CONFIG: WithTimingConfig = {
+  duration: 650,
+  easing: Easing.bezier(0.22, 1, 0.36, 1),
 };
 
-export { BACKGROUND_COLOR, SPRING_CONFIG, QR_URL };
+export { BACKGROUND_COLOR, TIMING_CONFIG, QR_URL };

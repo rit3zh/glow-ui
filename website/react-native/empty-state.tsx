@@ -20,6 +20,7 @@ import type {
 
 const EmptyContext = createContext<IEmptyContextValue | undefined>(undefined);
 
+// ==================== EMPTY COMPONENT ====================
 
 export const Empty: React.FC<IEmptyProps> = ({
   children,
@@ -48,11 +49,13 @@ export const Empty: React.FC<IEmptyProps> = ({
   );
 };
 
+// ==================== EMPTY HEADER ====================
 
 export const EmptyHeader: React.FC<IEmptyHeader> = ({ children, style }) => {
   return <View style={[styles.emptyHeader, style]}>{children}</View>;
 };
 
+// ==================== EMPTY MEDIA ====================
 
 export const EmptyMedia: React.FC<IEmptyMedia> = ({
   children,
@@ -72,10 +75,13 @@ export const EmptyMedia: React.FC<IEmptyMedia> = ({
   );
 };
 
+// ==================== EMPTY TITLE ====================
 
 export const EmptyTitle: React.FC<IEmptyTitle> = ({ children, style }) => {
   return <Text style={[styles.emptyTitle, style]}>{children}</Text>;
 };
+
+// ==================== EMPTY DESCRIPTION ====================
 
 export const EmptyDescription: React.FC<IEmptyDescription> = ({
   children,
@@ -84,11 +90,13 @@ export const EmptyDescription: React.FC<IEmptyDescription> = ({
   return <Text style={[styles.emptyDescription, style]}>{children}</Text>;
 };
 
+// ==================== EMPTY CONTENT ====================
 
 export const EmptyContent: React.FC<IEmptyContent> = ({ children, style }) => {
   return <View style={[styles.emptyContent, style]}>{children}</View>;
 };
 
+// ==================== BUTTON COMPONENT ====================
 
 export const EmptyButton: React.FC<IButton> = ({
   children,
@@ -127,6 +135,7 @@ export const EmptyButton: React.FC<IButton> = ({
   );
 };
 
+// ==================== ICON CLOUD COMPONENT ====================
 const styles = StyleSheet.create({
   empty: {
     backgroundColor: "transparent",
@@ -142,12 +151,14 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
   } as ViewStyle,
 
+  // Empty header
   emptyHeader: {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
   } as ViewStyle,
 
+  // Empty media
   emptyMedia: {
     marginBottom: 32,
     alignItems: "center",
@@ -162,6 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   } as ViewStyle,
 
+  // Empty title
   emptyTitle: {
     fontSize: 28,
     fontWeight: "600",
@@ -170,6 +182,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   } as TextStyle,
 
+  // Empty description
   emptyDescription: {
     fontSize: 16,
     color: "#999999",
@@ -178,12 +191,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   } as TextStyle,
 
+  // Empty content
   emptyContent: {
     marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
   } as ViewStyle,
 
+  // Button base
   button: {
     paddingHorizontal: 24,
     paddingVertical: 12,
@@ -198,6 +213,7 @@ const styles = StyleSheet.create({
     borderColor: "#333333",
   } as ViewStyle,
 
+  // Button sizes
   buttonSm: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -211,6 +227,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   } as ViewStyle,
 
+  // Button text
   buttonText: {
     fontSize: 14,
     fontWeight: "500",

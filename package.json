@@ -19,6 +19,9 @@
     "docs": "typedoc",
     "docs:deploy": "gh-pages -d docs",
     "generate-registry": "bun scripts/cli/generate-registry/index.ts",
+    "sync": "bun scripts/sync-website.ts",
+    "sync:dry": "bun scripts/sync-website.ts --dry",
+    "sync:changed": "bun scripts/sync-website.ts --changed",
     "deploy:wrangler": "npx tsx scripts/cli/generate-registry/index.ts && wrangler pages deploy ./src/components --project-name=reacticx-ui-components --branch=main"
   },
   "lint-staged": {
@@ -45,6 +48,7 @@
     "@react-navigation/stack": "^7.0.4",
     "@sbaiahmed1/react-native-blur": "^4.2.1",
     "@shopify/react-native-skia": "2.2.12",
+    "color": "^5.0.3",
     "dayjs": "^1.11.13",
     "expo": "~54.0.33",
     "expo-blur": "~15.0.8",

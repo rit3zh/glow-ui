@@ -1,11 +1,10 @@
 import {
   StyleSheet,
-  Text,
   View,
   Pressable,
-  ViewStyle,
-  TextStyle,
   FlatList,
+  type ViewStyle,
+  type TextStyle,
 } from "react-native";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,7 +23,7 @@ import { scheduleOnRN } from "react-native-worklets";
 import type { IPicker } from "./types";
 
 const AnimatedBlurView =
-  Animated.createAnimatedComponent<BlurViewProps>(BlurView);
+  Animated.createAnimatedComponent<Partial<BlurViewProps>>(BlurView);
 
 const DEFAULT_ITEM_HEIGHT = 44;
 const DEFAULT_VISIBLE_ITEMS = 7;
@@ -44,7 +43,7 @@ export const Picker: React.FC<IPicker> & React.FunctionComponent<IPicker> =
       hapticFeedback = true,
       selectionAreaBackgroundColor = "rgba(255, 255, 255, 0.06)",
       width,
-    }: IPicker):
+    }: React.ComponentProps<typeof Picker> | IPicker):
       | (React.ReactNode & React.ReactElement & React.JSX.Element)
       | null => {
       const scrollY = useSharedValue<number>(initialIndex * itemHeight);
@@ -96,7 +95,7 @@ export const Picker: React.FC<IPicker> & React.FunctionComponent<IPicker> =
       const AnimatedItem = useCallback(
         ({ item, index }: { item: string; index: number }) => {
           const animatedStyle = useAnimatedStyle<
-            Pick<ViewStyle, "opacity" | "transform">
+            Required<Partial<Pick<ViewStyle, "opacity" | "transform">>>
           >(() => {
             const centerOffset = index * itemHeight;
             const distance = scrollY.value - centerOffset;
@@ -141,7 +140,7 @@ export const Picker: React.FC<IPicker> & React.FunctionComponent<IPicker> =
           });
 
           const textAnimatedStyle = useAnimatedStyle<
-            Pick<TextStyle, "color" | "fontWeight">
+            Required<Partial<Pick<TextStyle, "color" | "fontWeight">>>
           >(() => {
             const centerOffset = index * itemHeight;
             const distance = scrollY.value - centerOffset;

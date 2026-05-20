@@ -1,4 +1,4 @@
-export interface SpinnerArcProps {
+interface ISpinnerArc {
   size?: number;
   colorStart?: string;
   colorEnd?: string;
@@ -7,3 +7,5 @@ export interface SpinnerArcProps {
   backgroundColor?: string;
   arcLength?: number;
 }
+
+export type { ISpinnerArc };

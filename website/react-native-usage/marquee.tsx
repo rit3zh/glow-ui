@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
+import Glow from "@/components/base/glow";
 import Marquee from "@/components/base/marquee";
 import { useFonts } from "expo-font";
 

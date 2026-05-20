@@ -7,6 +7,7 @@ import { templates } from "#/lib/source";
 
 import Link from "next/link";
 import { Header } from "@/components/header/header";
+import { LazyVideo } from "@/components/docs/lazy-video";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -90,12 +91,11 @@ export default async function TemplatePage(props: {
         {(hasVideo || hasPreview) && (
           <div className="relative mb-12 overflow-hidden rounded-2xl border border-white/6 bg-[#0c0c0e]">
             {hasVideo ? (
-              <video
+              <LazyVideo
                 src={videoMap[slug]}
                 muted
                 autoPlay
                 loop
-                playsInline
                 className="aspect-video w-full object-cover"
               />
             ) : (
@@ -117,6 +117,7 @@ export default async function TemplatePage(props: {
             components={{
               ...defaultMdxComponents,
               img: (props: any) => <ImageZoom {...props} />,
+              video: LazyVideo as any,
               ...TabsComponents,
               Steps,
               Step,

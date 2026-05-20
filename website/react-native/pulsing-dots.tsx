@@ -1,4 +1,3 @@
-// PulsingDots.tsx
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
@@ -9,10 +8,10 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import type { PulsingDotsProps } from "./PlusingDots.types";
+import type { IPulsingDots } from "./types";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-export const PulsingDots: React.FC<PulsingDotsProps> = ({
+export const PulsingDots: React.FC<IPulsingDots> = ({
   dotCount = 3,
   radius = 6,
   spacing = 25,

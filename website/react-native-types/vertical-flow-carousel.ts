@@ -32,4 +32,4 @@ interface AnimatedItemProps<T> {
   totalItems: number;
 }
 
-export type { VerticalCarouselProps, AnimatedItemProps };
+export { VerticalCarouselProps, AnimatedItemProps };

@@ -1,3 +1,4 @@
+import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 
 interface IMeshGradientColor {
@@ -6,16 +7,34 @@ interface IMeshGradientColor {
   b: number;
 }
 
-interface IAnimatedMeshGradient {
-  colors?: IMeshGradientColor[];
-  speed?: number;
-  noise?: number;
-  blur?: number;
-  contrast?: number;
-  animated?: boolean;
-  style?: StyleProp<ViewStyle>;
-  width?: number;
-  height?: number;
+interface IFrameBack {
+  fpsLock: number;
+  animated: boolean;
+  speed: number;
 }
 
-export type { IAnimatedMeshGradient, IMeshGradientColor };
+interface IPerformance {
+  undersampling?: number;
+  fpsLock?: number;
+}
+
+interface IAnimatedMeshGradient {
+  readonly performance?: IPerformance;
+  readonly colors?: IMeshGradientColor[];
+  readonly speed?: number;
+  readonly noise?: number;
+  readonly blur?: number;
+  readonly contrast?: number;
+  readonly animated?: boolean;
+  readonly style?: StyleProp<ViewStyle>;
+  readonly width?: number;
+  readonly height?: number;
+  readonly children?: React.ReactNode;
+}
+
+export type {
+  IAnimatedMeshGradient,
+  IMeshGradientColor,
+  IPerformance,
+  IFrameBack,
+};

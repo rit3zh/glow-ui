@@ -8,20 +8,10 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { View, StyleSheet } from "react-native";
-
+import type { ISpinnerArc } from "./types";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
-interface SpinnerArcProps {
-  size?: number;
-  colorStart?: string;
-  colorEnd?: string;
-  strokeWidth?: number;
-  speed?: number;
-  backgroundColor?: string;
-  arcLength?: number;
-}
-
-export const SpinnerArc: React.FC<SpinnerArcProps> = ({
+export const SpinnerArc: React.FC<ISpinnerArc> = ({
   size = 40,
   colorStart = "#FF4E4E",
   colorEnd = "#FF7A00",

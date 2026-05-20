@@ -1,6 +1,6 @@
 // @ts-check
 import { StyleSheet, View, type LayoutChangeEvent } from "react-native";
-import React, { useEffect, useMemo, memo, useState } from "react";
+import React, { useEffect, useMemo, memo, useState, useRef, useCallback } from "react";
 import {
   Canvas,
   Skia,
@@ -17,6 +17,7 @@ import {
   withTiming,
   useDerivedValue,
   Easing,
+  cancelAnimation,
 } from "react-native-reanimated";
 import type { IWaveScrawler, ITransitionRenderer } from "./types";
 import { WAVE_SCRAWLER_SHADER, DEFAULT_CONFIG } from "./conf";
@@ -49,27 +50,9 @@ const TransitionRenderer: React.FC<ITransitionRenderer> &
         waves,
         colorSeparation,
       };
-    }, [progress, width, height, amplitude, waves, colorSeparation]);
+    });
 
-    if (
-      !runtimeEffect ||
-      !fromImage ||
-      !toImage ||
-      width === 0 ||
-      height === 0
-    ) {
-      if (fromImage && width > 0 && height > 0) {
-        return (
-          <Group>
-            <ImageShader
-              image={fromImage}
-              fit="cover"
-              rect={rect(0, 0, width, height)}
-            />
-            <Fill />
-          </Group>
-        );
-      }
+    if (!runtimeEffect || !fromImage || !toImage || width === 0 || height === 0) {
       return null;
     }
 
@@ -116,10 +99,13 @@ export const WaveScrawler: React.FC<IWaveScrawler> &
       width: number;
       height: number;
     }>({ width: 0, height: 0 });
-    const [fromIndex, setFromIndex] = useState<number>(index);
-    const [toIndex, setToIndex] = useState<number>(index);
-    const progress = useSharedValue<number>(1);
-    const isAnimating = useSharedValue<boolean>(false);
+    const [displayedIndex, setDisplayedIndex] = useState<number>(index);
+    const [transition, setTransition] = useState<{
+      from: number;
+      to: number;
+    } | null>(null);
+    const prevIndexRef = useRef<number>(index);
+    const progress = useSharedValue<number>(0);
     const loadedImages = useLoadedImages(source);
 
     const onLayout = <T extends LayoutChangeEvent>(event: T) => {
@@ -127,49 +113,66 @@ export const WaveScrawler: React.FC<IWaveScrawler> &
       setDimensions({ width, height });
     };
 
-    const handleTransitionEnd = <T extends number>(newIndex: T) => {
-      onTransitionEnd?.(newIndex);
-    };
+    const finishTransition = useCallback(
+      (next: number) => {
+        setDisplayedIndex(next);
+        setTransition(null);
+        onTransitionEnd?.(next);
+      },
+      [onTransitionEnd],
+    );
+
     useEffect(() => {
-      if (index !== toIndex && !isAnimating.value) {
-        setFromIndex(toIndex);
-        setToIndex(index);
+      if (index === prevIndexRef.current) return;
+      const from = prevIndexRef.current;
+      const to = index;
+      prevIndexRef.current = index;
 
-        progress.value = 0;
-        isAnimating.value = true;
+      cancelAnimation(progress);
+      setTransition({ from, to });
+      progress.value = 0;
+      progress.value = withTiming<number>(
+        1,
+        {
+          duration,
+          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        },
+        (finished) => {
+          if (finished) {
+            scheduleOnRN<[number], void>(finishTransition, to);
+          }
+        },
+      );
+    }, [index, duration, finishTransition, progress]);
 
-        progress.value = withTiming<number>(
-          1,
-          {
-            duration,
-            easing: Easing.bezier(0.4, 0, 0.2, 1),
-          },
-          (finished) => {
-            if (finished) {
-              isAnimating.value = false;
-              scheduleOnRN<[number], void>(handleTransitionEnd, index);
-            }
-          },
-        );
-      }
-    }, [index]);
-
-    const fromImage = loadedImages[fromIndex] ?? null;
-    const toImage = loadedImages[toIndex] ?? null;
+    const fromImage = transition ? loadedImages[transition.from] ?? null : null;
+    const toImage = transition ? loadedImages[transition.to] ?? null : null;
+    const displayedImage = loadedImages[displayedIndex] ?? null;
 
     return (
       <View style={[styles.container, style]} onLayout={onLayout}>
         <Canvas style={styles.canvas}>
-          <TransitionRenderer
-            fromImage={fromImage}
-            toImage={toImage}
-            progress={progress}
-            width={dimensions.width}
-            height={dimensions.height}
-            amplitude={amplitude}
-            waves={waves}
-            colorSeparation={colorSeparation}
-          />
+          {transition && fromImage && toImage ? (
+            <TransitionRenderer
+              fromImage={fromImage}
+              toImage={toImage}
+              progress={progress}
+              width={dimensions.width}
+              height={dimensions.height}
+              amplitude={amplitude}
+              waves={waves}
+              colorSeparation={colorSeparation}
+            />
+          ) : displayedImage && dimensions.width > 0 && dimensions.height > 0 ? (
+            <Group>
+              <ImageShader
+                image={displayedImage}
+                fit="cover"
+                rect={rect(0, 0, dimensions.width, dimensions.height)}
+              />
+              <Fill />
+            </Group>
+          ) : null}
         </Canvas>
       </View>
     );

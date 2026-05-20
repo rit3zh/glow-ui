@@ -9,7 +9,7 @@ import Animated, {
   withSequence,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-import type { AnimatedProgressBarProps } from "./AnimatedProgress.types";
+import type { AnimatedProgressBarProps } from "./types";
 
 export const AnimatedProgressBar: React.FC<AnimatedProgressBarProps> = ({
   progress = 0,

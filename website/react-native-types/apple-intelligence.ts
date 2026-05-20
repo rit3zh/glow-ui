@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { DerivedValue, SharedValue } from "react-native-reanimated";
+import type { DerivedValue, SharedValue, FrameCallback } from "react-native-reanimated";
 
 interface IAppleIntelligenceProvider {
   children: ReactNode;
@@ -118,6 +118,7 @@ interface IUseSiriUniformsResult {
   intensity: SharedValue<number>;
   uniforms: DerivedValue<IShaderUniforms>;
   applyConfig: (override?: ISiriToggleOptions) => void;
+  frameCallback: FrameCallback;
 }
 
 export type {

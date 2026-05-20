@@ -46,7 +46,7 @@ interface ExtendedDialogContentProps extends DialogContentProps {
   readonly setIsAnimating?: (animating: boolean) => void;
 }
 
-export type {
+export {
   DialogContextType,
   DialogProps,
   DialogTriggerProps,

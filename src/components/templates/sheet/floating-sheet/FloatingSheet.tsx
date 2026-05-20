@@ -249,23 +249,23 @@ export const FloatingSheet: React.FC<IFloatingPlayerProps> = ({
     }
   };
 
-  const videoSource = useVideoPlayer(
-    require("@/assets/video/sza.mp4"),
-    (player) => {
-      player.loop = true;
-      player.volume = 0;
-      player.play();
-    },
-  );
+  // const videoSource = useVideoPlayer(
+  //   require("@/assets/video/sza.mp4"),
+  //   (player) => {
+  //     player.loop = true;
+  //     player.volume = 0;
+  //     player.play();
+  //   },
+  // );
 
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      videoSource.pause();
-    } else {
-      videoSource.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
+  // const togglePlayPause = () => {
+  //   if (isPlaying) {
+  //     videoSource.pause();
+  //   } else {
+  //     videoSource.play();
+  //   }
+  //   setIsPlaying(!isPlaying);
+  // };
 
   return (
     <TrueSheet
@@ -478,7 +478,7 @@ export const FloatingSheet: React.FC<IFloatingPlayerProps> = ({
                 {songTitle}
               </Text>
               <TouchableOpacity
-                onPress={togglePlayPause}
+                onPress={() => {}}
                 style={styles.minimizedPlayButton}
               >
                 <Ionicons

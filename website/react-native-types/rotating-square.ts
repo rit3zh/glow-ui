@@ -1,11 +1,13 @@
-import { ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
-export interface RotatingSquaresSpinnerProps {
+interface IRotatingSquaresSpinner {
   color?: string;
   squareSize?: number;
   spacing?: number;
   size?: number;
   duration?: number;
   repeatCount?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
+
+export type { IRotatingSquaresSpinner };

@@ -11,21 +11,12 @@ import Animated, {
   withSequence,
   Easing,
 } from "react-native-reanimated";
+import type { IOrbitDotLoader } from "./types";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-export interface OrbitDotLoaderProps {
-  dotColor?: string;
-  dotRadius?: number;
-  centerRadius?: number;
-  size?: number;
-  duration?: number;
-  numDots?: number;
-  style?: ViewStyle;
-}
-
-export const OrbitDotLoader: React.FC<OrbitDotLoaderProps> = ({
+export const OrbitDotLoader: React.FC<IOrbitDotLoader> = ({
   dotColor = "#fff",
   dotRadius = 4,
   centerRadius = 5,

@@ -10,6 +10,29 @@ import { CircularLoader } from "@/components/molecules/Loaders/circular";
 import DynamicText from "@/components/molecules/dynamic-text";
 import ElasticSlider from "@/components/micro-interactions/elastic-slider";
 
+const AVATARS = [
+  {
+    id: "1",
+    uri: "https://i.pinimg.com/736x/26/92/88/269288cb8a78b511f77e6f9ba85c9e49.jpg",
+    name: "Lawliet",
+  },
+  {
+    uri: "https://i.pinimg.com/736x/cb/91/92/cb9192cce5390e4b8c5401e1bad473fb.jpg",
+    id: "2",
+    name: "Light",
+  },
+  {
+    name: "Anime",
+    id: "3",
+    uri: "https://i.pinimg.com/1200x/d2/6e/31/d26e31e629d4d2d99a6d21fddf3e2035.jpg",
+  },
+  {
+    uri: "https://i.pinimg.com/736x/86/5c/18/865c1872cd515d129756ea3fd67eac06.jpg",
+    id: "4",
+    name: "Aesthetic",
+  },
+];
+
 export default function App() {
   const [fontLoaded] = useFonts({
     SfProRounded: require("@/assets/fonts/sf-pro-rounded.ttf"),

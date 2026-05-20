@@ -68,7 +68,7 @@ const DiscComponent: React.FC<IDiscComponent> = memo<IDiscComponent>(
 
 export const InfiniteMenu: React.FC<IInfiniteMenu> &
   React.FunctionComponent<IInfiniteMenu> = memo<IInfiniteMenu>(
-  ({ items, scale = 1, backgroundColor = "#000000" }: IInfiniteMenu) => {
+  ({ items, scale = 1, backgroundColor = "#000000", style }: IInfiniteMenu) => {
     const { width: screenWidth, height: screenHeight } =
       Dimensions.get("window");
     const centerX = screenWidth / 2;
@@ -135,7 +135,6 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
 
     useFrameCallback((info) => {
       "worklet";
-      // Clamp dt to prevent physics jumps after idle
       const rawDt = info.timeSincePreviousFrame || 16;
       const dt = Math.min(rawDt, 50);
       const ts = dt / 16 + 0.0001;
@@ -338,33 +337,30 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
           {
             backgroundColor,
           },
+          style,
         ]}
       >
-        <View style={styles.container}>
-          <GestureDetector gesture={panGesture}>
-            <Canvas style={styles.canvas}>
-              {discData.map((disc, idx) => (
-                <DiscComponent
-                  key={`disc-${idx}`}
-                  x={disc.screenX}
-                  y={disc.screenY}
-                  radius={disc.radius}
-                  alpha={disc.alpha}
-                  image={loadedImages[disc.itemIndex] || null}
-                />
-              ))}
-            </Canvas>
-          </GestureDetector>
-        </View>
+        <GestureDetector gesture={panGesture}>
+          <Canvas style={styles.canvas}>
+            {discData.map((disc, idx) => (
+              <DiscComponent
+                key={`disc-${idx}`}
+                x={disc.screenX}
+                y={disc.screenY}
+                radius={disc.radius}
+                alpha={disc.alpha}
+                image={loadedImages[disc.itemIndex] || null}
+              />
+            ))}
+          </Canvas>
+        </GestureDetector>
       </GestureHandlerRootView>
     );
   },
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: {},
   canvas: {
     flex: 1,
   },

@@ -15,10 +15,29 @@ ALL_FOLDERS=("react-native" "react-native-usage" "react-native-types")
 upload_file() {
   local file="$1"
   echo "  Uploading $file..."
-  wrangler r2 object put "$BUCKET/$file" \
-    --file "$file" \
-    --content-type "text/plain" \
-    --remote 2>&1 | grep -q "Upload complete" && echo "  Done: $file" || echo "  FAILED: $file"
+
+  # Wait for the file to settle (editors often save atomically; chokidar
+  # can fire while the rename/truncate is still in flight).
+  local prev_size=-1 size
+  for _ in 1 2 3 4 5; do
+    [ -f "$file" ] || { sleep 0.1; continue; }
+    size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo 0)
+    [ "$size" -gt 0 ] && [ "$size" = "$prev_size" ] && break
+    prev_size="$size"
+    sleep 0.1
+  done
+
+  local output
+  if output=$(wrangler r2 object put "$BUCKET/$file" \
+        --file "$file" \
+        --content-type "text/plain" \
+        --remote 2>&1); then
+    echo "  Done: $file"
+  else
+    echo "  FAILED: $file"
+    echo "$output" | sed 's/^/    /'
+    return 1
+  fi
 }
 
 sync_folder() {

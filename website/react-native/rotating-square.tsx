@@ -8,20 +8,10 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
-
+import type { IRotatingSquaresSpinner } from "./types";
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-interface RotatingSquaresSpinnerProps {
-  color?: string;
-  squareSize?: number;
-  spacing?: number;
-  size?: number;
-  duration?: number;
-  repeatCount?: number;
-  style?: ViewStyle;
-}
-
-export const RotatingSquaresSpinner: React.FC<RotatingSquaresSpinnerProps> = ({
+export const RotatingSquaresSpinner: React.FC<IRotatingSquaresSpinner> = ({
   color = "#FF5722",
   squareSize = 10,
   spacing = 20,

@@ -3,7 +3,7 @@ interface Gradient {
   to?: string;
 }
 
-export interface PulsingDotsProps {
+interface IPulsingDots {
   dotCount?: number;
   radius?: number;
   spacing?: number;
@@ -11,3 +11,5 @@ export interface PulsingDotsProps {
   color?: string;
   gradient?: Gradient[];
 }
+
+export type { IPulsingDots };
