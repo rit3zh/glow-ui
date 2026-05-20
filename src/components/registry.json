@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "totalComponents": 127,
+  "totalComponents": 128,
   "categories": [
     "ai",
     "atoms",
@@ -17,7 +17,11 @@
       "category": "molecules",
       "path": "src/components/molecules/accordion",
       "folders": [],
-      "files": ["index.tsx", "presets.ts", "types.ts"]
+      "files": [
+        "index.tsx",
+        "presets.ts",
+        "types.ts"
+      ]
     },
     "action-card": {
       "name": "action-card",
@@ -33,63 +37,94 @@
           ]
         }
       ],
-      "files": ["ActionCard.tsx", "ActionCard.types.ts"]
+      "files": [
+        "ActionCard.tsx",
+        "ActionCard.types.ts"
+      ]
     },
     "animated-chip": {
       "name": "animated-chip",
       "category": "molecules",
       "path": "src/components/molecules/animated-chip",
       "folders": [],
-      "files": ["AnimatedChip.tsx", "Chip.tsx", "Chip.types.ts"]
+      "files": [
+        "AnimatedChip.tsx",
+        "Chip.tsx",
+        "Chip.types.ts"
+      ]
     },
     "animated-curve-text": {
       "name": "animated-curve-text",
       "category": "molecules",
       "path": "src/components/molecules/animated-curve-text",
       "folders": [],
-      "files": ["index.tsx"]
+      "files": [
+        "index.tsx"
+      ]
     },
     "animated-header-scrollview": {
       "name": "animated-header-scrollview",
       "category": "organisms",
       "path": "src/components/organisms/animated-header-scrollview",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "animated-input-bar": {
       "name": "animated-input-bar",
       "category": "base",
       "path": "src/components/base/animated-input-bar",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "animated-masked-text": {
       "name": "animated-masked-text",
       "category": "molecules",
       "path": "src/components/molecules/animated-masked-text",
       "folders": [],
-      "files": ["AnimatedMaskedText.tsx", "AnimatedMaskedText.types.ts"]
+      "files": [
+        "AnimatedMaskedText.tsx",
+        "AnimatedMaskedText.types.ts"
+      ]
     },
     "animated-scroll-progress": {
       "name": "animated-scroll-progress",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/animated-scroll-progress",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "animated-text": {
       "name": "animated-text",
       "category": "organisms",
       "path": "src/components/organisms/animated-text",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "animated-theme-toggle": {
       "name": "animated-theme-toggle",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/animated-theme-toggle",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "apple-intelligence": {
       "name": "apple-intelligence",
@@ -111,63 +146,102 @@
       "category": "organisms",
       "path": "src/components/organisms/aura-lift",
       "folders": [],
-      "files": ["conf.ts", "context.tsx", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "context.tsx",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "aurora": {
       "name": "aurora",
       "category": "molecules",
       "path": "src/components/molecules/aurora",
       "folders": [],
-      "files": ["conf.ts", "const.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "const.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "avatar": {
       "name": "avatar",
       "category": "base",
       "path": "src/components/base/avatar",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "avatar-group": {
       "name": "avatar-group",
       "category": "base",
       "path": "src/components/base/avatar-group",
       "folders": [],
-      "files": ["const.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "badge": {
       "name": "badge",
       "category": "base",
       "path": "src/components/base/badge",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "blur-carousel": {
       "name": "blur-carousel",
       "category": "molecules",
       "path": "src/components/molecules/blur-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "bottom-input-bar": {
       "name": "bottom-input-bar",
       "category": "ai",
       "path": "src/components/ai/bottom-input-bar",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "bottom-sheet": {
       "name": "bottom-sheet",
       "category": "templates",
       "path": "src/components/templates/bottom-sheet",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts", "utils.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts",
+        "utils.ts"
+      ]
     },
     "bottom-sheet-stack": {
       "name": "bottom-sheet-stack",
       "category": "templates",
       "path": "src/components/templates/bottom-sheet-stack",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "Breadcrumbs": {
       "name": "Breadcrumbs",
@@ -185,21 +259,30 @@
           ]
         }
       ],
-      "files": ["BreadcrumbsList.tsx", "types.ts"]
+      "files": [
+        "BreadcrumbsList.tsx",
+        "types.ts"
+      ]
     },
     "button": {
       "name": "button",
       "category": "base",
       "path": "src/components/base/button",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "card": {
       "name": "card",
       "category": "molecules",
       "path": "src/components/molecules/card",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "chat-v1": {
       "name": "chat-v1",
@@ -220,168 +303,254 @@
       "category": "organisms",
       "path": "src/components/organisms/check-box",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "chroma-ring": {
       "name": "chroma-ring",
       "category": "organisms",
       "path": "src/components/organisms/chroma-ring",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "cinematic-carousel": {
       "name": "cinematic-carousel",
       "category": "molecules",
       "path": "src/components/molecules/cinematic-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circle-loader": {
       "name": "circle-loader",
       "category": "molecules",
       "path": "src/components/molecules/circle-loader",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circular-carousel": {
       "name": "circular-carousel",
       "category": "molecules",
       "path": "src/components/molecules/circular-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circular-list": {
       "name": "circular-list",
       "category": "molecules",
       "path": "src/components/molecules/circular-list",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circular-loader": {
       "name": "circular-loader",
       "category": "molecules",
       "path": "src/components/molecules/circular-loader",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circular-progress": {
       "name": "circular-progress",
       "category": "organisms",
       "path": "src/components/organisms/circular-progress",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "circular-text": {
       "name": "circular-text",
       "category": "organisms",
       "path": "src/components/organisms/circular-text",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "countdown": {
       "name": "countdown",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/countdown",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "curved-bottom-tabs": {
       "name": "curved-bottom-tabs",
       "category": "base",
       "path": "src/components/base/curved-bottom-tabs",
       "folders": [],
-      "files": ["helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "curved-marquee": {
       "name": "curved-marquee",
       "category": "organisms",
       "path": "src/components/organisms/curved-marquee",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "dialog": {
       "name": "dialog",
       "category": "organisms",
       "path": "src/components/organisms/dialog",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "disclosure-group": {
       "name": "disclosure-group",
       "category": "molecules",
       "path": "src/components/molecules/disclosure-group",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "dropdown": {
       "name": "dropdown",
       "category": "organisms",
       "path": "src/components/organisms/dropdown",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "dynamic-island": {
       "name": "dynamic-island",
       "category": "molecules",
       "path": "src/components/molecules/dynamic-island",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "dynamic-text": {
       "name": "dynamic-text",
       "category": "molecules",
       "path": "src/components/molecules/dynamic-text",
       "folders": [],
-      "files": ["const.ts", "helpers.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helpers.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "elastic-slider": {
       "name": "elastic-slider",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/elastic-slider",
       "folders": [],
-      "files": ["const.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "empty-state": {
       "name": "empty-state",
       "category": "base",
       "path": "src/components/base/empty-state",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "energy-orb": {
       "name": "energy-orb",
       "category": "organisms",
       "path": "src/components/organisms/energy-orb",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "fade-component": {
       "name": "fade-component",
       "category": "base",
       "path": "src/components/base/fade-component",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "fade-text": {
       "name": "fade-text",
       "category": "organisms",
       "path": "src/components/organisms/fade-text",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "flexi-button": {
       "name": "flexi-button",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/flexi-button",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "flip-card": {
       "name": "flip-card",
       "category": "base",
       "path": "src/components/base/flip-card",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "floating-sheet": {
       "name": "floating-sheet",
@@ -389,12 +558,16 @@
       "path": "src/components/templates/sheet/floating-sheet",
       "folders": [
         {
-          "name": "types",
-          "files": ["FloatingPlayer.types.ts"]
+          "name": "constants",
+          "files": [
+            "sizes/sheetSizes.ts"
+          ]
         },
         {
-          "name": "constants",
-          "files": ["sizes/sheetSizes.ts"]
+          "name": "types",
+          "files": [
+            "FloatingPlayer.types.ts"
+          ]
         },
         {
           "name": "utils",
@@ -410,49 +583,77 @@
           ]
         }
       ],
-      "files": ["FloatingSheet.tsx"]
+      "files": [
+        "FloatingSheet.tsx"
+      ]
     },
     "glow": {
       "name": "glow",
       "category": "base",
       "path": "src/components/base/glow",
       "folders": [],
-      "files": ["helper.ts", "index.tsx", "types.ts", "v.tsx"]
+      "files": [
+        "helper.ts",
+        "index.tsx",
+        "types.ts",
+        "v.tsx"
+      ]
     },
     "gooey-switch": {
       "name": "gooey-switch",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/gooey-switch",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "gooey-text": {
       "name": "gooey-text",
       "category": "molecules",
       "path": "src/components/molecules/gooey-text",
       "folders": [],
-      "files": ["conf.ts", "helpers.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helpers.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "grainy-gradient": {
       "name": "grainy-gradient",
       "category": "organisms",
       "path": "src/components/organisms/grainy-gradient",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "hamburger": {
       "name": "hamburger",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/hamburger",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "horizontal": {
       "name": "horizontal",
       "category": "atoms",
       "path": "src/components/atoms/divider/horizontal",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "infinite-menu": {
       "name": "infinite-menu",
@@ -475,14 +676,24 @@
       "category": "molecules",
       "path": "src/components/molecules/lanyard",
       "folders": [],
-      "files": ["const.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "liquid-metal": {
       "name": "liquid-metal",
       "category": "organisms",
       "path": "src/components/organisms/liquid-metal",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "List": {
       "name": "List",
@@ -501,38 +712,48 @@
           ]
         }
       ],
-      "files": ["List.tsx", "List.types.ts"]
+      "files": [
+        "List.tsx",
+        "List.types.ts"
+      ]
     },
     "marquee": {
       "name": "marquee",
       "category": "base",
       "path": "src/components/base/marquee",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "matched-geometry": {
       "name": "matched-geometry",
       "category": "organisms",
       "path": "src/components/organisms/matched-geometry",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "material-carousel": {
       "name": "material-carousel",
       "category": "molecules",
       "path": "src/components/molecules/material-carousel",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "media-list": {
       "name": "media-list",
       "category": "templates",
       "path": "src/components/templates/media-list",
       "folders": [
-        {
-          "name": "utils",
-          "files": ["chunk.ts", "snap.ts"]
-        },
         {
           "name": "children",
           "files": [
@@ -541,9 +762,19 @@
             "MediaListTitleWrapper.tsx",
             "MediaListWrapper.tsx"
           ]
+        },
+        {
+          "name": "utils",
+          "files": [
+            "chunk.ts",
+            "snap.ts"
+          ]
         }
       ],
-      "files": ["MediaList.tsx", "MediaList.types.ts"]
+      "files": [
+        "MediaList.tsx",
+        "MediaList.types.ts"
+      ]
     },
     "mesh-gradient": {
       "name": "mesh-gradient",
@@ -563,56 +794,70 @@
       "category": "organisms",
       "path": "src/components/organisms/mobile-dock",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts", "utils.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts",
+        "utils.ts"
+      ]
     },
     "morphing-tabbar": {
       "name": "morphing-tabbar",
       "category": "molecules",
       "path": "src/components/molecules/morphing-tabbar",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "orbiting-dots": {
       "name": "orbiting-dots",
       "category": "molecules",
       "path": "src/components/molecules/orbiting-dots",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "otp-input": {
       "name": "otp-input",
       "category": "base",
       "path": "src/components/base/otp-input",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "Pagination": {
       "name": "Pagination",
       "category": "molecules",
       "path": "src/components/molecules/Pagination",
       "folders": [],
-      "files": ["Pagination.tsx", "Pagination.types.ts"]
+      "files": [
+        "Pagination.tsx",
+        "Pagination.types.ts"
+      ]
     },
     "parallax-carousel": {
       "name": "parallax-carousel",
       "category": "molecules",
       "path": "src/components/molecules/parallax-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "parallax-header": {
       "name": "parallax-header",
       "category": "templates",
       "path": "src/components/templates/parallax-header",
       "folders": [
-        {
-          "name": "types",
-          "files": ["index.ts"]
-        },
-        {
-          "name": "constants",
-          "files": ["index.ts"]
-        },
         {
           "name": "components",
           "files": [
@@ -623,8 +868,10 @@
           ]
         },
         {
-          "name": "hooks",
-          "files": ["useAnimatedNavBar.ts", "useAnimatedScrollView.ts"]
+          "name": "constants",
+          "files": [
+            "index.ts"
+          ]
         },
         {
           "name": "helpers",
@@ -633,254 +880,410 @@
             "wrapper/AnimatedScrollViewTitleWrapper.tsx",
             "wrapper/HeaderComponentWrapper.tsx"
           ]
+        },
+        {
+          "name": "hooks",
+          "files": [
+            "useAnimatedNavBar.ts",
+            "useAnimatedScrollView.ts"
+          ]
+        },
+        {
+          "name": "types",
+          "files": [
+            "index.ts"
+          ]
         }
       ],
-      "files": ["ParallaxHeader.props.ts"]
+      "files": [
+        "ParallaxHeader.props.ts"
+      ]
     },
     "picker": {
       "name": "picker",
       "category": "organisms",
       "path": "src/components/organisms/picker",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "pressable": {
       "name": "pressable",
       "category": "atoms",
       "path": "src/components/atoms/pressable",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "progress": {
       "name": "progress",
       "category": "organisms",
       "path": "src/components/organisms/progress",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "property-detail-v1": {
       "name": "property-detail-v1",
       "category": "templates",
       "path": "src/components/templates/property-detail-v1",
       "folders": [],
-      "files": ["index.tsx"]
+      "files": [
+        "index.tsx"
+      ]
     },
     "pulsing-dots": {
       "name": "pulsing-dots",
       "category": "molecules",
       "path": "src/components/molecules/pulsing-dots",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "qr-code": {
       "name": "qr-code",
       "category": "base",
       "path": "src/components/base/qr-code",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "radial-intro": {
       "name": "radial-intro",
       "category": "organisms",
       "path": "src/components/organisms/radial-intro",
       "folders": [],
-      "files": ["config.ts", "index.tsx", "types.ts"]
+      "files": [
+        "config.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "radiant-button": {
       "name": "radiant-button",
       "category": "base",
       "path": "src/components/base/radiant-button",
       "folders": [],
-      "files": ["conf.ts", "helpers.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helpers.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "ripple": {
       "name": "ripple",
       "category": "base",
       "path": "src/components/base/ripple",
       "folders": [],
-      "files": ["helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "rolling-counter": {
       "name": "rolling-counter",
       "category": "organisms",
       "path": "src/components/organisms/rolling-counter",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "rotate-carousel": {
       "name": "rotate-carousel",
       "category": "molecules",
       "path": "src/components/molecules/rotate-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "rotating-square": {
       "name": "rotating-square",
       "category": "molecules",
       "path": "src/components/molecules/rotating-square",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "ruler": {
       "name": "ruler",
       "category": "base",
       "path": "src/components/base/ruler",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "scale-carousel": {
       "name": "scale-carousel",
       "category": "molecules",
       "path": "src/components/molecules/scale-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "scroll-progress": {
       "name": "scroll-progress",
       "category": "molecules",
       "path": "src/components/molecules/scroll-progress",
       "folders": [],
-      "files": ["index.tsx"]
+      "files": [
+        "index.tsx"
+      ]
     },
     "scrollable-search": {
       "name": "scrollable-search",
       "category": "base",
       "path": "src/components/base/scrollable-search",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "search-bar": {
       "name": "search-bar",
       "category": "molecules",
       "path": "src/components/molecules/search-bar",
       "folders": [],
-      "files": ["SearchBar.tsx", "SearchBar.types.ts"]
+      "files": [
+        "SearchBar.tsx",
+        "SearchBar.types.ts"
+      ]
     },
     "seek-bar": {
       "name": "seek-bar",
       "category": "molecules",
       "path": "src/components/molecules/seek-bar",
       "folders": [],
-      "files": ["SeekBar.tsx", "SeekBar.types.ts"]
+      "files": [
+        "SeekBar.tsx",
+        "SeekBar.types.ts"
+      ]
     },
     "segmented-control": {
       "name": "segmented-control",
       "category": "organisms",
       "path": "src/components/organisms/segmented-control",
       "folders": [],
-      "files": ["index.tsx", "presets.ts", "types.ts"]
+      "files": [
+        "index.tsx",
+        "presets.ts",
+        "types.ts"
+      ]
     },
     "settings-v1": {
       "name": "settings-v1",
       "category": "templates",
       "path": "src/components/templates/settings-v1",
       "folders": [],
-      "files": ["components.tsx", "const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "components.tsx",
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "Shimmer": {
       "name": "Shimmer",
       "category": "molecules",
       "path": "src/components/molecules/Shimmer",
       "folders": [],
-      "files": ["Shimmer.tsx", "Shimmer.types.ts", "const.ts"]
+      "files": [
+        "Shimmer.tsx",
+        "Shimmer.types.ts",
+        "const.ts"
+      ]
     },
     "shimmer-wave-text": {
       "name": "shimmer-wave-text",
       "category": "base",
       "path": "src/components/base/shimmer-wave-text",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
+    },
+    "shockwave": {
+      "name": "shockwave",
+      "category": "organisms",
+      "path": "src/components/organisms/shockwave",
+      "folders": [],
+      "files": [
+        "conf.ts",
+        "const.ts",
+        "index.tsx",
+        "types.ts",
+        "utils.ts"
+      ]
     },
     "sign-up-v1": {
       "name": "sign-up-v1",
       "category": "templates",
       "path": "src/components/templates/sign-up-v1",
       "folders": [],
-      "files": ["background-gradient.tsx", "icons.tsx", "index.tsx", "types.ts"]
+      "files": [
+        "background-gradient.tsx",
+        "icons.tsx",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "sign-up-v2": {
       "name": "sign-up-v2",
       "category": "templates",
       "path": "src/components/templates/sign-up-v2",
       "folders": [],
-      "files": ["background-grid.tsx", "index.tsx", "types.ts"]
+      "files": [
+        "background-grid.tsx",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "skia-ripple": {
       "name": "skia-ripple",
       "category": "organisms",
       "path": "src/components/organisms/skia-ripple",
       "folders": [],
-      "files": ["conf.ts", "hook.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "hook.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "spectral-wave": {
       "name": "spectral-wave",
       "category": "organisms",
       "path": "src/components/organisms/spectral-wave",
       "folders": [],
-      "files": ["conf.ts", "const.ts", "index.tsx", "types.ts", "utils.ts"]
+      "files": [
+        "conf.ts",
+        "const.ts",
+        "index.tsx",
+        "types.ts",
+        "utils.ts"
+      ]
     },
     "spin-button": {
       "name": "spin-button",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/spin-button",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "spinner-arc": {
       "name": "spinner-arc",
       "category": "molecules",
       "path": "src/components/molecules/spinner-arc",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "split-view": {
       "name": "split-view",
       "category": "molecules",
       "path": "src/components/molecules/split-view",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "squiggly-slider": {
       "name": "squiggly-slider",
       "category": "molecules",
       "path": "src/components/molecules/squiggly-slider",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "squircle-view": {
       "name": "squircle-view",
       "category": "base",
       "path": "src/components/base/squircle-view",
       "folders": [],
-      "files": ["const.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "stack-aware-tabs": {
       "name": "stack-aware-tabs",
       "category": "base",
       "path": "src/components/base/stack-aware-tabs",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "stack-carousel": {
       "name": "stack-carousel",
       "category": "molecules",
       "path": "src/components/molecules/stack-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "stacked-cards": {
       "name": "stacked-cards",
       "category": "molecules",
       "path": "src/components/molecules/stacked-cards",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "stacked-chips": {
       "name": "stacked-chips",
       "category": "micro-interactions",
       "path": "src/components/micro-interactions/stacked-chips",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "staggered-text": {
       "name": "staggered-text",
@@ -901,21 +1304,30 @@
       "category": "molecules",
       "path": "src/components/molecules/stepper",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "subtitle": {
       "name": "subtitle",
       "category": "base",
       "path": "src/components/base/subtitle",
       "folders": [],
-      "files": ["Subtitle.props.ts", "Subtitle.tsx"]
+      "files": [
+        "Subtitle.props.ts",
+        "Subtitle.tsx"
+      ]
     },
     "tabs": {
       "name": "tabs",
       "category": "base",
       "path": "src/components/base/tabs",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "theme-switch": {
       "name": "theme-switch",
@@ -936,21 +1348,32 @@
       "category": "ai",
       "path": "src/components/ai/thinking-state",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "tilt-carousel": {
       "name": "tilt-carousel",
       "category": "molecules",
       "path": "src/components/molecules/tilt-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "title": {
       "name": "title",
       "category": "base",
       "path": "src/components/base/title",
       "folders": [],
-      "files": ["const.ts", "helpers.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "helpers.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "Toast": {
       "name": "Toast",
@@ -959,21 +1382,35 @@
       "folders": [
         {
           "name": "context",
-          "files": ["ToastContext.tsx"]
+          "files": [
+            "ToastContext.tsx"
+          ]
         },
         {
           "name": "hooks",
-          "files": ["useToast.ts"]
+          "files": [
+            "useToast.ts"
+          ]
         }
       ],
-      "files": ["Toast.tsx", "Toast.types.ts", "ToastViewPort.tsx", "index.tsx"]
+      "files": [
+        "Toast.tsx",
+        "Toast.types.ts",
+        "ToastViewPort.tsx",
+        "index.tsx"
+      ]
     },
     "unstable_aurora": {
       "name": "unstable_aurora",
       "category": "organisms",
       "path": "src/components/organisms/unstable_aurora",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "unstable_infinite-menu": {
       "name": "unstable_infinite-menu",
@@ -997,73 +1434,100 @@
       "category": "organisms",
       "path": "src/components/organisms/unstable_metallic-paint",
       "folders": [],
-      "files": ["const.ts", "index.tsx", "types.ts"]
+      "files": [
+        "const.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "unstable_orb": {
       "name": "unstable_orb",
       "category": "organisms",
       "path": "src/components/organisms/unstable_orb",
       "folders": [],
-      "files": ["conf.ts", "helper.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "helper.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "unstable_siri_orb": {
       "name": "unstable_siri_orb",
       "category": "organisms",
       "path": "src/components/organisms/unstable_siri_orb",
       "folders": [],
-      "files": ["conf.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "v1": {
       "name": "v1",
       "category": "screens",
       "path": "src/components/screens/empty-state/v1",
       "folders": [],
-      "files": ["v1.tsx"]
+      "files": [
+        "v1.tsx"
+      ]
     },
     "vertical": {
       "name": "vertical",
       "category": "atoms",
       "path": "src/components/atoms/divider/vertical",
       "folders": [],
-      "files": ["index.tsx"]
+      "files": [
+        "index.tsx"
+      ]
     },
     "vertical-flow-carousel": {
       "name": "vertical-flow-carousel",
       "category": "molecules",
       "path": "src/components/molecules/vertical-flow-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "vertical-page-carousel": {
       "name": "vertical-page-carousel",
       "category": "molecules",
       "path": "src/components/molecules/vertical-page-carousel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "vertical-wheel": {
       "name": "vertical-wheel",
       "category": "molecules",
       "path": "src/components/molecules/vertical-wheel",
       "folders": [],
-      "files": ["index.tsx", "types.ts"]
+      "files": [
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "wave-scrawler": {
       "name": "wave-scrawler",
       "category": "organisms",
       "path": "src/components/organisms/wave-scrawler",
       "folders": [],
-      "files": ["conf.ts", "hooks.ts", "index.tsx", "types.ts"]
+      "files": [
+        "conf.ts",
+        "hooks.ts",
+        "index.tsx",
+        "types.ts"
+      ]
     },
     "whats-new": {
       "name": "whats-new",
       "category": "templates",
       "path": "src/components/templates/whats-new",
       "folders": [
-        {
-          "name": "context",
-          "files": ["WhatsNewContext.ts"]
-        },
         {
           "name": "children",
           "files": [
@@ -1074,9 +1538,18 @@
             "WhatsNewTrigger.tsx",
             "WhatsNewWrapper.tsx"
           ]
+        },
+        {
+          "name": "context",
+          "files": [
+            "WhatsNewContext.ts"
+          ]
         }
       ],
-      "files": ["WhatsNew.tsx", "WhatsNew.type.ts"]
+      "files": [
+        "WhatsNew.tsx",
+        "WhatsNew.type.ts"
+      ]
     }
   }
 }
