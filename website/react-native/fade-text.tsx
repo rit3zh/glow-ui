@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import type { AnimatedWordProps, FadeTextProps } from "./types";
+import { Platform } from "react-native";
 
 const AnimatedBlurView =
   Animated.createAnimatedComponent<BlurViewProps>(BlurView);
@@ -141,8 +142,35 @@ const AnimatedWord: React.FC<AnimatedWordProps> = memo<AnimatedWordProps>(
       };
     });
 
+    const animatedAndroidBlurViewStylez = useAnimatedStyle<
+      Pick<ViewStyle, "filter">
+    >(() => {
+      const blur = withSpring<number>(
+        interpolate(
+          animationValue.value,
+          [0, 0.3, 1],
+          blurIntensity,
+          Extrapolation.CLAMP,
+        ),
+      );
+
+      return {
+        filter: [
+          {
+            blur,
+          },
+        ],
+      };
+    });
+
     return (
-      <Animated.View style={[styles.wordContainer, animatedStyle]}>
+      <Animated.View
+        style={[
+          styles.wordContainer,
+          animatedStyle,
+          animatedAndroidBlurViewStylez,
+        ]}
+      >
         <Text
           style={[
             styles.word,
@@ -157,11 +185,13 @@ const AnimatedWord: React.FC<AnimatedWordProps> = memo<AnimatedWordProps>(
         >
           {word}{" "}
         </Text>
-        <AnimatedBlurView
-          style={[StyleSheet.absoluteFillObject]}
-          animatedProps={blurAnimatedProps}
-          tint={blurTint}
-        />
+        {Platform.OS === "ios" && (
+          <AnimatedBlurView
+            style={[StyleSheet.absoluteFillObject]}
+            animatedProps={blurAnimatedProps}
+            tint={blurTint}
+          />
+        )}
       </Animated.View>
     );
   },

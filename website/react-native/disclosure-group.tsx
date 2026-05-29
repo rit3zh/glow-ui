@@ -8,6 +8,7 @@ import React, {
   memo,
 } from "react";
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -182,6 +183,11 @@ const DisclosureGroupItemsBase: React.FC<IDisclosureGroupItems> = ({
   const animatedContainerStyle = useAnimatedStyle<ViewStyle>(() => {
     const targetHeight = Math.min(contentHeight || 0, maxHeight);
     return {
+      filter: [
+        {
+          blur: blurIntensity.value,
+        },
+      ],
       height: interpolate(
         animationProgress.value,
         [0, 1],
@@ -239,12 +245,14 @@ const DisclosureGroupItemsBase: React.FC<IDisclosureGroupItems> = ({
         style={[styles.itemsContainer, animatedContainerStyle, style]}
       >
         {children}
-        <AnimatedBlurView
-          tint={blurTint}
-          animatedProps={animatedBlurViewProps}
-          style={StyleSheet.absoluteFillObject}
-          pointerEvents="none"
-        />
+        {Platform.OS === "ios" && (
+          <AnimatedBlurView
+            tint={blurTint}
+            animatedProps={animatedBlurViewProps}
+            style={StyleSheet.absoluteFillObject}
+            pointerEvents="none"
+          />
+        )}
       </Animated.View>
     );
   }

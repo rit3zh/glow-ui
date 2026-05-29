@@ -21,6 +21,7 @@ import * as Haptics from "expo-haptics";
 import { BlurView, type BlurViewProps } from "expo-blur";
 import { scheduleOnRN } from "react-native-worklets";
 import type { IPicker } from "./types";
+import { Platform } from "react-native";
 
 const AnimatedBlurView =
   Animated.createAnimatedComponent<Partial<BlurViewProps>>(BlurView);
@@ -196,18 +197,21 @@ export const Picker: React.FC<IPicker> & React.FunctionComponent<IPicker> =
               >
                 {item}
               </Animated.Text>
-              <AnimatedBlurView
-                animatedProps={blurAnimatedProps}
-                tint="light"
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    overflow: "hidden",
-                    borderRadius: 99,
-                  },
-                ]}
-                pointerEvents="none"
-              />
+
+              {Platform.OS === "ios" && (
+                <AnimatedBlurView
+                  animatedProps={blurAnimatedProps}
+                  tint="light"
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      overflow: "hidden",
+                      borderRadius: 99,
+                    },
+                  ]}
+                  pointerEvents="none"
+                />
+              )}
             </Animated.View>
           );
         },

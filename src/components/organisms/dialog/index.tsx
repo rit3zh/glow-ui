@@ -68,7 +68,7 @@ export const Dialog: DialogComponent = ({ children }: DialogProps) => {
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && child.type === DialogContent) {
           return React.cloneElement(child, {
-            ...child.props,
+            ...child.props!,
             isAnimating,
             setIsAnimating,
           } as any);
@@ -101,7 +101,7 @@ const DialogBackdrop: React.FC<DialogBackdropProps> = ({
   backgroundColor = "rgba(0, 0, 0, 0.5)",
   blurType = "dark",
 }) => {
-  const { animationProgress } = useDialogContext();
+  const { animationProgress, isOpen } = useDialogContext();
 
   const backdropAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -130,7 +130,10 @@ const DialogBackdrop: React.FC<DialogBackdropProps> = ({
   });
 
   return (
-    <Animated.View style={[styles.backdrop, backdropAnimatedStyle]}>
+    <Animated.View
+      style={[styles.backdrop, backdropAnimatedStyle]}
+      pointerEvents={isOpen ? "auto" : "none"}
+    >
       <AnimatedBlurView
         style={StyleSheet.absoluteFill}
         animatedProps={backdropBlurAnimatedProps}
@@ -246,8 +249,29 @@ const DialogContent: React.FC<ExtendedDialogContentProps> = ({
           [0.85, 1],
           Extrapolation.CLAMP,
         );
-
+    const blur = externalIsAnimating
+      ? withSpring(
+          interpolate(
+            animationProgress.value,
+            [0, 0.5, 1],
+            [15, 10, 0],
+            Extrapolation.CLAMP,
+          ),
+        )
+      : withSpring(
+          interpolate(
+            animationProgress.value,
+            [0, 0.5, 1],
+            [3, 1.5, 0],
+            Extrapolation.CLAMP,
+          ),
+        );
     return {
+      filter: [
+        {
+          blur,
+        },
+      ],
       opacity,
       transform: [
         { perspective: 1000 },

@@ -5,6 +5,7 @@ import {
   type LayoutChangeEvent,
   type ViewStyle,
   type PressableProps,
+  Platform,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import Animated, {
@@ -124,6 +125,25 @@ const FlexiButton: React.FC<FlexiButtonProps> = ({
     };
   });
 
+  const animatedBlurViewStylez = useAnimatedStyle<ViewStyle>(() => {
+    const blur = withSpring<number>(
+      interpolate(
+        progress.value,
+        [0, 0.5, 1],
+        [0, 4.5, 0],
+        Extrapolation.CLAMP,
+      ),
+    );
+
+    return {
+      filter: [
+        {
+          blur,
+        },
+      ],
+    };
+  });
+
   return (
     <AnimatedPressable
       onPress={handlePress}
@@ -136,7 +156,12 @@ const FlexiButton: React.FC<FlexiButtonProps> = ({
         },
       ]}
     >
-      <Animated.View style={styles.content}>
+      <Animated.View
+        style={[
+          styles.content,
+          Platform.OS === "android" && animatedBlurViewStylez,
+        ]}
+      >
         <Animated.View style={[styles.iconContainer, animatedIconStyle]}>
           {typeof icon === "function" ? (
             icon()
@@ -150,11 +175,13 @@ const FlexiButton: React.FC<FlexiButtonProps> = ({
           </Text>
         </Animated.View>
       </Animated.View>
-      <AnimatedBlurView
-        tint="dark"
-        style={[StyleSheet.absoluteFillObject]}
-        animatedProps={animatedBlurProps}
-      />
+      {Platform.OS === "ios" && (
+        <AnimatedBlurView
+          tint="dark"
+          style={[StyleSheet.absoluteFillObject]}
+          animatedProps={animatedBlurProps}
+        />
+      )}
     </AnimatedPressable>
   );
 };

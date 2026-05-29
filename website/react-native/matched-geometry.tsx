@@ -5,6 +5,7 @@ import {
   Pressable,
   Modal,
   type ViewStyle,
+  Platform,
 } from "react-native";
 import type { LayoutMeasurement, IMatchedGeometry } from "./types";
 import Animated, {
@@ -258,7 +259,11 @@ export const MatchedGeometry: React.FC<IMatchedGeometry> &
                     <BlurView
                       experimentalBlurMethod="dimezisBlurView"
                       intensity={50}
-                      tint="default"
+                      tint={
+                        Platform.OS === "android"
+                          ? "systemChromeMaterialDark"
+                          : "default"
+                      }
                       style={[
                         StyleSheet.absoluteFill,
                         {

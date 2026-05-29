@@ -1,4 +1,10 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 import React from "react";
 import { CircularCarouselItemProps, CircularCarouselProps } from "./types";
 import { BlurView, type BlurViewProps } from "expo-blur";
@@ -10,6 +16,7 @@ import Animated, {
   Extrapolation,
   useAnimatedProps,
   useDerivedValue,
+  withSpring,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
@@ -100,11 +107,33 @@ const CarouselItem = <ItemT,>({
     };
   });
 
+  const animatedBlurViewStylez = useAnimatedStyle<ViewStyle>(() => {
+    const blurIntensity = withSpring(
+      interpolate(
+        scrollX.value,
+        inputRange,
+        [4, 8, 0, 8, 4],
+        Extrapolation.CLAMP,
+      ),
+    );
+
+    return {
+      filter: [
+        {
+          blur: blurIntensity,
+        },
+      ],
+    };
+  });
+
   return (
     <Animated.View
       style={[
         styles.itemContainer,
         animatedStyle,
+
+        Platform.OS === "android" && animatedBlurViewStylez,
+
         { width: itemWidth, marginHorizontal: spacing / 2 },
         {
           marginRight:
@@ -116,12 +145,13 @@ const CarouselItem = <ItemT,>({
     >
       <View style={styles.contentWrapper}>
         {renderItem({ item, index })}
-
-        <AnimatedBlurView
-          animatedProps={animatedBlurProps}
-          style={[StyleSheet.absoluteFill, styles.blurOverlay]}
-          tint="prominent"
-        />
+        {Platform.OS === "ios" && (
+          <AnimatedBlurView
+            animatedProps={animatedBlurProps}
+            style={[StyleSheet.absoluteFill, styles.blurOverlay]}
+            tint="prominent"
+          />
+        )}
       </View>
     </Animated.View>
   );

@@ -1,15 +1,9 @@
 import React, { memo, useMemo } from "react";
-import {
-  StyleSheet,
-  Image,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  type ViewStyle,
-  ImageProps,
-} from "react-native";
+import { StyleSheet, Image, type ViewStyle, ImageProps } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -145,9 +139,9 @@ const MaterialCarousel: React.FC<IMaterialCarousel> &
       />
     );
 
-    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      scrollX.value = e.nativeEvent.contentOffset.x;
-    };
+    const onScroll = useAnimatedScrollHandler((event) => {
+      scrollX.value = event.contentOffset.x;
+    });
 
     return (
       <Animated.FlatList

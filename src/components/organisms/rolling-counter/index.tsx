@@ -62,7 +62,21 @@ const CounterDigit: FC<IReusableDigit> = memo<IReusableDigit>(
         });
 
         return {
-          transform: [{ translateY: slideY.value }],
+          transform: [
+            { translateY: slideY.value },
+            {
+              scaleY: withSpring(
+                interpolate(
+                  Math.abs(slideY.value - targetY),
+                  [0, height],
+                  [1, 0.85],
+                ),
+                {
+                  ...springConfig,
+                },
+              ),
+            },
+          ],
         };
       },
     );
@@ -92,7 +106,7 @@ const CounterDigit: FC<IReusableDigit> = memo<IReusableDigit>(
           {
             blur: isMoving
               ? withSpring<number>(
-                  interpolate(delta, [0, height], [0, 1.95]),
+                  interpolate(delta, [0, height], [0, 1.15]),
                   {},
                 )
               : 0,

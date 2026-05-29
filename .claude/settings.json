@@ -12,7 +12,18 @@
       "Bash(bun scripts/sync-website.ts --dry)",
       "Bash(./scripts/sync-r2.sh react-native-types/morph-loader.ts)",
       "Bash(bash -c ' *)",
-      "Bash(xargs -I {} sh -c 'echo \"=== {} ===\"; grep -E \"export \\(type|interface\\)\" {}')"
+      "Bash(xargs -I {} sh -c 'echo \"=== {} ===\"; grep -E \"export \\(type|interface\\)\" {}')",
+      "Bash(yes)",
+      "Bash(~/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager \"ndk;27.1.12297006\")",
+      "Bash(echo \"exit:$?\")",
+      "Bash(node -e \"console.log\\(process.platform, process.arch\\)\")",
+      "Bash(node_modules/.bin/workerd --version)",
+      "Bash(node_modules/@cloudflare/workerd-darwin-arm64/bin/workerd --version)",
+      "Bash(node -e \"console.log\\(require\\('workerd'\\).default || require\\('workerd'\\)\\)\")",
+      "Bash(chmod +x /Users/rit3zhcx/Desktop/reacticx/website/scripts/sync-watch.sh)",
+      "Bash(./scripts/sync-watch.sh)",
+      "Bash(pkill -f \"sync-watch.sh\")",
+      "Bash(pkill -f \"node_modules/.bin/chokidar\")"
     ]
   }
 }

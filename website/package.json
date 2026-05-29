@@ -14,7 +14,9 @@
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
 		"sync-r2": "./scripts/sync-r2.sh",
 		"sync-r2:folder": "./scripts/sync-r2.sh --folder",
-		"sync-r2:watch": "chokidar 'react-native/**' 'react-native-usage/**' 'react-native-types/**' --event add --event change -c './scripts/sync-r2.sh {path}'"
+		"sync-r2:watch": "chokidar 'react-native/**' 'react-native-usage/**' 'react-native-types/**' --event add --event change -c './scripts/sync-r2.sh {path}'",
+		"sync-src:watch": "cd .. && chokidar 'src/components/**/*.ts' 'src/components/**/*.tsx' 'examples/**/*.tsx' --event add --event change -c 'bun scripts/sync-website.ts --changed'",
+		"sync-r2:watch:all": "./scripts/sync-watch.sh"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.17.1",

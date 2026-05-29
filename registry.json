@@ -558,15 +558,15 @@
       "path": "src/components/templates/sheet/floating-sheet",
       "folders": [
         {
-          "name": "constants",
-          "files": [
-            "sizes/sheetSizes.ts"
-          ]
-        },
-        {
           "name": "types",
           "files": [
             "FloatingPlayer.types.ts"
+          ]
+        },
+        {
+          "name": "constants",
+          "files": [
+            "sizes/sheetSizes.ts"
           ]
         },
         {
@@ -755,19 +755,19 @@
       "path": "src/components/templates/media-list",
       "folders": [
         {
+          "name": "utils",
+          "files": [
+            "chunk.ts",
+            "snap.ts"
+          ]
+        },
+        {
           "name": "children",
           "files": [
             "MediaListSubtitle.tsx",
             "MediaListTitle.tsx",
             "MediaListTitleWrapper.tsx",
             "MediaListWrapper.tsx"
-          ]
-        },
-        {
-          "name": "utils",
-          "files": [
-            "chunk.ts",
-            "snap.ts"
           ]
         }
       ],
@@ -871,12 +871,9 @@
       "path": "src/components/templates/parallax-header",
       "folders": [
         {
-          "name": "components",
+          "name": "types",
           "files": [
-            "AnimatedHeader.tsx",
-            "AnimatedNavBar.tsx",
-            "AnimatedScrollView.tsx",
-            "AnimatedScrollViewTitle.tsx"
+            "index.ts"
           ]
         },
         {
@@ -886,11 +883,12 @@
           ]
         },
         {
-          "name": "helpers",
+          "name": "components",
           "files": [
-            "header/HeaderNavBar.tsx",
-            "wrapper/AnimatedScrollViewTitleWrapper.tsx",
-            "wrapper/HeaderComponentWrapper.tsx"
+            "AnimatedHeader.tsx",
+            "AnimatedNavBar.tsx",
+            "AnimatedScrollView.tsx",
+            "AnimatedScrollViewTitle.tsx"
           ]
         },
         {
@@ -901,9 +899,11 @@
           ]
         },
         {
-          "name": "types",
+          "name": "helpers",
           "files": [
-            "index.ts"
+            "header/HeaderNavBar.tsx",
+            "wrapper/AnimatedScrollViewTitleWrapper.tsx",
+            "wrapper/HeaderComponentWrapper.tsx"
           ]
         }
       ],
@@ -1541,6 +1541,12 @@
       "path": "src/components/templates/whats-new",
       "folders": [
         {
+          "name": "context",
+          "files": [
+            "WhatsNewContext.ts"
+          ]
+        },
+        {
           "name": "children",
           "files": [
             "WhatsNewButton.tsx",
@@ -1549,12 +1555,6 @@
             "WhatsNewTitle.tsx",
             "WhatsNewTrigger.tsx",
             "WhatsNewWrapper.tsx"
-          ]
-        },
-        {
-          "name": "context",
-          "files": [
-            "WhatsNewContext.ts"
           ]
         }
       ],

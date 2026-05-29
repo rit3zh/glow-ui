@@ -9,6 +9,7 @@ import {
   withDecay,
   withSpring,
   interpolate,
+  interpolateColor,
   Extrapolation,
   withTiming,
 } from "react-native-reanimated";
@@ -117,7 +118,7 @@ const Tick = ({
   });
 
   const tickY2 = useDerivedValue<number>(() => {
-    return tickY1.value + animatedTickHeight.value;
+    return withSpring(tickY1.value + animatedTickHeight.value);
   });
 
   const strokeWidth = useDerivedValue<number>(() => {
@@ -131,7 +132,11 @@ const Tick = ({
     return baseWidth + extraWidth;
   });
   const tickColorAnimated = useDerivedValue<string>(() => {
-    return proximity.value > 0.4 ? activeTickColor : tickColor;
+    return interpolateColor(
+      proximity.value,
+      [0, 0.4, 1],
+      [tickColor, tickColor, activeTickColor],
+    );
   });
 
   return (

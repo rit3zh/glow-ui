@@ -170,29 +170,7 @@ export const HeaderDemo: React.FC = (): React.ReactNode => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
 
-  const videoSource = useVideoPlayer(
-    require("@/assets/video/video-artist.mp4"),
-    (player: VideoPlayer) => {
-      player.loop = true;
-      player.volume = 0;
-      player.play();
-    },
-  );
-
   const router: Router = useRouter() as Router;
-
-  const _ = useEvent<
-    VideoPlayerEvents,
-    "playingChange",
-    (payload: PlayingChangeEventPayload) => void,
-    {
-      isPlaying: boolean;
-      oldIsPlaying: boolean;
-    }
-  >(videoSource, "playingChange", {
-    isPlaying: videoSource.playing,
-    oldIsPlaying: videoSource.playing,
-  });
 
   const { width } = useWindowDimensions();
 
@@ -351,14 +329,6 @@ export const HeaderDemo: React.FC = (): React.ReactNode => {
         topBarHeight={100}
         renderHeaderComponent={() => (
           <HeaderComponentWrapper useGradient={false}>
-            <VideoView
-              style={styles.videoContainer}
-              contentFit="cover"
-              player={videoSource}
-              nativeControls={false}
-              allowsPictureInPicture={false}
-              startsPictureInPictureAutomatically={false}
-            />
             <LinearGradient
               colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,0.95)"]}
               style={styles.videoOverlay}

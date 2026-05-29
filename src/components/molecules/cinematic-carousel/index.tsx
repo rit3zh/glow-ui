@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import { CinematicCarouselItemProps, CinematicCarouselProps } from "./types";
-import { BlurView } from "@sbaiahmed1/react-native-blur";
+import { BlurView } from "expo-blur";
 import Animated, {
   interpolate,
   useAnimatedScrollHandler,
@@ -75,7 +75,19 @@ const CarouselItem = <ItemT,>({
       Extrapolation.CLAMP,
     );
 
+    const blurIntensity = interpolate(
+      scrollX.value,
+      inputRange,
+      [5, 0, 5],
+      Extrapolation.CLAMP,
+    );
+
     return {
+      filter: [
+        {
+          blur: blurIntensity,
+        },
+      ],
       transform: [
         { perspective: 400 },
         { rotateY: `${rotateY}deg` },
@@ -102,7 +114,7 @@ const CarouselItem = <ItemT,>({
     );
 
     return {
-      blurAmount: blurIntensity,
+      intensity: blurIntensity,
     };
   });
 
@@ -112,12 +124,15 @@ const CarouselItem = <ItemT,>({
     >
       <View style={styles.contentWrapper}>
         {renderItem({ item, index })}
-        <AnimatedBlurView
-          style={[StyleSheet.absoluteFillObject, styles.blurOverlay]}
-          blurType="regular"
-          animatedProps={animatedBlurProps}
-          // reducedTransparencyFallbackColor=""
-        />
+
+        {Platform.OS === "ios" && (
+          <AnimatedBlurView
+            style={[StyleSheet.absoluteFillObject, styles.blurOverlay]}
+            tint="regular"
+            animatedProps={animatedBlurProps}
+            // reducedTransparencyFallbackColor=""
+          />
+        )}
       </View>
     </Animated.View>
   );

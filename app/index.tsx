@@ -1,52 +1,61 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import MorphLoader from "@/components/organisms/morph-loader";
+import { View, StyleSheet, Text } from "react-native";
+import { useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Picker } from "@/components/organisms/picker";
+import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
 
-export default function MorphLoaderExample() {
+export default function App() {
+  const [selected, setSelected] = useState("Day");
+  const [fontLoaded] = useFonts({
+    SfProRounded: require("@/assets/fonts/sf-pro-rounded.ttf"),
+    HelveticaNowDisplay: require("@/assets/fonts/HelveticaNowDisplayMedium.ttf"),
+  });
+
   return (
-    <View style={styles.container}>
-      <MorphLoader
-        size={120}
-        color="#FF5722"
-        rotationDuration={1000}
-        morphDuration={1200}
-      />
-    </View>
+    <GestureHandlerRootView style={styles.container}>
+      <StatusBar style="light" />
+
+      <Text
+        style={[styles.label, fontLoaded && { fontFamily: "SfProRounded" }]}
+      >
+        Select a time
+      </Text>
+
+      <View style={styles.pickerWrapper}>
+        <Picker
+          items={["Day", "Afternoon", "Evening", "Night"]}
+          backgroundColor="#000"
+          hapticFeedback={true}
+          onItemChange={(item) => setSelected(item)}
+        />
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
-    justifyContent: "center",
+    backgroundColor: "#000",
     alignItems: "center",
+    // justifyContent: "cen1ter",
+    paddingHorizontal: 50,
+    marginTop: 90,
   },
-  card: {
-    width: 320,
-    height: 420,
-    borderRadius: 24,
-    overflow: "hidden",
-    bottom: 150,
-    backgroundColor: "#1a1a1a",
-  },
-  scrawler: {
-    flex: 1,
-  },
-  dots: {
+  label: {
+    color: "#666",
+    fontSize: 16,
     position: "absolute",
-    bottom: 16,
-    alignSelf: "center",
-    flexDirection: "row",
-    gap: 6,
+    top: 70,
+    zIndex: 222,
   },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "rgba(255,255,255,0.4)",
+  selected: {
+    color: "#fff",
+    fontSize: 48,
+    marginBottom: 40,
   },
-  dotActive: {
-    backgroundColor: "#fff",
+  pickerWrapper: {
+    width: "100%",
   },
 });

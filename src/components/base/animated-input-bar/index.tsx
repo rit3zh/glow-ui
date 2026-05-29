@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextStyle,
   StyleProp,
+  Platform,
 } from "react-native";
 import Animated, {
   withDelay,
@@ -234,15 +235,17 @@ const AnimatedInput: React.FC<IAnimatedInput> &
               style={[styles.character, placeholderStyle] as any}
             />
           )}
-          <AnimatedBlurView
-            style={[
-              StyleSheet.absoluteFillObject,
-              {
-                overflow: "hidden",
-              },
-            ]}
-            animatedProps={animatedBlurViewProps}
-          />
+          {Platform.OS === "ios" && (
+            <AnimatedBlurView
+              style={[
+                StyleSheet.absoluteFillObject,
+                {
+                  overflow: "hidden",
+                },
+              ]}
+              animatedProps={animatedBlurViewProps}
+            />
+          )}
           <TextInput
             style={[styles.input, inputStyle]}
             value={inputValue}
