@@ -1,7 +1,7 @@
 import { Skia } from "@shopify/react-native-skia";
 import { Easing, type EasingFunction } from "react-native-reanimated";
 
-import { SHAPES } from "./config";
+import { DEFAULT_SHAPE_KEYS, SHAPES } from "./config";
 
 const POINT_PAIRS = 80;
 const NORM_BOX = 100;
@@ -104,7 +104,7 @@ const buildFlatShapes = <T extends string>(shapes: readonly T[]): number[] => {
 };
 
 const defaultShapes: readonly string[] = Object.freeze(
-  Object.values({ ...SHAPES }),
+  DEFAULT_SHAPE_KEYS.map((key) => SHAPES[key]),
 );
 const DEFAULT_FLAT: number[] = buildFlatShapes<string>(defaultShapes);
 

@@ -42,6 +42,33 @@ full: true
 
 <ExampleComponentSource name="morph-loader" />
 
+### Shapes
+
+By default the loader cycles through `4-sided-cookie`, `7-sided-cookie`, `oval`,
+`pentagon`, `pill`, `soft-burst` and `very-sunny`. Pass `shapes` to choose your
+own sequence from the exported `SHAPES` map:
+
+```tsx
+import { MorphLoader, SHAPES } from "@/components/organisms/morph-loader";
+
+<MorphLoader
+  shapes={[SHAPES["clover-4"], SHAPES.flower, SHAPES.burst, SHAPES.gem]}
+/>;
+```
+
+The full set of Material 3 expressive shapes:
+
+| | | | |
+| --- | --- | --- | --- |
+| `4-sided-cookie` | `6-sided-cookie` | `7-sided-cookie` | `9-sided-cookie` |
+| `12-sided-cookie` | `burst` | `soft-burst` | `sunny` |
+| `very-sunny` | `clover-4` | `clover-8` | `flower` |
+| `triangle` | `diamond` | `square` | `pentagon` |
+| `gem` | `oval` | `pill` | |
+
+Any two of them morph into each other cleanly. You can also pass your own shape
+as either an SVG path string or a flat `"x y x y ..."` point list.
+
 ### Props
 
 <AutoTypeTable path="react-native-types/morph-loader.ts" name="IMorphLoader" />
