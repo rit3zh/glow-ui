@@ -8,6 +8,7 @@ import {
   TextIcon,
 } from "lucide-react";
 import { cn } from "../lib/cn";
+import { siteConfig } from "@/app/config/site";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
 import { buttonVariants } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -78,8 +79,14 @@ export function ViewOptions({
   githubUrl: string;
 }) {
   const items = useMemo(() => {
-    const pageUrl =
-      typeof window !== "undefined" ? window.location.href : "loading";
+    // Derive the page URL from `markdownUrl` instead of reading
+    // `window.location.href`. During a client-side route change the browser URL
+    // is only updated after the new page has rendered, so reading it here would
+    // capture the previously visited page.
+    const pageUrl = new URL(
+      markdownUrl.replace(/\.mdx$/, ""),
+      siteConfig.url,
+    ).toString();
     const q = `I'm reading the Reacticx documentation at ${pageUrl}. Reacticx is a React Native UI component library built with Reanimated, Skia, and Expo. Please read the page and help me understand: (1) what this component does, (2) how to install and set it up, (3) the available props and configuration options, (4) example usage patterns, and (5) any important caveats or platform-specific notes. Feel free to ask me follow-up questions about my specific use case.`;
 
     return [
