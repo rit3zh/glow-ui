@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -12,7 +12,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  type SharedValue,
 } from "react-native-reanimated";
 import Svg, {
   Circle,
@@ -26,6 +25,7 @@ import type {
   BackgroundCurveProps,
   CurvedBottomTabsProps,
   FloatingButtonComponentProps,
+  ShadowStyle,
   StyleConfig,
   Tab,
   CurvedTabBarNavigationProps,
@@ -194,6 +194,96 @@ const BackgroundCurve: React.FC<BackgroundCurveProps> =
       );
     },
   );
+interface TabItemProps {
+  tab: Tab;
+  index: number;
+  isActive: boolean;
+  onPress: (index: number, tab: Tab) => void;
+  styles: ReturnType<typeof createStyles>;
+  gradient: readonly [string, string];
+  activeColor: string;
+  labelColor: string;
+  buttonScale: number;
+  shadow: ShadowStyle;
+}
+
+/**
+ * A single tab owns its float animation so the number of hooks the tab bar
+ * runs does not depend on how many tabs it was given.
+ */
+const TabItem: React.FC<TabItemProps> = memo<TabItemProps>(
+  ({
+    tab,
+    index,
+    isActive,
+    onPress,
+    styles,
+    gradient,
+    activeColor,
+    labelColor,
+    buttonScale,
+    shadow,
+  }: TabItemProps) => {
+    const translateY = useSharedValue<number>(0);
+
+    useEffect(() => {
+      translateY.value = withSpring<number>(
+        isActive ? -VIEWPORT_HEIGHT * 4.2 : 0,
+        {
+          damping: 10,
+          stiffness: 100,
+          mass: 0.5,
+        },
+      );
+    }, [isActive, translateY]);
+
+    const animatedTabStyle = useAnimatedStyle<ViewStyle>(() => ({
+      transform: [{ translateY: translateY.value }],
+    }));
+
+    const handlePress = (): void => {
+      onPress(index, tab);
+    };
+
+    return (
+      <Animated.View style={[styles.tabWrapper, animatedTabStyle]}>
+        <TouchableOpacity
+          onPress={handlePress}
+          style={styles.tabTouchable}
+          activeOpacity={0.9}
+        >
+          {isActive ? (
+            <FloatingButtonComponent
+              icon={tab.icon}
+              tintColor={activeColor}
+              gradient={gradient}
+              scale={buttonScale}
+              shadow={shadow}
+              badge={tab.badge}
+            />
+          ) : (
+            <>
+              <View style={styles.iconWrapper}>
+                {tab.icon}
+                {tab.badge !== undefined && tab.badge > 0 && (
+                  <View style={styles.badgeContainer}>
+                    <Text style={styles.badgeLabel}>
+                      {tab.badge > 99 ? "99+" : tab.badge.toString()}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <Text style={[styles.tabLabel, { color: labelColor }]}>
+                {tab.title}
+              </Text>
+            </>
+          )}
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  },
+);
+
 const CurvedBottomTabsCore: React.FC<CurvedBottomTabsProps> =
   memo<CurvedBottomTabsProps>(
     ({
@@ -221,9 +311,6 @@ const CurvedBottomTabsCore: React.FC<CurvedBottomTabsProps> =
       const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 
       const curvePosition = useSharedValue<number>(0);
-      const floatingAnimations = useRef<SharedValue<number>[]>(
-        tabs.map(() => useSharedValue<number>(0)),
-      ).current;
 
       const processedGradient = processGradient<string[]>(gradient);
 
@@ -254,19 +341,6 @@ const CurvedBottomTabsCore: React.FC<CurvedBottomTabsProps> =
           stiffness: animation.stiffness,
           mass: animation.mass,
         });
-
-        floatingAnimations.forEach(
-          (anim: SharedValue<number>, index: number) => {
-            anim.value = withSpring<number>(
-              index === targetIndex ? -VIEWPORT_HEIGHT * 4.2 : 0,
-              {
-                damping: 10,
-                stiffness: 100,
-                mass: 0.5,
-              },
-            );
-          },
-        );
       };
 
       useEffect(() => {
@@ -302,57 +376,21 @@ const CurvedBottomTabsCore: React.FC<CurvedBottomTabsProps> =
             />
           </View>
 
-          {tabs.map((tab, index) => {
-            const isActive = currentIndex === index;
-
-            const handlePress = (): void => {
-              onPress(index, tab);
-            };
-
-            const animatedTabStyle = useAnimatedStyle<ViewStyle>(() => ({
-              transform: [{ translateY: floatingAnimations[index].value }],
-            }));
-
-            return (
-              <Animated.View
-                key={tab.id}
-                style={[styles.tabWrapper, animatedTabStyle]}
-              >
-                <TouchableOpacity
-                  onPress={handlePress}
-                  style={styles.tabTouchable}
-                  activeOpacity={0.9}
-                >
-                  {isActive ? (
-                    <FloatingButtonComponent
-                      icon={tab.icon}
-                      tintColor={activeColor}
-                      gradient={processedGradient}
-                      scale={buttonScale}
-                      shadow={shadow}
-                      badge={tab.badge}
-                    />
-                  ) : (
-                    <>
-                      <View style={styles.iconWrapper}>
-                        {tab.icon}
-                        {tab.badge !== undefined && tab.badge > 0 && (
-                          <View style={styles.badgeContainer}>
-                            <Text style={styles.badgeLabel}>
-                              {tab.badge > 99 ? "99+" : tab.badge.toString()}
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text style={[styles.tabLabel, { color: labelColor }]}>
-                        {tab.title}
-                      </Text>
-                    </>
-                  )}
-                </TouchableOpacity>
-              </Animated.View>
-            );
-          })}
+          {tabs.map((tab, index) => (
+            <TabItem
+              key={tab.id}
+              tab={tab}
+              index={index}
+              isActive={currentIndex === index}
+              onPress={onPress}
+              styles={styles}
+              gradient={processedGradient}
+              activeColor={activeColor}
+              labelColor={labelColor}
+              buttonScale={buttonScale}
+              shadow={shadow}
+            />
+          ))}
         </View>
       );
     },
