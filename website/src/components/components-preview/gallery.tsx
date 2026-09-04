@@ -7,6 +7,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { PreviewCard } from "@/components/components-preview/preview-card";
 import { toRows } from "@/components/components-preview/rows";
 import { HoverGroup } from "@/components/landing/hover-group";
+import { useIsMobileDevice } from "@/hooks/use-media-query";
 import { Chars, Reveal } from "@/components/landing/primitives";
 import {
   componentCategories,
@@ -75,6 +76,8 @@ export function ComponentsGallery({
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("default");
   const [reducedMotion, setReducedMotion] = useState(false);
+  // Resolved here, once, and handed to every card — see `PreviewCard`.
+  const mobile = useIsMobileDevice();
 
   // Typing stays responsive: the input updates immediately, the 113-card grid
   // re-filters at React's convenience.
@@ -255,6 +258,7 @@ export function ComponentsGallery({
                           <PreviewCard
                             component={component}
                             key={component.name}
+                            mobile={mobile}
                             reducedMotion={reducedMotion}
                             standalone={row.length === 1}
                           />

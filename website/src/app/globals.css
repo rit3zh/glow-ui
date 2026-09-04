@@ -1253,3 +1253,31 @@ pre:not([data-plain]) span {
     transition-duration: 0.01ms;
   }
 }
+
+/*
+ * Progressive blur bands pick their ramp in CSS rather than in JavaScript.
+ *
+ * `ProgressiveBlur` renders both a fine ramp and a one-layer coarse one; this
+ * is what chooses between them. Doing it here rather than from a `matchMedia`
+ * read means a phone never composites the fine stack even once — the answer is
+ * known at first paint instead of one hydration later, and the losing ramp is
+ * `display: none`, so the compositor never builds a layer for it at all.
+ *
+ * The query is by input device, not width: `pointer: coarse` is asking whether
+ * this is a phone or tablet GPU, which is the thing that cannot afford eight
+ * masked `backdrop-filter` passes per scroll frame. The width bound catches
+ * touchscreen laptops, which have the coarse pointer but not the problem.
+ */
+.progressive-blur-coarse {
+  display: none;
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .progressive-blur-fine {
+    display: none;
+  }
+
+  .progressive-blur-coarse {
+    display: block;
+  }
+}

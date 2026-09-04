@@ -2,8 +2,6 @@ import { createMDX } from "fumadocs-mdx/next";
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
-  // `gradualblur` ships untranspiled JSX, so Next has to compile it itself.
-  transpilePackages: ["gradualblur"],
   // Appending `.mdx` to any docs URL serves its markdown source. The section
   // segment is part of the page slug, so it has to survive the rewrite.
   async rewrites() {

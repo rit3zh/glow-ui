@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import type * as React from "react";
 import {
@@ -15,6 +14,7 @@ import {
   useState,
 } from "react";
 
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { cn } from "@/components/workspace-ui/lib/utils";
 
 const EFFECTS_KEY = "sidebar-001-effects";
@@ -22,11 +22,6 @@ const SIDEBAR_BOTTOM_FADE_MASK =
   "linear-gradient(to top, rgba(0, 0, 0, 1) 22%, rgba(0, 0, 0, 0.88) 44%, transparent 100%)";
 const SIDEBAR_TOP_FADE_HEIGHT = "5rem";
 
-// Client-only: the package pulls in mathjs, which has no business in the
-// server bundle for a purely decorative overlay.
-const GradualBlur = dynamic(() => import("gradualblur/Gradualblur.jsx"), {
-  ssr: false,
-});
 
 const EffectsContext = createContext<{ enabled: boolean; toggle: () => void }>({
   enabled: true,
@@ -401,16 +396,7 @@ export function Sidebar001Content({
             className="pointer-events-none absolute inset-x-0 top-0 z-10 isolate"
             style={{ height: SIDEBAR_TOP_FADE_HEIGHT }}
           >
-            <GradualBlur
-              curve="bezier"
-              divCount={5}
-              exponential
-              height={SIDEBAR_TOP_FADE_HEIGHT}
-              position="top"
-              strength={0.6}
-              target="parent"
-              zIndex={0}
-            />
+            <ProgressiveBlur divCount={5} position="top" strength={0.6} />
             {/* The blur carries no tint of its own — this keeps the sidebar
                 background reading as solid at the very top. */}
             <div className="absolute inset-0 bg-linear-to-b from-background via-background/60 to-transparent" />

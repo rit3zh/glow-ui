@@ -1,14 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { cn } from "#/lib/utils";
-
-// Client-only: the package pulls in mathjs, which has no business in the
-// server bundle for a purely decorative overlay.
-const GradualBlur = dynamic(() => import("gradualblur/Gradualblur.jsx"), {
-  ssr: false,
-});
 
 /** Height of the blur gradient — deliberately taller than the 3.5rem bar. */
 export const BLUR_HEIGHT = "6rem";
@@ -33,16 +26,7 @@ export function EdgeBlur({ position, className }: EdgeBlurProps) {
       )}
       style={{ height: BLUR_HEIGHT }}
     >
-      <GradualBlur
-        curve="bezier"
-        divCount={3}
-        exponential
-        height={BLUR_HEIGHT}
-        position={position}
-        strength={2}
-        target="parent"
-        zIndex={0}
-      />
+      <ProgressiveBlur divCount={3} position={position} strength={2} />
       {/* The blur alone carries no tint — this keeps content legible over
           bright material scrolling underneath it. */}
       <div

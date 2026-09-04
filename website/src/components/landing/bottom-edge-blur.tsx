@@ -1,14 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { cn } from "#/lib/utils";
-
-// Client-only: the package pulls in mathjs, which has no business in the
-// server bundle for a purely decorative overlay.
-const GradualBlur = dynamic(() => import("gradualblur/Gradualblur.jsx"), {
-  ssr: false,
-});
 
 /** Height of the blur gradient — deliberately taller than the 3.5rem bar. */
 export const BLUR_HEIGHT = "6rem";
@@ -43,17 +36,13 @@ export function BottomEdgeBlur({
       )}
       style={{ height: BLUR_HEIGHT }}
     >
-      <GradualBlur
-        curve="bezier"
-        divCount={8}
-        exponential
-        height={BLUR_HEIGHT}
-        position={position}
-        strength={2.5}
-        target="parent"
-        gpuOptimized
-        zIndex={0}
-      />
+      {/* Eight layers is eight blur passes over the full width of the viewport
+          on every scroll frame, for as long as the page is open — the band is
+          fixed, so it never stops being recomposited. That is affordable on a
+          desktop GPU and is not on a phone; `mobileDivCount` stands the ramp
+          down to a single pass there. */}
+      <ProgressiveBlur divCount={8} position={position} strength={2.5} />
+
       {/* The blur alone carries no tint — this keeps content legible over
           bright material scrolling underneath it. */}
       <div

@@ -14,9 +14,21 @@ import { cn } from "@/components/workspace-ui/lib/utils";
  *
  * Roughly one screen of lead time: far enough that a clip is decoded before it
  * scrolls in, near enough that a grid of a hundred never has more than a dozen
- * files in flight.
+ * files in flight. A phone gets a shorter run-up — the rows collapse to one
+ * column there, so the same margin in pixels covers several more cards.
  */
 const LOAD_MARGIN = "600px";
+const LOAD_MARGIN_MOBILE = "250px";
+
+/**
+ * How far a card may drift before its clip is torn down again.
+ *
+ * Wider than the load margin on purpose. If a card mounted and unmounted at
+ * the same boundary, resting the scroll exactly on it would thrash the element
+ * in and out; the gap between the two is the hysteresis that stops that.
+ */
+const KEEP_MARGIN = "1400px";
+const KEEP_MARGIN_MOBILE = "700px";
 
 /** Clips only run while actually on screen. */
 const PLAY_MARGIN = "80px";
@@ -33,14 +45,27 @@ function isRecent(lastModified: string) {
 }
 
 /**
- * Two observers rather than one.
+ * Three observers rather than one: load, keep, play.
  *
  * Loading and playing want different margins — a clip should be fetched well
  * before it appears and stopped the moment it leaves — and collapsing them into
  * a single threshold means either loading too late or decoding frames nobody is
  * looking at.
+ *
+ * The third exists because loading used to be a one-way door: the loader
+ * disconnected on first intersection and the `<video>` it mounted stayed for
+ * the life of the page. One scroll to the foot of the components catalogue
+ * therefore left 112 video elements alive at once, every one holding a decoder,
+ * a texture and its buffered frames. Desktop absorbs that; a phone has a hard
+ * cap on concurrent hardware decoders, falls back to software decoding past it,
+ * and starts evicting under memory pressure — which is the page grinding, and
+ * eventually the tab reloading itself. So a card that drifts far enough away
+ * now gives its clip back.
  */
-function useVisibility(ref: React.RefObject<HTMLElement | null>) {
+function useVisibility(
+  ref: React.RefObject<HTMLElement | null>,
+  mobile: boolean,
+) {
   const [shouldLoad, setShouldLoad] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -50,12 +75,16 @@ function useVisibility(ref: React.RefObject<HTMLElement | null>) {
 
     const loader = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
-          setShouldLoad(true);
-          loader.disconnect();
-        }
+        if (entry?.isIntersecting) setShouldLoad(true);
       },
-      { rootMargin: LOAD_MARGIN },
+      { rootMargin: mobile ? LOAD_MARGIN_MOBILE : LOAD_MARGIN },
+    );
+
+    const keeper = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) setShouldLoad(false);
+      },
+      { rootMargin: mobile ? KEEP_MARGIN_MOBILE : KEEP_MARGIN },
     );
 
     const player = new IntersectionObserver(
@@ -64,13 +93,15 @@ function useVisibility(ref: React.RefObject<HTMLElement | null>) {
     );
 
     loader.observe(element);
+    keeper.observe(element);
     player.observe(element);
 
     return () => {
       loader.disconnect();
+      keeper.disconnect();
       player.disconnect();
     };
-  }, [ref]);
+  }, [ref, mobile]);
 
   return { shouldLoad, isVisible };
 }
@@ -86,10 +117,16 @@ const STANDALONE_HEIGHT = 320;
 export const PreviewCard = memo(function PreviewCard({
   component,
   reducedMotion,
+  mobile,
   standalone,
 }: {
   component: GeneratedComponent;
   reducedMotion: boolean;
+  /**
+   * Resolved once by the gallery and handed down. Asking each card would mean
+   * a `matchMedia` listener per card — 112 of them for one boolean.
+   */
+  mobile: boolean;
   /**
    * True when this card is the only one in its row — a filtered search, or
    * a catalogue that happens to end on a single card. `md:grow-(--weight)`
@@ -104,8 +141,14 @@ export const PreviewCard = memo(function PreviewCard({
   // Registers the card with the section's shared highlight, so one plate
   // travels across the grid rather than each card fading its own in and out.
   const hover = useHoverItem();
-  const { shouldLoad, isVisible } = useVisibility(ref);
+  const { shouldLoad, isVisible } = useVisibility(ref, mobile);
   const [ready, setReady] = useState(false);
+
+  // The placeholder comes back with the clip, so a card that scrolled away and
+  // returned does not flash its last decoded frame before the new one arrives.
+  useEffect(() => {
+    if (!shouldLoad) setReady(false);
+  }, [shouldLoad]);
 
   const src = component.hoverVideo ?? component.previewVideo;
   const isImage = src ? IMAGE_FILE.test(src) : false;
@@ -123,6 +166,32 @@ export const PreviewCard = memo(function PreviewCard({
       video.pause();
     }
   }, [isImage, isVisible, reducedMotion]);
+
+  /**
+   * Hands the decoder back when the clip is torn down.
+   *
+   * Dropping the element is not enough on its own: a detached `<video>` that
+   * still has a `src` can hold its buffered data and its decoder until the
+   * collector gets to it, which on a long scroll is exactly the pressure this
+   * is meant to relieve. Clearing the source and calling `load()` releases both
+   * immediately.
+   */
+  useEffect(() => {
+    if (!shouldLoad) return;
+
+    // Captured now, while the element is still mounted. React detaches refs
+    // during the commit that removes the node, which lands before this
+    // effect's cleanup — reading `videoRef.current` in there would find null
+    // and release nothing.
+    const video = videoRef.current;
+    if (!video) return;
+
+    return () => {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
+  }, [shouldLoad]);
 
   return (
     <Link

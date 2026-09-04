@@ -108,6 +108,29 @@ export function Chars({
 
   const visible = reduced || (immediate ? mounted : inView);
 
+  /**
+   * Whether the entrance is over.
+   *
+   * `will-change` below promotes every glyph to its own compositor layer, and
+   * a promise about `filter` keeps a blur surface allocated alongside it. It
+   * used to be unconditional, which made it a standing cost rather than a
+   * hint: the landing page painted 127 glyph layers before a single one had
+   * moved — most of them in sections still several screens away — and none of
+   * them was ever released. So the promise is now made only for the half
+   * second a line is actually in motion. Off-screen lines make no promise at
+   * all, and a line that has landed withdraws its own.
+   */
+  const [settled, setSettled] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!visible || reduced) return;
+
+    setSettled(false);
+    const last = delay + Math.max(animatingCount - 1, 0) * step + DURATION;
+    const timer = window.setTimeout(() => setSettled(true), last * 1000 + 60);
+    return () => window.clearTimeout(timer);
+  }, [visible, reduced, delay, animatingCount, step]);
+
   let index = 0;
 
   return (
@@ -137,7 +160,10 @@ export function Chars({
                     : `opacity ${DURATION}s ${EASE_NUMERIC} ${charDelay}s,
                        transform ${DURATION}s ${EASE_NUMERIC} ${charDelay}s,
                        filter ${DURATION}s ${EASE_NUMERIC} ${charDelay}s`,
-                  willChange: "transform, filter, opacity",
+                  willChange:
+                    visible && !settled && !reduced
+                      ? "transform, filter, opacity"
+                      : undefined,
                 }}
               >
                 {char}

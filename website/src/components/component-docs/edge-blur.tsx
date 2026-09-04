@@ -1,15 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
 import { useComponentSidebarOpen } from "@/components/component-docs/sidebar/context";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { cn } from "@/components/workspace-ui/lib/utils";
-
-// Client-only: the package pulls in mathjs, which has no business in the
-// server bundle for a purely decorative overlay.
-const GradualBlur = dynamic(() => import("gradualblur/Gradualblur.jsx"), {
-  ssr: false,
-});
 
 /** Peak blur, in rem, at the outer edge — `2^4 * 0.0625 * strength`. */
 const STRENGTH = 0.75;
@@ -49,16 +42,7 @@ export function DocsEdgeBlur({
           load-bearing while the panel is up — the tint below carries the band
           on its own — so the filtered layers stand down until it closes. */}
       {sidebarOpen ? null : (
-        <GradualBlur
-          curve="bezier"
-          divCount={5}
-          exponential
-          height={height}
-          position={position}
-          strength={STRENGTH}
-          target="parent"
-          zIndex={0}
-        />
+        <ProgressiveBlur divCount={5} position={position} strength={STRENGTH} />
       )}
 
       {/* The blur alone carries no tint — this keeps the page background

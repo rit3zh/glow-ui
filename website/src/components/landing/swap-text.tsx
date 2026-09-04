@@ -137,6 +137,23 @@ export function Phrase({
   const animating = text.replace(/\s/g, "").length;
   const step = (DURATION * CHAR.stagger * spread) / Math.max(animating, 1);
 
+  /**
+   * An arriving phrase stays mounted until the next swap, which on the hero is
+   * seconds away — so the `will-change` below outlived the motion it was for
+   * and held a compositor layer per glyph the whole time. A leaving phrase is
+   * unmounted the moment it finishes, so it never needs standing down.
+   */
+  const [done, setDone] = React.useState(false);
+
+  React.useEffect(() => {
+    if (mode !== "in" || reduced) return;
+
+    setDone(false);
+    const last = Math.max(animating - 1, 0) * step + DURATION;
+    const timer = window.setTimeout(() => setDone(true), last * 1000 + 60);
+    return () => window.clearTimeout(timer);
+  }, [mode, reduced, animating, step, text]);
+
   // Enter rises from below, exit continues upward — one direction of travel.
   const displaced =
     mode === "in"
@@ -159,7 +176,8 @@ export function Phrase({
               : `opacity ${DURATION}s ${EASE_NUMERIC} ${charIndex * step}s,
                  transform ${DURATION}s ${EASE_NUMERIC} ${charIndex * step}s,
                  filter ${DURATION}s ${EASE_NUMERIC} ${charIndex * step}s`,
-            willChange: "transform, filter, opacity",
+            willChange:
+              done || reduced ? undefined : "transform, filter, opacity",
           }}
         >
           {char === " " ? NBSP : char}
