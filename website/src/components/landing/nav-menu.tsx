@@ -10,7 +10,8 @@ import { useHoverItem } from "./hover-group";
 import { SPRING } from "./motion";
 
 /**
- * A trimmed adaptation of the `inspo/iconiq` motion navigation menu: one
+ * A trimmed adaptation of the motion navigation menu in iconiq
+ * (MIT, Edwin Vakayil — https://github.com/edwinvakayil/iconiq): one
  * shared highlight pill that slides between triggers, and a single dropdown
  * panel that morphs its size and position between items instead of unmounting
  * and remounting per menu.

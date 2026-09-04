@@ -7,7 +7,8 @@ import { CHAR, DURATION, EASE_NUMERIC } from "./motion";
 /**
  * numeric-text's content transition, driven by a value rather than a timer.
  *
- * The mechanic is the one in `inspo/numeric-text`: the outgoing string leaves
+ * The mechanic is numeric-text's (MIT, shizukushq — see THIRD-PARTY.md): the
+ * outgoing string leaves
  * along the same axis the incoming one arrives on — glyphs rise, shrink to
  * 0.6, rotate 2deg and blur, staggered across a fixed share of the duration —
  * while the wrapper animates its own width so whatever sits beside it slides

@@ -3,7 +3,8 @@ import { cn } from "@/components/workspace-ui/lib/utils";
 /**
  * An iPhone 16 Pro Max, with a screenshot inside it.
  *
- * The frame is the vector body from `inspo/telephone`, exported once to
+ * The frame is the vector body from telephone (MIT, Dimah Snisarenko — see
+ * THIRD-PARTY.md), exported once to
  * `public/mockups/iphone-16-max.svg` and drawn as a plain `<img>` on top of the
  * screen rather than inlined per card. Nineteen copies of a 15 KB SVG is 19
  * copies of its gradients, filters and clip paths in the document — and every

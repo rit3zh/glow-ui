@@ -1,7 +1,8 @@
 /**
  * Shared motion vocabulary for the landing page.
  *
- * The curve and the enter/exit geometry are lifted from `inspo/numeric-text`,
+ * The curve and the enter/exit geometry are lifted from numeric-text
+ * (MIT, shizukushq — see THIRD-PARTY.md),
  * which replicates SwiftUI's `.numericText` content transition: a short,
  * slightly-overshooting spring where glyphs rise, scale up, unblur and settle.
  * Reusing one curve everywhere is what makes the page feel like a single
