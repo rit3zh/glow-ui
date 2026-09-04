@@ -14,11 +14,10 @@ import Animated, {
   useSharedValue,
   useAnimatedProps,
 } from "react-native-reanimated";
-import { BlurView, type BlurViewProps } from "@sbaiahmed1/react-native-blur";
 import type { ICarousel, ICarouselItem } from "./types";
+import { BlurView, BlurViewProps } from "expo-blur";
 
-const AnimatedBlurView =
-  Animated.createAnimatedComponent<BlurViewProps>(BlurView);
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const CarouselItem = <T,>({
   item,
@@ -54,7 +53,7 @@ const CarouselItem = <T,>({
     };
   });
 
-  const animatedBlurProps = useAnimatedProps<Pick<BlurViewProps, "blurAmount">>(
+  const animatedBlurProps = useAnimatedProps<Pick<BlurViewProps, "intensity">>(
     () => {
       const inputRange = [
         (index - 1) * fullWidth,
@@ -68,10 +67,28 @@ const CarouselItem = <T,>({
         Extrapolation.CLAMP,
       );
       return {
-        blurAmount: blurIntensity,
+        intensity: blurIntensity,
       };
     },
   );
+
+  // The native blur view still paints its material at `blurAmount: 0`, and its
+  // first frame lands before the animated prop is applied - which left the
+  // focused card blurred on mount. Fading the overlay out keeps the centered
+  // item sharp regardless of what the native view does with the intensity.
+  const animatedBlurStyle = useAnimatedStyle<Pick<ViewStyle, "opacity">>(() => {
+    const opacity = interpolate(
+      scrollX.value,
+      [
+        (index - 0.35) * fullWidth,
+        index * fullWidth,
+        (index + 0.35) * fullWidth,
+      ],
+      [1, 0, 1],
+      Extrapolation.CLAMP,
+    );
+    return { opacity };
+  });
 
   return (
     <Animated.View
@@ -100,9 +117,14 @@ const CarouselItem = <T,>({
       })}
       {useBlur && (
         <AnimatedBlurView
-          style={[StyleSheet.absoluteFillObject, styles.blurOverlay]}
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles.blurOverlay,
+            animatedBlurStyle,
+          ]}
           animatedProps={animatedBlurProps}
-          blurType="regular"
+          tint="regular"
         />
       )}
     </Animated.View>

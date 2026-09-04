@@ -1,0 +1,1575 @@
+{
+  "bucket": "reacticx-v2-previews",
+  "updatedAt": "2026-08-27T09:52:22.610Z",
+  "entries": {
+    "3d-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/3d-carousel-preview.mov",
+      "hash": "8f4db39748a74094d6daa2c708f206f0e3574378ddfd6191faa7eca94bec32b4",
+      "size": 1196966,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:17.628Z"
+    },
+    "3d-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/3d-carousel-preview.webm",
+      "hash": "46e23cd00670941b9a1f48960ec9d815e83ec3662b26267dd494ac8eb95bb69b",
+      "size": 303194,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:49.153Z"
+    },
+    "accordion-preview.mp4": {
+      "file": "cloudflare/v2-preview/accordion-preview.mov",
+      "hash": "ca53b7e859b9de1950aed0ba18831d8b64caf72899fb6d46b8e5bb222e135bb0",
+      "size": 168436,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:15.648Z"
+    },
+    "accordion-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/accordion-preview.webm",
+      "hash": "df28ca24c2397104888817b52836881e5bdef8a5c1127e33dd0290836a8369eb",
+      "size": 38874,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:49.153Z"
+    },
+    "action-rail-preview.mp4": {
+      "file": "cloudflare/v2-preview/action-rail-preview.mov",
+      "hash": "a8d80e8f18e3856e1971881ccae11a523288f51bebf6b19fe0020ce488256813",
+      "size": 175307,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:15.507Z"
+    },
+    "action-rail-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/action-rail-preview.webm",
+      "hash": "3ac84fe1bd32c87e484b9175767ca6394caa03242368c739165833ee16e1aedc",
+      "size": 36149,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:49.913Z"
+    },
+    "animated-chip-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-chip-preview.mov",
+      "hash": "645716d814d574765b3e286fcb307f1f6fd5b2bc1b5fdadd808bd9289e92ed43",
+      "size": 265980,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:15.873Z"
+    },
+    "animated-chip-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-chip-preview.webm",
+      "hash": "d5ed3b5c1fcaa4163db2d754dcadc9a5cc91b97ee9443113d471e1c3758f1b5f",
+      "size": 53615,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:49.152Z"
+    },
+    "animated-header-scrollview-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-header-scrollview-preview.mov",
+      "hash": "7d83a331e9a49ff0c82dd42bdaa3768b9d2a151bcb8d87d78c8824014c301a8b",
+      "size": 555091,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:16.584Z"
+    },
+    "animated-header-scrollview-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-header-scrollview-preview.webm",
+      "hash": "b8b6375fc1c0ba4886356b9eaef83788f109490871069111163e6e45b4c3228a",
+      "size": 90468,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:49.250Z"
+    },
+    "animated-input-bar-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-input-bar-preview.mov",
+      "hash": "2deac5a29eecc93015d233e8fb3e59cebd0a52a5c9e974581749e2413fe3d24f",
+      "size": 483402,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:16.484Z"
+    },
+    "animated-input-bar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-input-bar-preview.webm",
+      "hash": "f6dae199b428ce6b123c47d29d5491dfc8cca99da3bc693eb87da12ad39a15b8",
+      "size": 89777,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:51.651Z"
+    },
+    "animated-masked-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-masked-text-preview.mov",
+      "hash": "ad4f55b264e602af83086ee62baa7db5fbc6400a2fbb303b364fd385ef61151c",
+      "size": 185284,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:15.494Z"
+    },
+    "animated-masked-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-masked-text-preview.webm",
+      "hash": "8eddfddad8e276b681de80ffeb0a3df632e82550fb604d6fc1cd2057612b5104",
+      "size": 47524,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:51.609Z"
+    },
+    "animated-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-text-preview.mov",
+      "hash": "7a2036118e553fd3fce0ba663e15e37797306f623aa8e6ee104231641b46b336",
+      "size": 709462,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:15.460Z"
+    },
+    "animated-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-text-preview.webm",
+      "hash": "6229124d8d87e6890a20d76c179d7c02440225898b02f6a5cbe2dcd805f12ea4",
+      "size": 175220,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:51.609Z"
+    },
+    "animated-theme-toggle-preview.mp4": {
+      "file": "cloudflare/v2-preview/animated-theme-toggle-preview.mov",
+      "hash": "ca79edf8d717b1c5d21ec1881bc8eecdc6c5842d847340a4aa1828d094b0a045",
+      "size": 228496,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:17.605Z"
+    },
+    "animated-theme-toggle-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/animated-theme-toggle-preview.webm",
+      "hash": "bd3f8b4b75209fd30c7ff2ff367bba0be214089c8585588dc2c432e4bf9dbc21",
+      "size": 67247,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:52.362Z"
+    },
+    "apple-intelligence-preview.mp4": {
+      "file": "cloudflare/v2-preview/apple-intelligence-preview.mov",
+      "hash": "ca9650dd032758c78785de979dcf89dd5d1cb6ebe5961a2baa58c42bdb88e7d1",
+      "size": 7354959,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:19.142Z"
+    },
+    "apple-intelligence-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/apple-intelligence-preview.webm",
+      "hash": "d1b999bee46c885a6be91f15fbe79d11ae18c501a772d25af47333911fbbb2b3",
+      "size": 810296,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:51.752Z"
+    },
+    "arc-list-preview.mp4": {
+      "file": "cloudflare/v2-preview/arc-list-preview.mov",
+      "hash": "a8baa08d84686bcba657c2d103ab33224e7029fc011300d81b55610cfe45c41f",
+      "size": 1178656,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:18.306Z"
+    },
+    "arc-list-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/arc-list-preview.webm",
+      "hash": "cac60a24d281953e019fb4705f726a17f141d1e8d872486acf71c185e4f90f1e",
+      "size": 358139,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:51.608Z"
+    },
+    "aura-lift-preview.mp4": {
+      "file": "cloudflare/v2-preview/aura-lift-preview.mov",
+      "hash": "9f4d9abe4c23f0b1167529b5ad4b25bc29591e925b704b2a66a3d9c40f51b64d",
+      "size": 927745,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:18.568Z"
+    },
+    "aura-lift-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/aura-lift-preview.webm",
+      "hash": "e222cca4794897bd0bd844615975dfd430bd18dae6ccde15db8dc20a2b0e8357",
+      "size": 235131,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:52.236Z"
+    },
+    "aurora-preview.mp4": {
+      "file": "cloudflare/v2-preview/aurora-preview.mov",
+      "hash": "e1dc6c6d9678f5abc12b0ce2ac9943f4bcb5c1a36fa01814a582856ca746661d",
+      "size": 705357,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:18.166Z"
+    },
+    "aurora-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/aurora-preview.webm",
+      "hash": "00faea36e1d55a0e23cee18d5ba69d97c1659b92cf6907a0c7f660905096f015",
+      "size": 132640,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:52.499Z"
+    },
+    "blur-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/blur-carousel-preview.mov",
+      "hash": "585462fe17923694d07f1b62b323890a0d82b7f1522023189fbcad583925ee4a",
+      "size": 1153791,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:18.737Z"
+    },
+    "blur-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/blur-carousel-preview.webm",
+      "hash": "99d950f88a192098ca41da9127f1e229697883df6fcd1a810705bde5b328e1d9",
+      "size": 287990,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:53.827Z"
+    },
+    "border-beam-preview.mp4": {
+      "file": "cloudflare/v2-preview/border-beam-preview.mov",
+      "hash": "7bcf02ca4519700a732dc74c526815d962368af87ec7bd6d97e9a50a347fc29d",
+      "size": 298617,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:18.753Z"
+    },
+    "border-beam-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/border-beam-preview.webm",
+      "hash": "5399363d5c6a1443af3eadeb5e83f882ac7ff807e8ddd00dea04bd8aeb0a29c6",
+      "size": 56318,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:53.759Z"
+    },
+    "bouncy-accordion-preview.mp4": {
+      "file": "cloudflare/v2-preview/bouncy-accordion-preview.mov",
+      "hash": "c2b9b09b85edb22f68161a7e97cbab266203c8275e6e7b6230d31367b3b43846",
+      "size": 1014995,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.261Z"
+    },
+    "bouncy-accordion-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/bouncy-accordion-preview.webm",
+      "hash": "3eafc0bb24ab6d3c17be94c4556fd239c9b4a0dd90f4cc7b14b1815871f09ad1",
+      "size": 240798,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:53.796Z"
+    },
+    "button-preview.mp4": {
+      "file": "cloudflare/v2-preview/button-preview.mov",
+      "hash": "80d9eea11c5fa5c58da6d736d6409477fa6910fe8922b1b85429ab44474e50da",
+      "size": 364037,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:21.153Z"
+    },
+    "button-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/button-preview.webm",
+      "hash": "6f3e46c5b28e2c4684519d49b9826b8e854f9156b1de86cd94e4edef779aa316",
+      "size": 75273,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:53.771Z"
+    },
+    "check-box-preview.mp4": {
+      "file": "cloudflare/v2-preview/check-box-preview.mov",
+      "hash": "1ab46b0b323db397b509d04d6d916d92457bf8f9b91e16054a8d13c647387b58",
+      "size": 123621,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.303Z"
+    },
+    "check-box-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/check-box-preview.webm",
+      "hash": "3b9cd5f86467f7c3c9b72e25955f4aa86d5afdb4ea2eeef8fb038dfb2c4f0114",
+      "size": 22787,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:53.849Z"
+    },
+    "chroma-ring-preview.mp4": {
+      "file": "cloudflare/v2-preview/chroma-ring-preview.mov",
+      "hash": "516c42ad57ed19b05fe4579c49b6de0c032edc9dd730df7ab8b0df23a5301b13",
+      "size": 334331,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.791Z"
+    },
+    "chroma-ring-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/chroma-ring-preview.webm",
+      "hash": "c0f2d6b65cecfc94da32cc21e2dbe8151fbc15d9a65a05fd190018f3707e1ec7",
+      "size": 79754,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:54.503Z"
+    },
+    "chrome-backdrop-preview.mp4": {
+      "file": "cloudflare/v2-preview/chroma-backdrop-preview.mov",
+      "hash": "354dfd09237a19140e6dd89ba95aea6d384b7a9dbec5cbe40da10ac15e60c459",
+      "size": 583469,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.444Z"
+    },
+    "chrome-backdrop-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/chroma-backdrop-preview.webm",
+      "hash": "a7dd59d167ec235d47b42b0a8f19184bea57b8ec1447424901f0259f442ca112",
+      "size": 124012,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:54.658Z"
+    },
+    "cinematic-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/cinematic-carousel-preview.mov",
+      "hash": "63fef20906722a442a3d42e544f68b564289955740aaae41d3923cf7c2822a7c",
+      "size": 939071,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.746Z"
+    },
+    "cinematic-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/cinematic-carousel-preview.webm",
+      "hash": "009f00041a8b99f64b204aa2625777cfa465957f5224cd1990ad9efe24a124e3",
+      "size": 220782,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:54.535Z"
+    },
+    "circle-loader-preview.mp4": {
+      "file": "cloudflare/v2-preview/circle-loader-preview.mov",
+      "hash": "9d4c036cd0918c6ab8a9f694872686f8720610edb905acf3016675f50bc6f77a",
+      "size": 175453,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:20.792Z"
+    },
+    "circle-loader-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circle-loader-preview.webm",
+      "hash": "006edf19ebdf086a3c182876e0e4a9cb5288d88e6ed63b0a6d76608ef2cb41b3",
+      "size": 30064,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:55.993Z"
+    },
+    "circular-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/circular-carousel-preview.mov",
+      "hash": "bce27b211b98b98e5a0ad1de3dd62c8c210862414289d3aeba981fd2a51b4a82",
+      "size": 577911,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:21.250Z"
+    },
+    "circular-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circular-carousel-preview.webm",
+      "hash": "da8cbc83ab0b12fd180f43981710e16194b9c021139d60899f93198d8266ecbb",
+      "size": 136827,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:55.996Z"
+    },
+    "circular-list-preview.mp4": {
+      "file": "cloudflare/v2-preview/circular-list-preview.mov",
+      "hash": "dc812871b8e9be71eb491232906214731d1fbb608758ff6c64ae6d693e71d5ee",
+      "size": 325224,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:22.411Z"
+    },
+    "circular-list-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circular-list-preview.webm",
+      "hash": "a2f60aba432e05a7a4897f0dce24e654ec62db5f86311a75ab259f8a17d02740",
+      "size": 84346,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:56.148Z"
+    },
+    "circular-loader-preview.mp4": {
+      "file": "cloudflare/v2-preview/circular-loader-preview.mov",
+      "hash": "e8aa256d084737fade17a3f4e741a14fe4c3f8cc9ee8ad81395070d403525475",
+      "size": 123244,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:22.410Z"
+    },
+    "circular-loader-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circular-loader-preview.webm",
+      "hash": "8f1dd6e72765b29f12d8b8e1369f51eb5d9bee3b134f10ca3b96c767761b502b",
+      "size": 27335,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:55.994Z"
+    },
+    "circular-progress-preview.mp4": {
+      "file": "cloudflare/v2-preview/circular-progress-preview.mov",
+      "hash": "335f7287a57448a0fd8712d6daff3f14b8d53e98bec05f5ac1c535093bfacf1e",
+      "size": 208476,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:22.578Z"
+    },
+    "circular-progress-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circular-progress-preview.webm",
+      "hash": "0ff4bd71e32075509ea62ff16759b979a6ca304970064110d7914d594ea2c92d",
+      "size": 50011,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:56.005Z"
+    },
+    "circular-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/circular-text-preview.mov",
+      "hash": "d495ba84a407567947a768b55086207e8af6016e6fd07924ee8bb7679b4e7146",
+      "size": 1315857,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:23.612Z"
+    },
+    "circular-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/circular-text-preview.webm",
+      "hash": "7c8e2096ba8f69987c2fedbc7a64c8e50f75f76197f89eafc47b469f1591e22e",
+      "size": 359966,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:56.843Z"
+    },
+    "context-menu-preview.mp4": {
+      "file": "cloudflare/v2-preview/context-menu-preview.mov",
+      "hash": "2ec9075eba84785fbf2d6c925c5516fa16edc29bedd5a46bfefa06e084b16e92",
+      "size": 400337,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:23.821Z"
+    },
+    "context-menu-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/context-menu-preview.webm",
+      "hash": "f51426e12d75d697e6d0db36af4695eb0ede55285dc800c73bf9198b6e630bad",
+      "size": 106397,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:56.737Z"
+    },
+    "curved-bottom-tabs-preview.mp4": {
+      "file": "cloudflare/v2-preview/curved-bottom-tabs-preview.mov",
+      "hash": "c9cf4d9995155af602f33499884e6c401d3f30a1578cfe3fd85b130df9149173",
+      "size": 412550,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:22.948Z"
+    },
+    "curved-bottom-tabs-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/curved-bottom-tabs-preview.webm",
+      "hash": "008a52b48d9509807255afe4a875cb4153db421efd8610b6a53f8b0a3e9b9167",
+      "size": 90355,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:56.804Z"
+    },
+    "curved-marquee-preview.mp4": {
+      "file": "cloudflare/v2-preview/curved-maruqee-preview.mov",
+      "hash": "8dbb6ca2f7861279d50feca6997202caa854ff6fc0073bb975d20c4e940683d4",
+      "size": 1769636,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:23.247Z"
+    },
+    "curved-marquee-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/curved-maruqee-preview.webm",
+      "hash": "1423e4e94e8bcd88fb41b22ba6d9ac237d692e96aec182e8dd44bda6ca769553",
+      "size": 594372,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:58.060Z"
+    },
+    "dia-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/dia-text-preview.mov",
+      "hash": "7172314d9380c8c2cdcce687fee146ebd53ba86225532e46de08ed5b3aae5586",
+      "size": 634857,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:23.634Z"
+    },
+    "dia-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/dia-text-preview.webm",
+      "hash": "6c1ec66adff95408bbcbcbb4c9e2ef89ab734aa30f2fdd8de3bbe023278ff411",
+      "size": 87573,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:58.061Z"
+    },
+    "disclosure-group-preview.mp4": {
+      "file": "cloudflare/v2-preview/disclosure-group-preview.mov",
+      "hash": "37f4329adf257466f055a95ae884f757b5ec70c6c71fd98a9a54471680f1586d",
+      "size": 243504,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.152Z"
+    },
+    "disclosure-group-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/disclosure-group-preview.webm",
+      "hash": "04e4d136d48f8f36333ae9e6860befc3f1d3da3b4282c41880999b4ab33df9f1",
+      "size": 44399,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:58.114Z"
+    },
+    "dust-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/dust-text-preview.mov",
+      "hash": "a756d2d92067a3b5c4a3a4a6c3a6b2fb5423b0d3404815ac606a73ef0227b98d",
+      "size": 1006481,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.511Z"
+    },
+    "dust-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/dust-text-preview.webm",
+      "hash": "6e6757a052e6c35ed9734f8fd01abc88a93b9017b10632e8ec3bbbbd244a1edd",
+      "size": 350698,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:58.376Z"
+    },
+    "dynamic-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/dynamic-text-preview.mov",
+      "hash": "e79a9522ca8ae45a81e92f6f5e751155af9b59f58b911725787ca9e21452f98d",
+      "size": 201910,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.084Z"
+    },
+    "dynamic-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/dynamic-text-preview.webm",
+      "hash": "82994588329b2efc4384ba997bb72f89c88220dafc4784d472ce61af12467865",
+      "size": 47680,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:58.289Z"
+    },
+    "elastic-slider-preview.mp4": {
+      "file": "cloudflare/v2-preview/elastic-slider-preview.mov",
+      "hash": "e3ce015c25ed8f9ff589dbcd25242c3721c978c3daf2e722b3acd6393ce1bc2a",
+      "size": 321492,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.103Z"
+    },
+    "elastic-slider-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/elastic-slider-preview.webm",
+      "hash": "ff6018df78724452fd0205febb191eb8d43ec143d39c9a1e0bd47d2b9d4e5b2c",
+      "size": 56723,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:59.393Z"
+    },
+    "energy-orb-preview.mp4": {
+      "file": "cloudflare/v2-preview/energy-orb-preview.mov",
+      "hash": "522ff69400faf7993ed76847f2ed1a3d20fed79e9ab4cc0053b22edc10ed6f8b",
+      "size": 613362,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.445Z"
+    },
+    "energy-orb-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/energy-orb-preview.webm",
+      "hash": "e56020d18a88f2947bc18b0cb599d212cdcb3bf807718ca137ebbace62bdedff",
+      "size": 101172,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:59.409Z"
+    },
+    "expandable-view-preview.mp4": {
+      "file": "cloudflare/v2-preview/expandable-view-preview.mov",
+      "hash": "26c5d9134cb757e117c110a1725ac4d04f66f1d3237bec0895198c47706c3d03",
+      "size": 827658,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:25.665Z"
+    },
+    "expandable-view-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/expandable-view-preview.webm",
+      "hash": "44fedd88cdbac800a44d18799771d90d2d454f467720c6eb4a1b111fa3f023f6",
+      "size": 145480,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:51:59.452Z"
+    },
+    "fade-component-preview.mp4": {
+      "file": "cloudflare/v2-preview/fade-component-preview.mov",
+      "hash": "37a5ee7986a6c3c511249b617225af02e061396355141444af29ca87e283cfaa",
+      "size": 207804,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:26.075Z"
+    },
+    "fade-component-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/fade-component-preview.webm",
+      "hash": "31af3aac7d9372ab81dddbf129ea0ff422e0f82c9b4f0b530be06ffea05dfa1c",
+      "size": 43910,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:00.208Z"
+    },
+    "fade-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/fade-text-preview.mov",
+      "hash": "a8f7d432fa2887446dd7e275c2e8021a2b56cc989713aeb46ddc0ba2f63dd44d",
+      "size": 861156,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:26.021Z"
+    },
+    "fade-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/fade-text-preview.webm",
+      "hash": "8512b11f03464427e5565deb2f7c2443bc0de4525d1536cb52d15bffa675d508",
+      "size": 180960,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:00.389Z"
+    },
+    "fan-menu-preview.mp4": {
+      "file": "cloudflare/v2-preview/fan-menu-preview.mov",
+      "hash": "fff3999e58b2a2602cea762bf9165948e5f045b3213ac7e273c7d8e5cf58c2eb",
+      "size": 332165,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.421Z"
+    },
+    "fan-menu-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/fan-menu-preview.webm",
+      "hash": "34d95cd7aee09e258fccaa64df28a04afe87f4697825b1e67c3311e08714c13f",
+      "size": 87131,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:00.207Z"
+    },
+    "filling-stack-preview.mp4": {
+      "file": "cloudflare/v2-preview/filling-stack-preview.mov",
+      "hash": "07e5a6c614e93b17be94cb685ab319282d80cd072c04fb1e398cec3a64a87c65",
+      "size": 3118737,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.586Z"
+    },
+    "filling-stack-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/filling-stack-preview.webm",
+      "hash": "c7c6e1d042ce4367a2cf74fd394e272bc45f18443c6f131e901b0b7be6ab11a9",
+      "size": 784432,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:01.466Z"
+    },
+    "flexi-button-preview.mp4": {
+      "file": "cloudflare/v2-preview/flexi-button-preview.mov",
+      "hash": "4146c81e762c5620e40db864ecc417c7d3be2e97ee26a677a961f1bd7e2cceda",
+      "size": 162235,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.339Z"
+    },
+    "flexi-button-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/flexi-button-preview.webm",
+      "hash": "b4d7817f231f6117686481551ba972acc170794162e6fcf673b23d8f348dfbbb",
+      "size": 29678,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:00.903Z"
+    },
+    "flip-card-preview.mp4": {
+      "file": "cloudflare/v2-preview/flip-card-preview.mov",
+      "hash": "a8678ce182019985777d699722720d106d1cb877e166cabe31b29e6bdde76f97",
+      "size": 643775,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.820Z"
+    },
+    "flip-card-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/flip-card-preview.webm",
+      "hash": "c1906c3c9105def08191c7c7c3aa43cc4c3faf5502af7e46b0c81d812cd8e6d2",
+      "size": 161571,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:01.681Z"
+    },
+    "gooey-popover-preview.mp4": {
+      "file": "cloudflare/v2-preview/gooey-popover-preview.mov",
+      "hash": "dc6d2865713101d1e17569ae410689a25a36668efc5282808c2bea324094907c",
+      "size": 356265,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.708Z"
+    },
+    "gooey-popover-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gooey-popover-preview.webm",
+      "hash": "d50452ef53d3e82a77eba5bf9fe45b0e6de2598ee0e26cf5cf910c0deef05345",
+      "size": 72823,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:01.460Z"
+    },
+    "gooey-search-tabs-preview.mp4": {
+      "file": "cloudflare/v2-preview/gooey-search-tabs-preview.mov",
+      "hash": "e1526275d650c8b1987776c67d089a1629921b506688b18256830bc54909d92d",
+      "size": 334373,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:27.914Z"
+    },
+    "gooey-search-tabs-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gooey-search-tabs-preview.webm",
+      "hash": "7383e15bae8012d5c50010b8d5dfd0acac9ff0fe26e944f1b5efa59c4f4ba751",
+      "size": 62238,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:01.618Z"
+    },
+    "gooey-switch-preview.mp4": {
+      "file": "cloudflare/v2-preview/gooey-switch-preview.mov",
+      "hash": "f0bfdcdd89ddf27640ef95613781da997de6d2abac7518e92bee02291153ae7b",
+      "size": 280298,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:28.187Z"
+    },
+    "gooey-switch-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gooey-switch-preview.webm",
+      "hash": "8636998365a2e1c722f48746392bb25fd55df5ca35120d5340321041e28dd90f",
+      "size": 60974,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:02.527Z"
+    },
+    "gooey-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/gooey-text-preview.mov",
+      "hash": "c0267ac448672431780be75bf58403d34fe23ffecfa124901cf78442f24d323e",
+      "size": 481260,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:28.478Z"
+    },
+    "gooey-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gooey-text-preview.webm",
+      "hash": "43fc7d2748ac180daab81c66798dd5a40bf982480a4900392c327226f83847f3",
+      "size": 134930,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:02.563Z"
+    },
+    "gradient-avatar-preview.mp4": {
+      "file": "cloudflare/v2-preview/gradient-avatar-preview.mov",
+      "hash": "5d4310891abc483cc2e42e30656631ba1c3d7a3f2c89dc70156d9bcaf1523c67",
+      "size": 19186,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:29.794Z"
+    },
+    "gradient-avatar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gradient-avatar-preview.webm",
+      "hash": "055213ecb50073d2f01b28f60664e13d89810103acaaeabbc44714ed53bec857",
+      "size": 16560,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:02.464Z"
+    },
+    "gradient-wave-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/gradient-wave-text-preview.mov",
+      "hash": "572fc57bd2df87b858fadf2e028830eaf95526d42dde8c076eb51ffd1db69be4",
+      "size": 473586,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.285Z"
+    },
+    "gradient-wave-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/gradient-wave-text-preview.webm",
+      "hash": "c202861d2b46e256f6a234049d11edc464584a7fc167dd1bf00c436bdcdc939d",
+      "size": 118252,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:03.624Z"
+    },
+    "grainy-gradient-preview.mp4": {
+      "file": "cloudflare/v2-preview/grainy-gradient-preview.mov",
+      "hash": "a625b26772483542282fcd836c8e0685834b4413725cf8873d211ba737a5da43",
+      "size": 4169870,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.964Z"
+    },
+    "grainy-gradient-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/grainy-gradient-preview.webm",
+      "hash": "ffbca18883ba5fd7a0a9808b83fc4f93ed1e87eb2eddb2de0afad198c45ff912",
+      "size": 801834,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:04.717Z"
+    },
+    "hamburger-preview.mp4": {
+      "file": "cloudflare/v2-preview/hamburger-preview.mov",
+      "hash": "d4455720f056adf86898da8b46cada76106873a015594fa7ea1fd078edaeb619",
+      "size": 91706,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:29.836Z"
+    },
+    "hamburger-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/hamburger-preview.webm",
+      "hash": "4c450d8609224f558c5dbe3bde14e2f222d0fb9e7adee2d41e76334d29ec7c35",
+      "size": 30522,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:03.696Z"
+    },
+    "infinite-menu-preview.mp4": {
+      "file": "cloudflare/v2-preview/infinite-menu-preview.mov",
+      "hash": "d093d2f3ebbfde9a13dc3570ae9e4a393bce20cc0cb70431396fb5d89f3d7b40",
+      "size": 1347842,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.045Z"
+    },
+    "infinite-menu-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/infinite-menu-preview.webm",
+      "hash": "05613735d94e7bab7094927b06ccaab49311ff1e619b07a88d3cdff174db7efd",
+      "size": 349812,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:03.904Z"
+    },
+    "letter-swarm-preview.mp4": {
+      "file": "cloudflare/v2-preview/letter-swarm-preview.mov",
+      "hash": "ebea10fa2b4e8a52d92075f805dedd816875913a9a65a7d1bd80d7871ba18fdc",
+      "size": 2268209,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.526Z"
+    },
+    "letter-swarm-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/letter-swarm-preview.webm",
+      "hash": "8903bc1fbf8aa5e5b8b571dd30ffaf4816625db79dfa42a7f235cc1007dc81fe",
+      "size": 765801,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:03.975Z"
+    },
+    "liquid-chrome-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/liquid-chrome-text-preview.mov",
+      "hash": "a36d63ecabf560b1f65628d6705fd4e701a86ae34caffe8be96c2dd6ce52f178",
+      "size": 1487759,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.563Z"
+    },
+    "liquid-chrome-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/liquid-chrome-text-preview.webm",
+      "hash": "36971c99b3fc78b8b6615a13a6665fa42ba359d27695fa0ad94950443a93846a",
+      "size": 440376,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:04.717Z"
+    },
+    "liquid-metal-preview.mp4": {
+      "file": "cloudflare/v2-preview/liquid-metal-preview.mov",
+      "hash": "1f3126cb2e95fbf57779d968078d7294503433209acde4a17ada0d4abb1d87d1",
+      "size": 666054,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:30.574Z"
+    },
+    "liquid-metal-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/liquid-metal-preview.webm",
+      "hash": "7103bfd751c6cc5a8aa1204ab7f36d750be99059ae331f77c75abf40d907863c",
+      "size": 184285,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:04.717Z"
+    },
+    "marquee-preview.mp4": {
+      "file": "cloudflare/v2-preview/marquee-preview.mov",
+      "hash": "fea076d24de6cc587a458591a9c93acb3d311911a350ef3cd8411d6a67270433",
+      "size": 1072663,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.356Z"
+    },
+    "marquee-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/marquee-preview.webm",
+      "hash": "88e2ca1f18ce39b374efad5987e4c850e9c9ec4b04f7380c18fa39469b76633c",
+      "size": 214852,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:04.893Z"
+    },
+    "masked-tab-bar-preview.mp4": {
+      "file": "cloudflare/v2-preview/masked-tab-bar-preview.mov",
+      "hash": "8f42c5b5896711d2ce3745b7e73a00ebb5753cf08498e707c40f8e0150a23e08",
+      "size": 396623,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.557Z"
+    },
+    "masked-tab-bar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/masked-tab-bar-preview.webm",
+      "hash": "36ce733a0af7db0d32b7b378e91568ae324df531d67c7bda8408571796eedcf8",
+      "size": 83907,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:05.813Z"
+    },
+    "matched-geometry-preview.mp4": {
+      "file": "cloudflare/v2-preview/matched-geometry-preview.mov",
+      "hash": "021727d48087aa4a48bdbccdf00a5de31afd2398de336efaf5f0dab9f2ca8539",
+      "size": 337018,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.359Z"
+    },
+    "matched-geometry-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/matched-geometry-preview.webm",
+      "hash": "40372887e04d2d64991bac9e6d31766122d488224cba67f9036b2170b7a39eb5",
+      "size": 65432,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:05.683Z"
+    },
+    "material-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/material-carousel-preview.mov",
+      "hash": "4c8b773e393942470b311b2570954449b04470feaae81f75a7d9e741c8b5480f",
+      "size": 1908121,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.546Z"
+    },
+    "material-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/material-carousel-preview.webm",
+      "hash": "973b4c5fa5222e8ebd2f42850ee4bf580b167f1f390178ceeb0391621aae55e1",
+      "size": 266622,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:06.165Z"
+    },
+    "mesh-gradient-preview.mp4": {
+      "file": "cloudflare/v2-preview/mesh-gradient-preview.mov",
+      "hash": "9e2b16a927f9bb2e093946e8c5fa87e9288c9ac125a92697b29ff562f0cd8968",
+      "size": 2274479,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:33.450Z"
+    },
+    "mesh-gradient-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/mesh-gradient-preview.webm",
+      "hash": "73649ac9c17a113a5cb176183f563d3021b21713ed9ccdbde1e96e4efe9ddaaa",
+      "size": 244702,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:06.169Z"
+    },
+    "metal-preview.mp4": {
+      "file": "cloudflare/v2-preview/metal-preview.mov",
+      "hash": "07775f5a04d443a7b0ecb51d72ea5d3b2801bef3e7326d9fd3bb5063340e43cf",
+      "size": 546305,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.974Z"
+    },
+    "metal-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/metal-preview.webm",
+      "hash": "c83a9a4b1c80c35032504ad2910f5d87048d30aaa14389855d2432bbe9f29e8f",
+      "size": 119481,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:07.091Z"
+    },
+    "mobile-dock-preview.mp4": {
+      "file": "cloudflare/v2-preview/mobile-dock-preview.mov",
+      "hash": "353688ed82655d44d8b948aed591922fd0853625c45b58e0055ab2110dfd0c81",
+      "size": 499181,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:32.930Z"
+    },
+    "mobile-dock-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/mobile-dock-preview.webm",
+      "hash": "28fcfe6c082edba486b7bc2043181398d0d9e728b99a018b10a07bebe1aecb88",
+      "size": 105739,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:06.921Z"
+    },
+    "morph-fab-preview.mp4": {
+      "file": "cloudflare/v2-preview/morphing-fab-preview.mov",
+      "hash": "407f0d69a910a82c1b2dae08506e5e2178547a652337c14103f95fb350f7d217",
+      "size": 277645,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:34.506Z"
+    },
+    "morph-fab-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/morphing-fab-preview.webm",
+      "hash": "ea0a76bff2de1811d1c8e8254fc14c5048cc0521a21980178eaa947298901e93",
+      "size": 61023,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:06.874Z"
+    },
+    "morph-loader-preview.mp4": {
+      "file": "cloudflare/v2-preview/morph-loader-preview.mov",
+      "hash": "b0a50cfeedf38a90b442e03a6cef2db19cb4e1197b5c36d646cb0236e59d7a63",
+      "size": 612002,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:33.217Z"
+    },
+    "morph-loader-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/morph-loader-preview.webm",
+      "hash": "43aa1d1324b936d43dd13ce3e316ba5e75fea344a3e32f5f0bcb3f7ca9e85b87",
+      "size": 161990,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:06.963Z"
+    },
+    "morphing-tabbar-preview.mp4": {
+      "file": "cloudflare/v2-preview/morphing-tabbar-preview.mov",
+      "hash": "2efc0e4d57408e71574301024e4f7f29151405e91ac7667cb78ec2cb91f2edee",
+      "size": 259152,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:34.529Z"
+    },
+    "morphing-tabbar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/morphing-tabbar-preview.webm",
+      "hash": "bd184817a3056adab247ce36c754bec4b1220dcc62b7019520a709a5858c779f",
+      "size": 48789,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:07.786Z"
+    },
+    "nebula-orb-preview.mp4": {
+      "file": "cloudflare/v2-preview/nebula-orb-preview.mov",
+      "hash": "16b12b57249ecc0b8fbfc6773b125e2e06fb74db1c4491b7fa32f3e80a5fc787",
+      "size": 367887,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:34.842Z"
+    },
+    "nebula-orb-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/nebula-orb-preview.webm",
+      "hash": "69673c70bd940f45e07df38d70211cf2774eb3c410db578b4bae3e6fa5331063",
+      "size": 61047,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:07.873Z"
+    },
+    "number-flow-preview.mp4": {
+      "file": "cloudflare/v2-preview/number-flow-preview.mov",
+      "hash": "cfb3614b99aca48204bc7c85ba5f4b541b1d4cc0b3d943516bcabaaba5a71b45",
+      "size": 639649,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:35.000Z"
+    },
+    "number-flow-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/number-flow-preview.webm",
+      "hash": "78b527ef2c0e1b12f11cffbcdafe53c0b678ed633b392a1f9354b66eba12475d",
+      "size": 198302,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.203Z"
+    },
+    "orbiting-dots-preview.mp4": {
+      "file": "cloudflare/v2-preview/orbiting-dots-preview.mov",
+      "hash": "2803a21f9df3b27b6a5a893691666691163cf675ba4781e38abc5f687793fc9e",
+      "size": 97566,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:35.496Z"
+    },
+    "orbiting-dots-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/orbiting-dots-preview.webm",
+      "hash": "5a15cb3d187bf3f86f65042771185192a1b8df3ec6e8ecb8660b3a09ff9c3762",
+      "size": 26864,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:08.120Z"
+    },
+    "otp-input-preview.mp4": {
+      "file": "cloudflare/v2-preview/otp-input-preview.mov",
+      "hash": "c23bb5c36bca8b4586687776113a7995a310eba358d2fc2bd8123500080dcfed",
+      "size": 599398,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:35.213Z"
+    },
+    "otp-input-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/otp-input-preview.webm",
+      "hash": "06053992d382a1e1b5cefa85357dbf7fe2027873bc4ddd05daa450cfc4953d4b",
+      "size": 123462,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.012Z"
+    },
+    "pagination-preview.mp4": {
+      "file": "cloudflare/v2-preview/pagination-preview.mov",
+      "hash": "78ae883b32b5061687a56be7bc5064c659e759150e5a66f9bf11e5d784365490",
+      "size": 160879,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:35.615Z"
+    },
+    "pagination-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/pagination-preview.webm",
+      "hash": "d599c597e234919aab369675e695c07dbb15326bab9ab4e15d2190bb540a26d3",
+      "size": 22881,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.039Z"
+    },
+    "parallax-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/parallax-carousel-preview.mov",
+      "hash": "ada839e217126e1f8a9b53c7a36a94854f658f19e194cc176bde5cd490b44368",
+      "size": 746638,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:35.767Z"
+    },
+    "parallax-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/parallax-carousel-preview.webm",
+      "hash": "49c1e595746bd462bf9824131f94d86865a0814d6db637ccdfd370a8f941f9c7",
+      "size": 204959,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.012Z"
+    },
+    "parallax-header-preview.mp4": {
+      "file": "cloudflare/v2-preview/parallax-header-preview.mp4",
+      "hash": "be733c8c9ec55865ebc3cdea5184260b4923664b482e7d01f50e1253b55253f1",
+      "size": 1555512,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:38.153Z"
+    },
+    "parallax-header-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/parallax-header-preview.webm",
+      "hash": "e4d1c3ad20fa5e0a05e0caa7568436aadabeb86665990cb9c5e829fb5ce35cbf",
+      "size": 286697,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.076Z"
+    },
+    "pressable-preview.mp4": {
+      "file": "cloudflare/v2-preview/pressable-preview.mov",
+      "hash": "719be6a9ba13c8463803fb53c6813acb95ce81974058fa7f60211fe15737c53d",
+      "size": 116986,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:36.907Z"
+    },
+    "pressable-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/pressable-preview.webm",
+      "hash": "950c67b320b967a9b0a68eb86a7ab400d11a1507140b3145fa4b1de5f661a74d",
+      "size": 28188,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.855Z"
+    },
+    "progress-preview.mp4": {
+      "file": "cloudflare/v2-preview/progress-preview.mov",
+      "hash": "f3c716f3dcb7ea7466d2edda71faf9c97bffc3d6983280fe1456e3e6bc9c5c5f",
+      "size": 446140,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:36.938Z"
+    },
+    "progress-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/progress-preview.webm",
+      "hash": "d68b5129ee407076ccc677211068b6e1726aa1596e438ce872e0b1ed2ce93b72",
+      "size": 70000,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:09.911Z"
+    },
+    "pulsing-dots-preview.mp4": {
+      "file": "cloudflare/v2-preview/pulsing-dots-preview.mov",
+      "hash": "ad8d9e47f16c3ba730c243a3eecf66b98eb245525ba9e1dface073b06b7211f6",
+      "size": 151192,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:37.141Z"
+    },
+    "pulsing-dots-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/pulsing-dots-preview.webm",
+      "hash": "e6733484a00fcd92dc0600bf042cd340af6078bede4923fb8c10c9aca6a93fe8",
+      "size": 27592,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:10.189Z"
+    },
+    "qr-code-preview.mp4": {
+      "file": "cloudflare/v2-preview/qr-code-preview.mov",
+      "hash": "bfd851f0c7514bce3139c9b10850b3119d99dac7a9253286da35a20464c72c00",
+      "size": 498956,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:37.299Z"
+    },
+    "qr-code-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/qr-code-preview.webm",
+      "hash": "66ae4a8015a0cf581636a72907a5ba13b336e96f18c4afccd6d2f1a5c772f10a",
+      "size": 184010,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:11.167Z"
+    },
+    "radial-intro-preview.mp4": {
+      "file": "cloudflare/v2-preview/radial-intro-preview.mov",
+      "hash": "ef1c192f3f2050e38beb8944aeef59eab595c2db544d612987a37d8f33faf24c",
+      "size": 2875546,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:37.937Z"
+    },
+    "radial-intro-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/radial-intro-preview.webm",
+      "hash": "2ab1863d160615d25e0bfe0a3101e5fa2dab1f8eb20a63d5eabbeb5d62eb2881",
+      "size": 329007,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:11.222Z"
+    },
+    "radiant-button-preview.mp4": {
+      "file": "cloudflare/v2-preview/radiant-button-preview.mov",
+      "hash": "3019c4a238e4fc1382cb1b186b52cb13b879be0d966b653971f2dcf828e6528b",
+      "size": 465352,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:37.872Z"
+    },
+    "radiant-button-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/radiant-button-preview.webm",
+      "hash": "470c832d92f6925380b6b0e6a940cd35e2ac7efb66e9ffbe8597ef95d8682857",
+      "size": 95781,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:11.208Z"
+    },
+    "range-slider-preview.mp4": {
+      "file": "cloudflare/v2-preview/range-slider-preview.mov",
+      "hash": "f21a0c64d87ea9df427451a7ddabb2ff080b47803d2ca1707439efa5c5b077c5",
+      "size": 214599,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:37.947Z"
+    },
+    "range-slider-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/range-slider-preview.webm",
+      "hash": "e2391b3dfd03a638906cb51beb8068a8fb75f223ef326faa53ee749676b61c3e",
+      "size": 47121,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:11.199Z"
+    },
+    "rolling-counter-preview.mp4": {
+      "file": "cloudflare/v2-preview/rolling-counter-preview.mov",
+      "hash": "aadea7cf38ee0a44f8338f7145bfa64402bd2873a29dcdec9f8f5ce0b7830411",
+      "size": 653340,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:39.220Z"
+    },
+    "rolling-counter-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/rolling-counter-preview.webm",
+      "hash": "14b39a21f483265fa792b76165a5d5693928ff3714fd80f3b8406ea3d3dfd71a",
+      "size": 156638,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:11.397Z"
+    },
+    "rotate-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/rotate-carousel-preview.mov",
+      "hash": "e664140136b607a555f95dd1800cfff486f4da4fef1f25b2518f7b28d1b83ffc",
+      "size": 1441323,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:39.313Z"
+    },
+    "rotate-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/rotate-carousel-preview.webm",
+      "hash": "96dae1d5a0d0bf4457b4dbe99173cf2fd35c1517be42b1150e711f329c5ccd70",
+      "size": 340388,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:13.507Z"
+    },
+    "rotating-square-preview.mp4": {
+      "file": "cloudflare/v2-preview/rotating-square-preview.mov",
+      "hash": "7c7a72eaacae57c248e2e6b547e7c57e98fa9b1fa67f7871695cfb8e25619ae3",
+      "size": 70645,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:39.220Z"
+    },
+    "rotating-square-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/rotating-square-preview.webm",
+      "hash": "2243dffd8cc3c06f5dfd7019c1c91c90ab488329e2abf8e2d181268346015cbd",
+      "size": 24846,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:12.190Z"
+    },
+    "ruler-preview.mp4": {
+      "file": "cloudflare/v2-preview/ruler-preview.mov",
+      "hash": "1a64e96d758569d52a09b9f15254b42568abbf4313a63a4ad3437eabf15a5f7c",
+      "size": 466170,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:39.893Z"
+    },
+    "ruler-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/ruler-preview.webm",
+      "hash": "d64eb8e037f8f8fd401877a30d7b855fe5f33461ca2729d49cd0485304e0d7ba",
+      "size": 89053,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:12.302Z"
+    },
+    "save-button-preview.mp4": {
+      "file": "cloudflare/v2-preview/save-button-preview.mov",
+      "hash": "5ad54d3be2dac19e77ba0bfa9f0303e2541b738dede5380059e582d29d5b7fbe",
+      "size": 374737,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:39.884Z"
+    },
+    "save-button-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/save-button-preview.webm",
+      "hash": "ee80f1a19cc572b991b964ed398fb377916fdf72f18740115dd8eea3e5cef754",
+      "size": 74099,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:13.306Z"
+    },
+    "scale-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/scale-carousel-preview.mov",
+      "hash": "e7b4cdc9d826a6667e990105c7037fbe76d50a326748cc72e2bc4417571dc29b",
+      "size": 4347204,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:41.307Z"
+    },
+    "scale-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/scale-carousel-preview.webm",
+      "hash": "97f019826fe89929ea25166bb9d06f02b9c67b4ade868c8806255cf3e8fa1e82",
+      "size": 885637,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:14.247Z"
+    },
+    "scrollable-search-preview.mp4": {
+      "file": "cloudflare/v2-preview/scrollable-search-preview.mov",
+      "hash": "32446037b4c1c053dc20470000445614e7b3e4da116cd3972170484cd87e37e3",
+      "size": 709487,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:40.414Z"
+    },
+    "scrollable-search-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/scrollable-search-preview.webm",
+      "hash": "56cff511f1cc17fbb1e03d1cbde32b4e6c8f69983c8890664067de311d581da8",
+      "size": 174898,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:13.431Z"
+    },
+    "search-bar-preview.mp4": {
+      "file": "cloudflare/v2-preview/search-bar-preview.mov",
+      "hash": "b84937e36cd9964acedcae6538a86fcf56d701fbfe6b6fc013d89704f5d74128",
+      "size": 201927,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:40.292Z"
+    },
+    "search-bar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/search-bar-preview.webm",
+      "hash": "d5c2e48b7422396db247e109d322f6ad8e08388c9a3931b069ec39e83555da07",
+      "size": 33565,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:13.394Z"
+    },
+    "seek-bar-preview.mp4": {
+      "file": "cloudflare/v2-preview/seek-bar-preview.mov",
+      "hash": "59465655d0b61c12717be88addd026400201c4f0c8a4adc9619c375b1ab4a438",
+      "size": 197123,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:41.311Z"
+    },
+    "seek-bar-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/seek-bar-preview.webm",
+      "hash": "1e672f658c16fe210c2b2efa705c27e643941e6fb96f0a83b7a38d3374941281",
+      "size": 33986,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:13.316Z"
+    },
+    "segmented-control-preview.mp4": {
+      "file": "cloudflare/v2-preview/segmented-control-preview.mov",
+      "hash": "fd039165f777344a1953a90d8810753f8eddbb0b594cc5c1c08e6adde40a5d2a",
+      "size": 544596,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:41.478Z"
+    },
+    "segmented-control-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/segmented-control-preview.webm",
+      "hash": "a558394bb79a5e79df02ebfaec5ed50016a7e03e831573a415da4d37ea27da1d",
+      "size": 123599,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:14.323Z"
+    },
+    "shimmer-preview.mp4": {
+      "file": "cloudflare/v2-preview/shimmer-preview.mov",
+      "hash": "609e09a13523621f6dda5240445b02d216fbc413f9f0b555e5497cc8cbc639bf",
+      "size": 154807,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:41.510Z"
+    },
+    "shimmer-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/shimmer-preview.webm",
+      "hash": "71bf89014b8375b139a0c1a89fb1c072f9bd5ca8b6990f6d9a625e8c022725e8",
+      "size": 37341,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:14.483Z"
+    },
+    "shimmer-wave-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/shimmer-wave-text-preview.mov",
+      "hash": "c4abcd4d2f7ecf20638c25f4597f72d0927dd00ed60b656cc8ba0001d4e8f3ef",
+      "size": 269843,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:42.395Z"
+    },
+    "shimmer-wave-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/shimmer-wave-text-preview.webm",
+      "hash": "1c0e68a87aba4b0ca1c59fb512b7596c56560db6abac9137b4f34f612bdeaf1a",
+      "size": 66979,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:15.498Z"
+    },
+    "shockwave-preview.mp4": {
+      "file": "cloudflare/v2-preview/shockwave-preview.mov",
+      "hash": "68cb9f34ffcd73c1bd8c94316f59f78820276802d234d351fb1b4abe24154f0f",
+      "size": 1880517,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:42.394Z"
+    },
+    "shockwave-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/shockwave-preview.webm",
+      "hash": "c59be8734482546ad16bd8a51d49ce2fa53a5ea4636a9d32fd5f3a14c6281e1c",
+      "size": 380527,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:15.555Z"
+    },
+    "siri-ios-27-preview.mp4": {
+      "file": "cloudflare/v2-preview/siri-ios-27-preview.mov",
+      "hash": "4f89b619b4f5df2670406f194fced09ab6614d33b7916b94ae8d061684f754d5",
+      "size": 686449,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:42.824Z"
+    },
+    "siri-ios-27-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/siri-ios-27-preview.webm",
+      "hash": "825e6c8d76915b1b349e2f25158d9a94380757a19a75c1722022f28597f84497",
+      "size": 183857,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:15.968Z"
+    },
+    "skia-ripple-preview.mp4": {
+      "file": "cloudflare/v2-preview/skia-ripple-preview.mov",
+      "hash": "f068913989bb6cc59ae4266fc5073d7d68457aa9600a4e3ca74968897c00d119",
+      "size": 5426547,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:44.814Z"
+    },
+    "skia-ripple-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/skia-ripple-preview.webm",
+      "hash": "f117767c1f6fb9e5838d5079293c2ddadf7c0377a08e3dc17f20fdabbaddbbb6",
+      "size": 1072433,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:16.131Z"
+    },
+    "spectral-wave-preview.mp4": {
+      "file": "cloudflare/v2-preview/spectral-wave-preview.mov",
+      "hash": "311cf4fe267a55065b88f781ca0514099021e948e3d369f2a8ec84aac49b319f",
+      "size": 868872,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:43.781Z"
+    },
+    "spectral-wave-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/spectral-wave-preview.webm",
+      "hash": "8e515f877e7cfe321dfde082655bbf54f70f1f6b24dcdc42258b9f29d7898d2a",
+      "size": 166167,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:15.648Z"
+    },
+    "spin-button-preview.mp4": {
+      "file": "cloudflare/v2-preview/spin-button-preview.mov",
+      "hash": "f41e3ebe2181e7aaeb3066c227148846c143b2c4097de6b028241a0eb95dde5a",
+      "size": 263133,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:43.377Z"
+    },
+    "spin-button-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/spin-button-preview.webm",
+      "hash": "488f6454e2945482bb0f16e4c7ab49612b2133086ce5c1f96f83e56f61430db8",
+      "size": 59968,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:16.346Z"
+    },
+    "spinner-arc-preview.mp4": {
+      "file": "cloudflare/v2-preview/spinner-arc-preview.mov",
+      "hash": "54ea792a9f79f9bec1fe3645364663a16685f6476b584db1d07525ce0aa4c6a2",
+      "size": 144379,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:43.520Z"
+    },
+    "spinner-arc-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/spinner-arc-preview.webm",
+      "hash": "16ba78dd415288894cd64fd750a924cb1607f84d8524a5d7505e774d9622e430",
+      "size": 23952,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:16.348Z"
+    },
+    "split-view-preview.mp4": {
+      "file": "cloudflare/v2-preview/split-view-preview.mov",
+      "hash": "dc6688bc4654f158c0c11af44072fe446851e037cc923b27f4f113a527d0766e",
+      "size": 398791,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:43.683Z"
+    },
+    "split-view-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/split-view-preview.webm",
+      "hash": "5ae2b11bda05837cdfb36961a0e751cc9959774dca5c5e2e203147e3a48b6ed2",
+      "size": 85159,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:17.077Z"
+    },
+    "squiggly-slider-preview.mp4": {
+      "file": "cloudflare/v2-preview/squiggly-slider-preview.mov",
+      "hash": "536e2c54de051ae9f768d343e9e0819ccdb99a0df7a478347f4b6650c7430bcf",
+      "size": 378869,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:44.955Z"
+    },
+    "squiggly-slider-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/squiggly-slider-preview.webm",
+      "hash": "14966ed2c6a4c37a0dbc66c181dc00cbb6fada2d96796075fbded294e2f5f6b1",
+      "size": 66579,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:18.182Z"
+    },
+    "squircle-view-preview.mp4": {
+      "file": "cloudflare/v2-preview/squircle-view-preview.mov",
+      "hash": "a0208561bf5e1f45096819c74e942dc6384edc295f409f9ff74cc574c0f739e9",
+      "size": 18575,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:44.515Z"
+    },
+    "squircle-view-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/squircle-view-preview.webm",
+      "hash": "875e2faa48cf907d951e25344242c7d9a57fb93d12ef325553dd28dc18162237",
+      "size": 15791,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:17.575Z"
+    },
+    "stacked-chips-preview.mp4": {
+      "file": "cloudflare/v2-preview/stacked-chips-preview.mov",
+      "hash": "c7e1051501e327564fdc8965ac1a396799b802acb70c754f402278f2c130bf33",
+      "size": 315523,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:44.814Z"
+    },
+    "stacked-chips-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/stacked-chips-preview.webm",
+      "hash": "e5f0393cca65468d6491276484b23857b73757877e52e8c05a38bd4dff943af2",
+      "size": 60777,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:17.728Z"
+    },
+    "staggered-text-preview.mp4": {
+      "file": "cloudflare/v2-preview/staggered-text-preview.mov",
+      "hash": "76a66a529867930dfb5e00baf73787ac8c661194a39a3db72315ef4c6c75d5ad",
+      "size": 647167,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:46.619Z"
+    },
+    "staggered-text-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/staggered-text-preview.webm",
+      "hash": "c3e7b5c5ca2e9f7dabd499aca7d8ffa787c25f6aaf98470c32e7bc9bc134546d",
+      "size": 144286,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:17.947Z"
+    },
+    "theme-switch-preview.mp4": {
+      "file": "cloudflare/v2-preview/theme-switch-preview.mov",
+      "hash": "53366b896d2452b0053e9293c3c989c84675789a05f7a9c4915e75818c5941ce",
+      "size": 264668,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:45.976Z"
+    },
+    "theme-switch-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/theme-switch-preview.webm",
+      "hash": "94928ea1ab6ab53319451f1c72110ebaff7e994407b329416b326e001de71291",
+      "size": 50854,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:18.145Z"
+    },
+    "tilt-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/tilt-carousel-preview.mov",
+      "hash": "d13a08d7b70f479ec3c8cd45cd6bba7fa2f3beb4a382e226058d72737d87b7fb",
+      "size": 2649647,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:45.975Z"
+    },
+    "tilt-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/tilt-carousel-preview.webm",
+      "hash": "d61c99c02b18bf167622a25173846f036ee7cf0a724231d9ebca27598d0a9095",
+      "size": 719353,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:18.829Z"
+    },
+    "toast-preview.mp4": {
+      "file": "cloudflare/v2-preview/toast-preview.mov",
+      "hash": "e3391a16802af7cab9305248173d1d8f4f30d138ef97cad5b048e1db928c3b58",
+      "size": 1608959,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:46.214Z"
+    },
+    "toast-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/toast-preview.webm",
+      "hash": "59de347f6fef1d53524b8d10fd836d972d2bf44750e288c1f41e7b6784ff67e1",
+      "size": 348947,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:18.774Z"
+    },
+    "tray-preview.mp4": {
+      "file": "cloudflare/v2-preview/tray-preview.mov",
+      "hash": "792ea8c03a91a9110c05f9787afe6f6dc25874cf7040b6603fc17bc2ad92d9cf",
+      "size": 2612841,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:47.080Z"
+    },
+    "tray-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/tray-preview.webm",
+      "hash": "3a7bea4f60ff93d158d6edc0ec9728c01902084404906c86a8caef0d81d22b3f",
+      "size": 606224,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:19.663Z"
+    },
+    "unfold-menu-preview.mp4": {
+      "file": "cloudflare/v2-preview/unfold-menu-preview.mov",
+      "hash": "a6bda2be4e4b79ef461ef88da2aed7f67c0ffa27f47196387e3efb9437353615",
+      "size": 221078,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:46.845Z"
+    },
+    "unfold-menu-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/unfold-menu-preview.webm",
+      "hash": "d5b3c9799a287a8f7b5d787864d7132e4263f06cfa110d3912023f47ea408891",
+      "size": 78314,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:19.673Z"
+    },
+    "unstable_orb-preview.mp4": {
+      "file": "cloudflare/v2-preview/unstable_orb-preview.mov",
+      "hash": "caebca1537367102d13ef75a4d8b8ce3ab0e9ef89c8f7b447a1b9ac14b504072",
+      "size": 685734,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:47.145Z"
+    },
+    "unstable_orb-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/unstable_orb-preview.webm",
+      "hash": "03320ddd8f5f6ecf9454854af53137285643468ecd7a9a0beca2642aada10fc9",
+      "size": 159324,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:20.415Z"
+    },
+    "verified-shine-preview.mp4": {
+      "file": "cloudflare/v2-preview/verified-shine-preview.mov",
+      "hash": "7ee5e955273f97fdef0f2b815a21da3c8ce3b07acde1bddac5f803d90cfb95fa",
+      "size": 92580,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:46.970Z"
+    },
+    "verified-shine-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/verified-shine-preview.webm",
+      "hash": "641765dc8ef80f72ec6541c2edfadae61f0e421cd64755744b7830c8bdb8df32",
+      "size": 27477,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:20.074Z"
+    },
+    "vertical-flow-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/vertical-flow-carousel-preview.mov",
+      "hash": "d69af7cdcdea0038e5294f91b686315733f849ad29df16d2bd200c6def4ab248",
+      "size": 4045149,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:49.179Z"
+    },
+    "vertical-flow-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/vertical-flow-carousel-preview.webm",
+      "hash": "ee6f2d5e7604b64c8343ba999c0ae89e7f32e19231b2047edd1f214f811122bc",
+      "size": 908594,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:20.338Z"
+    },
+    "vertical-page-carousel-preview.mp4": {
+      "file": "cloudflare/v2-preview/vertical-page-carousel-preview.mov",
+      "hash": "c3d37c90c157e592e2de689fc3fd60ead7e3a8bad8e19c52fbb33dafb592ce98",
+      "size": 6360373,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:49.230Z"
+    },
+    "vertical-page-carousel-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/vertical-page-carousel-preview.webm",
+      "hash": "e168779b4a75c8adef3bf3103af9b87d21ef7e128b3681d2fd3c4492a14260f3",
+      "size": 1330632,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:22.609Z"
+    },
+    "wave-scrawler-preview.mp4": {
+      "file": "cloudflare/v2-preview/wave-scrawler-preview.mov",
+      "hash": "09bc41bf9c4463455ea94e5008d0910bfd503e981785068cc65274cab5b1a815",
+      "size": 4615684,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T09:51:50.033Z"
+    },
+    "wave-scrawler-preview.webm": {
+      "file": "cloudflare/v2-preview-webm/wave-scrawler-preview.webm",
+      "hash": "30807f0c3876d79681ed79a57a5c5d677a0aac5cf97465b2ce4f4a4f44089f2b",
+      "size": 926906,
+      "contentType": "video/webm",
+      "uploadedAt": "2026-08-27T09:52:21.324Z"
+    }
+  },
+  "orphaned": {}
+}

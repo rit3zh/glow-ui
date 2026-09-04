@@ -293,20 +293,25 @@ const Overlay: React.FC<IOverlay> & React.FunctionComponent<IOverlay> =
       const animatedBlurProps = useAnimatedProps(() => {
         if (isFocused) {
           return {
-            intensity: maxBlurIntensity,
+            intensity: withTiming(maxBlurIntensity, { duration: 350 }),
           };
         }
 
-        const intensity = interpolate(
-          pullDistance.value,
-          [0, 20, 80],
-          [0, 30, maxBlurIntensity],
-          Extrapolation.CLAMP,
-        );
+        if (pullDistance.value > 0) {
+          return {
+            intensity: interpolate(
+              pullDistance.value,
+              [0, 20, 80],
+              [0, 30, maxBlurIntensity],
+              Extrapolation.CLAMP,
+            ),
+          };
+        }
+
         return {
-          intensity,
+          intensity: withTiming(0, { duration: 400 }),
         };
-      }, [isFocused]);
+      }, [isFocused, maxBlurIntensity]);
 
       const animatedStyle = useAnimatedStyle(() => {
         if (isFocused) {

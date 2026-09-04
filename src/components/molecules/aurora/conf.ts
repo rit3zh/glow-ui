@@ -1,4 +1,4 @@
-const AURORA_VERTEX_SHADER = `
+const AURORA_VERTEX_SHADER = /*wgsl */ `
 uniform float2 resolution;
 uniform float time;
 uniform vec3 color1;
@@ -13,7 +13,6 @@ uniform float2 waveDirection;
 float hash(float n) {
   return fract(sin(n) * 43758.5453);
 }
-
 float noise(float2 p) {
   float2 i = floor(p);
   float2 f = fract(p);

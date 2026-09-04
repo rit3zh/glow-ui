@@ -1,38 +1,57 @@
 import type { ReactNode } from "react";
-import type { ListRenderItem, StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
+import type { PanGesture } from "react-native-gesture-handler";
+import type { SharedValue, WithSpringConfig } from "react-native-reanimated";
 
-interface SpringConfig {
-  readonly damping: number;
-  readonly stiffness: number;
-  readonly mass: number;
+type TSplitViewComponents =
+  | "SplitView.Bottom"
+  | "SplitView.Handle"
+  | "SplitView.Top";
+
+interface ISplitViewRoot {
+  children: ReactNode;
+  readonly initialTopHeight?: number;
+  readonly minTopHeight?: number;
+  readonly minBottomHeight?: number;
+  readonly springConfig?: WithSpringConfig;
+  readonly maxTopHeight?: number;
+  readonly gap?: number;
+  readonly snapPoints?: readonly number[];
+  readonly velocityThreshold?: number;
+  readonly onHeightChange?: (height: number) => void;
+  readonly style?: StyleProp<ViewStyle>;
 }
 
-interface SplitViewProps<TTop, TBottom> {
-  readonly topSectionItems: ReadonlyArray<TTop>;
-  readonly bottomSectionItems: ReadonlyArray<TBottom>;
-  readonly bottomSectionTitle: string;
-  readonly initialTopSectionHeight: number;
-  readonly minSectionHeight: number;
-  readonly maxTopSectionHeight: number;
-  readonly maxBottomSectionHeight?: number;
-  readonly velocityThreshold: number;
-  readonly springConfig: SpringConfig;
-  readonly containerBackgroundColor: string;
-  readonly sectionBackgroundColor: string;
-  readonly dividerBackgroundColor: string;
-  readonly dragHandleColor: string;
-  readonly renderTopItem: ListRenderItem<TTop>;
-  readonly renderBottomItem: ListRenderItem<TBottom>;
-  readonly renderHeader: () => ReactNode & React.JSX.Element;
-  readonly topKeyExtractor: (item: TTop, index: number) => string;
-  readonly bottomKeyExtractor: (item: TBottom, index: number) => string;
-  readonly showHeader?: boolean;
-  readonly topListContentContainerStyle?: StyleProp<ViewStyle>;
-  readonly bottomListContentContainerStyle?: StyleProp<ViewStyle>;
-  readonly topListStyle?: StyleProp<ViewStyle>;
-  readonly bottomListStyle?: StyleProp<ViewStyle>;
-  readonly sectionTitleStyle?: StyleProp<ViewStyle>;
-  readonly sectionTitleTextColor?: string;
+interface ISplitViewPane {
+  children: ReactNode;
+  readonly style?: StyleProp<ViewStyle>;
 }
 
-export type { SplitViewProps, SpringConfig };
+interface ISplitViewHandle {
+  readonly color?: string;
+  readonly style?: StyleProp<ViewStyle>;
+  readonly barStyle?: StyleProp<ViewStyle>;
+}
+
+interface ISplitViewTitle {
+  children: ReactNode;
+  readonly style?: StyleProp<TextStyle>;
+}
+
+interface ISplitViewContext {
+  topHeight: SharedValue<number>;
+  handleScale: SharedValue<number>;
+  gap: number;
+  minTop: number;
+  maxTop: number;
+  gesture: PanGesture;
+}
+
+export type {
+  ISplitViewRoot,
+  ISplitViewPane,
+  ISplitViewHandle,
+  ISplitViewTitle,
+  ISplitViewContext,
+  TSplitViewComponents,
+};

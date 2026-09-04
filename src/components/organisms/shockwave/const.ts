@@ -1,4 +1,4 @@
-const SHOCKWAVE_SHADER_SOURCE = `
+const SHOCKWAVE_SHADER_SOURCE = /*wgsl*/ `
 uniform float2 iResolution;
 uniform float  iTime;
 uniform float2 iMouse;

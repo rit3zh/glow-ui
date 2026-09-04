@@ -1,18 +1,28 @@
 {
   "name": "reacticx",
-  "version": "0.1.10",
-  "description": "💅 Add beautiful React Native components to your project",
+  "version": "0.2.0",
+  "description": "React Native components, copied into your project",
   "homepage": "https://www.reacticx.com/",
   "type": "module",
   "bin": {
     "reacticx": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.mjs\"",
+    "test": "node test/smoke.mjs",
+    "test:verbose": "node test/smoke.mjs --verbose",
+    "check": "bun run typecheck && bun run build && bun run test",
+    "clean": "rm -rf dist",
+    "link": "bun link",
+    "unlink": "bun unlink",
     "start": "node dist/index.js"
   },
   "devDependencies": {
@@ -32,9 +42,12 @@
   },
   "keywords": [
     "react-native",
+    "expo",
     "components",
     "ui",
-    "cli"
+    "cli",
+    "registry",
+    "reacticx"
   ],
   "license": "MIT"
 }

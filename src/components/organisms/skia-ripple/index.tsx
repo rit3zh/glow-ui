@@ -1,4 +1,11 @@
-import React, { memo, useMemo } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 // @ts-check
 import {
   Canvas,
@@ -10,11 +17,16 @@ import {
   rect,
   rrect,
   Image as SkiaImage,
+  ImageShader,
+  Fill,
   useImage,
+  makeImageFromView,
+  SkImage,
   SkPath,
 } from "@shopify/react-native-skia";
-import { StyleSheet, View } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
+import { PixelRatio, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { scheduleOnRN } from "react-native-worklets";
 
 import { RIPPLE_SHADER_SOURCE } from "./conf";
 import { useRipple } from "./hook";
@@ -39,32 +51,62 @@ const SkiaRippleEffect: React.FC<IRippleSkiaEffect> &
   }: IRippleSkiaEffect): React.ReactNode &
     React.JSX.Element &
     React.ReactElement => {
-    const { uniforms, tap } = useRipple({
-      amplitude,
+    const pd = PixelRatio.get();
+    const viewRef = useRef<View>(null);
+    const snapshotRef = useRef<SkImage | null>(null);
+    const [snapshot, setSnapshot] = useState<SkImage | null>(null);
+
+    const { uniforms, start } = useRipple({
+      amplitude: amplitude * pd,
       decay,
       duration,
       frequency,
-      height,
-      speed,
-      width,
+      height: height * pd,
+      speed: speed * pd,
+      width: width * pd,
     });
 
-    const clipPath = useMemo<SkPath | null>(() => {
-      if (borderRadius <= 0) return null;
-      const path = Skia.Path.Make();
-      path.addRRect(
-        rrect(rect(0, 0, width, height), borderRadius, borderRadius),
-      );
-      return path;
-    }, [width, height, borderRadius]);
+    const capture = useCallback(async (): Promise<SkImage | null> => {
+      if (!viewRef.current) return null;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const image = await makeImageFromView(viewRef);
+      if (image) {
+        snapshotRef.current = image;
+        setSnapshot(image);
+      }
+      return image;
+    }, []);
+
+    useEffect(() => {
+      capture();
+    }, [children, capture]);
+
+    const handleTap = useCallback(
+      async (x: number, y: number) => {
+        const px = x * pd;
+        const py = y * pd;
+        if (snapshotRef.current) {
+          start(px, py);
+          capture();
+          return;
+        }
+        const image = await capture();
+        if (image) start(px, py);
+      },
+      [capture, start, pd],
+    );
+
+    const tap = Gesture.Tap().onStart((event) => {
+      scheduleOnRN(handleTap, event.x, event.y);
+    });
 
     if (!RIPPLE_SHADER) {
       return (
-        <GestureDetector gesture={tap}>
-          <View style={[{ width, height }, style]}>
-            <Canvas style={{ width, height }}>{children}</Canvas>
-          </View>
-        </GestureDetector>
+        <View
+          style={[{ width, height, borderRadius, overflow: "hidden" }, style]}
+        >
+          {children}
+        </View>
       );
     }
 
@@ -73,18 +115,30 @@ const SkiaRippleEffect: React.FC<IRippleSkiaEffect> &
         <View
           style={[{ width, height, borderRadius, overflow: "hidden" }, style]}
         >
-          <Canvas style={{ width, height }}>
-            <Group
-              clip={clipPath ?? undefined}
-              layer={
-                <Paint>
-                  <RuntimeShader source={RIPPLE_SHADER} uniforms={uniforms} />
-                </Paint>
-              }
-            >
-              {children}
-            </Group>
-          </Canvas>
+          <View
+            ref={viewRef}
+            collapsable={false}
+            onLayout={() => capture()}
+            style={StyleSheet.absoluteFill}
+          >
+            {children}
+          </View>
+
+          {snapshot && (
+            <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Group transform={[{ scale: 1 / pd }]}>
+                <Fill>
+                  <RuntimeShader source={RIPPLE_SHADER} uniforms={uniforms}>
+                    <ImageShader
+                      image={snapshot}
+                      fit="cover"
+                      rect={rect(0, 0, snapshot.width(), snapshot.height())}
+                    />
+                  </RuntimeShader>
+                </Fill>
+              </Group>
+            </Canvas>
+          )}
         </View>
       </GestureDetector>
     );

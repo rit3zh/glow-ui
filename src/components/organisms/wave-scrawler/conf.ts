@@ -1,4 +1,4 @@
-export const WAVE_SCRAWLER_SHADER = `
+export const WAVE_SCRAWLER_SHADER = /*wgsl*/ `
 uniform shader fromImage;
 uniform shader toImage;
 uniform float progress;

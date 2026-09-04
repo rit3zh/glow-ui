@@ -52,3 +52,9 @@ export const DEFAULT_ANIMATION_DURATION = 600;
 export const DEFAULT_ANIMATION_TYPE = AnimationType.Circular;
 export const DEFAULT_SWITCH_DELAY = 80;
 export const DEFAULT_EASING = EasingType.EaseInOut;
+
+// Number of slats the Blinds variants divide the screen into.
+export const DEFAULT_SLAT_COUNT = 12;
+
+// Blur radius applied to the CircularBlur mask, in points.
+export const DEFAULT_MASK_BLUR = 24;

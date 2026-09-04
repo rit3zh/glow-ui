@@ -2,20 +2,20 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { StackAwareTabBar } from "@/components/base/stack-aware-tabs";
+import { CurvedBottomTabs } from "@/components/base/curved-bottom-tabs";
 
 export default function TabLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs
-        tabBar={(props) => <StackAwareTabBar {...props} />}
+        tabBar={(props) => <CurvedBottomTabs {...props} />}
         screenOptions={{
           headerShown: true,
-          headerTitle: "Glow UI",
+          headerTitle: "Reacticx",
         }}
       >
         <Tabs.Screen
-          name="(first)"
+          name="index"
           options={{
             title: "Home",
 
@@ -29,7 +29,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="(second)"
+          name="second"
           options={{
             title: "Search",
             tabBarIcon: ({ focused, color, size }) => (
@@ -42,7 +42,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="(third)"
+          name="third"
           options={{
             title: "Profile",
             tabBarIcon: ({ focused, color, size }) => (

@@ -1,0 +1,118 @@
+---
+title: Installation
+description: The native setup Reacticx components are built on.
+icon: Download
+---
+
+There is no Reacticx package to install. What you set up here are the **native
+dependencies** the components are built on, plus the CLI that copies them in.
+
+<Callout title="Expo Go will not run every component">
+  Skia and several other native modules need a
+  [development build](https://docs.expo.dev/develop/development-builds/introduction/).
+  Components built only on Reanimated and Gesture Handler run fine in Expo Go.
+</Callout>
+
+---
+
+## 1. Install the shared dependencies
+
+```bash
+npx expo install react-native-reanimated react-native-worklets react-native-gesture-handler react-native-svg
+```
+
+```bash
+npx expo install @shopify/react-native-skia expo-haptics expo-blur expo-symbols @expo/vector-icons
+```
+
+| Package | Used for |
+| --- | --- |
+| `react-native-reanimated` | every animated component — not optional |
+| `react-native-worklets` | ships separately from Reanimated 4; 40 components need it |
+| `react-native-gesture-handler` | drag, swipe and press interactions |
+| `react-native-svg` | vector shapes, icons and path animations |
+| `@shopify/react-native-skia` | shaders, gradients and canvas-drawn effects |
+| `expo-haptics` | touch feedback on press |
+| `expo-blur` | frosted-glass surfaces |
+| `expo-symbols` / `@expo/vector-icons` | icon sets |
+
+Each component page lists anything extra it needs. Install only what you use —
+none of this is required up front.
+
+---
+
+## 2. Add the Reanimated Babel plugin
+
+It **must be last** in the `plugins` array:
+
+```js title="babel.config.js"
+module.exports = {
+  presets: ["babel-preset-expo"],
+  plugins: ["react-native-reanimated/plugin"],
+};
+```
+
+Then clear the cache:
+
+```bash
+npx expo start --clear
+```
+
+---
+
+## 3. Wrap the root in `GestureHandlerRootView`
+
+Anything gesture-driven needs this above it in the tree:
+
+```tsx title="app/_layout.tsx"
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {children}
+    </GestureHandlerRootView>
+  );
+}
+```
+
+---
+
+## 4. Initialise the CLI
+
+```bash
+npx reacticx init
+```
+
+It asks where components should go, how they should be laid out, and what to do
+about npm packages they import, then writes `component.config.json`. Only what
+differs from the defaults is written:
+
+```json title="component.config.json"
+{
+  "$schema": "https://reacticx.com/schema/component.config.json",
+  "outDir": "src/components/ui",
+  "aliases": { "components": "@/components/ui" }
+}
+```
+
+The alias has to match your `tsconfig.json` path mapping — `init` reads it and
+suggests one that already works. Every key is listed in the
+[CLI reference](/docs/cli#configuration).
+
+Skip this step entirely if you would rather copy source from the component pages
+by hand.
+
+---
+
+## 5. Add a component
+
+```bash
+npx reacticx add accordion
+```
+
+Whatever it imports comes with it, and any npm package your project lacks is
+offered for install. After anything native lands, rebuild the native target —
+`npx expo run:ios` — rather than restarting Metro.
+
+Next: [Usage](/docs/usage), or the [CLI reference](/docs/cli) for every flag.

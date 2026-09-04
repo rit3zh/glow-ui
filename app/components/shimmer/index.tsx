@@ -1,196 +1,301 @@
-import { View, Text, ScrollView, SafeAreaView, Dimensions } from "react-native";
-import React, { useState } from "react";
-import { ShimmerEffect } from "@/components";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import { ShimmerGroup, Shimmer } from "@/components";
+import { useState } from "react";
+import { Showcase } from "~/showcase";
+import type { ShimmerPreset } from "@/components/molecules/Shimmer/Shimmer.types";
 
-const { width } = Dimensions.get("window");
+const PRESETS: ShimmerPreset[] = ["dark", "light", "twitter", "neutral"];
 
-const ShimmerDemo: React.FC = (_$_): React.ReactNode => {
-  const [isLoading] = useState<boolean>(true);
-  const shimmerConfig: any = {
-    duration: 2000,
-    shimmerColors: [
-      "rgba(0, 0, 0, 0.5)",
-      "rgba(255, 255, 255, 0)",
-      "rgba(0, 0, 0, 0.5)",
-    ],
-    variant: "pulse",
-    // direction: "topToBottom",
-  };
+const CUSTOM_COLORS = [
+  "rgba(88, 28, 135, 1)",
+  "rgba(147, 51, 234, 1)",
+  "rgba(232, 121, 249, 1)",
+  "rgba(147, 51, 234, 1)",
+  "rgba(88, 28, 135, 1)",
+];
 
-  const ProfileCard: React.FC = (_$_) => (
-    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
-      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
-        PROFILE CARD
-      </Text>
-      <View className="flex-row items-center">
-        <ShimmerEffect
-          isLoading={isLoading}
-          {...shimmerConfig}
-          className="w-16 h-16 bg-zinc-800 rounded-full"
-        />
+export default function App(_$_: Record<string, unknown>) {
+  const [fontLoaded] = useFonts({
+    SfProRounded: require("@/assets/fonts/sf-pro-rounded.ttf"),
+    HelveticaNowDisplay: require("@/assets/fonts/HelveticaNowDisplayMedium.ttf"),
+  });
 
-        <View className="flex-1 ml-4">
-          <ShimmerEffect
-            isLoading={isLoading}
-            {...shimmerConfig}
-            className="h-5 bg-zinc-800 rounded mb-2 w-full"
-          />
-          <ShimmerEffect
-            isLoading={isLoading}
-            {...shimmerConfig}
-            className="h-4 bg-zinc-800 rounded w-3/4"
-          />
-        </View>
-      </View>
-    </View>
-  );
-
-  const StatsCard: React.FC = (_$_) => (
-    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
-      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
-        STATISTICS
-      </Text>
-      <View className="flex-row justify-between">
-        {[1, 2, 3].map((item, index) => (
-          <View key={index} className="items-center flex-1">
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="w-12 h-12 bg-zinc-800 rounded-lg mb-3"
-            />
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="h-6 bg-zinc-800 rounded mb-1 w-10"
-            />
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="h-4 bg-zinc-800 rounded w-12"
-            />
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-
-  const ListItems: React.FC = () => (
-    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
-      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
-        RECENT ACTIVITY
-      </Text>
-      {[1, 2, 3, 4].map((item, index) => (
-        <View
-          key={index}
-          className={`flex-row items-center py-3 ${index < 3 ? "border-b border-zinc-800" : ""}`}
-        >
-          <ShimmerEffect
-            isLoading={isLoading}
-            {...shimmerConfig}
-            className="w-10 h-10 bg-zinc-800 rounded-full mr-4"
-          />
-          <View className="flex-1">
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="h-4 bg-zinc-800 rounded mb-2 w-4/5"
-            />
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="h-3 bg-zinc-800 rounded w-2/5"
-            />
-          </View>
-          <ShimmerEffect
-            isLoading={isLoading}
-            {...shimmerConfig}
-            className="w-6 h-6 bg-zinc-800 rounded"
-          />
-        </View>
-      ))}
-    </View>
-  );
-
-  const ImageGallery = () => (
-    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
-      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
-        GALLERY
-      </Text>
-      <View className="flex-row flex-wrap justify-between">
-        {[1, 2, 3, 4, 5, 6].map((item, index) => (
-          <ShimmerEffect
-            key={index}
-            isLoading={isLoading}
-            {...shimmerConfig}
-            className="bg-zinc-800 rounded-lg mb-3"
-            style={{ width: (width - 80) / 3, height: (width - 80) / 3 }}
-          />
-        ))}
-      </View>
-    </View>
-  );
-
-  const ActionButtons = () => (
-    <View className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
-      <Text className="text-zinc-400 text-sm font-medium mb-4 tracking-wide">
-        ACTIONS
-      </Text>
-      <View className="flex-row justify-between">
-        {[1, 2, 3].map((action, index) => (
-          <View key={index} className="flex-1 mx-1">
-            <ShimmerEffect
-              isLoading={isLoading}
-              {...shimmerConfig}
-              className="bg-zinc-800 rounded-lg p-4 h-20"
-            />
-          </View>
-        ))}
-      </View>
-    </View>
-  );
+  const [preset, setPreset] = useState<ShimmerPreset>("dark");
+  const display = fontLoaded ? "HelveticaNowDisplay" : undefined;
+  const text = fontLoaded ? "SfProRounded" : undefined;
 
   return (
-    <ScrollView
-      className="flex-1 bg-black"
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={true}
-      contentContainerStyle={{ paddingBottom: 40 }}
-    >
-      <SafeAreaView className="flex-1">
-        <View className="px-6 pt-8 pb-6 border-b border-zinc-800">
-          <View className="flex-row items-center flex-1 gap-3 border-b mb-3">
-            <MaterialCommunityIcons name="shimmer" size={30} color="white" />
-            <Text className="text-3xl font-bold text-zinc-100 mb-2">
-              Shimmer
-            </Text>
-          </View>
-          <Text className="text-zinc-400 mb-4">
-            Beautiful loading states with dark theme
+    <Showcase>
+      <GestureHandlerRootView style={styles.container}>
+        <StatusBar style="light" />
+
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={[styles.title, { fontFamily: display }]}>Shimmer</Text>
+          <Text style={[styles.subtitle, { fontFamily: text }]}>
+            Placeholder skeletons while content loads.
           </Text>
-          <View className="flex-row items-center">
-            <View className="w-3 h-3 rounded-full mr-2 bg-blue-500" />
-            <Text className="text-zinc-400 text-sm">Loading state active</Text>
-          </View>
-        </View>
 
-        <View className="px-6 pt-6">
-          <ProfileCard />
-          <StatsCard />
-          <ListItems />
-          <ImageGallery />
-          <ActionButtons />
-
-          <View className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6 items-center">
-            <Feather name="zap" size={24} color="#71717a" />
-            <Text className="text-zinc-400 text-center mt-2">
-              Fast shimmer effects with 500ms duration
-            </Text>
+          <View style={styles.presetRow}>
+            {PRESETS.map((item) => {
+              const active = item === preset;
+              return (
+                <Pressable
+                  key={item}
+                  onPress={() => setPreset(item)}
+                  style={[styles.presetChip, active && styles.presetChipActive]}
+                >
+                  <Text
+                    style={[
+                      styles.presetLabel,
+                      active && styles.presetLabelActive,
+                      { fontFamily: text },
+                    ]}
+                  >
+                    {item}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
-        </View>
-      </SafeAreaView>
-    </ScrollView>
+
+          <Text style={[styles.sectionLabel, { fontFamily: text }]}>Card</Text>
+          <View style={styles.card}>
+            <ShimmerGroup
+              preset={preset}
+              duration={1200}
+              opacity={0.7}
+              variant="shimmer"
+            >
+              <Shimmer style={styles.cover} />
+              <View style={styles.cardBody}>
+                <Shimmer style={styles.lineLg} />
+                <Shimmer style={styles.lineMd} />
+                <Shimmer style={styles.lineSm} />
+              </View>
+            </ShimmerGroup>
+          </View>
+
+          <Text style={[styles.sectionLabel, { fontFamily: text }]}>List</Text>
+          <View style={styles.card}>
+            <ShimmerGroup preset={preset} duration={1200}>
+              {[0, 1, 2].map((row) => (
+                <View key={row} style={styles.listRow}>
+                  <Shimmer style={styles.avatar} />
+                  <View style={styles.listRowText}>
+                    <Shimmer style={styles.lineMd} />
+                    <Shimmer style={styles.lineSm} />
+                  </View>
+                  <Shimmer style={styles.trailing} />
+                </View>
+              ))}
+            </ShimmerGroup>
+          </View>
+
+          <Text style={[styles.sectionLabel, { fontFamily: text }]}>
+            Variants
+          </Text>
+          <View style={styles.card}>
+            <View style={styles.variantRow}>
+              <View style={styles.variantCell}>
+                <Shimmer
+                  preset={preset}
+                  variant="shimmer"
+                  duration={1200}
+                  style={styles.tile}
+                />
+                <Text style={[styles.caption, { fontFamily: text }]}>
+                  shimmer
+                </Text>
+              </View>
+              <View style={styles.variantCell}>
+                <Shimmer
+                  preset={preset}
+                  variant="pulse"
+                  duration={1200}
+                  style={styles.tile}
+                />
+                <Text style={[styles.caption, { fontFamily: text }]}>
+                  pulse
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={[styles.sectionLabel, { fontFamily: text }]}>
+            Custom colors
+          </Text>
+          <View style={styles.card}>
+            <ShimmerGroup
+              preset="custom"
+              shimmerColors={CUSTOM_COLORS}
+              duration={1400}
+            >
+              <Shimmer style={styles.customTile} />
+              <Shimmer style={styles.customLineLg} />
+              <Shimmer style={styles.customLineMd} />
+            </ShimmerGroup>
+          </View>
+
+          <Text style={[styles.sectionLabel, { fontFamily: text }]}>
+            Directions
+          </Text>
+          <View style={styles.card}>
+            <ShimmerGroup preset={preset} duration={1200}>
+              <Shimmer direction="leftToRight" style={styles.bar} />
+              <Shimmer direction="rightToLeft" style={styles.bar} />
+              <Shimmer direction="topToBottom" style={styles.bar} />
+              <Shimmer direction="bottomToTop" style={styles.bar} />
+            </ShimmerGroup>
+          </View>
+        </ScrollView>
+      </GestureHandlerRootView>
+    </Showcase>
   );
-};
+}
 
-export default ShimmerDemo;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 72,
+    paddingBottom: 64,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#777",
+    marginTop: 6,
+  },
+  presetRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 20,
+  },
+  presetChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,255,255,0.06)",
+  },
+  presetChipActive: {
+    backgroundColor: "#fff",
+  },
+  presetLabel: {
+    fontSize: 13,
+    color: "#999",
+  },
+  presetLabelActive: {
+    color: "#000",
+  },
+  sectionLabel: {
+    fontSize: 12,
+    color: "#555",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginTop: 32,
+    marginBottom: 12,
+  },
+  card: {
+    backgroundColor: "#141414",
+    borderRadius: 20,
+    padding: 16,
+    gap: 12,
+  },
+  cover: {
+    width: "100%",
+    height: 140,
+    borderRadius: 14,
+  },
+  cardBody: {
+    gap: 10,
+  },
+  lineLg: {
+    width: "80%",
+    height: 18,
+    borderRadius: 6,
+  },
+  lineMd: {
+    width: "60%",
+    height: 13,
+    borderRadius: 5,
+  },
+  lineSm: {
+    width: "40%",
+    height: 13,
+    borderRadius: 5,
+  },
+  listRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  listRowText: {
+    flex: 1,
+    gap: 8,
+  },
+  avatar: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+  },
+  trailing: {
+    width: 26,
+    height: 26,
+    borderRadius: 8,
+  },
+  variantRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  variantCell: {
+    flex: 1,
+    gap: 8,
+    alignItems: "center",
+  },
+  tile: {
+    width: "100%",
+    height: 72,
+    borderRadius: 14,
+  },
+  caption: {
+    fontSize: 11,
+    color: "#666",
+  },
+  bar: {
+    width: "100%",
+    height: 34,
+    borderRadius: 10,
+  },
+  customTile: {
+    width: "100%",
+    height: 72,
+    borderRadius: 14,
+    backgroundColor: "rgba(88, 28, 135, 1)",
+  },
+  customLineLg: {
+    width: "80%",
+    height: 18,
+    borderRadius: 6,
+    backgroundColor: "rgba(88, 28, 135, 1)",
+  },
+  customLineMd: {
+    width: "60%",
+    height: 13,
+    borderRadius: 5,
+    backgroundColor: "rgba(88, 28, 135, 1)",
+  },
+});

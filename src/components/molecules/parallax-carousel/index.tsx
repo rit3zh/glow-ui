@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   interpolate,
+  Extrapolation,
 } from "react-native-reanimated";
 import type {
   ParallaxCarouselItem,
@@ -26,23 +27,22 @@ const ParallaxCarouselItemComponent = <ItemT extends ParallaxCarouselItem>({
   spacing,
   parallaxIntensity,
 }: ParallaxCarouselItemProps<ItemT>) => {
-  const inputRange = [
-    (index - 1) * itemWidth,
-    index * itemWidth,
-    (index + 1) * itemWidth,
-  ];
-
   const imageAnimatedStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(scrollX.value, inputRange, [
-      -itemWidth * parallaxIntensity,
-      0,
-      itemWidth * parallaxIntensity,
-    ]);
+    const offset = index * itemWidth;
+    const translateX = interpolate(
+      scrollX.value,
+      [offset - itemWidth, offset, offset + itemWidth],
+      [-itemWidth * parallaxIntensity, 0, itemWidth * parallaxIntensity],
+      Extrapolation.CLAMP,
+    );
 
     return {
       transform: [{ translateX }],
     };
-  });
+  }, [index, itemWidth, parallaxIntensity]);
+
+  const innerWidth = itemWidth - spacing * 2;
+  const innerHeight = itemHeight - spacing * 2;
 
   return (
     <View
@@ -51,18 +51,16 @@ const ParallaxCarouselItemComponent = <ItemT extends ParallaxCarouselItem>({
       <View
         style={[
           styles.imageContainer,
-          { width: itemWidth - spacing * 2, height: itemHeight - spacing * 2 },
+          { width: innerWidth, height: innerHeight },
         ]}
+        renderToHardwareTextureAndroid
       >
         {item.image && (
           <Animated.Image
             source={item.image}
             style={[
               styles.image,
-              {
-                width: (itemWidth - spacing * 2) * 1,
-                height: itemHeight - spacing * 2,
-              },
+              { width: innerWidth, height: innerHeight },
               imageAnimatedStyle,
             ]}
           />
@@ -72,6 +70,10 @@ const ParallaxCarouselItemComponent = <ItemT extends ParallaxCarouselItem>({
     </View>
   );
 };
+
+const MemoizedParallaxCarouselItem = React.memo(
+  ParallaxCarouselItemComponent,
+) as typeof ParallaxCarouselItemComponent;
 
 const ParallaxCarousel = <ItemT extends ParallaxCarouselItem>({
   data,
@@ -95,8 +97,59 @@ const ParallaxCarousel = <ItemT extends ParallaxCarouselItem>({
     },
   });
 
-  const defaultKeyExtractor = (item: ItemT, index: number) =>
-    keyExtractor ? keyExtractor(item, index) : `item-${index}`;
+  const defaultKeyExtractor = useCallback(
+    (item: ItemT, index: number) =>
+      keyExtractor ? keyExtractor(item, index) : `item-${index}`,
+    [keyExtractor],
+  );
+
+  const getItemLayout = useCallback(
+    (_: ArrayLike<ItemT> | null | undefined, index: number) => ({
+      length: itemWidth,
+      offset: itemWidth * index,
+      index,
+    }),
+    [itemWidth],
+  );
+
+  const renderCarouselItem = useCallback(
+    ({ item, index }: { item: ItemT; index: number }) => (
+      <MemoizedParallaxCarouselItem
+        item={item}
+        index={index}
+        scrollX={scrollX}
+        renderItem={renderItem}
+        itemWidth={itemWidth}
+        itemHeight={itemHeight}
+        spacing={spacing}
+        parallaxIntensity={parallaxIntensity}
+      />
+    ),
+    [scrollX, renderItem, itemWidth, itemHeight, spacing, parallaxIntensity],
+  );
+
+  const sidePadding = useMemo(
+    () => Math.max((width - itemWidth) / 2, 0),
+    [itemWidth],
+  );
+
+  const contentContainerStyle = useMemo(
+    () => [styles.flatListContent, { paddingHorizontal: sidePadding }],
+    [sidePadding],
+  );
+
+  const snapProps = useMemo(
+    () =>
+      pagingEnabled
+        ? {
+            snapToInterval: itemWidth,
+            snapToAlignment: "start" as const,
+            decelerationRate: "fast" as const,
+            disableIntervalMomentum: true,
+          }
+        : {},
+    [pagingEnabled, itemWidth],
+  );
 
   return (
     <View style={styles.carouselWrapper}>
@@ -104,24 +157,19 @@ const ParallaxCarousel = <ItemT extends ParallaxCarouselItem>({
         data={data}
         keyExtractor={defaultKeyExtractor}
         horizontal
-        pagingEnabled={pagingEnabled}
         showsHorizontalScrollIndicator={showHorizontalScrollIndicator}
         onScroll={onScroll}
-        style={{ flexGrow: 0 }}
+        style={styles.list}
         scrollEventThrottle={16}
-        contentContainerStyle={styles.flatListContent}
-        renderItem={({ item, index }) => (
-          <ParallaxCarouselItemComponent
-            item={item}
-            index={index}
-            scrollX={scrollX}
-            renderItem={renderItem}
-            itemWidth={itemWidth}
-            itemHeight={itemHeight}
-            spacing={spacing}
-            parallaxIntensity={parallaxIntensity}
-          />
-        )}
+        getItemLayout={getItemLayout}
+        removeClippedSubviews={false}
+        initialNumToRender={3}
+        maxToRenderPerBatch={1}
+        windowSize={3}
+        overScrollMode="never"
+        contentContainerStyle={contentContainerStyle}
+        renderItem={renderCarouselItem}
+        {...snapProps}
       />
     </View>
   );
@@ -133,6 +181,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  list: {
+    flexGrow: 0,
+  },
   flatListContent: {
     alignItems: "center",
   },
@@ -142,12 +193,15 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     overflow: "hidden",
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
   },
   image: {
+    position: "absolute",
+    top: 0,
+    left: 0,
     resizeMode: "cover",
   },
 });

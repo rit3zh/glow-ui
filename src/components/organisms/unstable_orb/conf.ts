@@ -1,4 +1,4 @@
-export const SHADER_SOURCE: string = `
+export const SHADER_SOURCE: string = /*wgsl*/ `
 uniform float iTime;
 uniform vec2 iResolution;
 uniform float colorShift;

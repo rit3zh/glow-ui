@@ -1,0 +1,31 @@
+{
+  "$schema": "https://reacticx.com/schema/component.config.json",
+  "outDir": "src/shared/components",
+  "structure": "category",
+  "typescript": true,
+  "aliases": {
+    "components": "@/shared/components",
+    "utils": "@/shared/utils",
+    "hooks": "@/shared/hooks"
+  },
+  "paths": {
+    "utils": "src/shared/utils",
+    "hooks": "src/shared/hooks",
+    "types": "src/shared/types",
+    "examples": "src/shared/examples"
+  },
+  "include": {
+    "types": false,
+    "examples": false,
+    "dependencies": true
+  },
+  "overwrite": false,
+  "packageManager": "auto",
+  "installDependencies": "prompt",
+  "registry": {
+    "origin": "https://pub-028ac77ff44d4123aed5b9b6592ec08d.r2.dev",
+    "index": "index.json",
+    "registry": "core/registry.json",
+    "cache": 3600
+  }
+}

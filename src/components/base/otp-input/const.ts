@@ -15,12 +15,20 @@ import type { AnimationVariant } from "./types";
 
 const ANIMATION_VARIATIONS: Record<AnimationVariant, any> = {
   fadeSlideUp: {
-    entering: FadeInUp.duration(300).springify(),
+    entering: FadeInUp.duration(300).springify().mass(0.5),
     exiting: FadeOutUp.duration(200),
   },
   fadeSlideDown: {
-    entering: FadeInDown.duration(300).springify(),
-    exiting: FadeOutDown.duration(200),
+    entering: FadeInDown.duration(300)
+      .springify()
+      .damping(12)
+      .stiffness(150)
+      .mass(0.5),
+    exiting: FadeOutDown.duration(200)
+      .springify()
+      .damping(12)
+      .stiffness(150)
+      .mass(0.5),
   },
   scale: {
     entering: ZoomIn.duration(250).easing(Easing.out(Easing.back(1.5))),

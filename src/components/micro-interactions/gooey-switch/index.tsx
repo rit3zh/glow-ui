@@ -16,6 +16,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   interpolate,
+  interpolateColor,
   useDerivedValue,
   clamp,
   WithSpringConfig,
@@ -45,14 +46,14 @@ const AnimatedMainOval: React.FC<ICoreOval> &
   cy,
   rx,
   ry,
-  isOn,
+  progress,
   onColor,
   offColor,
 }: ICoreOval):
   | (React.ReactNode & React.JSX.Element & React.ReactElement)
   | null => {
-  const color = useDerivedValue(() => {
-    return isOn.value ? onColor : offColor;
+  const color = useDerivedValue<string>(() => {
+    return interpolateColor(progress.value, [0, 1], [offColor, onColor]);
   });
 
   const x = useDerivedValue(() => cx.value - rx.value);
@@ -199,12 +200,10 @@ export const GooeySwitch: React.FC<IGooeySwitch> &
 
     const progress = useSharedValue<number>(currentActive ? 1 : 0);
     const isDragging = useSharedValue<boolean>(false);
-    const isOn = useSharedValue<Required<boolean>>(currentActive);
 
     useEffect(() => {
       if (!isDragging.value) {
         progress.value = withSpring<number>(currentActive ? 1 : 0, spring);
-        isOn.value = currentActive;
       }
     }, [currentActive]);
 
@@ -273,11 +272,6 @@ export const GooeySwitch: React.FC<IGooeySwitch> &
         const clampedX = clamp(newX, LEFT_X, RIGHT_X);
         const newProgress = interpolate(clampedX, [LEFT_X, RIGHT_X], [0, 1]);
         progress.value = newProgress;
-
-        const shouldBeOn = newProgress >= toggleThreshold;
-        if (shouldBeOn !== isOn.value) {
-          isOn.value = shouldBeOn;
-        }
       })
       .onEnd((event) => {
         "worklet";
@@ -299,8 +293,6 @@ export const GooeySwitch: React.FC<IGooeySwitch> &
           velocity: velocity / (RIGHT_X - LEFT_X),
         });
 
-        isOn.value = shouldBeOn;
-
         if (shouldBeOn !== currentActive) {
           scheduleOnRN(updateValue, shouldBeOn);
         }
@@ -316,7 +308,6 @@ export const GooeySwitch: React.FC<IGooeySwitch> &
         "worklet";
         const newValue = !currentActive;
         progress.value = withSpring(newValue ? 1 : 0, spring);
-        isOn.value = newValue;
         scheduleOnRN(updateValue, newValue);
       });
 
@@ -481,7 +472,7 @@ export const GooeySwitch: React.FC<IGooeySwitch> &
               cy={SWITCH_HEIGHT / 2}
               rx={innerBlobRx}
               ry={innerBlobRy}
-              isOn={isOn}
+              progress={progress}
               onColor={activeColor}
               offColor={inactiveColor}
             />

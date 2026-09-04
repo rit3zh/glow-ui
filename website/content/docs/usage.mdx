@@ -1,0 +1,137 @@
+---
+title: Usage
+description: Working with a Reacticx component once it is in your project.
+icon: Info
+---
+
+A component that has been added is ordinary project code. It lives in your
+`outDir`, imports through your aliases, and is committed with everything else.
+There is no package to update and no fork to maintain — the file is yours.
+
+---
+
+## Importing
+
+The path follows `outDir`, `structure` and `aliases` from your
+`component.config.json`. With the defaults from `init`:
+
+```tsx title="app/faq.tsx"
+import { Accordion } from "@/components/ui/molecules/accordion";
+```
+
+Not sure where something landed? `npx reacticx info accordion` prints the path
+and whether it is installed.
+
+---
+
+## A component in use
+
+Most Reacticx components are compound — a root that holds state, and parts you
+compose inside it:
+
+```tsx title="app/faq.tsx"
+import { View, Text } from "react-native";
+import { Accordion } from "@/components/ui/molecules/accordion";
+
+const FAQS = [
+  { id: "1", question: "How do I get started?", answer: "Run reacticx init." },
+  { id: "2", question: "Can I edit the code?", answer: "It's your file now." },
+];
+
+export default function FAQ() {
+  return (
+    <View style={{ flex: 1, padding: 16 }}>
+      <Accordion spacing={8}>
+        {FAQS.map((faq) => (
+          <Accordion.Item key={faq.id} value={faq.id} icon="chevron">
+            <Accordion.Trigger>
+              <Text>{faq.question}</Text>
+            </Accordion.Trigger>
+            <Accordion.Content>
+              <Text>{faq.answer}</Text>
+            </Accordion.Content>
+          </Accordion.Item>
+        ))}
+      </Accordion>
+    </View>
+  );
+}
+```
+
+Every component page documents its own props, and the types ship with the source
+so autocomplete answers most questions without leaving the editor.
+
+---
+
+## Editing it
+
+Change the file. That is the whole workflow — there is no theme layer to fight
+and no `!important` to win.
+
+```tsx title="src/components/ui/molecules/accordion/presets.ts" {3}
+export const AccordionThemes = {
+  light: {
+    backgroundColor: "#fafafa", // was #ffffff
+    borderColor: "#e4e4e7",
+    headlineColor: "#09090b",
+    subtitleColor: "#71717a",
+    iconColor: "#71717a",
+  },
+  // …
+};
+```
+
+To see how far a component has drifted from the registry after your edits:
+
+```bash
+npx reacticx diff accordion
+```
+
+It replays the import rewriting before comparing, so only your real changes are
+reported. Re-adding with `--overwrite` discards them, which is exactly why the
+command exists.
+
+---
+
+## Keeping up with the registry
+
+```bash
+npx reacticx diff                        # everything installed
+npx reacticx add accordion --overwrite   # take the registry version
+```
+
+An unedited component can be overwritten freely. An edited one is a merge you do
+by hand: read the diff, then decide.
+
+---
+
+## Dependencies
+
+Each component imports only what it needs. `add` reports anything missing from
+your `package.json` and offers to install it; install manually with `expo` so
+versions match your SDK:
+
+```bash
+npx expo install expo-haptics
+```
+
+Two that catch people out:
+
+- `react-native-worklets` installs **separately** from
+  `react-native-reanimated` — Reanimated 4 moved worklets into its own package.
+- Blur is `@sbaiahmed1/react-native-blur`, a scoped package. The unscoped
+  `react-native-blur` is a different library.
+
+After anything native lands, rebuild — `npx expo run:ios` or
+`npx expo run:android`. A Metro restart is not enough.
+
+---
+
+## Removing one
+
+```bash
+npx reacticx remove accordion
+```
+
+It deletes the component's folder. Shared helpers it brought along and packages
+it needed stay where they are, in case something else uses them.

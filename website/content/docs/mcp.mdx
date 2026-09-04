@@ -1,0 +1,153 @@
+---
+title: MCP Server
+description: Give a coding agent the Reacticx registry — browse, read and add components without leaving the conversation.
+icon: Bot
+---
+
+`@reacticx/mcp` puts the registry behind [Model Context Protocol](https://modelcontextprotocol.io)
+tools. An agent can list components, read their real source and types, and copy
+them into your project — the same registry the CLI uses, with the same import
+rewriting.
+
+```bash
+npx @reacticx/mcp
+```
+
+It speaks MCP over stdio, so a client launches it. Running it by hand only
+prints a readiness line.
+
+---
+
+## Setup
+
+<Tabs items={["Claude Code", "mcp.json", "Cursor"]}>
+
+<Tab value="Claude Code">
+
+```bash
+claude mcp add reacticx -- npx -y @reacticx/mcp
+```
+
+</Tab>
+
+<Tab value="mcp.json">
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "reacticx": {
+      "command": "npx",
+      "args": ["-y", "@reacticx/mcp"]
+    }
+  }
+}
+```
+
+</Tab>
+
+<Tab value="Cursor">
+
+```json title=".cursor/mcp.json"
+{
+  "mcpServers": {
+    "reacticx": {
+      "command": "npx",
+      "args": ["-y", "@reacticx/mcp"]
+    }
+  }
+}
+```
+
+</Tab>
+
+</Tabs>
+
+The project the write tools act on is the directory the server starts in. Pin it
+with `--root` when one client spans several projects, or pass `projectRoot` on
+an individual call.
+
+| Flag | Description |
+| --- | --- |
+| `--root <path>` | project the write tools act on |
+| `--read-only` | expose the registry, refuse every write |
+| `--registry <origin>` | read from your own mirror |
+| `--cache <seconds>` | registry cache TTL |
+| `--no-cache` | always refetch |
+
+`REACTICX_MCP_ROOT`, `REACTICX_MCP_READ_ONLY=1` and `REACTICX_MCP_REGISTRY` set
+the same three things through the environment.
+
+---
+
+## Tools
+
+| Tool | What it returns |
+| --- | --- |
+| `get_usage_guide` | the whole workflow — read once per session |
+| `list_components` | the catalog, filtered by category or name |
+| `get_component` | one component's files, and whether it is installed here |
+| `get_component_source` | full source, file by file |
+| `get_component_types` | the published prop types |
+| `get_component_example` | the example screen |
+| `get_config` | the resolved `component.config.json` |
+| `init_config` | write `component.config.json` |
+| `list_installed_components` | what the project already has |
+| `add_components` | copy components in, imports rewritten |
+| `diff_components` | installed files that drift from the registry |
+| `refresh_registry` | drop the cache and refetch |
+
+Two resources come with them: `reacticx://registry` for the whole catalog as
+JSON, and `reacticx://component/{name}` for one component's source.
+
+---
+
+## Adding a component
+
+`add_components` takes the component names plus the same switches as the CLI —
+`dir`, `includeTypes`, `includeExamples`, `followDependencies`, `overwrite`,
+`dryRun`. It answers with JSON:
+
+```json
+{
+  "status": "written",
+  "outDir": "src/components/ui",
+  "filesWritten": ["src/components/ui/molecules/accordion/index.tsx"],
+  "missingPackages": [{ "name": "expo-haptics", "usedBy": ["…/index.tsx"] }],
+  "installCommand": "bun add expo-haptics"
+}
+```
+
+A `status` of `blocked` means files already exist and nothing was written — call
+again with `overwrite: true`, after `diff_components` if you may have edited
+them.
+
+<Callout title="It never installs anything">
+  Missing packages come back as a command for you to run, never as a shell
+  invocation. Native dependencies still need a rebuild — `npx expo run:ios`, not
+  just a Metro restart.
+</Callout>
+
+---
+
+## What it will not do
+
+- Write outside the project root — a `dir` that escapes it is refused.
+- Overwrite an existing file without an explicit `overwrite: true`.
+- Run a shell command, install a package, or touch `package.json`.
+- Skip a checksum: every download is verified against the registry index.
+
+`--read-only` keeps the whole catalog browsable while refusing every write — the
+right default for a shared client.
+
+---
+
+## Docs as markdown
+
+Every docs page is also served as plain markdown for agents that would rather
+read prose than call a tool. Append `.mdx` to any URL:
+
+```bash
+curl https://reacticx.com/docs/cli.mdx
+```
+
+Each page's header has a **Copy Markdown** button for the same thing by hand.

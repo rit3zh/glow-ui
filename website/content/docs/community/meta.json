@@ -1,7 +1,0 @@
-{
-  "title": "Community",
-  "description": "Request components, share your projects, and connect with the Reactix community",
-  "icon": "Users",
-  "root": true,
-  "pages": ["index", "showcase", "request"]
-}

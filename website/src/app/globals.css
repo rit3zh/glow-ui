@@ -2,16 +2,171 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+  `preset.css` is kept for what it provides rather than how it looks: the shiki
+  token classes, the collapsible keyframes, and the `--color-fd-*` custom
+  properties the few remaining framework-rendered pieces read. The docs theme
+  (`solar.css`) is deliberately not imported — every surface it styles is now
+  ours, and its `#nd-*` rules would only fight them.
+*/
 @import "fumadocs-ui/css/preset.css";
-@import "fumadocs-ui/css/solar.css";
+@import "fumadocs-ui/css/neutral.css";
 /* @import "fumadocs-ui/css/shadcn.css"; */
 /* @import "fumadocs-ui/css/black.css"; */
 /* @import "fumadocs-ui/css/catppuccin.css"; */
 /* @import "fumadocs-ui/css/dusk.css"; */
 
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @source "../node_modules/fumadocs-ui/dist/**/*.js";
+
+/*
+  Landing page type system: Instrument Serif for headlines, Geist elsewhere.
+
+  These must live in an `inline` theme block. next/font declares
+  `--font-instrument-serif` on the <body> class, so a plain `@theme` token
+  would try to resolve it at :root — where it does not exist — leaving the
+  utility invalid at computed-value time and silently inheriting the sans
+  stack. `inline` pastes the value into the utility so it resolves at the
+  element instead.
+*/
+@theme inline {
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  /* Unlumen docs surface (Guides + Community). `ux-surface` is the raised
+     plate under code viewports and tables; `accent-pro` is its one accent hue.
+     Deliberately not named `surface` — the landing page already owns that
+     token, and the two palettes are unrelated. */
+  --color-ux-surface: var(--ux-surface);
+  --color-accent-pro: var(--accent-pro);
+  --breakpoint-3xl: 2000px;
+  /* `font-brand` — landing body face; docs keep Geist. */
+  --font-brand: var(--font-inter), system-ui, sans-serif;
+  /* Inter is the docs body face, matching Unlumen. This has to name the font
+     explicitly — defining it as `var(--font-sans)` makes the token resolve to
+     itself, which silently invalidates every `font-sans` utility. */
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading:
+    var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-geist:
+    var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+  Landing palette. Near-black rather than pure black and an off-white ink so
+  the serif headline does not glare. One ember accent, used only for the
+  headline's terminal period and inline text links.
+*/
+@theme {
+  --color-surface: #0b0b0b;
+  --color-surface-raised: #171717;
+  /* Barely above the page black — panels that should read as recessed. */
+  --color-surface-sunken: #101010;
+  --color-ink: #ededed;
+  --color-ink-muted: #a1a1a1;
+  --color-ink-faint: #6e6e6e;
+  --color-brand: #ff6a3d;
+}
+
+/* ==========================================================================
+   `.site-nav` — the bar's own palette
+   ==========================================================================
+
+   The site bar stands over two different surfaces: the landing page, which is
+   always near-black, and the docs, which follow the reader's theme. Its colours
+   are therefore read from custom properties rather than written into the
+   utilities, so one set of markup can be repainted by the scope it lands in.
+
+   The defaults below are the landing values. `.site-nav--docs` re-points them
+   at the docs palette, which already swaps itself under `.dark`, so the bar
+   inherits light and dark without knowing either exists.
+   ========================================================================== */
+
+.site-nav {
+  --nav-bg: transparent;
+  --nav-fg: var(--color-ink);
+  --nav-fg-muted: var(--color-ink-muted);
+  --nav-fg-faint: var(--color-ink-faint);
+  --nav-hover: rgb(255 255 255 / 0.07);
+  --nav-hover-soft: rgb(255 255 255 / 0.06);
+  --nav-rule: rgb(255 255 255 / 0.07);
+  --nav-panel: #080808;
+  --nav-panel-border: rgb(255 255 255 / 0.1);
+  --nav-panel-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
+  --nav-cta: #ffffff;
+  --nav-cta-fg: #000000;
+}
+
+.site-nav--docs {
+  /* The page's own background, not the docs palette's — `.ux` sits a step
+     lighter than the surface around it, and a bar painted in it read as a grey
+     plate laid over the page. Slightly translucent so the blur has something
+     to do. */
+  --nav-bg: color-mix(in oklab, var(--page-bg) 82%, transparent);
+  --nav-fg: var(--foreground);
+  --nav-fg-muted: var(--muted-foreground);
+  --nav-fg-faint: color-mix(in oklab, var(--muted-foreground) 75%, transparent);
+  --nav-hover: var(--accent);
+  --nav-hover-soft: color-mix(in oklab, var(--accent) 70%, transparent);
+  --nav-rule: var(--border);
+  /* The page's background, not `--popover`: the docs palette's popover is a
+     raised grey card, and the menu is a panel hanging off the bar, not a card
+     on the page. Read from `--page-bg` for the same reason `--nav-bg` is —
+     `.ux` re-declares `--background` a step lighter, and the panel would drift
+     grey again on every docs route. */
+  --nav-panel: var(--page-bg);
+  --nav-panel-border: var(--border);
+  --nav-panel-shadow: 0 16px 48px rgb(0 0 0 / 0.14);
+  /* Ink and paper, not `--primary`: the primitives section hands its primary to
+     the brand orange, and the site bar is not that section's — it is the same
+     bar on every page, so its one filled control reads the same on all of
+     them. */
+  --nav-cta: var(--foreground);
+  --nav-cta-fg: var(--background);
+}
+
+.dark .site-nav--docs {
+  --nav-panel-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
+}
 
 @theme {
   --color-background: var(--background);
@@ -118,8 +273,11 @@
 } */
 
 @layer utilities {
+  /* Browser default. Every rem-based size in the app is measured against this,
+     so the docs only match Unlumen's scale at 16px — at 18px the whole surface
+     renders 12.5% larger than the design it is ported from. */
   html {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   body {
@@ -195,10 +353,14 @@ button {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  @media (min-width: 1024px) {
-    article {
-      padding-left: 0px !important;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
@@ -207,6 +369,33 @@ button {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
+}
+
+/*
+  Hero device strip. The track renders the list twice with `gap-5` (1.25rem),
+  so one full set is 50% of the track plus half a gap.
+*/
+@keyframes landing-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+
+.landing-drift {
+  animation: landing-drift 72s linear infinite;
+}
+
+.landing-drift:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-drift {
+    animation: none;
+  }
 }
 
 @keyframes marquee {
@@ -228,6 +417,17 @@ button {
 }
 
 @layer utilities {
+  /* A scroller that keeps its scrollbar out of the layout — used by the
+     component docs columns, where a bar would break the split seam. */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .animate-marquee {
     animation: marquee var(--duration, 40s) linear infinite;
   }
@@ -286,28 +486,94 @@ a[href="/docs/components/morph-loader"]::after {
 }
 
 :root {
-  --sidebar: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 95.9%);
-  --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* Code sits a step deeper than the card it is in, so the surface reads as
+     inset rather than flush. Defined at the root rather than on `.ux` because
+     the source drawer portals into <body>, outside that scope — a token that
+     does not resolve there leaves the sheet transparent. */
+  --code-surface: #ededed;
+  /* Brand orange, rooted for the same reason: the floating component sidebar
+     portals into <body> too, and an unresolved accent paints as transparent.
+     `.ux` restates it so that scope stays self-contained. */
+  --accent-pro: #c2490c;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  /* The page's own background, held under a second name. `.ux` re-declares
+     `--background` for the docs palette, so anything that has to match the
+     surface *behind* the docs shell — the site bar — cannot read it from
+     inside that scope. A custom property resolves its `var()` where it is
+     declared, so this keeps the root value all the way down. */
+  --page-bg: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
 }
 
 .dark {
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --code-surface: #0d0d0d;
+  --accent-pro: #ff6a3d;
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.145 0 0);
+  --page-bg: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
 }
 
 @theme inline {
+  --color-code-surface: var(--code-surface);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -324,4 +590,666 @@ a[href="/docs/components/morph-loader"]::after {
 
 [data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
   height: 0px !important;
+}
+
+/* ==========================================================================
+   `.ux` — the documentation surface
+   ==========================================================================
+
+   Three Fumadocs instances — Guides, Components, Community — one look. The
+   scope exists so this palette, type stack and set of metrics apply to the
+   docs and to nothing else: the landing page keeps its own, and neither has to
+   know about the other.
+
+   The token block below is the docs theme re-declared at this boundary rather
+   than at `:root`. Everything inside — including the pieces Fumadocs renders
+   itself, which read `--color-fd-*` — inherits from here.
+
+   One hue. Orange is spent only where the reader is being told something:
+   "you are here" (the sidebar's active mark, the TOC rail), "this goes
+   somewhere" (links, list markers), "do this" (buttons). Everything else is
+   greyscale, which is the only reason a single accent can carry that much.
+   ========================================================================== */
+
+.ux {
+  /* --- Metrics ---------------------------------------------------------- */
+  --ux-nav-h: 4rem;
+  --ux-side-w: 16.75rem;
+  --ux-toc-w: 14rem;
+
+  /* --- Palette (light) -------------------------------------------------- */
+  --ux-surface: #f7f7f7;
+  /* Brand orange. Darkened for light mode so links clear AA on white. */
+  --accent-pro: #c2490c;
+  --background: oklch(1 0 0);
+  --foreground: #333333;
+  --card: #f5f5f5;
+  --card-foreground: #333333;
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #333333;
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: #f7f7f7;
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: #f7f7f7;
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --border: oklch(0.94 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+
+  /* --- Fumadocs bridge -------------------------------------------------- *
+   * The search palette, the props tables and the shiki token classes are
+   * still framework-rendered. Re-pointing fumadocs' own custom properties
+   * inside this scope is what makes them inherit this palette instead of the
+   * framework's defaults.                                                    */
+  --color-fd-background: var(--background);
+  --color-fd-foreground: var(--foreground);
+  --color-fd-muted: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+  --color-fd-popover: var(--background);
+  --color-fd-popover-foreground: var(--foreground);
+  --color-fd-card: var(--card);
+  --color-fd-card-foreground: var(--card-foreground);
+  --color-fd-border: var(--border);
+  --color-fd-primary: oklch(0 0 0);
+  --color-fd-primary-foreground: var(--primary-foreground);
+  --color-fd-secondary: var(--secondary);
+  --color-fd-secondary-foreground: var(--secondary-foreground);
+  --color-fd-accent: oklch(0.97 0 0);
+  --color-fd-accent-foreground: oklch(0.205 0 0);
+  --color-fd-ring: var(--ring);
+
+  font-family: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+.dark .ux {
+  --ux-surface: hsl(0, 0%, 9%);
+  --accent-pro: #ff6a3d;
+  --background: #121212;
+  --foreground: #e5e5e5;
+  --card: #191919;
+  --card-foreground: #e5e5e5;
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: #232323;
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: #232323;
+  --accent-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  --color-fd-primary: oklch(1 0 0);
+  --color-fd-accent: oklch(0.269 0 0);
+  --color-fd-accent-foreground: oklch(0.985 0 0);
+}
+
+/* ==========================================================================
+   Theme switch — the soft sweep
+   ==========================================================================
+
+   `use-theme-transition` wraps the change in `startViewTransition` and
+   publishes the pointer position and a radius reaching the farthest corner as
+   `--vt-x` / `--vt-y` / `--vt-r`. Without rules here the browser falls back to
+   cross-fading a raster of the whole document, which is what made the switch
+   feel late.
+
+   The edge is a growing circular clip on the incoming layer.
+
+   It used to be a feathered radial mask whose stops were driven by `--vt-p`, a
+   registered custom property swept from zero to the far corner. That reads
+   beautifully in Chromium and does not run in WebKit: Safari does not animate
+   a registered custom property on a view-transition pseudo-element, so `--vt-p`
+   held at its `0px` initial value, the mask resolved to fully transparent for
+   the whole 560ms, and the switch appeared to hang — then snapped to the new
+   theme in one frame when the pseudo-elements were torn down.
+
+   `clip-path` needs no custom-property interpolation: it is animatable in every
+   engine that ships view transitions, and a circle clip is composited rather
+   than repainted, which is also what keeps the sweep smooth over a snapshot
+   the size of the window.
+
+   Everything the animation touches lives on the incoming layer. The outgoing
+   one is never faded, blurred or moved — see the note above it. Behind these
+   two snapshots there is no page, only the canvas, so any pixel neither of
+   them covers is a hole.
+   ========================================================================== */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  /* The default cross-fade, off. `plus-lighter` is what makes two stacked
+     snapshots wash out through the middle of a fade. */
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/*
+  The outgoing theme holds still, fully opaque, and is simply covered.
+
+  It used to dissolve to `opacity: 0` under the reveal, which reads well in
+  isolation and is wrong here: a root view transition does not paint the live
+  document, so the only thing behind this snapshot is the page canvas —
+  `body`'s background, already repainted in the theme being switched *to*.
+  Fading the old layer therefore washed everything the reveal had not reached
+  yet toward a flat, contentless plate, and the easing is front-loaded enough
+  that it was three-quarters gone inside the first 100ms. Held opaque, the
+  reveal has something real to resolve out of and no pixel is ever uncovered.
+*/
+::view-transition-old(root) {
+  z-index: 0;
+  animation: none;
+}
+
+/*
+  The reveal, as Unlumen runs it — the one shape of this animation known to
+  hold up in WebKit and in Chromium both.
+
+  Three things do the work, and none of them are the circle itself:
+
+  - The closed state lives on the rule, not in a `from` keyframe, so the layer
+    is already clipped at radius zero the frame it is created. A `from` block is
+    only sampled once the animation starts, which leaves one frame of the whole
+    incoming theme on screen before it closes.
+  - 380ms on an ease-out quint, not 560ms on a smooth-in-out. The old timing
+    spent its middle third at near-constant speed, which is exactly the part you
+    read as a disc crossing the page. Front-loading the travel and landing it
+    softly means the edge is never anywhere long enough to be followed.
+  - `will-change` plus a compositor nudge. Without them the clip repaints the
+    snapshot every frame instead of masking a texture already on the GPU, which
+    is what turns the sweep choppy on a large or retina display.
+*/
+::view-transition-new(root) {
+  z-index: 9999;
+  clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%));
+  animation: theme-sweep 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: clip-path;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/*
+  `forwards` keeps the clip at full radius for the frame between the animation
+  ending and the browser tearing the pseudo-elements down. Without it the clip
+  reverts to the rule's closed state and the incoming theme is clipped off the
+  screen entirely for that frame: one blank flash at the end of every sweep.
+*/
+@keyframes theme-sweep {
+  to {
+    clip-path: circle(var(--vt-r, 100vmax) at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    clip-path: none;
+    will-change: auto;
+  }
+}
+
+/*
+  A colour `transition` started by the class flip is captured in the new
+  snapshot at its *first* frame and then carries on running in the live DOM
+  underneath, so the sweep hands over to an element still mid-fade a second
+  after the theme was supposed to have finished changing. The flag is set
+  before `startViewTransition`, so both snapshots are taken with transitions
+  already off, and it is lifted once the snapshots are gone — by which point
+  every value has settled, so nothing moves when it goes.
+
+  It deliberately no longer touches `backdrop-filter`. That override was here
+  on the theory that a blurred surface re-samples the page while the page is a
+  snapshot, but a root view transition does not paint the live document at all
+  — only the pseudo-elements — so there is nothing for it to re-sample. What it
+  did do was flatten the site bar, the floating TOC and every other blurred
+  surface to an opaque fill for the length of the sweep and then hand the blur
+  back in a single frame, which is a blink of its own, at the top of the screen
+  where the reader is already looking.
+*/
+:root[data-theme-switching] *,
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+/* ==========================================================================
+   `.ux-primitive` — the primitives section
+   ==========================================================================
+
+   Same surface, one dial turned. `.ux` spends orange only on "you are here"
+   and "this goes somewhere", and leaves fumadocs' own primary greyscale —
+   black in light, white in dark. The primitives section hands that primary to
+   the accent as well, so the sidebar's active mark, the TOC rail and the
+   section's buttons all read in the brand hue rather than in ink.
+
+   It is layered on top of `.ux` rather than replacing it: everything not named
+   here still inherits, so the two sections cannot drift apart on anything
+   except the one colour they are meant to differ on.
+
+   Both selectors are written out, and the doubled class is deliberate. `.ux`
+   declares the light palette and `.dark .ux` the dark one, and that second
+   selector outranks a lone `.ux-primitive` — so the orange applied in light
+   mode and was quietly overwritten by the greyscale primary the moment the
+   theme flipped, which read as the theme switch misbehaving on these pages and
+   nowhere else. `.ux.ux-primitive` outranks `.ux`, and `.dark .ux.ux-primitive`
+   outranks `.dark .ux`, so the accent survives both.
+   ========================================================================== */
+
+.ux.ux-primitive,
+.dark .ux.ux-primitive {
+  --primary: var(--accent-pro);
+  --primary-foreground: oklch(1 0 0);
+  --color-fd-primary: var(--accent-pro);
+  --color-fd-primary-foreground: oklch(1 0 0);
+  --ring: var(--accent-pro);
+  --color-fd-ring: var(--accent-pro);
+}
+
+/* --- Layout metrics ------------------------------------------------------- *
+ * Fumadocs positions its own shell (`#nd-*`). The nav is fixed and 4rem tall,
+ * so the article has to be pushed clear of it by hand — the framework assumes
+ * a static header and leaves no room otherwise.                              */
+
+.ux #nd-sidebar {
+  @apply md:border-0!;
+}
+
+.ux #nd-docs-layout {
+  @apply relative 3xl:mx-auto! 3xl:w-full! 3xl:max-w-[var(--breakpoint-3xl)]!;
+}
+
+.ux #nd-page {
+  @apply pt-0! 2xl:max-w-none!;
+}
+
+/* `#nd-docs-layout` already reserves the sidebar with
+ * `padding-inline-start: var(--fd-sidebar-width)`, so the article's own box
+ * starts right where the sidebar ends. Fumadocs centres it in that remaining
+ * space (`md:mx-auto`) once it stops filling the whole width, which reads as
+ * drifting away from the rail; pinning it to the start instead keeps it
+ * hugging the sidebar, with the leftover space pushed to the right. */
+.ux #nd-page article {
+  @apply pt-23! max-md:px-6! md:max-w-[min(94%,1600px)]! md:ms-0! md:me-auto! 3xl:mx-auto!;
+}
+
+/* The table of contents is the docked control in `floating-toc.tsx`, so the
+ * framework's rail and its mobile popover are both switched off in `page.tsx`.
+ * Zeroing the width is what hands the space back to the article — `#nd-page`
+ * reserves it with `padding-inline-end: var(--fd-toc-width)` whether or not a
+ * rail is actually rendered into it. */
+.ux #nd-page {
+  --fd-toc-width: 0px;
+}
+
+.ux #nd-tocnav {
+  @apply hidden!;
+}
+
+/* --- Prose ---------------------------------------------------------------- *
+ * The article body is markup we do not author — it comes out of the MDX
+ * compiler — so its type scale lives here rather than in a component. One
+ * measure (`max-w-prose`), one accent (links and list markers), and headings
+ * that step down by size alone.                                              */
+
+.ux #docs-body h1 {
+  @apply mt-10 mb-6 scroll-m-28 text-4xl font-medium! leading-none tracking-tight text-foreground;
+}
+
+.ux #docs-body h2 {
+  @apply mt-11 mb-4 scroll-m-28 text-2xl font-semibold! leading-tight tracking-tight text-foreground;
+}
+
+.ux #docs-body h3 {
+  @apply mt-8 mb-3 scroll-m-28 text-xl font-normal! tracking-normal text-foreground;
+}
+
+.ux #docs-body h4,
+.ux #docs-body h5,
+.ux #docs-body h6 {
+  @apply text-foreground font-medium!;
+}
+
+.ux #docs-body :is(h1, h2, h3, h4, h5, h6) a {
+  @apply text-foreground no-underline hover:no-underline;
+}
+
+.ux #docs-body p {
+  @apply max-w-prose text-lg font-normal leading-relaxed tracking-[-0.022em] text-foreground/85;
+}
+
+.ux #docs-body ul {
+  @apply flex max-w-prose list-disc flex-col gap-3 pl-5 text-lg tracking-normal text-foreground/80;
+}
+
+.ux #docs-body ol {
+  @apply flex max-w-prose list-decimal flex-col gap-1 pl-5 text-lg text-foreground/60;
+}
+
+.ux #docs-body ul li::marker,
+.ux #docs-body ol li::marker {
+  @apply text-accent-pro!;
+}
+
+.ux #docs-body a {
+  @apply text-accent-pro decoration-accent-pro underline-offset-4 transition-colors hover:underline;
+}
+
+.ux #docs-body strong {
+  @apply font-medium text-foreground;
+}
+
+.ux #docs-body blockquote {
+  @apply my-4 border-l-2 border-border pl-4 text-foreground/70 italic;
+}
+
+.ux #docs-body hr {
+  @apply my-8 border-border;
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+.ux #docs-body table {
+  display: table;
+  max-width: none;
+  white-space: normal;
+  @apply my-4 w-full border-collapse overflow-hidden rounded-lg bg-ux-surface! text-left text-sm;
+}
+
+.ux #docs-body thead {
+  @apply border-b border-border;
+}
+
+.ux #docs-body tr {
+  @apply border-border;
+}
+
+.ux #docs-body tbody tr + tr {
+  @apply border-t;
+}
+
+.ux #docs-body th {
+  @apply px-4 py-2.5 text-left align-top text-sm font-normal text-muted-foreground;
+}
+
+.ux #docs-body td {
+  @apply px-4 py-2.5 align-top text-sm leading-relaxed text-foreground/80;
+}
+
+.ux #docs-body table code {
+  @apply inline-block max-w-full overflow-x-auto rounded-md border-0 bg-transparent! px-2 py-0.5 font-mono text-sm tracking-tight text-foreground;
+}
+
+/* --- Component page prose ------------------------------------------------- *
+ * The component pages render into one half of the viewport rather than a full
+ * measure, so the prose runs at a tighter scale than `#docs-body`. The `###`
+ * headings the pages are written with are their section headings, which is why
+ * `h3` here matches the size the shell's own section titles use.            */
+
+.ux #component-docs-body {
+  @apply space-y-5;
+}
+
+.ux #component-docs-body h2,
+.ux #component-docs-body h3 {
+  @apply mt-20 mb-8 scroll-mt-24 text-[2.125rem] font-normal! leading-tight tracking-[-0.02em] text-foreground;
+}
+
+.ux #component-docs-body h4 {
+  @apply mt-10 mb-4 text-xl font-medium! tracking-[-0.01em] text-foreground;
+}
+
+.ux #component-docs-body :is(h2, h3, h4) a {
+  @apply text-foreground no-underline hover:no-underline;
+}
+
+.ux #component-docs-body p {
+  @apply text-[17px] leading-[1.7] tracking-[-0.011em] text-foreground/70;
+}
+
+.ux #component-docs-body ul {
+  @apply flex list-disc flex-col gap-3 pl-5 text-[17px] leading-[1.7] text-foreground/70;
+}
+
+.ux #component-docs-body ol {
+  @apply flex list-decimal flex-col gap-3 pl-5 text-[17px] leading-[1.7] text-foreground/70;
+}
+
+/* Inline code inside prose reads as a chip, not as a second typeface. */
+.ux #component-docs-body :not(pre) > code {
+  @apply rounded-md bg-accent px-1.5 py-0.5 font-mono text-[0.875em] text-foreground/90;
+}
+
+.ux #component-docs-body :is(ul, ol) li::marker {
+  @apply text-accent-pro!;
+}
+
+.ux #component-docs-body a {
+  @apply text-accent-pro decoration-accent-pro underline-offset-4 transition-colors hover:underline;
+}
+
+.ux #component-docs-body strong {
+  @apply font-medium text-foreground;
+}
+
+/* An empty wrapper is left behind where a recording was hoisted out of the
+ * flow and into the preview column. */
+.ux #component-docs-body div:empty {
+  @apply hidden;
+}
+
+/* --- Steps ---------------------------------------------------------------- *
+ * Steps run without any spacing of their own, so consecutive ones read as one
+ * block. The numbered dot sits on the rail, which is why the gap is set here
+ * rather than as a margin on the step's own children.                       */
+
+.ux #component-docs-body .fd-step + .fd-step {
+  @apply mt-12;
+}
+
+/* A step's body needs air under its instruction line before the panel or tree
+ * it introduces. */
+.ux #component-docs-body .fd-step > * + * {
+  @apply mt-4;
+}
+
+/* The file tree builds each folder row as an accordion header — a real `h3` —
+ * which the prose rules above would otherwise blow up to section-heading size
+ * and space out by five rem. Scoped to the tree so the rest of the body keeps
+ * its headings. */
+.ux #component-docs-body [data-slot="files"] :is(h2, h3, h4) {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+/* --- Chrome --------------------------------------------------------------- */
+
+.ux ::selection {
+  @apply bg-accent-pro/25 text-white;
+}
+
+.ux ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ux ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ux ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+.ux * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* --- Code inside the article --------------------------------------------- *
+ * `DocsBody` carries fumadocs' `prose` class, and prose styles `code` with a
+ * chip background and a border through `:where(code)` — which matches `pre >
+ * code`, not just inline code. A `code` element is inline, so that single
+ * background paints one box per line box, each hugging its own line's text:
+ * the stray highlight sitting behind a code block.
+ *
+ * Fumadocs' own blocks escape it by carrying `not-prose`; the panels here
+ * render the highlighted markup directly, so they are switched off by hand.
+ * The panel already paints the ground, and the tokens carry the colour.
+ *
+ * Scoped to `#docs-body`, which is the guides and the primitives. The
+ * components section renders into `#component-docs-body` and already states
+ * its own rule as `:not(pre) > code`.                                        */
+
+.ux #docs-body pre code,
+.ux #docs-body pre .line {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+/* --- Shiki dual themes ------------------------------------------------- *
+ * `highlight()` is called with `themes: { light, dark }`, so shiki emits the
+ * colours as `--shiki-light` / `--shiki-dark` custom properties on each token
+ * rather than as concrete colours. Nothing else on the site binds them —
+ * fumadocs' own stylesheet, which normally does, is not imported — so without
+ * these rules every token inherits the surrounding text colour.
+ *
+ * These are matched on `pre` rather than on `[data-code-block]`: the source
+ * drawer renders the highlighted markup on its own, outside that wrapper. The
+ * `inherit` fallback keeps any non-shiki `pre` on its normal colour.
+ *
+ * These rules are unlayered, so they outrank every Tailwind utility no matter
+ * how specific — utilities live in a cascade layer, and unlayered CSS always
+ * wins over layered CSS. A `pre` coloured by hand rather than by shiki opts
+ * out with `data-plain`, or its `text-*` classes would never apply.          */
+pre {
+  /* The panel supplies the surface, so the theme's own background is dropped. */
+  background-color: var(--code-surface);
+}
+
+pre:not([data-plain]) {
+  color: var(--shiki-light, inherit);
+}
+
+pre:not([data-plain]) code,
+pre:not([data-plain]) span {
+  color: var(--shiki-light, inherit);
+  font-style: var(--shiki-light-font-style, inherit);
+  font-weight: var(--shiki-light-font-weight, inherit);
+  text-decoration: var(--shiki-light-text-decoration, inherit);
+}
+
+.dark pre:not([data-plain]) {
+  color: var(--shiki-dark, inherit);
+}
+
+.dark pre:not([data-plain]) code,
+.dark pre:not([data-plain]) span {
+  color: var(--shiki-dark, inherit);
+  font-style: var(--shiki-dark-font-style, inherit);
+  font-weight: var(--shiki-dark-font-weight, inherit);
+  text-decoration: var(--shiki-dark-text-decoration, inherit);
+}
+
+/* ---------------------------------------------------------------------------
+   Components sidebar rows
+
+   The list is ~113 rows. Driving the hover state through React re-rendered
+   every one of them — and the five motion nodes each carries — on every pointer
+   move, which is what made the panel lag. All of it is expressible in CSS, so
+   none of it costs a render:
+
+     - the row under the pointer lifts to full opacity and nudges right
+     - every other row dims, but only while some row is hovered
+     - the active row is never dimmed
+     - the tick beside the row grows on hover and collapses when active
+
+   `:has()` is what makes the "only while some row is hovered" part work without
+   a class toggle. Transforms and opacity only, so each row stays on the
+   compositor and nothing here triggers layout.
+   --------------------------------------------------------------------------- */
+
+[data-sb-shift] {
+  opacity: 0.55;
+  transform: translate3d(0, 0, 0);
+  transform-origin: left center;
+  transition:
+    opacity 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-sb-nav]:has([data-sb-row]:hover) [data-sb-row]:not(:hover) [data-sb-shift] {
+  opacity: 0.3;
+}
+
+[data-sb-row]:hover [data-sb-shift] {
+  opacity: 1;
+  transform: translate3d(6px, 0, 0);
+}
+
+/* Written after the dim rule and with equal specificity, so "you are here"
+   survives another row being hovered. */
+[data-sb-nav] [data-sb-row][data-active] [data-sb-shift],
+[data-sb-row][data-active] [data-sb-shift] {
+  opacity: 1;
+  transform: translate3d(8px, 0, 0);
+}
+
+/* A row states which of three things it is by colour alone: the current page is
+   the accent, the row under the pointer is plain foreground, everything else is
+   muted. The accent rule is last so it holds while another row is hovered —
+   "you are here" should not blink off as the pointer passes. */
+[data-sb-label] {
+  color: var(--color-muted-foreground);
+  transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-sb-row]:hover [data-sb-label] {
+  color: var(--color-foreground);
+}
+
+[data-sb-row][data-active] [data-sb-label],
+[data-sb-row][data-active]:hover [data-sb-label] {
+  color: var(--color-accent-pro);
+}
+
+/* Width rather than a transform: the tick is a 1px rule whose length is the
+   whole affordance, and scaling a hairline blurs it. One property, one element,
+   no layout outside its own absolutely positioned box. */
+[data-sb-tick] {
+  width: 18px;
+  transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-sb-row]:hover [data-sb-tick] {
+  width: 26px;
+}
+
+/* The active row's middle rule collapses to nothing: the accent bar that slides
+   between rows takes its place, and two lines in the same slot read as a
+   glitch. The three short ticks stay neutral — the accent marks one line and
+   one label, and spreading it across the whole left margin only muddies which
+   line is the indicator. */
+[data-sb-row][data-active] [data-sb-tick] {
+  width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sb-shift],
+  [data-sb-label],
+  [data-sb-tick] {
+    transition-duration: 0.01ms;
+  }
 }
