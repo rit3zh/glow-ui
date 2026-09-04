@@ -1,6 +1,6 @@
 {
   "name": "reacticx-ui",
-  "version": "1.21.0",
+  "version": "1.23.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
