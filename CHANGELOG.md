@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## <small>1.23.1 (2026-09-04)</small>
+
+* fix: repoint attribution comments at their upstream projects ([8401532](https://github.com/rit3zh/reacticx/commit/8401532))
+
 ## 1.23.0 (2026-09-04)
 
 Reacticx M5 — the library becomes four catalogues, gains two published packages,
