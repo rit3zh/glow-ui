@@ -4,6 +4,7 @@ import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 import Animated, {
   useSharedValue,
   useAnimatedProps,
+  withDelay,
   withRepeat,
   withTiming,
   Easing,
@@ -11,6 +12,51 @@ import Animated, {
 import type { IPulsingDots } from "./types";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const STAGGER_DELAY = 200;
+
+interface DotProps {
+  index: number;
+  radius: number;
+  spacing: number;
+  duration: number;
+  fill: string;
+}
+
+/**
+ * A single dot owns its animation so the number of hooks stays constant no
+ * matter how many dots are rendered.
+ */
+const Dot: React.FC<DotProps> = ({ index, radius, spacing, duration, fill }) => {
+  const opacity = useSharedValue(0.3);
+
+  useEffect(() => {
+    opacity.value = withDelay(
+      index * STAGGER_DELAY,
+      withRepeat(
+        withTiming(1, {
+          duration,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        -1,
+        true,
+      ),
+    );
+  }, [duration, index, opacity]);
+
+  const animatedProps = useAnimatedProps(() => ({ opacity: opacity.value }));
+
+  return (
+    <AnimatedCircle
+      cx={radius + index * spacing}
+      cy={radius * 1.5}
+      r={radius}
+      fill={fill}
+      animatedProps={animatedProps}
+    />
+  );
+};
+
 export const PulsingDots: React.FC<IPulsingDots> = ({
   dotCount = 3,
   radius = 6,
@@ -19,27 +65,6 @@ export const PulsingDots: React.FC<IPulsingDots> = ({
   color = "#00C896",
   gradient,
 }): React.ReactNode & React.JSX.Element => {
-  const opacities = Array.from({ length: dotCount }, () => useSharedValue(0.3));
-
-  useEffect(() => {
-    opacities.forEach((opacity, i) => {
-      setTimeout(() => {
-        opacity.value = withRepeat(
-          withTiming(1, {
-            duration,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          -1,
-          true,
-        );
-      }, i * 200);
-    });
-  }, []);
-
-  const animatedProps = opacities.map((val) =>
-    useAnimatedProps(() => ({ opacity: val.value })),
-  );
-
   const totalWidth = radius * 2 + (dotCount - 1) * spacing;
 
   return (
@@ -61,7 +86,7 @@ export const PulsingDots: React.FC<IPulsingDots> = ({
           ))}
         </Defs>
 
-        {animatedProps.map((props, i) => {
+        {Array.from({ length: dotCount }, (_, i) => {
           const gradientId = gradient?.[i]
             ? `url(#grad-${i})`
             : gradient?.[0]
@@ -69,13 +94,13 @@ export const PulsingDots: React.FC<IPulsingDots> = ({
               : color;
 
           return (
-            <AnimatedCircle
+            <Dot
               key={i}
-              cx={radius + i * spacing}
-              cy={radius * 1.5}
-              r={radius}
+              index={i}
+              radius={radius}
+              spacing={spacing}
+              duration={duration}
               fill={gradientId}
-              animatedProps={props}
             />
           );
         })}
