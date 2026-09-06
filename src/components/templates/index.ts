@@ -1,4 +1,3 @@
-export * from "./whats-new/index";
 export * from "./parallax-header";
 export * from "./media-list/index";
 

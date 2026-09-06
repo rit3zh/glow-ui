@@ -13,6 +13,8 @@ interface ISegmentedControl {
   readonly dividerColor?: string;
   readonly borderRadius?: number;
   readonly disableScaleEffect?: boolean;
+  /** Total width of the control. Defaults to the screen width minus 32. */
+  readonly width?: number;
 }
 
 export { ISegmentedControl, SegmentedControlPreset };

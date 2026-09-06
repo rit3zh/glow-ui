@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Github, Twitter } from "lucide-react";
+import { Logo } from "@/components/logo";
 import localFont from "next/font/local";
 const satoshi = localFont({
   src: [
@@ -50,10 +51,10 @@ export default function Footer() {
         <div className="grid gap-8">
           <div className="col-span-full border-b pb-8">
             <Link href="/" className="flex items-center gap-0 -ml-4">
-              <img
-                src="/static/deps/white_glow.png"
-                alt="Reacticx"
-                className="h-8 w-8 object-contain"
+              <Logo
+                role="img"
+                aria-label="Reacticx"
+                className="h-8 w-8 text-foreground"
               />
               <span
                 className={`text-lg font-semibold text-foreground ${satoshi.className} font-satoshi`}

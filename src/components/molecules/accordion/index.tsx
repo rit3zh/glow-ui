@@ -1,6 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView, type BlurViewProps } from "expo-blur";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  cloneElement,
+  Children,
+  isValidElement,
+  ReactElement,
+  memo,
+} from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   interpolate,
@@ -50,7 +60,7 @@ const ChevronIcon = ({ isOpen }: { isOpen: boolean }) => {
   const { theme } = useAccordionContext();
   const rotation = useSharedValue<number>(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     rotation.value = withTiming<number>(isOpen ? 1 : 0, { duration: 200 });
   }, [isOpen]);
 
@@ -75,7 +85,7 @@ const CrossIcon = ({ isOpen }: { isOpen: boolean }) => {
   const bottomLineTranslate = useSharedValue(0);
   const middleLineOpacity = useSharedValue(1);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       topLineTranslate.value = withTiming(6, { duration: 200 });
       bottomLineTranslate.value = withTiming(-6, { duration: 200 });
@@ -176,10 +186,10 @@ const Accordion = ({
     });
   };
 
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = Children.toArray(children);
   const childrenWithProps = childrenArray.map((child, index) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child as React.ReactElement<any>, {
+    if (isValidElement(child)) {
+      return cloneElement(child as ReactElement<any>, {
         isLast: index === childrenArray.length - 1,
       });
     }
@@ -204,46 +214,48 @@ const Accordion = ({
     </AccordionContext.Provider>
   );
 };
-const AccordionItem = ({
-  children,
-  value,
-  pop = false,
-  icon = "chevron",
-  popScale = 1.02,
-  isLast = false,
-}: AccordionItemProps) => {
-  const { openItems, theme, spacing } = useAccordionContext();
-  const isOpen = openItems.has(value);
-  const scale = useSharedValue(1);
+const AccordionItem = memo(
+  ({
+    children,
+    value,
+    pop = false,
+    icon = "chevron",
+    popScale = 1.02,
+    isLast = false,
+  }: AccordionItemProps): React.ReactNode => {
+    const { openItems, theme, spacing } = useAccordionContext();
+    const isOpen = openItems.has(value);
+    const scale = useSharedValue(1);
 
-  React.useEffect(() => {
-    if (pop) {
-      scale.value = withTiming(isOpen ? popScale : 1, { duration: 200 });
-    }
-  }, [isOpen, pop]);
+    useEffect(() => {
+      if (pop) {
+        scale.value = withTiming(isOpen ? popScale : 1, { duration: 200 });
+      }
+    }, [isOpen, pop]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
 
-  return (
-    <AccordionItemContext.Provider value={{ value, isOpen, icon }}>
-      <Animated.View
-        style={[
-          styles.item,
-          {
-            borderBottomColor: theme.borderColor,
-            borderBottomWidth: isLast ? 0 : 1,
-            marginBottom: spacing,
-          },
-          pop && animatedStyle,
-        ]}
-      >
-        {children}
-      </Animated.View>
-    </AccordionItemContext.Provider>
-  );
-};
+    return (
+      <AccordionItemContext.Provider value={{ value, isOpen, icon }}>
+        <Animated.View
+          style={[
+            styles.item,
+            {
+              borderBottomColor: theme.borderColor,
+              borderBottomWidth: isLast ? 0 : 1,
+              marginBottom: spacing,
+            },
+            pop && animatedStyle,
+          ]}
+        >
+          {children}
+        </Animated.View>
+      </AccordionItemContext.Provider>
+    );
+  },
+);
 const AccordionTrigger = ({ children }: AccordionTriggerProps) => {
   const { toggleItem } = useAccordionContext();
   const { value, isOpen, icon } = useAccordionItemContext();
@@ -294,7 +306,7 @@ const AccordionContent = ({ children }: AccordionContentProps) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (measured) {
       if (isOpen) {
         height.value = withTiming(contentHeight, { duration: 200 });
@@ -312,7 +324,7 @@ const AccordionContent = ({ children }: AccordionContentProps) => {
     overflow: "hidden",
   }));
 
-  React.useEffect(() => {
+  useEffect(() => {
     blurIntensity.value = withTiming(isOpen ? 0 : 20, {
       duration: 200,
     });

@@ -1,0 +1,55 @@
+const SWARM_CHARSET =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<>/{}[]()=+-*#$%&@?!";
+
+const SWARM_PALETTE = ["#FFFFFF", "#D97757"];
+
+const TRAVEL_MS = 900;
+const HOLD_MS = 2600;
+const LETTER_SIZE = 13;
+const COVERAGE = 0.62;
+const TRACKING = 1.06;
+const MAX_LETTERS = 1600;
+const SWAY = 0.4;
+const LIFT = 0.5;
+const REACH = 64;
+const REPEL = 0.9;
+const SEED = 9152026;
+const CANVAS_SIZE = 256;
+const CANVAS_FIT = 0.98;
+const OPAQUE_AT = 128;
+const MIN_STRIDE = 1.6;
+const MAX_CHARSET = 64;
+const MAX_TILE = 64;
+const TILE_PADDING = 1.55;
+const LETTER_ADVANCE = 0.6;
+const REVEAL_MS = 420;
+const SWAY_SPEED = 0.0011;
+const POINTER_EASE = 0.35;
+const WARMUP_FRAMES = 2;
+export {
+  SWARM_CHARSET,
+  SWARM_PALETTE,
+  TRAVEL_MS,
+  HOLD_MS,
+  LETTER_SIZE,
+  COVERAGE,
+  TRACKING,
+  MAX_LETTERS,
+  SWAY,
+  LIFT,
+  REACH,
+  REPEL,
+  SEED,
+  CANVAS_SIZE,
+  CANVAS_FIT,
+  OPAQUE_AT,
+  MIN_STRIDE,
+  MAX_CHARSET,
+  MAX_TILE,
+  TILE_PADDING,
+  LETTER_ADVANCE,
+  REVEAL_MS,
+  SWAY_SPEED,
+  POINTER_EASE,
+  WARMUP_FRAMES,
+};

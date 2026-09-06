@@ -1,0 +1,95 @@
+---
+title: Agent Skills
+description: Teach Claude Code how Reacticx works — the catalog, the CLI, and the mistakes worth avoiding.
+icon: Sparkles
+---
+
+A [skill](https://code.claude.com/docs/en/skills) is a folder of instructions an
+agent loads when it becomes relevant. Reacticx ships one, `using-reacticx`, so an
+agent working in your project knows components are copied rather than imported,
+which dependencies each one needs, and what to check before it writes code.
+
+The skill and the [MCP server](/docs/mcp) solve different halves of the problem:
+the server gives an agent the registry, the skill gives it the judgement to use
+it well. They work best together, and either works alone.
+
+---
+
+## Install it
+
+Copy the skill into the project you are working in:
+
+```bash
+npx degit rit3zh/reacticx/skills/using-reacticx .claude/skills/using-reacticx
+```
+
+Or clone the repo and copy `skills/using-reacticx` into `.claude/skills/`. Put it
+in `~/.claude/skills/` instead to have it available in every project.
+
+Claude Code picks it up on the next session — no restart flag, no config entry.
+Other agents that read `.claude/skills` or accept a folder of markdown work the
+same way.
+
+---
+
+## What's inside
+
+```
+using-reacticx/
+├── SKILL.md
+└── references/
+    ├── components.md
+    ├── cli.md
+    ├── mcp.md
+    └── configuration.md
+```
+
+| File | Holds |
+| --- | --- |
+| `SKILL.md` | the workflow: what to check before adding, what `add` does, what to do after |
+| `references/components.md` | all 163 components — CLI key, description, files, exact dependencies, docs link |
+| `references/cli.md` | every command and flag, and the behaviour behind each |
+| `references/mcp.md` | the MCP tools, and the order to call them in |
+| `references/configuration.md` | every `component.config.json` key, and how a path actually resolves |
+
+Only `SKILL.md` is loaded up front. The references are read when the task needs
+them, so the catalog costs nothing until a component is actually being chosen.
+
+---
+
+## The catalog is generated
+
+`references/components.md` is derived, not written: names and categories from the
+registry, descriptions from these docs pages, and the dependency list from the
+imports in each component's source. The dependency list an agent reads is
+therefore the one the code actually imports, not a list that drifted out of date.
+
+In a checkout of the repo, `bun run skill:catalog` regenerates it.
+
+---
+
+## Without a skill
+
+If your agent has no skill mechanism, the same ground is covered by pointing it
+at the docs and stating the one thing agents reliably get wrong:
+
+```
+I'm using Reacticx in an Expo app.
+
+- Components are copied into src/components/ui, not imported from a package.
+  There is no `import { Accordion } from "reacticx"`.
+- Animations use react-native-reanimated; several components also need
+  react-native-worklets, which installs separately.
+- Read https://reacticx.com/docs/usage.mdx before writing code.
+```
+
+---
+
+## What to check in generated code
+
+- **Invented package imports.** The most common failure by a wide margin.
+- **A missing Reanimated Babel plugin** — agents rarely open `babel.config.js`.
+  See [Installation](/docs/installation).
+- **Skia in Expo Go**, which needs a development build.
+- **A missing `GestureHandlerRootView`**, which makes gesture components silently
+  do nothing. See [Troubleshooting](/docs/troubleshooting).

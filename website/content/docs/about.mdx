@@ -1,0 +1,51 @@
+---
+title: About
+description: Why Reacticx exists, and the shape of the decision behind it.
+icon: Info
+---
+
+Reacticx is an open-source library of animated components for React Native. It
+started in January 2025, out of the same frustration most component libraries
+start from: more time was going into UI polish than into features.
+
+The tools were never the problem. Reanimated, Gesture Handler and Skia can do
+all of it. Assembling them into something that feels considered — the right
+spring, the right delay, the press state that reads as physical — is the part
+that took the afternoon, every time, in every project.
+
+---
+
+## What it is
+
+A registry of components you **copy into your project**. `reacticx add` writes
+the source into your repo, rewrites its imports to match your paths, and stops
+there. No runtime package, no wrapper, no version to keep in step with.
+
+That choice has one consequence worth being honest about: you own what you
+copied. There is no upgrade that arrives for free. In exchange, nothing is
+hidden behind an API surface someone else controls, and no styling override
+turns into a fight — `reacticx diff` shows how far your copy has moved, and you
+decide what to do about it.
+
+---
+
+## What it optimises for
+
+- **Motion that survives contact with a real app.** Components are built on
+  Reanimated and Skia and are tuned on device, not in a storybook.
+- **Readable source.** The code is meant to be opened, understood and edited —
+  it is documentation as much as it is a dependency.
+- **Gestures first.** Drag, swipe, press and their interruptions are the design
+  target, not an afterthought bolted onto a web component.
+- **Staying out of the way.** No theme provider to adopt, no context to wire,
+  no configuration ceremony before the first component renders.
+
+---
+
+## Where it is going
+
+The [issue tracker](https://github.com/rit3zh/reacticx/issues) tracks what is
+being worked on, the [changelog](/docs/changelog) tracks what has landed, and the
+[contributing guide](/docs/contributing) covers how to add a component.
+
+Built by [@rit3zh](https://twitter.com/rit3zh).

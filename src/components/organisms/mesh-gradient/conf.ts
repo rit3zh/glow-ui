@@ -1,4 +1,4 @@
-const SHADER = `
+const SHADER = /*wgsl*/ `
 uniform float2 resolution;
 uniform float time;
 uniform float noise;

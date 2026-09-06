@@ -358,9 +358,8 @@ export const SearchBar = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    paddingHorizontal: 0,
-    paddingVertical: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchRow: {
     flexDirection: "row",

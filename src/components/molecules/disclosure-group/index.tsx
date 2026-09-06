@@ -25,6 +25,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import type {
@@ -38,6 +39,14 @@ import type {
 
 const AnimatedBlurView =
   Animated.createAnimatedComponent<BlurViewProps>(BlurView);
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const PRESS_SPRING_CONFIG = {
+  mass: 0.6,
+  stiffness: 260,
+  damping: 18,
+} as const;
 
 const createDisclosureGroupContext = () =>
   createContext<IDisclosureGroupContext | undefined>(undefined);
@@ -183,11 +192,6 @@ const DisclosureGroupItemsBase: React.FC<IDisclosureGroupItems> = ({
   const animatedContainerStyle = useAnimatedStyle<ViewStyle>(() => {
     const targetHeight = Math.min(contentHeight || 0, maxHeight);
     return {
-      filter: [
-        {
-          blur: blurIntensity.value,
-        },
-      ],
       height: interpolate(
         animationProgress.value,
         [0, 1],
@@ -199,7 +203,7 @@ const DisclosureGroupItemsBase: React.FC<IDisclosureGroupItems> = ({
   });
 
   const animatedBlurViewProps = useAnimatedProps(() => ({
-    intensity: blurIntensity.value,
+    intensity: withSpring(blurIntensity.value),
   }));
 
   const handleLayout = useCallback(
@@ -231,37 +235,26 @@ const DisclosureGroupItemsBase: React.FC<IDisclosureGroupItems> = ({
       <AnimatedBlurView
         tint={blurTint}
         animatedProps={animatedBlurViewProps}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />
     </ScrollView>
   ) : (
     <View style={styles.itemsContent}>{children}</View>
   );
-
-  if (useBlur) {
-    return (
-      <Animated.View
-        style={[styles.itemsContainer, animatedContainerStyle, style]}
-      >
-        {children}
-        {Platform.OS === "ios" && (
-          <AnimatedBlurView
-            tint={blurTint}
-            animatedProps={animatedBlurViewProps}
-            style={StyleSheet.absoluteFillObject}
-            pointerEvents="none"
-          />
-        )}
-      </Animated.View>
-    );
-  }
-
   return (
     <Animated.View
       style={[styles.itemsContainer, animatedContainerStyle, style]}
     >
       {content}
+      {useBlur && Platform.OS === "ios" && (
+        <AnimatedBlurView
+          tint={blurTint}
+          animatedProps={animatedBlurViewProps}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+      )}
     </Animated.View>
   );
 };
@@ -271,6 +264,8 @@ const DisclosureGroupItemBase: React.FC<IDisclosureGroupItem> = ({
   onPress,
   style,
   disabled = false,
+  pressScale = 0.98,
+  springConfig,
 }): React.ReactNode & React.JSX.Element => {
   const DisclosureContext = useContext(DisclosureGroupInstanceContext);
   if (!DisclosureContext) {
@@ -278,6 +273,11 @@ const DisclosureGroupItemBase: React.FC<IDisclosureGroupItem> = ({
   }
 
   const scale = useSharedValue<number>(1);
+
+  const spring = useMemo(
+    () => ({ ...PRESS_SPRING_CONFIG, ...springConfig }),
+    [springConfig],
+  );
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => ({
     transform: [{ scale: scale.value }],
@@ -290,17 +290,24 @@ const DisclosureGroupItemBase: React.FC<IDisclosureGroupItem> = ({
     [disabled],
   );
 
+  const handlePressIn = useCallback((): void => {
+    scale.value = withSpring(pressScale, spring);
+  }, [pressScale, spring]);
+
+  const handlePressOut = useCallback((): void => {
+    scale.value = withSpring(1, spring);
+  }, [spring]);
+
   return (
-    <Pressable
+    <AnimatedPressable
       disabled={disabled}
       onPress={() => handlePress(onPress)}
-      onPressIn={() => (scale.value = 0.97)}
-      onPressOut={() => (scale.value = 1)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[styles.item, style, animatedStyle]}
     >
-      <Animated.View style={[styles.item, style, animatedStyle]}>
-        {children}
-      </Animated.View>
-    </Pressable>
+      {children}
+    </AnimatedPressable>
   );
 };
 
@@ -310,9 +317,7 @@ const DisclosureGroupTrigger = memo<IDisclosureGroupTrigger>(
 const DisclosureGroupItems = memo<IDisclosureGroupItems>(
   DisclosureGroupItemsBase,
 );
-const DisclosureGroupItem = memo<IDisclosureGroupTrigger>(
-  DisclosureGroupItemBase,
-);
+const DisclosureGroupItem = memo<IDisclosureGroupItem>(DisclosureGroupItemBase);
 
 export const DisclosureGroup: React.NamedExoticComponent<IDisclosureGroups> &
   DisclosureGroupComposition = Object.assign(memo(DisclosureGroupBase), {

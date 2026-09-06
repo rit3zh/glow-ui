@@ -1,10 +1,5 @@
 import React, { memo, useMemo } from "react";
-import {
-  StyleSheet,
-  Image,
-  type ViewStyle,
-  ImageProps,
-} from "react-native";
+import { StyleSheet, Image, type ViewStyle, ImageProps } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -24,6 +19,7 @@ const CarouselItem: React.FC<ICarouselItem> &
     scrollX,
     index,
     renderItem,
+    scaleEnabled,
     dataLength,
   }: ICarouselItem):
     | (React.ReactNode & React.JSX.Element & React.ReactElement)
@@ -70,16 +66,18 @@ const CarouselItem: React.FC<ICarouselItem> &
         width: interpolate(scrollX.value, inputRange, outputRange, "clamp"),
         transform: [
           {
-            scale: interpolate(
-              scrollX.value,
-              inputRange,
-              [0.8, 0.9, 1, 0.8],
-              Extrapolation.CLAMP,
-            ),
+            scale: scaleEnabled
+              ? interpolate(
+                  scrollX.value,
+                  inputRange,
+                  [0.8, 0.9, 1, 0.8],
+                  Extrapolation.CLAMP,
+                )
+              : 1,
           },
         ],
       };
-    }, [inputRange, outputRange, isLastImage]);
+    }, [inputRange, outputRange, isLastImage, scaleEnabled]);
     const containerStylez = useAnimatedStyle<
       Required<Partial<Pick<ViewStyle, "width" | "opacity">>>
     >(() => {
@@ -129,6 +127,7 @@ const MaterialCarousel: React.FC<IMaterialCarousel> &
   ({
     data,
     renderItem: _renderItem,
+    scaleEnabled = true,
   }: IMaterialCarousel):
     | (React.ReactNode & React.JSX.Element & React.ReactElement)
     | null => {
@@ -138,6 +137,7 @@ const MaterialCarousel: React.FC<IMaterialCarousel> &
       <CarouselItem
         item={item}
         scrollX={scrollX}
+        scaleEnabled={scaleEnabled}
         index={index}
         renderItem={_renderItem}
         dataLength={data.length}

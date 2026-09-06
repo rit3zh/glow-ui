@@ -13,24 +13,30 @@ import {
   useFrameCallback,
   useSharedValue,
 } from "react-native-reanimated";
+
 import {
-  DEFAULT_FLAT,
+  getDefaultFrames,
   MotionEasing,
-  POINT_PAIRS,
-  buildFlatShapes,
+  buildMorphFrames,
   cubicBezier,
-  defaultShapes,
 } from "./helper";
 import type { IMorphLoader } from "./types";
-import { DEG_TO_RAD, SQRT2, VIEWBOX } from "./config";
+import {
+  DEG_TO_RAD,
+  M3_LOADING_SEQUENCE,
+  POINTS_PER_FRAME,
+  SQRT2,
+  STEPS_PER_SEGMENT,
+  VIEWBOX,
+} from "./const";
 
-export const MorphLoader: React.FC<IMorphLoader> &
+const MorphLoader: React.FC<IMorphLoader> &
   React.FunctionComponent<IMorphLoader> = memo<IMorphLoader>(
   ({
     size = 60,
     color = "#6750A4",
     rotationDuration = 5000,
-    morphDuration = 700,
+    morphDuration = 650,
     style,
     shapes,
     easing,
@@ -38,14 +44,15 @@ export const MorphLoader: React.FC<IMorphLoader> &
     React.JSX.Element &
     React.ReactElement => {
     const rotation = useSharedValue<number>(0);
-    const morph = useSharedValue<number>(0);
+    const phase = useSharedValue<number>(0);
 
-    const flat = useMemo(
-      () => (shapes ? buildFlatShapes<string>(shapes) : DEFAULT_FLAT),
-      [shapes],
+    const { flat, frameCount } = useMemo(
+      () =>
+        shapes || easing
+          ? buildMorphFrames(shapes ?? M3_LOADING_SEQUENCE, easing)
+          : getDefaultFrames(),
+      [shapes, easing],
     );
-    const shapeCount = (shapes ?? defaultShapes).length;
-    const easingFn = easing ?? MotionEasing.emphasized;
 
     const innerSize = size;
     const canvasSize = innerSize * SQRT2;
@@ -59,24 +66,23 @@ export const MorphLoader: React.FC<IMorphLoader> &
     );
 
     const rotPerMs = 360 / rotationDuration;
-    const morphPerMs = 1 / morphDuration;
+    const framesPerMs = STEPS_PER_SEGMENT / morphDuration;
 
     useFrameCallback((info) => {
       const dt = info.timeSincePreviousFrame ?? 16.6667;
       rotation.value = (rotation.value + dt * rotPerMs) % 360;
-      morph.value = (morph.value + dt * morphPerMs) % shapeCount;
+      phase.value = (phase.value + dt * framesPerMs) % frameCount;
     });
 
     const path = useDerivedValue<SkPath>(() => {
-      const v = morph.value;
+      const v = phase.value;
       const i = Math.floor(v);
-      const raw = v - i;
-      const t = easingFn(raw);
-      const baseA = i * POINT_PAIRS * 2;
-      const baseB = ((i + 1) % shapeCount) * POINT_PAIRS * 2;
+      const t = v - i;
+      const baseA = i * POINTS_PER_FRAME * 2;
+      const baseB = ((i + 1) % frameCount) * POINTS_PER_FRAME * 2;
 
       const p = Skia.Path.Make();
-      for (let k = 0; k < POINT_PAIRS; k++) {
+      for (let k = 0; k < POINTS_PER_FRAME; k++) {
         const ix = k * 2;
         const iy = ix + 1;
         const ax = flat[baseA + ix];
@@ -123,7 +129,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export { MotionEasing, cubicBezier, defaultShapes };
-export { SHAPES } from "./config";
-export default MorphLoader;
+export {
+  MorphLoader,
+  MorphLoader as default,
+  MotionEasing,
+  cubicBezier,
+  buildMorphFrames,
+  M3_LOADING_SEQUENCE,
+};
+export { shapeNames, type ShapeName } from "./shape-registry";
 export type { IMorphLoader };

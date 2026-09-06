@@ -1,19 +1,50 @@
-import { Header } from "@/components/header/header";
 import { ForceDarkTheme } from "@/components/force-dark-theme";
-import { Hero } from "@/components/home/hero";
+import { BottomEdgeBlur } from "@/components/landing/bottom-edge-blur";
+import { Footer } from "@/components/landing/footer";
+import { Community } from "@/components/landing/community";
+import { Faq } from "@/components/landing/faq";
+import { Hero } from "@/components/landing/hero";
+import {
+  MobileNavDrawer,
+  MobileNavProvider,
+  MobileNavShell,
+} from "@/components/landing/mobile-nav";
+import { Navbar } from "@/components/landing/navbar";
+import { Note } from "@/components/landing/note";
+import { Showcase } from "@/components/landing/showcase";
+import { SmoothScroll } from "@/components/landing/smooth-scroll";
 
 export default function Home() {
   return (
     <>
       <ForceDarkTheme />
-      <div className="relative min-h-screen w-full bg-neutral-50/50 dark:bg-neutral-950">
-        <Header />
-        {/* <Header /> */}
-        <div className="absolute inset-0 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] dark:bg-[radial-gradient(#ffffff22_1px,transparent_1px)] pointer-events-none" />
-        <main className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-          <Hero />
-        </main>
-      </div>
+      <MobileNavProvider>
+        <div className="min-h-screen bg-surface font-brand text-ink tracking-[-0.011em]">
+          <div aria-hidden className="fixed inset-0 -z-10 bg-black" />
+
+          <Navbar />
+          <MobileNavDrawer />
+
+          {/* Everything inside the shell becomes the card the mobile drawer
+              pushes aside; the header deliberately stays outside it. */}
+          <MobileNavShell>
+            <div aria-hidden className="fixed inset-0 -z-10 bg-surface" />
+
+            <SmoothScroll>
+              <main>
+                <Hero />
+                <Showcase />
+                <Note />
+                <Community />
+                <Faq />
+              </main>
+              <Footer />
+            </SmoothScroll>
+
+            <BottomEdgeBlur position="bottom" />
+          </MobileNavShell>
+        </div>
+      </MobileNavProvider>
     </>
   );
 }

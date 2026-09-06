@@ -1,0 +1,98 @@
+---
+title: Getting Started
+description: Copy-paste animated components for React Native and Expo.
+icon: ListStart
+---
+
+Reacticx is a library of animated, gesture-driven components for React Native
+and Expo. Nothing is installed from npm — the CLI **copies component source into
+your project**, rewrites its imports to match your paths, and gets out of the
+way. From that moment the code is yours to edit.
+
+---
+
+## Three commands
+
+```bash
+npx reacticx init          # once, per project
+npx reacticx list          # see what's available
+npx reacticx add accordion # copy one in
+```
+
+`bunx`, `pnpm dlx` and `yarn dlx` work the same way.
+
+---
+
+## Starting from nothing
+
+`create` scaffolds an Expo app, sets the bundle ID, and runs `init` inside it:
+
+```bash
+npx reacticx create
+```
+
+It asks for a name, a template — blank TypeScript, blank JavaScript, or Expo
+Router tabs — and a package manager, defaulting to the one it detects.
+
+---
+
+## Adding to a project you already have
+
+Install the shared native dependencies, then initialise:
+
+```package-install
+react-native-reanimated react-native-gesture-handler react-native-svg @shopify/react-native-skia expo-haptics expo-blur
+```
+
+```bash
+npx reacticx init
+```
+
+`init` reads your `tsconfig.json` for a path alias and your lockfile for a
+package manager, then writes a short `component.config.json`:
+
+```json title="component.config.json"
+{
+  "$schema": "https://reacticx.com/schema/component.config.json",
+  "outDir": "src/components/ui",
+  "aliases": { "components": "@/components/ui" }
+}
+```
+
+Everything else has a default. [Installation](/docs/installation) covers the
+Babel and gesture setup those dependencies need.
+
+---
+
+## What `add` actually does
+
+```bash
+npx reacticx add accordion
+```
+
+```
+┌ reacticx add  src/components/ui
+│
+├  accordion
+│  src/components/ui/molecules/accordion/index.tsx
+│  src/components/ui/molecules/accordion/presets.ts
+│  src/components/ui/molecules/accordion/types.ts
+│
+│  ✓ wrote 3 file(s)
+└  added accordion · 3 files
+```
+
+- **Imports are rewritten** from the registry's `@/…` paths to your aliases.
+- **Dependencies come along** — another component, a shared hook, a helper.
+- **Existing files are never overwritten** unless you pass `--overwrite`.
+- **Missing npm packages are reported**, and offered for install.
+
+---
+
+## Where to go next
+
+- [Installation](/docs/installation) — Babel, gestures, and the native setup
+- [Usage](/docs/usage) — working with a component once it is in your project
+- [CLI reference](/docs/cli) — every command, flag and config key
+- [MCP server](/docs/mcp) — give a coding agent the registry directly
+- [Agent skills](/docs/skills) — teach Claude Code how Reacticx works

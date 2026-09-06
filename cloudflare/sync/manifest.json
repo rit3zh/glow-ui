@@ -1,0 +1,966 @@
+{
+  "bucket": "reacticx-landing-assets",
+  "updatedAt": "2026-08-27T10:19:56.280Z",
+  "entries": {
+    "3d-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/3d-carousel-landing-asset.mp4",
+      "hash": "8e98137700238da17b47cd832fb6f70d76169fbee86cda10418cbbd146a6102a",
+      "size": 2662240,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:54.627Z"
+    },
+    "accordion-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/accordion-landing-asset.mp4",
+      "hash": "35a0a64fdc4b07565a2055e2d9da0ef41cbf990b76b3170bae878e2b0036678f",
+      "size": 401462,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:50.655Z"
+    },
+    "action-rail-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/action-rail-landing-asset.mp4",
+      "hash": "143009758394d3d47dc25aa3c2d107c22cfbc6c413e5f7062da78d710cb8e6d9",
+      "size": 127594,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:50.658Z"
+    },
+    "alert-landing-asset.png": {
+      "file": "cloudflare/landing-assets/alert-landing-asset.png",
+      "hash": "7f6396c857fc3d499cc3bad2d24d91f966d8d9b2eb876eca52d363ed7f04bce1",
+      "size": 129818,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:18:51.012Z"
+    },
+    "animated-chip-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-chip-landing-asset.mp4",
+      "hash": "ddae6dc55a88f08cd7129910e269818066ded45bc389f154eb588df8a293e7f1",
+      "size": 155688,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:50.657Z"
+    },
+    "animated-header-scrollview-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-header-scrollview-landing-asset.mp4",
+      "hash": "275e2204511afb096e39a746403faa1c1dd7d552a2e9f614e86f27a3ee13dcdc",
+      "size": 346277,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:50.754Z"
+    },
+    "animated-input-bar-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-input-bar-landing-asset.mp4",
+      "hash": "7be7711e76454a8d269a9f8535ac3905c81f78cfdeb495697eea327e2deb5b49",
+      "size": 293211,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:53.867Z"
+    },
+    "animated-masked-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-masked-text-landing-asset.mp4",
+      "hash": "932183b918642a688aeb48f1cfa70eaffa3c1f2e2caa23d529287539b8132d05",
+      "size": 103064,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:52.839Z"
+    },
+    "animated-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-text-landing-asset.mp4",
+      "hash": "09727ff6a86102934337ec5d885f3a8443e0527ddfbad0c067c575d5ff136b0e",
+      "size": 251185,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:52.950Z"
+    },
+    "animated-theme-toggle-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/animated-theme-toggle-landing-asset.mp4",
+      "hash": "4919fc1497fc7712f310386823b155b4d877b00f2754ab0aabd69807e5069602",
+      "size": 115444,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:53.755Z"
+    },
+    "apple-intelligence-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/apple-intelligence-landing-asset.mp4",
+      "hash": "4a1c4536bdc73e0fe672c4c141859ca2f9fcaf5fe67bf2dbfe1086574050dc09",
+      "size": 2586119,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:54.277Z"
+    },
+    "arc-list-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/arc-list-landing-asset.mp4",
+      "hash": "cad893632710ee44909e55e91d0ce2ca0f7915d3302a5c7bb356678104274d86",
+      "size": 1311928,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:55.292Z"
+    },
+    "aura-lift-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/aura-lift-landing-asset.mp4",
+      "hash": "9f16441fc844ad5eb95a22c786c9c1873c44055b0e2f95ebbe98970edcee15f1",
+      "size": 1212344,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:55.331Z"
+    },
+    "aurora-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/aurora-landing-asset.mp4",
+      "hash": "05dad752e2e4ba7e7c6a96ab115fe2756d044e651621e95a9f08a03f21f27147",
+      "size": 1317533,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:56.040Z"
+    },
+    "avatar-landing-asset.png": {
+      "file": "cloudflare/landing-assets/avatar-landing-asset.png",
+      "hash": "f18283b84b692ed9e11998e48dc968667fcadbb851b4f19d11a354acbc8cde5c",
+      "size": 94716,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:18:56.041Z"
+    },
+    "bar-chart-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/bar-chart-landing-asset.mp4",
+      "hash": "90355395ef1aa056bbd206d194dde2f99e4d786b2a60290a0eab60b596bf894a",
+      "size": 389430,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:57.839Z"
+    },
+    "barcode-badge-landing-asset.png": {
+      "file": "cloudflare/landing-assets/barcode-badge-landing-asset.png",
+      "hash": "50a71ab32319321a3ffee488b2d4681699176057a5f0ad5f495f26a3d2ca0c0e",
+      "size": 41681,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:18:57.238Z"
+    },
+    "blur-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/blur-carousel-landing-asset.mp4",
+      "hash": "f300441b663d3a411eaab0c522b7c71fb5afafc01897246d5c41bfcf910d17a1",
+      "size": 2052102,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:57.553Z"
+    },
+    "book-page-landing-asset.png": {
+      "file": "cloudflare/landing-assets/book-page-landing-asset.png",
+      "hash": "e7d222c77dd28517e80c5b94119bd5de8480c100f207b379b1db1c60ea6603be",
+      "size": 44311,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:18:57.531Z"
+    },
+    "border-beam-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/border-beam-landing-page-asset.mp4",
+      "hash": "10713d2b64aeeaa6a9608cb311fc4a67dc8035c9f94b7c9dbbf2829da23abd44",
+      "size": 168946,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:58.400Z"
+    },
+    "bouncy-accordion-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/bouncy-accordion-landing-page-asset.mp4",
+      "hash": "75f5687da7110372229751b47057d44bf8cd62f25fa9aff9eedd47be5a1eb603",
+      "size": 1028334,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:58.576Z"
+    },
+    "button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/button-landing-asset.mp4",
+      "hash": "3e356eb03388c49ab8a69693c00dae9c251b33e09b4999315a4642b095621105",
+      "size": 107938,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:59.492Z"
+    },
+    "check-box-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/check-box-landing-asset.mp4",
+      "hash": "97a8d3c338102eb565ce1c7826a500ae80180581f98a94a4e021c12a49a2b1d6",
+      "size": 35877,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:59.690Z"
+    },
+    "chroma-ring-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/chroma-ring-landing-asset.mp4",
+      "hash": "200ce4af8cc3b5dc147df292ab6df66dc2cb0c5011b4207715ae012fc269a0c7",
+      "size": 124815,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:18:59.626Z"
+    },
+    "chrome-backdrop-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/chrome-backdrop-landing-asset.mp4",
+      "hash": "db6f3763bddfd268cd2119a3ce6913961408e9c4a70fb1c46d6d4c51694ca3f4",
+      "size": 1449253,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:00.847Z"
+    },
+    "cinematic-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/cinematic-carousel-landing-asset.mp4",
+      "hash": "f2f8a72c640651ec9310d576449f355b353006edef0f1e0ffcc929e90e11fc6a",
+      "size": 2203090,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:01.635Z"
+    },
+    "circle-loader-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circle-loader-landing-asset.mp4",
+      "hash": "336e3e3a852679ae89e41e193b1da42386739afdae1b35770dd3f7ecbef81a5b",
+      "size": 31238,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:00.795Z"
+    },
+    "circular-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circular-carousel-landing-asset.mp4",
+      "hash": "83e283fbb5234a9b18f62c0e168211e34d2ed3dd115cd99395ae16005e325a3f",
+      "size": 1798515,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:04.788Z"
+    },
+    "circular-list-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circular-list-landing-asset.mp4",
+      "hash": "e17b0448bc2a237c3d703f981573b1bed98565b373053f44c8c071970969bbae",
+      "size": 1138287,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:02.273Z"
+    },
+    "circular-loader-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circular-loader-landing-asset.mp4",
+      "hash": "cc262d57dc7b1a78983dfe49bf49fa0cb86d152cf0d06562656f4b1ee24073e0",
+      "size": 38159,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:02.293Z"
+    },
+    "circular-progress-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circular-progress-landing-asset.mp4",
+      "hash": "131a2a961d34f5955b0400d7abd3bb1a73cae1bf2b0421ecd6196e026b57476a",
+      "size": 20299,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:03.387Z"
+    },
+    "circular-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/circular-text-landing-asset.mp4",
+      "hash": "7c18b10553a67d571ed0dc1b0e896b7633124d27957dc952ae023cf2cc2d41d0",
+      "size": 421977,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:03.517Z"
+    },
+    "context-menu-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/context-menu-landing-asset.mp4",
+      "hash": "889a49b7e75d4747e41773464e4b2e079a4822ea2ffb993c952387f641148217",
+      "size": 427946,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:04.470Z"
+    },
+    "coupon-landing-asset.png": {
+      "file": "cloudflare/landing-assets/coupon-landing-asset.png",
+      "hash": "06ee2805bbc2fccc81460a8d005f613ee8214c0ba042715f1d23cf5e6cdc4537",
+      "size": 55616,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:04.472Z"
+    },
+    "curved-bottom-tabs-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/curved-bottom-tabs-landing-asset.mp4",
+      "hash": "2261fdf0dad7cae2fecbb751e9644bfd6b33f25e3550df416f7d1c31ad394804",
+      "size": 250553,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:04.504Z"
+    },
+    "curved-marquee-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/curved-marquee-landing-asset.mp4",
+      "hash": "47b475880bb2d145c646e49bd92569398670fe23f3c8236f7fd15176172e09e8",
+      "size": 1248630,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:06.245Z"
+    },
+    "dia-text-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/dia-text-landing-page-asset.mp4",
+      "hash": "07736250a671bc72e815d8b839c82fe47c55559fb1f2dc3648fa942e5b93dab0",
+      "size": 200483,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:05.999Z"
+    },
+    "dialog-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/dialog-landing-asset.mp4",
+      "hash": "72f15cb274ae1c641e534a354bdf8ffec075e9ffb5e33337e1989fa1c11340fe",
+      "size": 426952,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:07.010Z"
+    },
+    "disclosure-group-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/disclosure-group-landing-asset.mp4",
+      "hash": "fb3f8c96b4c33204d3b3362395d53083d297e3b10dda4711f19ddf8d73cc624d",
+      "size": 233205,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:06.994Z"
+    },
+    "dust-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/dust-text-landing-asset.mp4",
+      "hash": "39d205c553f3df0d0aca9b4994c81a803d81046a41cdf4b87b83479f3854afec",
+      "size": 504231,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:06.993Z"
+    },
+    "dynamic-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/dynamic-text-landing-asset.mp4",
+      "hash": "0f4a70254b4584bfef4352dcef8b44a78a8f3571dfc39f0ceda9307bb9d1b901",
+      "size": 83436,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:07.019Z"
+    },
+    "elastic-slider-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/elastic-slider-landing-asset.mp4",
+      "hash": "00e499316b02da343cce04f859eaf6a596a787f983d42ce53df4eab61b90bf91",
+      "size": 79129,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:08.185Z"
+    },
+    "energy-orb-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/energy-orb-landing-asset.mp4",
+      "hash": "fc4ea328ca2852c0afa393f788f1eef40f2837e43dfb59be541a713aecc94d04",
+      "size": 634120,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:08.806Z"
+    },
+    "event-ticket-card-landing-asset.png": {
+      "file": "cloudflare/landing-assets/event-ticket-card-landing-asset.png",
+      "hash": "9cb11298e93fbb5a051c403fd2079725375a443eaebc2d5805cd1c6b0d3a7e5b",
+      "size": 40854,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:09.448Z"
+    },
+    "expandable-view-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/expandable-view-landing-page-asset.mp4",
+      "hash": "2c63bc655498ff1cf961706f12b487f672fef6361bbd42b87f6ebd481eec974a",
+      "size": 907665,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:11.787Z"
+    },
+    "fade-component-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/fade-component-landing-asset.mp4",
+      "hash": "92f97b425221773f361bd1c0e386afcfc7282b16898936aea6ef86ac4ec89258",
+      "size": 44670,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:09.273Z"
+    },
+    "fade-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/fade-text-landing-asset.mp4",
+      "hash": "e1740c0810583793591f725f11ce90e8ea028e77a2166f36ca8d9798daf0c12d",
+      "size": 534510,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:10.661Z"
+    },
+    "fan-menu-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/fan-menu-landing-page-asset.mp4",
+      "hash": "4ebb55f6faf1c833f8580d0bbca0b56a0c34112ad27c3d0aba7ef3580959dfe7",
+      "size": 374958,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:10.661Z"
+    },
+    "filling-stack-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/filling-stack-landing-asset.mp4",
+      "hash": "5ccb4b3a90b517d369f8943f62c9f679477f52587ddbe4bc5836b9bd86308ade",
+      "size": 4261768,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:12.279Z"
+    },
+    "flexi-button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/flexi-button-landing-asset.mp4",
+      "hash": "8bd13a8f7b2f066690f95fd946a1bc077672cd51e67269dfe6f8bb62d374eb4e",
+      "size": 67079,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:11.787Z"
+    },
+    "flip-card-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/flip-card-landing-asset.mp4",
+      "hash": "54f702cccfabe2dfb26e7fce8190a9dbe68567ec578704a43617e268c02ad148",
+      "size": 642429,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:11.786Z"
+    },
+    "gooey-popover-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/gooey-popover-landing-asset.mp4",
+      "hash": "8699299ce89d7d921429c40532a75fdf6ef450c0b8fc3a51e0fefc39527a9f39",
+      "size": 210763,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:13.062Z"
+    },
+    "gooey-search-tabs-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/gooey-search-tabs-landing-asset.mp4",
+      "hash": "dc1cb845c1d34404e9e796659120a24227d2d781ff531d42270f3427081b0028",
+      "size": 112141,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:12.950Z"
+    },
+    "gooey-switch-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/gooey-switch-landing-asset.mp4",
+      "hash": "44d7c8bb66587a74f9ffe28d990bd41289a70099a67366802c6b0db052731330",
+      "size": 375773,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:14.633Z"
+    },
+    "gooey-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/gooey-text-landing-asset.mp4",
+      "hash": "3a2e75599890dd2a8cdb77997d75c735c8dea15120ae82475f169e8b4ee4b9a1",
+      "size": 193850,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:14.531Z"
+    },
+    "gradient-avatar-landing-asset.png": {
+      "file": "cloudflare/landing-assets/gradient-avatar-landing-asset.png",
+      "hash": "3f65ec44f1aee96c5d507cd23327188ef64986f8331d0512beac54094a6c5a83",
+      "size": 97288,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:14.660Z"
+    },
+    "gradient-wave-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/gradient-wave-text-landing-asset.mp4",
+      "hash": "98ebb1fdc0c1d2efe759c963143053ebe34e24398a58df7586d88a007c196b4a",
+      "size": 284192,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:14.876Z"
+    },
+    "grainy-gradient-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/grainy-gradient-landing-asset.mp4",
+      "hash": "8e90c505a99f817e607899a80117d1496dcdea998546603b1a60dba67f64f882",
+      "size": 3874587,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:15.881Z"
+    },
+    "hamburger-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/hamburger-landing-asset.mp4",
+      "hash": "2f00ac7d2c12e9f10ee8333cb7b1b523bf7bf0c3cfcf44565bcce55d39f0eadf",
+      "size": 114292,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:15.327Z"
+    },
+    "icon-tile-landing-asset.png": {
+      "file": "cloudflare/landing-assets/icon-tile-landing-asset.png",
+      "hash": "46d33c018637a3a4347594feffad1d2797dafdd941b953e8c06b1777e18ed629",
+      "size": 41980,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:16.760Z"
+    },
+    "infinite-menu-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/infinite-menu-landing-asset.mp4",
+      "hash": "eed6d5f5657d1a89ad904a5b2e8d92abe6c3fd97653692d3942a7e9308eea58e",
+      "size": 1187386,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:17.351Z"
+    },
+    "letter-swarm-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/letter-swarm-landing-asset.mp4",
+      "hash": "e4862bc2638db3144b59afc5a25af18e5d43dd119f99de96c637dcfd614de905",
+      "size": 5137037,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:18.668Z"
+    },
+    "line-chart-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/line-chart-landing-asset.mp4",
+      "hash": "8a93814bc3556182ec8ce95b29e3f59050ff2a779bf7649088075edd83ef035f",
+      "size": 638992,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:17.722Z"
+    },
+    "liquid-chrome-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/liquid-chrome-text-landing-asset.mp4",
+      "hash": "d5ededbb53ffea78695ccad72916eca466010b49b5e3b604b7c8266a094084ef",
+      "size": 3191376,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:18.182Z"
+    },
+    "liquid-metal-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/liquid-metal-landing-asset.mp4",
+      "hash": "bce0aebafd4c96cce8bed59baab55ba55a91447ae9b161fec2ea6626e54e9547",
+      "size": 1041180,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:18.823Z"
+    },
+    "list-landing-asset.png": {
+      "file": "cloudflare/landing-assets/list-landing-asset.png",
+      "hash": "a534729e250eca5b9318c16eb354a4e93c6594b273ab29c83545d1808dce6297",
+      "size": 89850,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:18.948Z"
+    },
+    "marquee-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/marquee-landing-asset.mp4",
+      "hash": "58115848c542f0014b0f1945aeda097a3dc06a599eeb8aac2d4e5d43705db51a",
+      "size": 997064,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:20.199Z"
+    },
+    "masked-tab-bar-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/masked-tab-bar-landing-asset.mp4",
+      "hash": "e5e0c4b2296b4a51be9f7c8efe3c79e0534455f90e4fce28835d6b0b724e7400",
+      "size": 184559,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:20.177Z"
+    },
+    "matched-geometry-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/matched-geometry-landing-asset.mp4",
+      "hash": "d648ba7f9a6dc6ddb2db707897cfdbf18f43d3cee59cfd775852ab34c22f788b",
+      "size": 1104249,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:20.877Z"
+    },
+    "material-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/material-carousel-landing-asset.mp4",
+      "hash": "348a56c6af403957a06baf92b3b80b3a5f31b5410b371abe91a6343de3298d50",
+      "size": 2053977,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:21.379Z"
+    },
+    "mesh-gradient-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/mesh-gradient-landing-asset.mp4",
+      "hash": "e9973b3bc8483c205876e12bb62d59b55765038c4532f23d269168db5b222104",
+      "size": 1146752,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:23.727Z"
+    },
+    "metal-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/metal-landing-asset.mp4",
+      "hash": "dc349a4e93a773397e9a8ace9b2c7ee10be6f53be62828a55d70604f9f182277",
+      "size": 294203,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:21.460Z"
+    },
+    "mobile-dock-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/mobile-dock-landing-asset.mp4",
+      "hash": "65412a491b2250522388406520cb478fea762763e8451fed5e3d2a48a8714faa",
+      "size": 356959,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:22.527Z"
+    },
+    "morph-fab-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/morph-fab-landing-asset.mp4",
+      "hash": "4c855da8eaa19070d194bb7b7e9b4ab28fc3e76d400e160df42507d8cee219ab",
+      "size": 93229,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:22.526Z"
+    },
+    "morph-loader-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/morph-loader-landing-asset.mp4",
+      "hash": "13915d66dcd49e13e004553e9256dc4cc0fbdfbcfe78b5439eb958a1ab8510b9",
+      "size": 369981,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:23.147Z"
+    },
+    "morphing-tabbar-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/morphing-tabbar-landing-asset.mp4",
+      "hash": "775e0c6e8b164f89cd5c7791a4b3d39f7bafdbc74b2f72fd7a7cc3ae965da1c0",
+      "size": 94916,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:24.920Z"
+    },
+    "nebula-orb-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/nebula-orb-landing-page-asset.mp4",
+      "hash": "70a3d1dd761609f5b00c82b7e1cde4f28b43724b687ed0e49c314e521b81eedd",
+      "size": 533937,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:24.577Z"
+    },
+    "number-flow-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/number-flow-landing-page-asset.mp4",
+      "hash": "697cd2f61e27e952fe6e4e7f88a12b5c97f775487b888d1fd50b810fe2cb70de",
+      "size": 1025603,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:25.080Z"
+    },
+    "orbiting-dots-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/orbiting-dots-landing-asset.mp4",
+      "hash": "f493d0bc0cfa039db65696fea02754a4c35cda885637356890846cfb8516b643",
+      "size": 42755,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:24.685Z"
+    },
+    "otp-input-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/otp-input-landing-asset.mp4",
+      "hash": "f6408bae811fac2fd5dfb6179bb21506cd5b3a2279aa40dfece9035d92ed155b",
+      "size": 318368,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:25.388Z"
+    },
+    "pagination-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/pagination-landing-asset.mp4",
+      "hash": "d68bb6c92d60e367d7086eafe883454f546708bf821d001d6c88d741936ae18c",
+      "size": 70715,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:25.921Z"
+    },
+    "parallax-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/parallax-carousel-landing-asset.mp4",
+      "hash": "de73ecf99df0cb739f32f38ab2dcd52e77d70a73a0c9614880e529a3727d20b2",
+      "size": 779038,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:29.489Z"
+    },
+    "parallax-header-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/parallax-header-landing-asset.mp4",
+      "hash": "613fd70d3a897f89b57f23ecbe7a9caa7f6cdb530d8ad80aab5a6123b302efa7",
+      "size": 4422210,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:28.266Z"
+    },
+    "photo-stack-landing-asset.png": {
+      "file": "cloudflare/landing-assets/photo-stack-landing-asset.png",
+      "hash": "d8e476ae97b3c91fd1788e930131f9c5e0e4d7efbe5a3263dc086a5fc53531b3",
+      "size": 278403,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:27.341Z"
+    },
+    "pie-chart-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/pie-chart-landing-asset.mp4",
+      "hash": "98eae023a906d813d3add217814533837fb3de3c7a0858a1a1d38e9ddb58fb21",
+      "size": 870039,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:27.392Z"
+    },
+    "polaroid-landing-asset.png": {
+      "file": "cloudflare/landing-assets/polaroid-landing-asset.png",
+      "hash": "4418c2f2d632fd308dbd2a701f2e994d56bb8f575112f9138b58f4bd2ba3c1c3",
+      "size": 286327,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:27.487Z"
+    },
+    "pressable-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/pressable-landing-asset.mp4",
+      "hash": "2d21de2bf043b9211cf3ef979e3b7915eda59019956f48b0e2f511edd6ad0a02",
+      "size": 86302,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:28.266Z"
+    },
+    "profile-card-landing-asset.png": {
+      "file": "cloudflare/landing-assets/profile-card-landing-asset.png",
+      "hash": "33461a93b97e63ba94fa0cbe8a21d79715797a7743ec6177ea2c728e7502e628",
+      "size": 245077,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:29.786Z"
+    },
+    "progress-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/progress-landing-asset.mp4",
+      "hash": "caed05f20372f55e3d6a3136393b6f9eb27f063aa6144b1f23e9f730e4cf5a62",
+      "size": 163625,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:29.615Z"
+    },
+    "pulsing-dots-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/pulsing-dots-landing-asset.mp4",
+      "hash": "41b896d79f5194f063180872daea1c3093137f58952a87bca4d8668cc3400f83",
+      "size": 26637,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:29.609Z"
+    },
+    "qr-code-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/qr-code-landing-asset.mp4",
+      "hash": "889d2a12ba5effc17cf4ac314323fe713ed12b653a3dbf2b4904d26241edb30c",
+      "size": 370812,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:30.784Z"
+    },
+    "radar-chart-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/radar-chart-landing-asset.mp4",
+      "hash": "1012a7a1c217203e31e9eb1e9a72af7c7c79e14d6f49517fbaa1253bef771183",
+      "size": 486637,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:31.835Z"
+    },
+    "radial-chart-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/radial-chart-landing-asset.mp4",
+      "hash": "7af5dcc835406989782bfe78d0c8a8e5c3d48e652433740609f75a0d344ae045",
+      "size": 1118495,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:31.960Z"
+    },
+    "radial-intro-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/radial-intro-landing-asset.mp4",
+      "hash": "a229c8148334e4c18d9d6c3e664f5c304dcc5e86044f3da35f60f450947ccbcf",
+      "size": 1617582,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:32.131Z"
+    },
+    "radiant-button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/radiant-button-landing-asset.mp4",
+      "hash": "c8bf7f47ce0d7c0b9643032ac584e09e2cc7fd235ea2e33464066f3e7d275f0d",
+      "size": 110681,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:31.898Z"
+    },
+    "range-slider-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/range-slider-landing-asset.mp4",
+      "hash": "b3550a49049434de802ccaaf3babc24b0098262fd6fea50196d545d04bc4797e",
+      "size": 126748,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:32.055Z"
+    },
+    "receipt-card-landing-asset.png": {
+      "file": "cloudflare/landing-assets/receipt-card-landing-asset.png",
+      "hash": "024a3921930b8fe8b196137e2a60dfba9828d7fceedc4837d94d6f1f5ff86b9d",
+      "size": 107175,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:32.935Z"
+    },
+    "ripple-button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/ripple-button-landing-asset.mp4",
+      "hash": "555f2a6c1fde0913d107e2696e733ae32d666a3a3ba9fd334fe840c4f3abb094",
+      "size": 80546,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:34.301Z"
+    },
+    "rolling-counter-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/rolling-counter-landing-asset.mp4",
+      "hash": "adef72a738ebdbc54bfc74097532a4e79b28aba2fdfe1fb81c28ed1b54fb9bfd",
+      "size": 545908,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:34.301Z"
+    },
+    "rotate-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/rotate-carousel-landing-asset.mp4",
+      "hash": "d4fc0ee0b5bc7143716749c5dea82c41a32b0787a6cce41cdc4378d84b9157e4",
+      "size": 670334,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:34.746Z"
+    },
+    "rotating-square-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/rotating-square-landing-asset.mp4",
+      "hash": "925a9608e8bf4aa684cf344a62115cd7388f964bb2e037b9d263bfafbbd8e32e",
+      "size": 101828,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:40.186Z"
+    },
+    "ruler-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/ruler-landing-page-asset.mp4",
+      "hash": "385f18c7bab74c9b014bec81a97d2cf546c643b812e9de0504f16e2fc73a7f5a",
+      "size": 190368,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:34.301Z"
+    },
+    "save-button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/save-button-landing-asset.mp4",
+      "hash": "d58d4021a3d7e3280e1375b25a9a0b010889d2fe39cb2c24f401a1701b18c50c",
+      "size": 78948,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:35.098Z"
+    },
+    "scale-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/scale-carousel-landing-asset.mp4",
+      "hash": "95278863c1072d8847a94bad2017bdf22d96d43991fd10d44db4489086516035",
+      "size": 3289577,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:37.024Z"
+    },
+    "scrollable-search-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/scrollable-search-landing-asset.mp4",
+      "hash": "e898e504f70998525a426780c8a0149539e190f36f890a885340dffaf3638cc5",
+      "size": 801237,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:36.967Z"
+    },
+    "search-bar-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/search-bar-landing-asset.mp4",
+      "hash": "a2e971b5be55bc361433d49b49c1281cffb54f8628dc07a4db3fd418bc02d592",
+      "size": 90346,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:36.851Z"
+    },
+    "seek-bar-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/seek-bar-landing-asset.mp4",
+      "hash": "11c703bc40b7bddd9e41b1281ecf6707f5a2ac9540ff1ebc8ba21baf7074e637",
+      "size": 141486,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:36.870Z"
+    },
+    "segmented-control-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/segmented-control-landing-asset.mp4",
+      "hash": "01c8478e74a6a6ea95cf8873c598acf11f64ec7cd1d1a1d6397679c191a3c6f0",
+      "size": 289623,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:37.328Z"
+    },
+    "shimmer-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/shimmer-landing-asset.mp4",
+      "hash": "52dde29e8fab7c8ca6785c1e374fd5fbaf0e74a2d9ab402267286993de6eea22",
+      "size": 76438,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:39.092Z"
+    },
+    "shimmer-wave-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/shimmer-wave-text-landing-asset.mp4",
+      "hash": "6313377829ba33da1ac2134870c81de33a414c8328720aaa7e0046dc42a072a3",
+      "size": 129490,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:39.138Z"
+    },
+    "shockwave-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/shockwave-landing-asset.mp4",
+      "hash": "fa332ddd887360c9657390a59f84f209c8c1c018621a6134732de40862170e52",
+      "size": 5604729,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:41.338Z"
+    },
+    "siri-ios-27-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/siri-ios-27-landing-asset.mp4",
+      "hash": "134c854a87f2204a2ee88f0f3bce48a770c39b8560123f9e06ae3881528d6dff",
+      "size": 468791,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:39.202Z"
+    },
+    "skia-ripple-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/skia-ripple-landing-page-asset.mp4",
+      "hash": "d8df9c7cc86ea322fb1de235b40f6a21fc2be8b64afd13e400c8fc479d4edfb5",
+      "size": 3445812,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:39.999Z"
+    },
+    "social-button-landing-asset.png": {
+      "file": "cloudflare/landing-assets/social-button-landing-asset.png",
+      "hash": "e96bc2f2f83de7e2193b5b52837cb34a87542d500b4327f71516da9b770db09d",
+      "size": 46490,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:41.269Z"
+    },
+    "spectral-wave-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/spectral-wave-landing-asset.mp4",
+      "hash": "b0786cce9f75411694bd6edb177acb7cd77cde55c82d180aae4642d543e4ffeb",
+      "size": 202625,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:41.462Z"
+    },
+    "spin-button-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/spin-button-landing-asset.mp4",
+      "hash": "2c19e0a71bd5fea7d66f018359128dd8ef953879b735a0ef73428837a1d96159",
+      "size": 161117,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:41.460Z"
+    },
+    "spinner-arc-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/spinner-arc-landing-asset.mp4",
+      "hash": "b09fd2c998f2f5d8a3a611151f23424fb249380ca0afec2ca26f9744786a684d",
+      "size": 29503,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:42.993Z"
+    },
+    "split-view-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/split-view-landing-page-asset.mp4",
+      "hash": "80f02e36b18f9b5b0f2d959afe5a9c8ad801401e4355ccd945f379644d811f42",
+      "size": 532075,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:43.501Z"
+    },
+    "squiggly-slider-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/squiggly-slider-landing-asset.mp4",
+      "hash": "d91919ab3916054f3b3c9a7b11fb8f9b39ac5a76ac363c3bdd5021e3f7aebcd3",
+      "size": 406652,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:44.022Z"
+    },
+    "squircle-view-landing-asset.jpg": {
+      "file": "cloudflare/landing-assets/squircle-view-landing-asset.jpg",
+      "hash": "6a39a2c7e2dc56ce168727a270c4d90ccd977c4c38715a6dffc9c6d415269a50",
+      "size": 19384,
+      "contentType": "image/jpeg",
+      "uploadedAt": "2026-08-27T10:19:43.837Z"
+    },
+    "stacked-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/stacked-carousel-landing-asset.mp4",
+      "hash": "5ccb4b3a90b517d369f8943f62c9f679477f52587ddbe4bc5836b9bd86308ade",
+      "size": 4261768,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:44.226Z"
+    },
+    "stacked-chips-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/stacked-chips-landing-asset.mp4",
+      "hash": "779178ee4a3c0401c2266eb606febab25c7985f6efb803b688b33c6ee4c7b05d",
+      "size": 145823,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:43.697Z"
+    },
+    "staggered-text-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/staggered-text-landing-asset.mp4",
+      "hash": "4f53c027b0d6546e557c5320c3fcf488b7c2578b2424b75de106cbb1c9b1a9de",
+      "size": 457972,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:45.381Z"
+    },
+    "switch-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/switch-landing-asset.mp4",
+      "hash": "4f97d51f9ade678b08f07164afcb9600860e7ab62fa857bd7642ce6ebb73a965",
+      "size": 135121,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:45.995Z"
+    },
+    "tabs-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/tabs-landing-asset.mp4",
+      "hash": "3f0ea1689c3bfb32cd083607723903a3327d9448573abddcc5cee035d0b925a2",
+      "size": 119485,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:45.809Z"
+    },
+    "theme-switch-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/theme-switch-landing-asset.mp4",
+      "hash": "f1e876155522bab4967bd61896a182af69bee71320b61de8134eaf8336a63631",
+      "size": 264857,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:46.054Z"
+    },
+    "tilt-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/tilt-carousel-landing-asset.mp4",
+      "hash": "96f4b7c76b15be5b617a0e5500ffbb66e5f717b766b9fe3933d49e3eb7563d1d",
+      "size": 3004770,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:48.109Z"
+    },
+    "toast-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/toast-landing-asset.mp4",
+      "hash": "a7e4fffcce86a7803c3abe7ac5a2ddf733c172db953cc8debfeee579ea3bf8d5",
+      "size": 705427,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:46.989Z"
+    },
+    "toggle-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/toggle-landing-asset.mp4",
+      "hash": "a90a07b6c6ecb1caa4996ac85065492aa3bef4dc6165305bdc8b880881911010",
+      "size": 42610,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:47.867Z"
+    },
+    "tray-landing-page-asset.mp4": {
+      "file": "cloudflare/landing-assets/tray-landing-page-asset.mp4",
+      "hash": "3651349d123c18253d8abfcb1b60ec4f52104200aea37d1c72be5065cb37da17",
+      "size": 1699707,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:51.367Z"
+    },
+    "unfold-menu-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/unfold-menu-landing-asset.mp4",
+      "hash": "25d79708f297bf2dc0f9bd8c95722a9b9ca3004e2258b95d44b570425257ca24",
+      "size": 209179,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:48.392Z"
+    },
+    "unstable_orb-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/unstable_orb-landing-asset.mp4",
+      "hash": "44375d43cf53e00151b55292122bed09ccb446f3fff7cd753ac52fe9a1056b5d",
+      "size": 559116,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:48.397Z"
+    },
+    "verified-badge-landing-asset.png": {
+      "file": "cloudflare/landing-assets/verified-badge-landing-asset.png",
+      "hash": "510c39561f292541c2a7b64e87ce9869c68b3a9eb5f4bd53c9e244f58509c823",
+      "size": 12760,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-27T10:19:49.112Z"
+    },
+    "verified-shine-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/verified-shine-landing-asset.mp4",
+      "hash": "5989548eecd15e2a413ff0ec0f6d8e3d0d799139e45149f3d5512b40dce20a9c",
+      "size": 52222,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:50.149Z"
+    },
+    "vertical-flow-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/vertical-flow-carousel-landing-asset.mp4",
+      "hash": "b5cc066f54a58f7d858ee057186af88aef6431fd90c223a3713c1639eb8db5bd",
+      "size": 2653318,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:51.991Z"
+    },
+    "vertical-page-carousel-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/vertical-page-carousel-landing-asset.mp4",
+      "hash": "e791022840c09308ea15dc5f0e7b10cc90b86b6ea18487c67860ecccbf89725a",
+      "size": 6081741,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:52.748Z"
+    },
+    "wave-scrawler-landing-asset.mp4": {
+      "file": "cloudflare/landing-assets/wave-scrawler-landing-asset.mp4",
+      "hash": "9bc69e91439abedd4c7849bbf423b0029be89ace7712fe6d6e4c2a8371bb4f80",
+      "size": 4987799,
+      "contentType": "video/mp4",
+      "uploadedAt": "2026-08-27T10:19:52.313Z"
+    }
+  },
+  "orphaned": {}
+}

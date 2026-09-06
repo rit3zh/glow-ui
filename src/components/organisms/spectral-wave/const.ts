@@ -1,4 +1,4 @@
-const SHADER_SOURCE = `
+const SHADER_SOURCE = /*wgsl */ `
 uniform float2 uDimensions;
 uniform float  uTick;
 uniform float  uIterations;
@@ -19,7 +19,6 @@ uniform float3 uColor2;
 
 float3 spectral_colour(float l) {
   float r = 0.0, g = 0.0, b = 0.0;
-
   if      ((l >= 400.0) && (l < 410.0)) { float t = (l - 400.0) / (410.0 - 400.0); r = +(0.33 * t) - (0.20 * t * t); }
   else if ((l >= 410.0) && (l < 475.0)) { float t = (l - 410.0) / (475.0 - 410.0); r = 0.14 - (0.13 * t * t); }
   else if ((l >= 545.0) && (l < 595.0)) { float t = (l - 545.0) / (595.0 - 545.0); r = +(1.98 * t) - (t * t); }

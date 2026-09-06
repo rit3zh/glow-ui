@@ -21,8 +21,10 @@ interface IShimmerGroup {
   readonly isLoading?: boolean;
   readonly children: ReactNode;
   readonly preset?: ShimmerPreset;
+  readonly shimmerColors?: string[];
   readonly duration?: number;
   readonly direction?: ShimmerDirection;
+  readonly variant?: "shimmer" | "pulse";
   readonly opacity?: number;
 }
 

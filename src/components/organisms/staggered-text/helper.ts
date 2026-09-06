@@ -1,5 +1,5 @@
 import type { SkFont } from "@shopify/react-native-skia";
-import type { TStaggerFrom, ICharacterMetrics } from "./types";
+import type { TStaggerFrom, ICharacterMetrics, ITextMetrics } from "./types";
 
 const withBuildCharacterMetrics = <T extends SkFont>(
   text: string,
@@ -7,22 +7,32 @@ const withBuildCharacterMetrics = <T extends SkFont>(
   staggerFrom: TStaggerFrom,
   charDelay: number,
   letterSpacing: number = 0,
-): ICharacterMetrics[] => {
-  const chars = text.split("");
-  const widths = chars.map((c) => font.measureText(c).width);
+): ITextMetrics => {
+  // Array.from splits by code point, which matches getGlyphIDs' per-code-point ids.
+  const chars = Array.from(text);
+  // Advance widths, not glyph bounds: measureText returns a tight bounding box,
+  // so whitespace measures as 0 and words collapse into each other.
+  const advances = font.getGlyphWidths(font.getGlyphIDs(text));
   const delays = getStaggerDelays(chars.length, staggerFrom, charDelay);
 
-  let XOFFSET: number = 0;
-  return chars.map((char, i) => {
+  let xOffset: number = 0;
+  const characters = chars.map<ICharacterMetrics>((char, i) => {
+    const width = advances[i] ?? font.measureText(char).width;
     const m: ICharacterMetrics = {
       char,
-      x: XOFFSET,
-      width: widths[i],
+      x: xOffset,
+      width,
       delay: delays[i],
     };
-    XOFFSET += widths[i] + letterSpacing;
+    xOffset += width + letterSpacing;
     return m;
   });
+
+  // Drop the trailing letterSpacing so centering isn't biased to the left.
+  return {
+    characters,
+    width: Math.max(0, xOffset - letterSpacing),
+  };
 };
 
 const getStaggerDelays = <T extends number>(

@@ -1,230 +1,157 @@
-import chalk from "chalk";
-import prompts from "prompts";
+import path from "node:path";
 import fs from "fs-extra";
-import path from "path";
-import { execSync, spawn } from "child_process";
 
-const EXPO_TEMPLATES = [
+import type { PackageManager } from "../typings/index.js";
+import {
+  PM_CREATE,
+  PM_EXEC,
+  PM_LABELS,
+  detectPackageManager,
+  run,
+} from "../core/pm.js";
+import { accent, bail, c, muted, row, ui } from "../ui/index.js";
+
+const TEMPLATES = [
   {
-    title: "Blank — TypeScript",
+    title: "blank — typescript",
     value: "blank-typescript",
-    description: "Minimal Expo app with TypeScript (recommended)",
+    description: "minimal Expo app, TypeScript",
   },
   {
-    title: "Blank",
+    title: "blank",
     value: "blank",
-    description: "Minimal Expo app with JavaScript",
+    description: "minimal Expo app, JavaScript",
   },
   {
-    title: "Tabs — Expo Router",
+    title: "tabs — expo router",
     value: "tabs",
-    description: "Expo Router with file-based routing and tab navigation",
+    description: "file-based routing with tab navigation",
   },
 ];
 
-type PM = "bun" | "pnpm" | "yarn" | "npm";
-
-const PM_LABELS: Record<PM, string> = {
-  bun: "bun",
-  pnpm: "pnpm",
-  yarn: "yarn",
-  npm: "npm",
-};
-
-const PM_CREATE_PREFIX: Record<PM, string> = {
-  bun: "bunx create-expo-app",
-  pnpm: "pnpm create expo-app",
-  yarn: "yarn create expo-app",
-  npm: "npx create-expo-app",
-};
-
-const PM_EXEC: Record<PM, string> = {
-  bun: "bunx",
-  pnpm: "pnpm dlx",
-  yarn: "yarn dlx",
-  npm: "npx",
-};
-
-function detectPackageManager(): PM {
-  for (const pm of ["bun", "pnpm", "yarn"] as PM[]) {
-    try {
-      execSync(`${pm} --version`, { stdio: "ignore" });
-      return pm;
-    } catch {}
-  }
-  return "npm";
-}
-
-function runCommand(cmd: string, cwd?: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const proc = spawn(cmd, {
-      cwd,
-      stdio: "inherit",
-      shell: true,
-    });
-    proc.on("close", (code) => {
-      code === 0
-        ? resolve()
-        : reject(new Error(`Process exited with code ${code}`));
-    });
-    proc.on("error", reject);
-  });
-}
-
-function toSlug(name: string) {
-  return name
+const slug = (name: string) =>
+  name
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
-}
 
-function defaultBundleId(appName: string) {
-  const safe = appName.replace(/[^a-z0-9]/gi, "").toLowerCase();
-  return `com.${safe}`;
-}
+const bundleFor = (name: string) =>
+  `com.${name.replace(/[^a-z0-9]/gi, "").toLowerCase()}`;
 
-export async function create() {
-  console.log(chalk.bold("\n✨  Create a new Expo app with Reacticx\n"));
+export async function create(nameArgument: string | undefined) {
+  const detected = detectPackageManager();
+  const order: PackageManager[] = ["bun", "pnpm", "yarn", "npm"];
 
-  const detectedPM = detectPackageManager();
-  const pmOrder: PM[] = ["bun", "pnpm", "yarn", "npm"];
-
-  const response = await prompts(
-    [
-      {
-        type: "text",
-        name: "appName",
-        message: "App name",
-        initial: "my-expo-app",
-        validate: (v: string) =>
-          v.trim().length > 0 ? true : "App name cannot be empty",
-        format: (v: string) => toSlug(v) || v.trim(),
-      },
-      {
-        type: "text",
-        name: "bundleId",
-        message: "Bundle / package ID  (leave blank to skip)",
-        initial: "",
-      },
-      {
-        type: "select",
-        name: "template",
-        message: "Template",
-        choices: EXPO_TEMPLATES.map((t) => ({
-          title: t.title,
-          value: t.value,
-          description: t.description,
-        })),
-        initial: 0,
-      },
-      {
-        type: "select",
-        name: "packageManager",
-        message: "Package manager",
-        choices: pmOrder.map((pm) => ({
-          title:
-            pm === detectedPM
-              ? `${PM_LABELS[pm]}  ${chalk.green("← detected")}`
-              : PM_LABELS[pm],
-          value: pm,
-        })),
-        initial: pmOrder.indexOf(detectedPM),
-      },
-      {
-        type: "confirm",
-        name: "runInit",
-        message: (_, values) =>
-          `Run  ${PM_EXEC[values.packageManager as PM]} reacticx init  inside the new project?`,
-        initial: true,
-      },
+  ui.box({
+    title: "reacticx create",
+    badge: "new Expo app",
+    rows: [
+      row.gap(),
+      muted("Scaffolds an Expo app and sets reacticx up inside it."),
+      row.gap(),
     ],
+  });
+
+  const answers = await ui.ask<
+    "appName" | "bundleId" | "template" | "packageManager" | "runInit"
+  >([
     {
-      onCancel() {
-        console.log(chalk.yellow("\nCancelled.\n"));
-        process.exit(0);
-      },
+      type: nameArgument ? null : "text",
+      name: "appName",
+      message: "App name",
+      initial: "my-expo-app",
+      format: (value: string) => slug(value) || value.trim(),
+      validate: (value: string) => (value.trim() ? true : "Give it a name"),
     },
-  );
+    {
+      type: "text",
+      name: "bundleId",
+      message: "Bundle / package ID",
+      initial: (_prev: unknown, values: Record<string, unknown>) =>
+        bundleFor(slug(nameArgument ?? String(values.appName ?? ""))),
+    },
+    {
+      type: "select",
+      name: "template",
+      message: "Template",
+      choices: TEMPLATES,
+      initial: 0,
+    },
+    {
+      type: "select",
+      name: "packageManager",
+      message: "Package manager",
+      choices: order.map((pm) => ({
+        title:
+          pm === detected
+            ? `${PM_LABELS[pm]} ${c.dim("· detected")}`
+            : PM_LABELS[pm],
+        value: pm,
+      })),
+      initial: order.indexOf(detected),
+    },
+    {
+      type: "confirm",
+      name: "runInit",
+      message: "Initialize reacticx in it afterwards?",
+      initial: true,
+    },
+  ]);
 
-  const { appName, bundleId, template, packageManager, runInit } = response;
-  if (!appName) {
-    console.log(chalk.yellow("\nCancelled.\n"));
-    process.exit(0);
-  }
+  const appName = slug(nameArgument ?? String(answers.appName));
+  const pm = answers.packageManager as PackageManager;
+  const command = `${PM_CREATE[pm]} ${appName} --template ${answers.template}`;
 
-  const createCmd = [
-    PM_CREATE_PREFIX[packageManager as PM],
-    appName,
-    "--template",
-    template,
-  ].join(" ");
-
-  console.log(chalk.bold("\n┌ Creating Expo app\n│"));
-  console.log(chalk.dim(`│  ${createCmd}\n│`));
+  ui.hint(command);
 
   try {
-    await runCommand(createCmd);
-  } catch {
-    console.error(
-      chalk.red(
-        "\n✗  Failed to create the Expo app. Check the output above for details.\n",
-      ),
-    );
-    process.exit(1);
+    await run(command);
+  } catch (error) {
+    bail((error as Error).message, ["the Expo output above says why"]);
   }
 
   const appDir = path.join(process.cwd(), appName);
+  const bundleId = String(answers.bundleId ?? "").trim();
 
-  const resolvedBundleId =
-    bundleId && bundleId.trim() ? bundleId.trim() : defaultBundleId(appName);
-
-  if (bundleId && bundleId.trim()) {
-    const appJsonPath = path.join(appDir, "app.json");
-    if (await fs.pathExists(appJsonPath)) {
-      try {
-        const appJson = await fs.readJson(appJsonPath);
-        if (!appJson.expo) appJson.expo = {};
-        if (!appJson.expo.ios) appJson.expo.ios = {};
-        if (!appJson.expo.android) appJson.expo.android = {};
-        appJson.expo.ios.bundleIdentifier = resolvedBundleId;
-        appJson.expo.android.package = resolvedBundleId;
-        await fs.writeJson(appJsonPath, appJson, { spaces: 2 });
-        console.log(
-          chalk.dim(
-            `\n│  Updated app.json → bundle ID: ${chalk.white(resolvedBundleId)}`,
-          ),
-        );
-      } catch {
-        console.log(
-          chalk.yellow(
-            "\n│  Could not patch app.json — set the bundle ID manually.",
-          ),
-        );
-      }
-    }
+  if (bundleId) {
+    await patchBundleId(appDir, bundleId);
   }
 
-  const exec = PM_EXEC[packageManager as PM];
-
-  if (runInit) {
-    console.log(chalk.bold("\n├ Initializing Reacticx\n│"));
+  if (answers.runInit) {
     try {
-      await runCommand(`${exec} reacticx init`, appDir);
+      await run(`${PM_EXEC[pm]} reacticx init`, appDir);
     } catch {
-      console.log(
-        chalk.yellow("\n│  reacticx init failed — run it manually:") +
-          chalk.cyan(`\n│    cd ${appName} && ${exec} reacticx init`),
-      );
+      ui.hint("reacticx init did not finish — run it yourself");
     }
   }
 
-  console.log(chalk.bold.green("\n└ All done! 🎉\n"));
-  console.log(chalk.dim("  Next steps:\n"));
-  console.log(chalk.cyan(`    cd ${appName}`));
-  if (!runInit) {
-    console.log(chalk.cyan(`    ${exec} reacticx init`));
+  ui.box({
+    title: `created ${c.green(appName)}`,
+    rows: [
+      row.gap(),
+      ...[
+        `cd ${appName}`,
+        ...(answers.runInit ? [] : [`${PM_EXEC[pm]} reacticx init`]),
+        `${PM_EXEC[pm]} reacticx add button`,
+      ].map((step) => accent(step)),
+      row.gap(),
+    ],
+  });
+}
+
+async function patchBundleId(appDir: string, bundleId: string) {
+  const appJsonPath = path.join(appDir, "app.json");
+  if (!(await fs.pathExists(appJsonPath))) return;
+
+  try {
+    const appJson = await fs.readJson(appJsonPath);
+    appJson.expo ??= {};
+    appJson.expo.ios = { ...appJson.expo.ios, bundleIdentifier: bundleId };
+    appJson.expo.android = { ...appJson.expo.android, package: bundleId };
+    await fs.writeJson(appJsonPath, appJson, { spaces: 2 });
+    ui.hint(`app.json · bundle ID ${c.bold(bundleId)}`);
+  } catch {
+    ui.hint("could not patch app.json — set the bundle ID yourself");
   }
-  console.log(chalk.cyan(`    ${exec} reacticx add button`));
-  console.log();
 }

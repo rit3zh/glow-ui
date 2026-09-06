@@ -5,7 +5,7 @@
   "editor.cursorSmoothCaretAnimation": "off",
   "workbench.list.smoothScrolling": false,
   "terminal.integrated.smoothScrolling": false,
-  "editor.cursorBlinking": "solid",
+  "editor.cursorBlinking": "smooth",
   "animations.Smooth-Mode": false,
-  "discord.enabled": true
+  "discord.enabled": false
 }

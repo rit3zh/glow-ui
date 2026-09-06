@@ -78,7 +78,7 @@ export const UnstableOrb: React.FC<UnstableOrbProps> &
 
 const styles = StyleSheet.create({
   canvas: {
-    flex: 1,
+    // flex: 1,
   },
 });
 

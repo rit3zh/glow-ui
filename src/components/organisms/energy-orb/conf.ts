@@ -1,6 +1,6 @@
 import type { RGB } from "./types";
 
-const SHADER_SOURCE = `
+const SHADER_SOURCE = /*wgsl*/ `
   uniform float iTime;
   uniform vec2 iResolution;
   uniform float uSpeed;

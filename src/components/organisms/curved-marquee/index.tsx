@@ -1,9 +1,14 @@
-import React, { useMemo, memo } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import {
+  StyleSheet,
+  Text as RNText,
+  View,
+  type LayoutChangeEvent,
+} from "react-native";
 import Animated, {
-  useSharedValue,
   useAnimatedProps,
   useFrameCallback,
+  useSharedValue,
   type FrameInfo,
 } from "react-native-reanimated";
 import SVG, {
@@ -14,106 +19,138 @@ import SVG, {
   type TextPathProps,
 } from "react-native-svg";
 import { Direction, type ICurvedMarquee } from "./types";
+import {
+  PATH_CONTROL_X,
+  PATH_END_X,
+  PATH_START_X,
+  PATH_Y,
+  VIEW_BOX_HEIGHT,
+  VIEW_BOX_WIDTH,
+} from "./const";
+const AnimatedTextPath = Animated.createAnimatedComponent(TextPath);
 
-const AnimatedTextPath = Animated.createAnimatedComponent<
-  Partial<TextPathProps> & React.ComponentProps<typeof TextPath>
->(TextPath);
+const measurePathLength = (curve: number): number => {
+  const p1y = PATH_Y + curve;
 
-export const CurvedMarquee: React.FC<Partial<ICurvedMarquee>> &
-  React.FunctionComponent<Partial<ICurvedMarquee>> = memo<
-  Partial<ICurvedMarquee>
->(
-  memo<Partial<ICurvedMarquee>>(
-    memo<Partial<ICurvedMarquee>>(
-      ({
-        text: marqueeText = "⟣ REACTICX ⟢ 🤍",
-        speed = 500,
-        curve = -500,
-        direction = Direction.Left,
-        textColor = "#ffffff",
-        fontSize = 100,
-        copies = 50,
-        style,
-      }: Partial<React.ComponentProps<typeof CurvedMarquee>> & ICurvedMarquee):
-        | (React.ReactElement & React.JSX.Element & React.ReactNode)
-        | null => {
-        const offset = useSharedValue<number>(0);
-        const text = useMemo<string>(() => {
-          const hasTrailing = /\s|\u00A0$/.test(marqueeText);
-          return (
-            (hasTrailing ? marqueeText.replace(/\s+$/, "") : marqueeText) +
-            "\u00A0"
+  const STEPS = 32;
+  let length = 0;
+  let prevX = PATH_START_X;
+  let prevY = PATH_Y;
+
+  for (let i = 1; i <= STEPS; i++) {
+    const t = i / STEPS;
+    const mt = 1 - t;
+    const x =
+      mt * mt * PATH_START_X + 2 * mt * t * PATH_CONTROL_X + t * t * PATH_END_X;
+    const y = mt * mt * PATH_Y + 2 * mt * t * p1y + t * t * PATH_Y;
+    length += Math.hypot(x - prevX, y - prevY);
+    prevX = x;
+    prevY = y;
+  }
+
+  return length;
+};
+
+export const CurvedMarquee: React.FC<Partial<ICurvedMarquee>> =
+  memo<ICurvedMarquee>(
+    ({
+      text: marqueeText = "⟣ REACTICX ⟢ 🤍",
+      speed = 500,
+      curve = -500,
+      direction = Direction.Left,
+      textColor = "#ffffff",
+      fontSize = 100,
+      copies,
+      style,
+    }: Partial<ICurvedMarquee>): React.ReactNode &
+      React.ReactElement &
+      React.JSX.Element => {
+      const phase = useSharedValue<number>(0);
+      const spacing = useSharedValue<number>(0);
+
+      const [measuredSpacing, setMeasuredSpacing] = useState<number>(0);
+
+      const text = useMemo<string>(
+        () => marqueeText.replace(/[\s\u00A0]+$/, "") + "\u00A0",
+        [marqueeText],
+      );
+
+      const pathId = useMemo<string>(
+        () => `curved-path-${Math.random().toString(36).slice(2)}`,
+        [],
+      );
+
+      const pathD = useMemo<string>(
+        () =>
+          `M${PATH_START_X},${PATH_Y} Q${PATH_CONTROL_X},${PATH_Y + curve} ${PATH_END_X},${PATH_Y}`,
+        [curve],
+      );
+
+      const pathLength = useMemo<number>(
+        () => measurePathLength(curve),
+        [curve],
+      );
+
+      const totalText = useMemo<string>(() => {
+        if (measuredSpacing <= 0) return "";
+        const needed =
+          Math.ceil((pathLength + measuredSpacing) / measuredSpacing) + 1;
+        return text.repeat(copies ?? needed);
+      }, [text, measuredSpacing, pathLength, copies]);
+
+      const onMeasure = useCallback(
+        (event: LayoutChangeEvent) => {
+          const width = event.nativeEvent.layout.width;
+          if (width <= 0) return;
+          spacing.value = width;
+          setMeasuredSpacing((previous) =>
+            Math.abs(previous - width) < 0.5 ? previous : width,
           );
-        }, [marqueeText]);
+        },
+        [spacing],
+      );
 
-        const spacing = useMemo<number>(() => {
-          return text.length * 2 * (fontSize * 2);
-        }, [text, fontSize]);
+      const isLeft = direction === Direction.Left;
+      useFrameCallback((frameInfo: FrameInfo) => {
+        "worklet";
+        const loop = spacing.value;
+        if (loop <= 0) return;
 
-        const pathId = useMemo<string>(
-          () => `curved-path-${Math.random().toString(36).slice(2)}`,
-          [],
-        );
-        const pathD = useMemo<string>(
-          () => `M-100,50 Q500,${50 + curve} 1140,50`,
-          [curve],
-        );
-        const totalText = useMemo<string>(() => {
-          const numCopies = Math.max(
-            copies satisfies number,
-            Math.ceil(1800 / spacing) + 2,
-          );
-          return Array(numCopies).fill(text).join("");
-        }, [text, spacing, copies]);
+        const deltaTime = frameInfo.timeSincePreviousFrame ?? 16;
+        phase.value = (phase.value + (speed * deltaTime) / 1000) % loop;
+      }, true);
 
-        useFrameCallback((frameInfo: FrameInfo) => {
-          "worklet";
-          if (spacing === 0) return;
+      const animatedProps = useAnimatedProps(() => {
+        "worklet";
+        const loop = spacing.value;
+        return {
+          startOffset:
+            loop <= 0 ? 0 : isLeft ? -phase.value : phase.value - loop,
+        } as Partial<TextPathProps>;
+      }, [isLeft]);
 
-          const deltaTime = frameInfo.timeSincePreviousFrame ?? 16;
-          const distance = (speed * deltaTime) / 1000;
+      return (
+        <View
+          style={[styles.container, style ?? styles.defaultContainer]}
+          pointerEvents="none"
+        >
+          <View style={styles.measureBox} pointerEvents="none">
+            <RNText
+              style={[styles.measure, { fontSize }]}
+              numberOfLines={1}
+              onLayout={onMeasure}
+              allowFontScaling={false}
+            >
+              {text}
+            </RNText>
+          </View>
 
-          if (direction === "left") {
-            offset.value -= distance;
-            if (offset.value <= -spacing) {
-              offset.value += spacing;
-            }
-          } else {
-            offset.value += distance;
-            if (offset.value >= 0) {
-              offset.value -= spacing;
-            }
-          }
-        }, spacing > 0);
-        const animatedProps = useAnimatedProps<
-          Required<Partial<Pick<TextPathProps, "startOffset">>>
-        >(() => {
-          "worklet";
-          return {
-            startOffset: offset.value,
-          };
-        });
-
-        if (spacing === 0) {
-          return <View style={styles.container} />;
-        }
-
-        return (
-          <View
-            style={[
-              styles.container,
-              style ?? {
-                height: 390,
-                overflow: "hidden",
-              },
-            ]}
-          >
+          {measuredSpacing > 0 ? (
             <SVG
               width="100%"
               height="100%"
-              viewBox="0 0 1040 190"
+              viewBox={`0 0 ${VIEW_BOX_WIDTH} ${VIEW_BOX_HEIGHT}`}
               style={styles.svg}
-              key={curve}
             >
               <Defs>
                 <Path id={pathId} d={pathD} fill="none" stroke="transparent" />
@@ -127,22 +164,31 @@ export const CurvedMarquee: React.FC<Partial<ICurvedMarquee>> &
                 </AnimatedTextPath>
               </Text>
             </SVG>
-          </View>
-        );
-      },
-    ),
-  ),
-);
+          ) : null}
+        </View>
+      );
+    },
+  );
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
   },
+  defaultContainer: {
+    overflow: "hidden",
+  },
   svg: {
     overflow: "visible",
   },
+  measureBox: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: 100000,
+    opacity: 0,
+  },
+  measure: {
+    alignSelf: "flex-start",
+    includeFontPadding: false,
+  },
 });
-
-export default memo<
-  React.FC<ICurvedMarquee> & React.FunctionComponent<ICurvedMarquee>
->(CurvedMarquee);

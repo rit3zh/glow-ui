@@ -293,14 +293,14 @@ export const OtpInput: FC<IOtpInput> & FunctionComponent<IOtpInput> =
         opacity: opacity.value,
         transform: [{ translateX: translateX.value }],
       }));
-      const triggerCompleteAnimation = () => {
+      const triggerCompleteAnimation = (): void => {
         opacity.value = withSequence<number>(
           withTiming(0.6, { duration: 900 }),
           withTiming(1, { duration: 900 }),
         );
       };
 
-      const triggerShakeAnimation = () => {
+      const triggerShakeAnimation = (): void => {
         translateX.value = withSequence<number>(
           withTiming(-4, { duration: 50 }),
           withTiming(4, { duration: 50 }),

@@ -25,7 +25,7 @@ import { scheduleOnRN } from "react-native-worklets";
 const AnimatedBlurView =
   Animated.createAnimatedComponent<Partial<BlurViewProps>>(BlurView);
 
-const width = Dimensions.get("screen").width - 32;
+const DEFAULT_WIDTH = Dimensions.get("screen").width - 32;
 
 const SegmentedControl: React.FC<ISegmentedControl> &
   React.FunctionComponent<ISegmentedControl> = ({
@@ -39,6 +39,7 @@ const SegmentedControl: React.FC<ISegmentedControl> &
   dividerColor,
   borderRadius = 8,
   disableScaleEffect = false,
+  width = DEFAULT_WIDTH,
 }: ISegmentedControl):
   | (React.ReactNode & React.JSX.Element & React.ReactElement)
   | null => {
@@ -165,6 +166,7 @@ const SegmentedControl: React.FC<ISegmentedControl> &
         style={[
           styles.segmentedControlWrapper,
           {
+            width,
             backgroundColor: finalSegmentedControlBackgroundColor,
             paddingVertical: paddingVertical,
             borderRadius,
@@ -264,7 +266,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    width: width,
     marginVertical: 20,
   },
   textWrapper: {

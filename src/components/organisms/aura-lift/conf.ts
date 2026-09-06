@@ -1,4 +1,4 @@
-const AURA_LIFT_SHADER = `
+const AURA_LIFT_SHADER = /*wgsl*/ `
   uniform float iProgress;
   uniform float2 iResolution;
   uniform shader contents;

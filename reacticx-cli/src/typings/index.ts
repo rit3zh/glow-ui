@@ -1,13 +1,83 @@
-interface ComponentConfig {
-  outDir: string;
+export type Structure = "category" | "flat" | "mirror";
+
+export type PackageManager = "bun" | "pnpm" | "yarn" | "npm";
+export type PackageManagerSetting = PackageManager | "auto";
+
+export type InstallPolicy = "auto" | "prompt" | "never";
+
+export interface RegistryConfig {
+  origin: string;
+  index: string;
+  registry: string;
+  cache: number | false;
 }
 
-interface FolderEntry {
+export interface AliasConfig {
+  components: string;
+  utils: string;
+  hooks: string;
+}
+
+export interface PathConfig {
+  utils: string;
+  hooks: string;
+  types: string;
+  examples: string;
+}
+
+export interface IncludeConfig {
+  types: boolean;
+  examples: boolean;
+  dependencies: boolean;
+}
+
+export interface ComponentConfig {
+  $schema?: string;
+  outDir: string;
+  structure: Structure;
+  typescript: boolean;
+  aliases: AliasConfig;
+  paths: PathConfig;
+  include: IncludeConfig;
+  overwrite: boolean;
+  packageManager: PackageManagerSetting;
+  installDependencies: InstallPolicy;
+  registry: RegistryConfig;
+}
+
+export type UserConfig = {
+  [K in keyof ComponentConfig]?: ComponentConfig[K] extends object
+    ? Partial<ComponentConfig[K]>
+    : ComponentConfig[K];
+};
+
+export interface BucketFile {
+  path: string;
+  key: string;
+  size: number;
+  hash: string;
+  contentType: string;
+}
+
+export interface BucketFolder {
+  prefix: string;
+  source: string;
+  files: BucketFile[];
+}
+
+export interface BucketIndex {
+  bucket: string;
+  generatedAt: string;
+  total: number;
+  folders: Record<string, BucketFolder>;
+}
+
+export interface FolderEntry {
   name: string;
   files: string[];
 }
 
-interface ComponentInfo {
+export interface ComponentInfo {
   name: string;
   category: string;
   path: string;
@@ -15,22 +85,55 @@ interface ComponentInfo {
   folders: FolderEntry[];
 }
 
-interface Registry {
+export interface Registry {
   version: string;
   totalComponents: number;
   categories: string[];
   components: Record<string, ComponentInfo>;
 }
 
-interface AddOptions {
-  overwrite?: boolean;
-  dir?: string;
+export interface PlannedFile {
+  key: string;
+  target: string;
+  display: string;
+  hash: string;
+  size: number;
+  text: boolean;
 }
 
-export type {
-  ComponentConfig,
-  ComponentInfo,
-  FolderEntry,
-  Registry,
-  AddOptions,
-};
+export type PlanKind = "component" | "types" | "example" | "shared";
+
+export interface PlanGroup {
+  kind: PlanKind;
+  name: string;
+  reason?: string;
+  files: PlannedFile[];
+}
+
+export interface Plan {
+  groups: PlanGroup[];
+  files: PlannedFile[];
+}
+
+export interface AddOptions {
+  overwrite?: boolean;
+  dir?: string;
+  types?: boolean;
+  examples?: boolean;
+  deps?: boolean;
+  install?: boolean;
+  dry?: boolean;
+  yes?: boolean;
+}
+
+export interface ListOptions {
+  category?: string;
+  json?: boolean;
+  search?: string;
+}
+
+export interface InitOptions {
+  yes?: boolean;
+  force?: boolean;
+  dir?: string;
+}

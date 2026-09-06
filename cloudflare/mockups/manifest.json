@@ -1,0 +1,178 @@
+{
+  "bucket": "reacticx-v2-mockups",
+  "updatedAt": "2026-08-30T12:28:02.237Z",
+  "entries": {
+    "blocks/bottom-sheet/add-address-new.png": {
+      "file": "cloudflare/v2-mockups/add-address-new.png",
+      "hash": "403431941a6c30cc4d15d37d036e24a32d665be7664228270283a7dbd42bb459",
+      "size": 144148,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.121Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/airbnb-v1.png": {
+      "file": "cloudflare/v2-mockups/airbnb-v1.png",
+      "hash": "29ae6f87b3f3ad241b9ca77a6d997d717f8370e5a8997d3e541a501309a91748",
+      "size": 367922,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.120Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/airbnb-v2.png": {
+      "file": "cloudflare/v2-mockups/airbnb-v2.png",
+      "hash": "5fad97abaacd8cffae9badc3496018882233ce93c1c35a5f57a19057d0380d4c",
+      "size": 187393,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.690Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/apple-v1.png": {
+      "file": "cloudflare/v2-mockups/apple-v1.png",
+      "hash": "77cac488766f88fa30fdea6f6a1b6dd539679e97664bcd16781368a996920e26",
+      "size": 159690,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.121Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/billing-v1.png": {
+      "file": "cloudflare/v2-mockups/billing-v1.png",
+      "hash": "d5a7f92d84471693c8e227fb3d973a1220b653a204fa2395a03a77ec65188d5c",
+      "size": 169899,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.120Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/email-verification-v1.png": {
+      "file": "cloudflare/v2-mockups/email-verification-v1.png",
+      "hash": "0d60aeffe840c9815b034a1f0db2bfca78ff9295f0cd2e75e420eb8c29e953bf",
+      "size": 166844,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.670Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/bottom-sheet/signup-v1.png": {
+      "file": "cloudflare/v2-mockups/signup-v1.png",
+      "hash": "8844c644855c4b7cb687cb07d201ac857289cef238a049d41b0fd2eb16344d64",
+      "size": 142979,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:40.064Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/empty-state/empty-collection-v1.png": {
+      "file": "cloudflare/v2-mockups/empty-collection-v1.png",
+      "hash": "cfeb78e307e1aec7be99b9dbaa23af8935a9374fe8b11a58b4bc971cfccdb239",
+      "size": 766955,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.121Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/empty-state/empty-gallary-v1.png": {
+      "file": "cloudflare/v2-mockups/empty-gallary-v1.png",
+      "hash": "6b2e6b9e952146bae28db2479d0c38d006ccffd50fad21f7ef58bee1505f5d0b",
+      "size": 870487,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:33.132Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/empty-state/empty-gift-v1.png": {
+      "file": "cloudflare/v2-mockups/empty-gift-v1.png",
+      "hash": "fedb9cf18936271f9299340ac87a0e4b96e1d1d33fc623cfdc8da8b5ecf79d26",
+      "size": 214650,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:38.898Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/empty-state/empty-inbox-v1.png": {
+      "file": "cloudflare/v2-mockups/empty-inbox-v1.png",
+      "hash": "6c7e9256472266e9a372119da0cd81aeb2f4ff010131ec49947d78db3276dc14",
+      "size": 255007,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:40.988Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/settings/profile-settings-v1.png": {
+      "file": "cloudflare/v2-mockups/profile-settings-v1.png",
+      "hash": "0da773d02a5baad15c5de67400915fed88ae7802d1c52f361227785ea9b3a66c",
+      "size": 360825,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:40.344Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/settings/profile-settings-v2.png": {
+      "file": "cloudflare/v2-mockups/profile-settings-v2.png",
+      "hash": "ad372a8f37f25206ee2025e639fabba7a9abe26b5c285adb29937ebe0eb0bcb9",
+      "size": 300787,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:35.639Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/settings/profile-settings-v3.png": {
+      "file": "cloudflare/v2-mockups/profile-settings-v3.png",
+      "hash": "2cbcfa46c9e3c697f1579f35d07098a46f52ab35829b473fa522452f98f694e0",
+      "size": 421317,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:36.520Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/settings/profile-settings-v4.png": {
+      "file": "cloudflare/v2-mockups/profile-settings-v4.png",
+      "hash": "42c99b5dcf71417072171ae1f2eddf6974e15e13255fa4882c5c1e7969868aca",
+      "size": 306668,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:42.620Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/welcome-screen/welcome-v1.png": {
+      "file": "cloudflare/v2-mockups/welcome-v1.png",
+      "hash": "52dbd68aa5be38b135213de86dc443fbe137fbbf28d5102337fdf476a777a6ec",
+      "size": 3251965,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:39.312Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/welcome-screen/welcome-v2.png": {
+      "file": "cloudflare/v2-mockups/welcome-v2.png",
+      "hash": "9f3541f4cc48370e0ff9049cc64af839e9eb6ee71ba259df0442d8ab304f4d8d",
+      "size": 4183514,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:40.065Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/welcome-screen/welcome-v3.png": {
+      "file": "cloudflare/v2-mockups/welcome-v3.png",
+      "hash": "41a3aca959e981b414498d3198be0939a9e8206da0628fd40c51b4163b004c8b",
+      "size": 170946,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:40.270Z",
+      "width": 1320,
+      "height": 2868
+    },
+    "blocks/welcome-screen/welcome-v4.png": {
+      "file": "cloudflare/v2-mockups/welcome-v4.png",
+      "hash": "7335f087a196561310daab36d6ff7122f99ebf8ef47d1cfd59630ee04502d7f0",
+      "size": 213767,
+      "contentType": "image/png",
+      "uploadedAt": "2026-08-30T11:45:41.110Z",
+      "width": 1320,
+      "height": 2868
+    }
+  },
+  "orphaned": {}
+}

@@ -5,7 +5,7 @@ interface ICoreOval {
   cy: number;
   rx: SharedValue<number>;
   ry: SharedValue<number>;
-  isOn: SharedValue<boolean>;
+  progress: SharedValue<number>;
   onColor: string;
   offColor: string;
 }

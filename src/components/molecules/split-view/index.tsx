@@ -1,5 +1,11 @@
-import React, { memo } from "react";
-import { FlatList, StyleSheet, Text, View, Dimensions } from "react-native";
+// @ts-check
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  ViewStyle,
+  type LayoutChangeEvent,
+} from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -12,296 +18,284 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+
 import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import { DRAG_HANDLE_HEIGHT } from "./conf";
-import type { SplitViewProps, SpringConfig } from "./types";
+  DEFAULT_GAP,
+  DEFAULT_INITIAL_TOP_HEIGHT,
+  DEFAULT_MIN_BOTTOM_HEIGHT,
+  DEFAULT_MIN_TOP_HEIGHT,
+  DEFAULT_SPRING,
+  DEFAULT_VELOCITY_THRESHOLD,
+  HANDLE_HIT_SLOP,
+  THEME,
+} from "./const";
+import { SplitViewContext, useSplitView } from "./context";
+import { clamp, resolveSnapTarget } from "./helpers";
+import type {
+  ISplitViewHandle,
+  ISplitViewPane,
+  ISplitViewRoot,
+  ISplitViewTitle,
+} from "./types";
+import { scheduleOnRN } from "react-native-worklets";
+import { createCompoundComponent } from "@/utils/create-compound-component";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const SplitViewRoot: React.FC<ISplitViewRoot> &
+  React.FunctionComponent<ISplitViewRoot> = ({
+  children,
+  initialTopHeight = DEFAULT_INITIAL_TOP_HEIGHT,
+  minTopHeight = DEFAULT_MIN_TOP_HEIGHT,
+  minBottomHeight = DEFAULT_MIN_BOTTOM_HEIGHT,
+  maxTopHeight,
+  gap = DEFAULT_GAP,
+  snapPoints,
+  velocityThreshold = DEFAULT_VELOCITY_THRESHOLD,
+  springConfig = DEFAULT_SPRING,
+  onHeightChange,
+  style,
+}: ISplitViewRoot): React.JSX.Element &
+  React.ReactNode &
+  React.ReactElement => {
+  const [containerHeight, setContainerHeight] = useState<number>(0);
 
-const SplitViewInner = <TTop, TBottom>({
-  topSectionItems,
-  bottomSectionItems,
-  bottomSectionTitle,
-  initialTopSectionHeight,
-  minSectionHeight,
-  maxTopSectionHeight,
-  maxBottomSectionHeight,
-  velocityThreshold,
-  springConfig,
-  containerBackgroundColor,
-  sectionBackgroundColor,
-  dividerBackgroundColor,
-  dragHandleColor,
-  renderTopItem,
-  renderBottomItem,
-  renderHeader,
-  topKeyExtractor,
-  bottomKeyExtractor,
-  showHeader,
-  topListContentContainerStyle,
-  bottomListContentContainerStyle,
-  topListStyle,
-  bottomListStyle,
-  sectionTitleStyle,
-  sectionTitleTextColor,
-}: SplitViewProps<TTop, TBottom>):
-  | (React.ReactNode & JSX.Element & React.ReactElement)
-  | null => {
-  const topSectionHeight = useSharedValue<number>(initialTopSectionHeight);
+  const topHeight = useSharedValue<number>(initialTopHeight);
   const startY = useSharedValue<number>(0);
-  const isDragging = useSharedValue<boolean>(false);
-  const insets = useSafeAreaInsets();
+  const handleScale = useSharedValue<number>(1);
 
-  const minTopHeight = maxBottomSectionHeight
-    ? SCREEN_HEIGHT - maxBottomSectionHeight - 60
-    : minSectionHeight;
+  const minTop = minTopHeight;
+  const maxTop =
+    maxTopHeight ??
+    Math.max(minTop + 1, containerHeight - gap - minBottomHeight);
 
-  const middleHeight = (minTopHeight + maxTopSectionHeight) / 2;
+  const resolvedSnapPoints = useMemo<number[]>(() => {
+    if (snapPoints && snapPoints.length > 0) {
+      return [...snapPoints].sort((a, b) => a - b);
+    }
+    return [minTop, (minTop + maxTop) / 2, maxTop];
+  }, [snapPoints, minTop, maxTop]);
 
-  const panGesture = Gesture.Pan()
-    .onStart(() => {
-      startY.value = topSectionHeight.value;
-      isDragging.value = true;
-    })
-    .onUpdate((event) => {
-      const nextHeight = startY.value + event.translationY;
-      topSectionHeight.value = Math.max(
-        minTopHeight,
-        Math.min(nextHeight, maxTopSectionHeight),
-      );
-    })
-    .onEnd((event) => {
-      "worklet";
-      isDragging.value = false;
+  useEffect(() => {
+    if (containerHeight <= 0) return;
+    const bounded = Math.min(Math.max(topHeight.value, minTop), maxTop);
+    if (bounded !== topHeight.value) {
+      topHeight.value = withSpring(bounded, springConfig);
+    }
+  }, [containerHeight, minTop, maxTop]);
 
-      let targetHeight: number;
-
-      const clampedVelocity = Math.max(-4000, Math.min(4000, event.velocityY));
-
-      const snapPoints = [minTopHeight, middleHeight, maxTopSectionHeight];
-
-      if (Math.abs(clampedVelocity) > velocityThreshold) {
-        const currentHeight = topSectionHeight.value;
-
-        if (clampedVelocity > 0) {
-          const nextSnapIndex = snapPoints.findIndex(
-            (point) => point > currentHeight + 20,
+  const gesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .hitSlop({ top: HANDLE_HIT_SLOP, bottom: HANDLE_HIT_SLOP })
+        .onStart(() => {
+          startY.value = topHeight.value;
+          handleScale.value = withSpring(1.18, springConfig);
+        })
+        .onUpdate((e) => {
+          topHeight.value = clamp(
+            startY.value + e.translationY,
+            minTop,
+            maxTop,
           );
-          targetHeight =
-            nextSnapIndex !== -1
-              ? snapPoints[nextSnapIndex]
-              : maxTopSectionHeight;
-        } else {
-          const reversedPoints = [...snapPoints].reverse();
-          const prevSnapIndex = reversedPoints.findIndex(
-            (point) => point < currentHeight - 20,
+        })
+        .onEnd((e) => {
+          const velocity = clamp(e.velocityY, -4000, 4000);
+          const target = resolveSnapTarget(
+            topHeight.value,
+            velocity,
+            resolvedSnapPoints,
+            velocityThreshold,
           );
-          targetHeight =
-            prevSnapIndex !== -1 ? reversedPoints[prevSnapIndex] : minTopHeight;
-        }
-      } else {
-        let closestPoint = snapPoints[0];
-        let minDistance = Math.abs(snapPoints[0] - topSectionHeight.value);
+          topHeight.value = withSpring(target, {
+            ...springConfig,
+            overshootClamping: true,
+          });
+          if (onHeightChange) scheduleOnRN(onHeightChange, target);
+        })
+        .onFinalize(() => {
+          handleScale.value = withSpring(1, springConfig);
+        }),
+    [
+      minTop,
+      maxTop,
+      resolvedSnapPoints,
+      velocityThreshold,
+      springConfig,
+      onHeightChange,
+      topHeight,
+      startY,
+      handleScale,
+    ],
+  );
 
-        for (let i = 1; i < snapPoints.length; i++) {
-          const distance = Math.abs(snapPoints[i] - topSectionHeight.value);
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestPoint = snapPoints[i];
-          }
-        }
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
+    setContainerHeight(e.nativeEvent.layout.height);
+  }, []);
 
-        targetHeight = closestPoint;
-      }
+  const ctx = useMemo(
+    () => ({ topHeight, handleScale, gap, minTop, maxTop, gesture }),
+    [topHeight, handleScale, gap, minTop, maxTop, gesture],
+  );
 
-      topSectionHeight.value = withSpring(targetHeight, {
-        ...springConfig,
-        overshootClamping: true,
-      });
-    });
+  return (
+    <SplitViewContext.Provider value={ctx}>
+      <GestureHandlerRootView style={[styles.root, style]} onLayout={onLayout}>
+        {children}
+      </GestureHandlerRootView>
+    </SplitViewContext.Provider>
+  );
+};
 
-  const topSectionAnimatedStyle = useAnimatedStyle(() => ({
-    height: topSectionHeight.value,
+const SplitViewTop: React.FC<ISplitViewPane> = ({
+  children,
+  style,
+}: ISplitViewPane): React.JSX.Element &
+  React.ReactNode &
+  React.ReactElement => {
+  const { topHeight, minTop } = useSplitView("SplitView.Top");
+
+  const animatedStyle = useAnimatedStyle<Pick<ViewStyle, "height" | "opacity">>(
+    () => ({
+      height: topHeight.value,
+      opacity: interpolate(
+        topHeight.value,
+        [minTop, minTop + 60],
+        [0.2, 1],
+        Extrapolation.CLAMP,
+      ),
+    }),
+  );
+
+  return (
+    <Animated.View style={[styles.pane, styles.top, animatedStyle, style]}>
+      {children}
+    </Animated.View>
+  );
+};
+
+const SplitViewHandle: React.FC<ISplitViewHandle> &
+  React.FunctionComponent<ISplitViewHandle> = ({
+  color,
+  style,
+  barStyle,
+}: ISplitViewHandle): React.JSX.Element &
+  React.ReactNode &
+  React.ReactElement => {
+  const { gesture, handleScale, gap } = useSplitView("SplitView.Handle");
+
+  const barAnimatedStyle = useAnimatedStyle<Pick<ViewStyle, "transform">>(
+    () => ({
+      transform: [{ scale: handleScale.value }],
+    }),
+  );
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View style={[styles.handle, { height: gap }, style]}>
+        <Animated.View
+          style={[
+            styles.handleBar,
+            { backgroundColor: color ?? THEME.handle },
+            barAnimatedStyle,
+            barStyle,
+          ]}
+        />
+      </Animated.View>
+    </GestureDetector>
+  );
+};
+
+const SplitViewBottom: React.FC<ISplitViewPane> = ({
+  children,
+  style,
+}: ISplitViewPane): React.JSX.Element &
+  React.ReactNode &
+  React.ReactElement => {
+  const { topHeight, maxTop } = useSplitView("SplitView.Bottom");
+
+  const animatedStyle = useAnimatedStyle<Pick<ViewStyle, "opacity">>(() => ({
     opacity: interpolate(
-      topSectionHeight.value,
-      [minTopHeight, minTopHeight + 50],
-      [0.3, 1],
+      topHeight.value,
+      [maxTop - 60, maxTop],
+      [1, 0.2],
       Extrapolation.CLAMP,
     ),
   }));
 
-  const bottomSectionAnimatedStyle = useAnimatedStyle(() => {
-    const calculatedHeight =
-      SCREEN_HEIGHT - topSectionHeight.value - 60 - insets.bottom - insets.top;
-    const finalHeight = maxBottomSectionHeight
-      ? Math.min(calculatedHeight, maxBottomSectionHeight)
-      : calculatedHeight;
-    return {
-      height: finalHeight,
-      opacity: interpolate(
-        topSectionHeight.value,
-        [maxTopSectionHeight - 50, maxTopSectionHeight],
-        [1, 0.5],
-        Extrapolation.CLAMP,
-      ),
-    };
-  });
-
-  const dragHandleAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withSpring(isDragging.value ? 1.2 : 1, springConfig) },
-    ],
-  }));
-
-  const dragHandleContainerAnimatedStyle = useAnimatedStyle(() => ({
-    top: topSectionHeight.value - DRAG_HANDLE_HEIGHT / 2,
-  }));
-
   return (
-    <GestureHandlerRootView style={styles.flex}>
-      <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: containerBackgroundColor },
-        ]}
-      >
-        {showHeader && renderHeader?.()}
-
-        <View
-          style={[
-            styles.mainContainer,
-            { backgroundColor: dividerBackgroundColor },
-          ]}
-        >
-          <Animated.View
-            style={[
-              styles.topSection,
-              { backgroundColor: sectionBackgroundColor },
-              topSectionAnimatedStyle,
-            ]}
-          >
-            <FlatList
-              data={topSectionItems}
-              renderItem={renderTopItem}
-              keyExtractor={topKeyExtractor}
-              style={[styles.list, topListStyle]}
-              contentContainerStyle={[
-                styles.listContent,
-                topListContentContainerStyle,
-              ]}
-              showsVerticalScrollIndicator={false}
-            />
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              styles.bottomSection,
-              { backgroundColor: sectionBackgroundColor },
-              bottomSectionAnimatedStyle,
-            ]}
-          >
-            <View style={[styles.sectionHeader, sectionTitleStyle]}>
-              <Text
-                style={[styles.sectionTitle, { color: sectionTitleTextColor }]}
-              >
-                {bottomSectionTitle}
-              </Text>
-            </View>
-            <View style={styles.bottomListContainer}>
-              <FlatList
-                data={bottomSectionItems}
-                renderItem={renderBottomItem}
-                keyExtractor={bottomKeyExtractor}
-                style={[styles.list, bottomListStyle]}
-                contentContainerStyle={[
-                  styles.listContent,
-                  bottomListContentContainerStyle,
-                ]}
-                showsVerticalScrollIndicator={false}
-                nestedScrollEnabled={true}
-              />
-            </View>
-          </Animated.View>
-
-          <GestureDetector gesture={panGesture}>
-            <Animated.View
-              style={[
-                styles.dragHandleContainer,
-                { backgroundColor: dividerBackgroundColor },
-                dragHandleContainerAnimatedStyle,
-              ]}
-            >
-              <Animated.View
-                style={[
-                  styles.dragHandle,
-                  { backgroundColor: dragHandleColor },
-                  dragHandleAnimatedStyle,
-                ]}
-              />
-            </Animated.View>
-          </GestureDetector>
-        </View>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    <Animated.View
+      style={[styles.pane, styles.bottom, styles.flex, animatedStyle, style]}
+    >
+      {children}
+    </Animated.View>
   );
 };
 
-export const SplitView = memo(SplitViewInner) as <TTop, TBottom>(
-  props: SplitViewProps<TTop, TBottom>,
-) => React.ReactNode & JSX.Element;
+const SplitViewTitle: React.FC<ISplitViewTitle> = ({
+  children,
+  style,
+}: ISplitViewTitle): React.JSX.Element &
+  React.ReactNode &
+  React.ReactElement => <Text style={[styles.title, style]}>{children}</Text>;
+
+const SplitView = Object.assign(SplitViewRoot, {
+  Root: SplitViewRoot,
+  Top: SplitViewTop,
+  Handle: SplitViewHandle,
+  Bottom: SplitViewBottom,
+  Title: SplitViewTitle,
+});
+
+const Root = createCompoundComponent("Root", SplitViewRoot);
+const Top = createCompoundComponent("Top", SplitViewTop);
+const Bottom = createCompoundComponent("Bottom", SplitViewBottom);
+const Handle = createCompoundComponent("Handle", SplitViewHandle);
+const Title = createCompoundComponent("Title", SplitViewTitle);
+
+export {
+  SplitView,
+  SplitViewRoot,
+  SplitViewTop,
+  SplitViewHandle,
+  SplitViewBottom,
+  SplitViewTitle,
+};
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  container: { flex: 1 },
-  mainContainer: { flex: 1 },
-  topSection: {
+  root: {
+    flex: 1,
+    backgroundColor: THEME.container,
+  },
+  flex: {
+    flex: 1,
+  },
+  pane: {
     overflow: "hidden",
+    backgroundColor: THEME.section,
+  },
+  top: {
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    marginBottom: 30,
   },
-  bottomSection: {
-    overflow: "hidden",
+  bottom: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  bottomListContainer: {
-    flex: 1,
-  },
-  list: { flex: 1 },
-  listContent: {
-    padding: 16,
-    paddingBottom: 16,
-  },
-  sectionHeader: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    alignSelf: "center",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  dragHandleContainer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
+  handle: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1000,
-    marginTop: 15,
-    paddingVertical: 0,
   },
-  dragHandle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    alignSelf: "center",
-    marginVertical: 8,
+  handleBar: {
+    width: 44,
+    height: 5,
+    borderRadius: 3,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: THEME.title,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
   },
 });
-
-export type { SplitViewProps, SpringConfig };
