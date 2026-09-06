@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { setDefaultResultOrder } from "node:dns";
 import os from "node:os";
 import path from "node:path";
 import fs from "fs-extra";
@@ -44,6 +45,76 @@ async function writeCache<T>(file: string, value: T) {
   } catch {}
 }
 
+const DEFAULT_TIMEOUT_MS = 30_000;
+const MAX_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 500;
+
+/** Errors raised before a connection could be established, so retrying is worthwhile. */
+const CONNECT_ERROR_CODES = new Set([
+  "UND_ERR_CONNECT_TIMEOUT",
+  "EHOSTUNREACH",
+  "ENETUNREACH",
+  "ETIMEDOUT",
+]);
+
+let ipv4FallbackApplied = false;
+
+function fetchTimeout(): number {
+  const raw = Number(process.env.REACTICX_FETCH_TIMEOUT);
+  return Number.isFinite(raw) && raw > 0 ? raw : DEFAULT_TIMEOUT_MS;
+}
+
+function isConnectFailure(error: unknown): boolean {
+  const code = (error as { cause?: { code?: string } })?.cause?.code;
+  return code !== undefined && CONNECT_ERROR_CODES.has(code);
+}
+
+/**
+ * Prefer IPv4 for the remaining attempts. Dual-stack networks frequently
+ * advertise an AAAA record for the registry host that they cannot actually
+ * route, so the first connect hangs until it times out.
+ */
+function preferIPv4(): void {
+  if (ipv4FallbackApplied) return;
+  ipv4FallbackApplied = true;
+  try {
+    setDefaultResultOrder("ipv4first");
+  } catch {
+    // Runtimes without `dns.setDefaultResultOrder` simply retry as-is.
+  }
+}
+
+const delay = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * `fetch` only rejects on transport-level failures — an HTTP error status
+ * resolves normally — so anything thrown here is worth another attempt.
+ */
+async function fetchWithRetry(url: string): Promise<Response> {
+  const timeout = fetchTimeout();
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      return await fetch(url, { signal: AbortSignal.timeout(timeout) });
+    } catch (error) {
+      lastError = error;
+      if (attempt === MAX_ATTEMPTS) break;
+
+      if (isConnectFailure(error)) preferIPv4();
+      await delay(RETRY_BASE_DELAY_MS * attempt);
+    }
+  }
+
+  const error = new Error(
+    `${(lastError as Error).message} (${MAX_ATTEMPTS} attempts, ${timeout}ms timeout each — ` +
+      `set REACTICX_FETCH_TIMEOUT=<milliseconds> to allow longer)`,
+  );
+  (error as Error & { cause?: unknown }).cause = lastError;
+  throw error;
+}
+
 export class RegistryClient {
   private readonly origin: string;
   private readonly ttl: number | false;
@@ -72,7 +143,7 @@ export class RegistryClient {
 
     let response: Response;
     try {
-      response = await fetch(this.url(key));
+      response = await fetchWithRetry(this.url(key));
     } catch (error) {
       throw new Error(
         `cannot reach the registry at ${this.origin} — ${(error as Error).message}`,
@@ -131,7 +202,7 @@ export class RegistryClient {
   async file(file: BucketFile): Promise<Buffer> {
     let response: Response;
     try {
-      response = await fetch(this.url(file.key));
+      response = await fetchWithRetry(this.url(file.key));
     } catch (error) {
       throw new Error(`${file.key} — ${(error as Error).message}`);
     }
