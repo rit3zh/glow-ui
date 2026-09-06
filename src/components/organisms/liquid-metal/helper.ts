@@ -1,60 +1,62 @@
-import type { RGBA } from "./types";
+import {
+  AlphaType,
+  ColorType,
+  Skia,
+  type SkImage,
+  type SkRect,
+} from "@shopify/react-native-skia";
 
-const COLORS: Record<string, RGBA> = {
-  red: [1, 0, 0, 1],
-  green: [0, 1, 0, 1],
-  blue: [0, 0, 1, 1],
-  white: [1, 1, 1, 1],
-  black: [0, 0, 0, 1],
-  yellow: [1, 1, 0, 1],
-  cyan: [0, 1, 1, 1],
-  magenta: [1, 0, 1, 1],
-  orange: [1, 0.65, 0, 1],
-  purple: [0.5, 0, 0.5, 1],
-  pink: [1, 0.75, 0.8, 1],
-  gold: [1, 0.84, 0, 1],
-  silver: [0.75, 0.75, 0.75, 1],
-  bronze: [0.8, 0.5, 0.2, 1],
+const hexToRgb = <T extends string>(hex: T): [number, number, number] => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  return result
+    ? [
+        parseInt(result[1], 16) / 255,
+        parseInt(result[2], 16) / 255,
+        parseInt(result[3], 16) / 255,
+      ]
+    : [0, 0, 0];
 };
 
-const colorToRGBA = <T extends string>(val: T): RGBA => {
-  const s = val.trim().toLowerCase();
-
-  if (COLORS[s]) return COLORS[s];
-
-  const hex6 = s.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-  if (hex6) {
-    return [
-      parseInt(hex6[1], 16) / 255,
-      parseInt(hex6[2], 16) / 255,
-      parseInt(hex6[3], 16) / 255,
-      1,
-    ];
+const fitRect = <T extends SkImage | null>(
+  image: T,
+  width: number,
+  height: number,
+): SkRect => {
+  if (!image || width <= 0 || height <= 0) {
+    return Skia.XYWHRect(0, 0, width, height);
   }
 
-  const hex3 = s.match(/^#?([a-f\d])([a-f\d])([a-f\d])$/i);
-  if (hex3) {
-    return [
-      parseInt(hex3[1] + hex3[1], 16) / 255,
-      parseInt(hex3[2] + hex3[2], 16) / 255,
-      parseInt(hex3[3] + hex3[3], 16) / 255,
-      1,
-    ];
-  }
+  const scale = Math.min(width / image.width(), height / image.height());
 
-  const rgb = s.match(
-    /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\)/,
+  const imageWidth = image.width() * scale;
+  const imageHeight = image.height() * scale;
+
+  return Skia.XYWHRect(
+    (width - imageWidth) / 2,
+    (height - imageHeight) / 2,
+    imageWidth,
+    imageHeight,
   );
-  if (rgb) {
-    return [
-      parseInt(rgb[1], 10) / 255,
-      parseInt(rgb[2], 10) / 255,
-      parseInt(rgb[3], 10) / 255,
-      rgb[4] ? parseFloat(rgb[4]) : 1,
-    ];
-  }
-
-  return [0.9, 0.9, 0.95, 1];
 };
 
-export { colorToRGBA };
+const emptyImage = (): SkImage => {
+  const pixels = Skia.Data.fromBytes(new Uint8Array([0, 0, 0, 0]));
+
+  return Skia.Image.MakeImage(
+    {
+      width: 1,
+      height: 1,
+      colorType: ColorType.RGBA_8888,
+      alphaType: AlphaType.Unpremul,
+    },
+    pixels,
+    4,
+  )!;
+};
+
+const degreesToRadians = (degrees: number): number => {
+  return (degrees * Math.PI) / 180;
+};
+
+export { degreesToRadians, emptyImage, fitRect, hexToRgb };

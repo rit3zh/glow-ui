@@ -1,25 +1,87 @@
-import type { ReactNode } from "react";
+import type { DataSourceParam } from "@shopify/react-native-skia";
 import type { StyleProp, ViewStyle } from "react-native";
 
-type RGBA = [number, number, number, number];
-
 interface ILiquidMetal {
-  readonly width?: number;
-  readonly height?: number;
-  readonly borderRadius?: number;
-  readonly highlightColor?: string;
-  readonly shadowColor?: string;
-  readonly density?: number;
-  readonly rate?: number;
-  readonly split?: number;
-  readonly turbulence?: number;
-  readonly crispness?: number;
-  readonly tilt?: number;
-  readonly pulsate?: number;
-  readonly halo?: number;
-  readonly asChild?: boolean;
-  readonly children?: ReactNode;
-  readonly style?: StyleProp<ViewStyle>;
+  source?: DataSourceParam;
+
+  width?: number;
+  height?: number;
+
+  lightColor?: string;
+  darkColor?: string;
+
+  /**
+   * Controls the width/frequency of the liquid pattern.
+   */
+  patternScale?: number;
+
+  /**
+   * Controls RGB channel separation/refraction.
+   */
+  refraction?: number;
+
+  /**
+   * Controls edge influence.
+   */
+  edge?: number;
+
+  /**
+   * Softens the stripe transitions.
+   */
+  patternBlur?: number;
+
+  /**
+   * Controls the liquid edge distortion.
+   */
+  liquid?: number;
+
+  /**
+   * Animation speed.
+   */
+  speed?: number;
+
+  /**
+   * Radius used for edge detection.
+   */
+  edgeRadius?: number;
+
+  /**
+   * Rotates the liquid pattern in degrees.
+   */
+  rotation?: number;
+
+  /**
+   * Strength of animated noise distortion.
+   */
+  noiseStrength?: number;
+
+  /**
+   * Controls the frequency/scale of the noise.
+   */
+  noiseScale?: number;
+
+  /**
+   * Controls how pronounced the liquid bulge is.
+   */
+  bulgeStrength?: number;
+
+  /**
+   * Controls RGB stripe distortion.
+   */
+  stripeWarp?: number;
+
+  /**
+   * Controls how strongly the detected edge affects
+   * the liquid effect.
+   */
+  edgeSoftness?: number;
+
+  /**
+   * Pauses the animation.
+   */
+  paused?: boolean;
+
+  style?: StyleProp<ViewStyle>;
 }
 
-export type { ILiquidMetal, RGBA };
+export type { ILiquidMetal };

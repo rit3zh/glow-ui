@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { RootProvider } from "fumadocs-ui/provider/next";
-import { Geist } from "next/font/google";
+import { RootProvider } from "fumadocs-ui/provider";
+import { Geist, Geist_Mono, Inter, Instrument_Serif } from "next/font/google";
 import { META_THEME_COLORS, siteConfig } from "@/app/config/site";
 import { cn } from "#/lib/utils";
 import { TooltipProvider } from "@/components/tooltip";
@@ -9,6 +9,25 @@ import { TooltipProvider } from "@/components/tooltip";
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+});
+
+// Body face for the marketing surface; docs keep Geist.
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+// Editorial headline face for the marketing surface.
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
 });
 
 export const metadata: Metadata = {
@@ -35,8 +54,15 @@ export const metadata: Metadata = {
   creator: "rit3zh",
   manifest: "/site.webmanifest",
   icons: {
-    icon: [{ url: "/favicon.png", type: "image/png" }],
-    shortcut: "/favicon.png",
+    // The SVG first: it is the Reacticx glyph and it inverts with the
+    // browser's theme, so the mark stays legible on a light or dark tab strip.
+    // The PNG stays behind it for anything that cannot take an SVG.
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: [{ url: "/favicon.png", sizes: "512x512" }],
   },
   openGraph: {
     title: siteConfig.name,
@@ -86,8 +112,20 @@ export default function RootLayout({
       style={{ colorScheme: "dark" }}
       suppressHydrationWarning
     >
-      <body className={cn(geist.variable, geist.className, "antialiased")}>
+      <body
+        className={cn(
+          geist.variable,
+          geistMono.variable,
+          inter.variable,
+          instrumentSerif.variable,
+          geist.className,
+          "antialiased",
+        )}
+      >
         <RootProvider
+          // The docs ship their own command palette, and it owns ⌘K. Leaving
+          // the framework dialog enabled would put two of them on the shortcut.
+          search={{ enabled: false }}
           theme={{
             attribute: "class",
             defaultTheme: "dark",

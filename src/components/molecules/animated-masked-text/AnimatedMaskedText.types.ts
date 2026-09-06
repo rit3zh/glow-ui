@@ -3,6 +3,7 @@ import type { StyleProp, TextStyle } from "react-native";
 interface IAnimatedMaskedText {
   children: string;
   readonly speed?: number;
+  readonly textWaveLength?: number;
   /**
    *
    *

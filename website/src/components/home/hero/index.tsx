@@ -148,7 +148,7 @@ export function Hero() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-              <AnimatedShinyButton url="/docs/components/apple-intelligence">
+              <AnimatedShinyButton url="/components/apple-intelligence">
                 View Components
               </AnimatedShinyButton>
 

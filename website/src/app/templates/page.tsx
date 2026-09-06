@@ -73,7 +73,7 @@ export default function TemplatesPage() {
         {/* Template grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {allTemplates.map((template, index) => {
-            const slug = template.info.path.replace(/\.mdx$/, "");
+            const slug = template._file.path.replace(/\.mdx$/, "");
             const hasVideo = !!videoMap[slug];
             const hasPreview = !!template.preview;
 

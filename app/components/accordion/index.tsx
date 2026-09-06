@@ -1,80 +1,179 @@
-import Accordion from "@/components/molecules/accordion";
-import { AccordionTheme } from "@/components/molecules/accordion/types";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import { SymbolView } from "expo-symbols";
+import { Accordion } from "@/components";
+import { Fragment } from "react";
+import { Stack } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+const FAQS = [
+  {
+    id: "1",
+    question: "How do I get started?",
+    answer:
+      "Simply create an account and follow the onboarding steps. It only takes a minute.",
+    icon: "questionmark.circle.fill",
+  },
+  {
+    id: "2",
+    question: "Is my data secure?",
+    answer:
+      "Yes, we use end-to-end encryption and never share your data with third parties.",
+    icon: "lock.fill",
+  },
+  {
+    id: "3",
+    question: "Can I cancel anytime?",
+    answer:
+      "Absolutely. No contracts, no hidden fees. Cancel whenever you want.",
+    icon: "xmark.circle.fill",
+  },
+];
 
-const CUSTOM_THEME: AccordionTheme = {
-  backgroundColor: "#000",
-  borderColor: "#000",
-  headlineColor: "#fafafa",
-  iconColor: "#fafafa",
-  subtitleColor: "#a1a1aa",
-};
+export default function App() {
+  const [fontLoaded] = useFonts({
+    SfProRounded: require("@/assets/fonts/sf-pro-rounded.ttf"),
+    SfProRoundedBold: require("~/assets/fonts/SF-Pro-Rounded-Bold.otf"),
+    SfProRoundedMedium: require("~/assets/fonts/SF-Pro-Rounded-Medium.otf"),
+  });
 
-export default function ProductAccordion() {
+  const darkTheme = {
+    backgroundColor: "#141414",
+    borderColor: "#222",
+    textColor: "#fff",
+    iconColor: "#666",
+  };
+
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      <Accordion type="single" theme={CUSTOM_THEME} spacing={0}>
-        <Accordion.Item value="product-info" icon="cross">
-          <Accordion.Trigger>
-            <Text style={styles.triggerText}>Product Information</Text>
-          </Accordion.Trigger>
-          <Accordion.Content>
-            <Text style={styles.contentText}>
-              Our flagship product combines cutting-edge technology with sleek
-              design. Built with premium materials, it offers unparalleled
-              performance and reliability.
-            </Text>
-            <Text style={[styles.contentText, { marginTop: 12 }]}>
-              Key features include advanced processing capabilities, and an
-              intuitive user interface designed for both beginners and experts.
-            </Text>
-          </Accordion.Content>
-        </Accordion.Item>
+    <Fragment>
+      <Stack.Screen
+        options={{
+          headerBackVisible: true,
+          headerShown: true,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
+      <GestureHandlerRootView
+        style={[
+          styles.container,
+          {
+            paddingTop: insets.top,
+          },
+        ]}
+      >
+        <StatusBar style="light" />
 
-        <Accordion.Item value="shipping">
-          <Accordion.Trigger>
-            <Text style={styles.triggerText}>Shipping Details</Text>
-          </Accordion.Trigger>
-          <Accordion.Content>
-            <Text style={styles.contentText}>
-              Free shipping on orders over $50. Standard delivery takes 3-5
-              business days. Express shipping available at checkout.
-            </Text>
-          </Accordion.Content>
-        </Accordion.Item>
+        <View style={styles.content}>
+          <Text
+            style={[
+              styles.title,
+              fontLoaded && { fontFamily: "SfProRoundedBold" },
+            ]}
+          >
+            FAQ
+          </Text>
+          <Text
+            style={[
+              styles.subtitle,
+              fontLoaded && { fontFamily: "SfProRounded" },
+            ]}
+          >
+            Common questions
+          </Text>
 
-        <Accordion.Item value="returns">
-          <Accordion.Trigger>
-            <Text style={styles.triggerText}>Return Policy</Text>
-          </Accordion.Trigger>
-          <Accordion.Content>
-            <Text style={styles.contentText}>
-              30-day money-back guarantee. Items must be unused and in original
-              packaging. Contact support to initiate a return.
-            </Text>
-          </Accordion.Content>
-        </Accordion.Item>
-      </Accordion>
-    </View>
+          <View style={styles.accordionWrapper}>
+            <Accordion
+              theme={{
+                backgroundColor: darkTheme.backgroundColor,
+                borderColor: darkTheme.borderColor,
+                iconColor: darkTheme.iconColor,
+                headlineColor: darkTheme.textColor,
+                subtitleColor: darkTheme.textColor,
+              }}
+              spacing={8}
+            >
+              {FAQS.map((faq) => (
+                <Accordion.Item key={faq.id} value={faq.id} icon="chevron">
+                  <Accordion.Trigger>
+                    <View style={styles.triggerContent}>
+                      <SymbolView
+                        name={faq.icon as any}
+                        size={18}
+                        tintColor="#888"
+                      />
+                      <Text
+                        style={[
+                          styles.question,
+                          fontLoaded && { fontFamily: "SfProRoundedMedium" },
+                        ]}
+                      >
+                        {faq.question}
+                      </Text>
+                    </View>
+                  </Accordion.Trigger>
+                  <Accordion.Content>
+                    <Text
+                      style={[
+                        styles.answer,
+                        fontLoaded && { fontFamily: "SfProRounded" },
+                      ]}
+                    >
+                      {faq.answer}
+                    </Text>
+                  </Accordion.Content>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          </View>
+        </View>
+      </GestureHandlerRootView>
+    </Fragment>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
-    padding: 20,
+    backgroundColor: "#0a0a0a",
   },
-  triggerText: {
-    color: "#fafafa",
-    fontSize: 16,
-    fontWeight: "500",
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 80,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#555",
+    marginBottom: 32,
+  },
+  accordionWrapper: {
+    gap: 8,
+    top: 150,
+  },
+  triggerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
     flex: 1,
   },
-  contentText: {
-    color: "#a1a1aa",
+  question: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#fff",
+    flex: 1,
+  },
+  answer: {
     fontSize: 14,
+    color: "#888",
     lineHeight: 22,
   },
 });

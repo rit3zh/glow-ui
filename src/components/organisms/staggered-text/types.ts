@@ -44,7 +44,6 @@ interface ITransitionCharacter<T> {
   to: TResolvedChar;
   direction: "in" | "out";
   config: TResolvedConfig;
-  trigger: SharedValue<number>;
   triggerSnapshot: number;
 }
 
@@ -78,6 +77,11 @@ interface ICharacterMetrics {
   delay: number;
 }
 
+interface ITextMetrics {
+  characters: ICharacterMetrics[];
+  width: number;
+}
+
 interface IStaggeredText {
   texts: string[];
   readonly activeIndex?: number;
@@ -103,6 +107,7 @@ export type {
   TResolvedConfig,
   TResolvedChar,
   ICharacterMetrics,
+  ITextMetrics,
   ITransitionCharacter,
   ICharacterRenderer,
 };

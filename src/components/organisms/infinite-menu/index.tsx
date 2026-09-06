@@ -1,13 +1,14 @@
 // @ts-check
-import React, { useCallback, useMemo, useState, memo, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated as RNAnimated,
-} from "react-native";
+import React, { useCallback, useMemo, useState, useRef, memo } from "react";
+import { StyleSheet, Dimensions, type LayoutChangeEvent } from "react-native";
 import { Canvas, Circle, Group, Image, Skia } from "@shopify/react-native-skia";
-import { useSharedValue, useFrameCallback } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useFrameCallback,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import {
   Gesture,
   GestureDetector,
@@ -15,7 +16,13 @@ import {
 } from "react-native-gesture-handler";
 import { useLoadImages } from "./hooks";
 import { Quat, Vec3 } from "./maths-type";
-import type { IDisc, IDiscComponent, IInfiniteMenu, IMenuItem } from "./types";
+import type {
+  Fit,
+  IDisc,
+  IDiscComponent,
+  IInfiniteMenu,
+  IMenuState,
+} from "./types";
 import { generateIcosahedronVertices } from "./helpers";
 import {
   projectToSphere,
@@ -36,6 +43,11 @@ const DiscComponent: React.FC<IDiscComponent> = memo<IDiscComponent>(
     radius,
     alpha,
     image,
+    fit = "cover",
+    placeholderColor = "rgb(80, 80, 80)",
+    borderWidth = 0,
+    borderColor = "rgba(255, 255, 255, 0.25)",
+    minRadius = 1,
   }: IDiscComponent): React.ReactElement | null => {
     const clipPath = useMemo(() => {
       const path = Skia.Path.Make();
@@ -43,24 +55,49 @@ const DiscComponent: React.FC<IDiscComponent> = memo<IDiscComponent>(
       return path;
     }, [x, y, radius]);
 
-    if (radius < 1) return null;
+    if (radius < minRadius) return null;
+
+    const border =
+      borderWidth > 0 ? (
+        <Circle
+          cx={x}
+          cy={y}
+          r={radius - borderWidth / 2}
+          color={borderColor}
+          style="stroke"
+          strokeWidth={borderWidth}
+          opacity={alpha}
+        />
+      ) : null;
 
     if (!image) {
       return (
-        <Circle cx={x} cy={y} r={radius} color={`rgba(80, 80, 80, ${alpha})`} />
+        <Group>
+          <Circle
+            cx={x}
+            cy={y}
+            r={radius}
+            color={placeholderColor}
+            opacity={alpha}
+          />
+          {border}
+        </Group>
       );
     }
 
     return (
-      <Group clip={clipPath} opacity={alpha}>
-        <Image
-          image={image}
-          x={x - radius}
-          y={y - radius}
-          width={radius * 2}
-          height={radius * 2}
-          fit="cover"
-        />
+      <Group>
+        <Group clip={clipPath} opacity={alpha}>
+          <Image
+            image={image}
+            x={x - radius}
+            y={y - radius}
+            width={radius * 2}
+            height={radius * 2}
+            fit={fit as Fit}
+          />
+        </Group>
+        {border}
       </Group>
     );
   },
@@ -68,11 +105,58 @@ const DiscComponent: React.FC<IDiscComponent> = memo<IDiscComponent>(
 
 export const InfiniteMenu: React.FC<IInfiniteMenu> &
   React.FunctionComponent<IInfiniteMenu> = memo<IInfiniteMenu>(
-  ({ items, scale = 1, backgroundColor = "#000000", style }: IInfiniteMenu) => {
+  ({
+    items,
+    scale = 1,
+    projectionScale: projectionScaleProp,
+    backgroundColor = "#000000",
+    style,
+
+    subdivisions = 1,
+    sphereRadius = 2,
+    cameraDistance = 3,
+    discSize = 0.25,
+
+    opacityRange = [0.1, 1],
+    depthScaleRange = [0.4, 1],
+    placeholderColor,
+    imageFit = "cover",
+    discBorderWidth = 0,
+    discBorderColor,
+    minDiscRadius = 1,
+
+    gesturesEnabled = true,
+    dragSensitivity = 0.3,
+    dragAmplification = 5,
+    inertia = 0.1,
+    snapEnabled = true,
+    snapStrength = 0.2,
+    zoomOnDrag = 2.5,
+    autoRotateSpeed = 0,
+
+    onActiveItemChange,
+    onItemPress,
+    renderOverlay,
+    overlayFadeInDuration = 100,
+    overlayFadeOutDuration = 500,
+    overlayRestingScale = 0.9,
+  }: IInfiniteMenu) => {
     const { width: screenWidth, height: screenHeight } =
       Dimensions.get("window");
-    const centerX = screenWidth / 2;
-    const centerY = screenHeight / 2;
+
+    const layoutWidth = useSharedValue<number>(screenWidth);
+    const layoutHeight = useSharedValue<number>(screenHeight);
+
+    const onLayout = useCallback(
+      (e: LayoutChangeEvent): void => {
+        const { width, height } = e.nativeEvent.layout;
+        if (width > 0 && height > 0) {
+          layoutWidth.value = width;
+          layoutHeight.value = height;
+        }
+      },
+      [layoutWidth, layoutHeight],
+    );
 
     const imageUrls = useMemo(
       () => items.map<string>((item) => item.image),
@@ -80,21 +164,26 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
     );
     const loadedImages = useLoadImages<string[]>(imageUrls);
 
-    const [activeItem, setActiveItem] = useState<IMenuItem | null>(
-      items[0] || null,
-    );
+    const [activeIndex, setActiveIndex] = useState<number>(0);
     const [isMoving, setIsMoving] = useState<boolean>(false);
     const [discData, setDiscData] = useState<IDisc[]>([]);
-    const SPHERE_RADIUS = 2 * scale;
-    const DISC_BASE_SCALE = 0.25;
-    const CAMERA_Z = 3 * scale;
-    const PROJECTION_SCALE = 150;
+    const discRef = useRef<IDisc[]>([]);
+
+    const DISC_BASE_SCALE = discSize;
+    const SPHERE_RADIUS = sphereRadius;
+    const CAMERA_Z = cameraDistance;
+    const FIT_DIVISOR = 6.2;
+    const explicitProjection = projectionScaleProp ?? 0;
+
     const sphereVertices = useMemo(
-      () => generateIcosahedronVertices(1, SPHERE_RADIUS),
-      [SPHERE_RADIUS],
+      () => generateIcosahedronVertices(subdivisions, SPHERE_RADIUS),
+      [subdivisions, SPHERE_RADIUS],
     );
 
     const verticesRef = useMemo(() => [...sphereVertices], [sphereVertices]);
+
+    const [minOpacity, maxOpacity] = opacityRange;
+    const [minDepthScale, maxDepthScale] = depthScaleRange;
 
     const qx = useSharedValue<number>(0);
     const qy = useSharedValue<number>(0);
@@ -117,9 +206,10 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
       (index: number) => {
         if (items.length === 0) return;
         const itemIndex = index % items.length;
-        setActiveItem(items[itemIndex]);
+        setActiveIndex(itemIndex);
+        onActiveItemChange?.(items[itemIndex], itemIndex);
       },
-      [items],
+      [items, onActiveItemChange],
     );
 
     const updateIsMoving = useCallback((moving: boolean) => {
@@ -127,6 +217,7 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
     }, []);
 
     const updateDiscData = useCallback((data: IDisc[]) => {
+      discRef.current = data;
       setDiscData(data);
     }, []);
 
@@ -153,7 +244,7 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
         w: prw.value,
       };
 
-      const dampIntensity = 0.1 * ts;
+      const dampIntensity = inertia * ts;
       const dampenedPR = quatSlerp(pointerRot, IDENTITY, dampIntensity);
       prx.value = dampenedPR.x;
       pry.value = dampenedPR.y;
@@ -182,17 +273,22 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
           }
         }
 
-        const nearestV = verticesRef[nearestIdx];
-        const worldV = quatRotateVec3(orientation, nearestV);
-        const targetDir = vec3Normalize(worldV);
+        if (snapEnabled && autoRotateSpeed === 0) {
+          const nearestV = verticesRef[nearestIdx];
+          const worldV = quatRotateVec3(orientation, nearestV);
+          const targetDir = vec3Normalize(worldV);
 
-        const sqrDist =
-          (targetDir.x - snapDir.x) ** 2 +
-          (targetDir.y - snapDir.y) ** 2 +
-          (targetDir.z - snapDir.z) ** 2;
-        const distFactor = Math.max(0.1, 1 - sqrDist * 10);
-        const snapIntensity = 0.2 * ts * distFactor;
-        snapRot = quatFromVectors(targetDir, snapDir, snapIntensity);
+          const sqrDist =
+            (targetDir.x - snapDir.x) ** 2 +
+            (targetDir.y - snapDir.y) ** 2 +
+            (targetDir.z - snapDir.z) ** 2;
+          const distFactor = Math.max(0.1, 1 - sqrDist * 10);
+          const snapIntensity = snapStrength * ts * distFactor;
+          snapRot = quatFromVectors(targetDir, snapDir, snapIntensity);
+        } else if (autoRotateSpeed !== 0) {
+          const angle = (autoRotateSpeed * dt) / 1000 / 2;
+          snapRot = { x: 0, y: Math.sin(angle), z: 0, w: Math.cos(angle) };
+        }
 
         const itemLen = Math.max(1, items.length);
         const itemIdx = nearestIdx % itemLen;
@@ -213,9 +309,10 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
       const rv = rad / (2 * Math.PI);
       rotVelocity.value += (rv - rotVelocity.value) * 0.5 * ts;
 
-      const targetZ = isDown.value
-        ? CAMERA_Z + rotVelocity.value * 80 + 2.5
-        : CAMERA_Z;
+      const targetZ =
+        isDown.value && zoomOnDrag !== 0
+          ? CAMERA_Z + rotVelocity.value * 80 + zoomOnDrag
+          : CAMERA_Z;
       const damping = isDown.value ? 7 / ts : 5 / ts;
       camZ.value += (targetZ - camZ.value) / damping;
 
@@ -236,6 +333,9 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
 
       const discs: IDisc[] = [];
       const currentCamZ = camZ.value;
+      const autoFit =
+        (Math.min(layoutWidth.value, layoutHeight.value) / FIT_DIVISOR) * scale;
+      const projScale = explicitProjection > 0 ? explicitProjection : autoFit;
       const itemLen = Math.max(1, items.length);
 
       for (let i = 0; i < verticesRef.length; i++) {
@@ -243,14 +343,20 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
         const worldPos = quatRotateVec3(newOrientation, v);
 
         const perspective = currentCamZ / (currentCamZ - worldPos.z);
-        const sx = centerX + worldPos.x * perspective * PROJECTION_SCALE;
-        const sy = centerY - worldPos.y * perspective * PROJECTION_SCALE;
+        const sx = layoutWidth.value / 2 + worldPos.x * perspective * projScale;
+        const sy =
+          layoutHeight.value / 2 - worldPos.y * perspective * projScale;
 
-        const zFactor = (Math.abs(worldPos.z) / SPHERE_RADIUS) * 0.6 + 0.4;
-        const baseRadius =
-          zFactor * DISC_BASE_SCALE * perspective * PROJECTION_SCALE;
+        const depthT = Math.abs(worldPos.z) / SPHERE_RADIUS;
+        const zFactor =
+          minDepthScale + (maxDepthScale - minDepthScale) * depthT;
+        const baseRadius = zFactor * DISC_BASE_SCALE * perspective * projScale;
 
-        const alpha = Math.max(0.1, (worldPos.z / SPHERE_RADIUS) * 0.45 + 0.55);
+        const alphaT = (worldPos.z / SPHERE_RADIUS + 1) / 2;
+        const alpha = Math.max(
+          minOpacity,
+          minOpacity + (maxOpacity - minOpacity) * alphaT,
+        );
 
         discs.push({
           screenX: sx,
@@ -265,82 +371,133 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
       scheduleOnRN(updateDiscData, discs);
     });
 
-    const panGesture = Gesture.Pan()
-      .onBegin((e) => {
-        "worklet";
-        prevX.value = e.x;
-        prevY.value = e.y;
-        isDown.value = true;
-      })
-      .onUpdate((e) => {
-        "worklet";
-        const intensity = 0.3;
-        const amplification = 5;
-
-        const midX = prevX.value + (e.x - prevX.value) * intensity;
-        const midY = prevY.value + (e.y - prevY.value) * intensity;
-
-        const dx = midX - prevX.value;
-        const dy = midY - prevY.value;
-
-        if (dx * dx + dy * dy > 0.1) {
-          const p = projectToSphere(midX, midY);
-          const q = projectToSphere(prevX.value, prevY.value);
-          const newRot = quatFromVectors(p, q, amplification);
-
-          prx.value = newRot.x;
-          pry.value = newRot.y;
-          prz.value = newRot.z;
-          prw.value = newRot.w;
-
-          prevX.value = midX;
-          prevY.value = midY;
+    const handlePress = useCallback(
+      (x: number, y: number) => {
+        if (!onItemPress || items.length === 0) return;
+        for (let i = discRef.current.length - 1; i >= 0; i--) {
+          const d = discRef.current[i];
+          const dx = x - d.screenX;
+          const dy = y - d.screenY;
+          if (dx * dx + dy * dy <= d.radius * d.radius) {
+            onItemPress(items[d.itemIndex], d.itemIndex);
+            return;
+          }
         }
-      })
-      .onEnd(() => {
-        "worklet";
-        isDown.value = false;
-      })
-      .onFinalize(() => {
-        "worklet";
-        isDown.value = false;
-      });
-
-    const fadeAnim = useMemo<RNAnimated.Value>(
-      () => new RNAnimated.Value(1),
-      [],
-    );
-    const scaleAnim = useMemo<RNAnimated.Value>(
-      () => new RNAnimated.Value(1),
-      [],
+      },
+      [onItemPress, items],
     );
 
-    useEffect(() => {
-      RNAnimated.parallel([
-        RNAnimated.timing(fadeAnim, {
-          toValue: isMoving ? 0 : 1,
-          duration: isMoving ? 100 : 500,
-          useNativeDriver: true,
-        }),
-        RNAnimated.timing(scaleAnim, {
-          toValue: isMoving ? 0 : 1,
-          duration: isMoving ? 100 : 500,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, [isMoving, fadeAnim, scaleAnim]);
+    const panGesture = useMemo(
+      () =>
+        Gesture.Pan()
+          .enabled(gesturesEnabled)
+          .onBegin((e) => {
+            "worklet";
+            prevX.value = e.x;
+            prevY.value = e.y;
+            isDown.value = true;
+          })
+          .onUpdate((e) => {
+            "worklet";
+            const midX = prevX.value + (e.x - prevX.value) * dragSensitivity;
+            const midY = prevY.value + (e.y - prevY.value) * dragSensitivity;
+
+            const dx = midX - prevX.value;
+            const dy = midY - prevY.value;
+
+            if (dx * dx + dy * dy > 0.1) {
+              const p = projectToSphere(
+                midX,
+                midY,
+                layoutWidth.value,
+                layoutHeight.value,
+              );
+              const q = projectToSphere(
+                prevX.value,
+                prevY.value,
+                layoutWidth.value,
+                layoutHeight.value,
+              );
+              const newRot = quatFromVectors(p, q, dragAmplification);
+
+              prx.value = newRot.x;
+              pry.value = newRot.y;
+              prz.value = newRot.z;
+              prw.value = newRot.w;
+
+              prevX.value = midX;
+              prevY.value = midY;
+            }
+          })
+          .onEnd(() => {
+            "worklet";
+            isDown.value = false;
+          })
+          .onFinalize(() => {
+            "worklet";
+            isDown.value = false;
+          }),
+      [
+        gesturesEnabled,
+        dragSensitivity,
+        dragAmplification,
+        prevX,
+        prevY,
+        isDown,
+        prx,
+        pry,
+        prz,
+        prw,
+        layoutWidth,
+        layoutHeight,
+      ],
+    );
+
+    const tapGesture = useMemo(
+      () =>
+        Gesture.Tap()
+          .enabled(gesturesEnabled && !!onItemPress)
+          .onEnd((e) => {
+            "worklet";
+            scheduleOnRN(handlePress, e.x, e.y);
+          }),
+      [gesturesEnabled, onItemPress, handlePress],
+    );
+
+    const composedGesture = useMemo(
+      () => Gesture.Simultaneous(panGesture, tapGesture),
+      [panGesture, tapGesture],
+    );
+
+    const overlayStyle = useAnimatedStyle(() => {
+      const moving = lastMoving.value;
+      const timing = {
+        duration: moving ? overlayFadeInDuration : overlayFadeOutDuration,
+        easing: Easing.out(Easing.quad),
+      };
+      return {
+        opacity: withTiming(moving ? 0 : 1, timing),
+        transform: [
+          { scale: withTiming(moving ? overlayRestingScale : 1, timing) },
+        ],
+      };
+    }, [overlayFadeInDuration, overlayFadeOutDuration, overlayRestingScale]);
+
+    const menuState = useMemo<IMenuState>(
+      () => ({
+        activeItem: items[activeIndex] ?? null,
+        activeIndex,
+        isMoving,
+      }),
+      [items, activeIndex, isMoving],
+    );
 
     return (
       <GestureHandlerRootView
-        style={[
-          styles.container,
-          {
-            backgroundColor,
-          },
-          style,
-        ]}
+        onLayout={onLayout}
+        style={[styles.container, { backgroundColor }, style]}
       >
-        <GestureDetector gesture={panGesture}>
+        <GestureDetector gesture={composedGesture}>
           <Canvas style={styles.canvas}>
             {discData.map((disc, idx) => (
               <DiscComponent
@@ -350,19 +507,40 @@ export const InfiniteMenu: React.FC<IInfiniteMenu> &
                 radius={disc.radius}
                 alpha={disc.alpha}
                 image={loadedImages[disc.itemIndex] || null}
+                fit={imageFit}
+                placeholderColor={placeholderColor}
+                borderWidth={discBorderWidth}
+                borderColor={discBorderColor}
+                minRadius={minDiscRadius}
               />
             ))}
           </Canvas>
         </GestureDetector>
+
+        {renderOverlay ? (
+          <Animated.View
+            pointerEvents="box-none"
+            style={[styles.overlay, overlayStyle]}
+          >
+            {renderOverlay(menuState)}
+          </Animated.View>
+        ) : null}
       </GestureHandlerRootView>
     );
   },
 );
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    overflow: "hidden",
+  },
   canvas: {
     flex: 1,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
@@ -370,4 +548,10 @@ export default memo<
   React.FC<IInfiniteMenu> & React.FunctionComponent<IInfiniteMenu>
 >(InfiniteMenu);
 
-export type { IMenuItem, IInfiniteMenu, IDisc, IDiscComponent };
+export type {
+  IMenuItem,
+  IMenuState,
+  IInfiniteMenu,
+  IDisc,
+  IDiscComponent,
+} from "./types";

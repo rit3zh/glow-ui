@@ -1,0 +1,364 @@
+---
+title: CLI Reference
+description: Every Reacticx command, argument, and flag.
+icon: Terminal
+---
+
+The `reacticx` CLI copies component source into your project. Nothing is added
+as a dependency — the files land in your repo and are yours to edit. It is
+published on npm as [`reacticx`](https://www.npmjs.com/package/reacticx) and
+runs without installing:
+
+```bash
+npx reacticx <command>
+```
+
+```bash
+npx reacticx init          # once, per project
+npx reacticx add accordion # as often as you like
+```
+
+---
+
+## Where the files come from
+
+Everything is read from `reacticx-codebase`, the R2 bucket that mirrors the
+library source one object per file.
+
+| Prefix | Holds |
+| --- | --- |
+| `core/…` | the components themselves |
+| `types/<component>/` | the component's extracted public types |
+| `examples/<component>/` | the screen that documents it |
+| `helpers/…`, `shared/…` | what a component's `@/…` imports point at |
+
+The bucket cannot be listed over HTTP, so an `index.json` at its root describes
+every object — key, size, sha256, content type. That listing is what decides
+which files a component has, and every download is verified against its hash
+before it touches your disk. `core/registry.json` carries the metadata around
+it: category, repo path, the list `list` prints.
+
+Point `registry.origin` at your own mirror of that layout and the CLI will serve
+your components instead.
+
+---
+
+## `init`
+
+Writes `component.config.json` in the project root.
+
+```bash
+npx reacticx init
+```
+
+It reads your `tsconfig.json` for a path alias and your lockfile for a package
+manager, then asks where components should go, how they should be laid out, what
+to copy alongside them, and what to do about missing npm packages.
+
+| Flag | Description |
+| --- | --- |
+| `-y, --yes` | accept the defaults, ask nothing |
+| `-f, --force` | replace an existing config |
+| `-d, --dir <path>` | where components should go |
+
+Only what differs from the defaults is written, so the file stays short:
+
+```json title="component.config.json"
+{
+  "$schema": "https://reacticx.com/schema/component.config.json",
+  "outDir": "src/shared/ui",
+  "packageManager": "bun"
+}
+```
+
+---
+
+## `add`
+
+Copies components into your project.
+
+```bash
+npx reacticx add accordion
+npx reacticx add accordion button border-beam
+npx reacticx add                    # pick from a searchable list
+```
+
+```
+┌ reacticx add  src/shared/ui
+│
+├  profile-settings-v1
+│  src/shared/ui/blocks/profile-settings-v1/index.tsx
+│  src/shared/ui/blocks/profile-settings-v1/types.ts
+│  src/shared/ui/blocks/profile-settings-v1/const.ts
+│
+├  squircle-view  — required by profile-settings-v1
+│  src/shared/ui/base/squircle-view/index.tsx
+│  src/shared/ui/base/squircle-view/types.ts
+│
+│  ✓ wrote 5 file(s)
+└  added profile-settings-v1 · 5 files
+```
+
+### Options
+
+| Flag | Description |
+| --- | --- |
+| `-o, --overwrite` | replace files that already exist |
+| `-d, --dir <path>` | write somewhere other than the configured `outDir` |
+| `-t, --types` | also copy the component's public types |
+| `-e, --examples` | also copy the example screen |
+| `--no-deps` | do not follow imports into other components |
+| `--no-install` | never install missing npm packages |
+| `--dry` | show what would be written, write nothing |
+| `-y, --yes` | no prompts — safe defaults for everything |
+
+### It brings what it needs
+
+The source is scanned for `@/…` imports. Anything that maps into the bucket —
+another component, a shared hook, a helper — is fetched too and reported as
+`required by <component>`. An import the registry has no answer for is called
+out rather than silently left dangling.
+
+Turn it off with `--no-deps` or `"include": { "dependencies": false }`.
+
+### Imports are rewritten
+
+Copied files are written against *your* aliases, never the library's:
+
+```diff
+- import { SquircleView } from "@/components/base/squircle-view";
++ import { SquircleView } from "@/shared/ui/base/squircle-view";
+```
+
+Set an alias to `""` and the same import comes out relative instead, so a
+project with no path mapping still compiles.
+
+### Missing npm packages
+
+The registry mirrors source, not packages, so there is no dependency list to
+trust. Instead the imports in the files just written are read back, anything
+already in your `package.json` is dropped, and what remains is offered for
+install with your own package manager.
+
+```
+│  ! 2 package(s) are imported but not installed
+│  · @shopify/react-native-skia
+│  · react-native-reanimated
+│
+? Install them with bun? › (Y/n)
+```
+
+`installDependencies` decides whether that is a prompt, automatic, or never.
+
+<Callout type="warn" title="--overwrite discards local edits">
+  Components are yours to modify once copied. `--overwrite` replaces the files
+  on disk with the registry version, so any changes you made are lost. Run
+  `reacticx diff` first to see what you would be throwing away.
+</Callout>
+
+---
+
+## `list`
+
+Every component in the registry, by category.
+
+```bash
+npx reacticx list
+npx reacticx list -c molecules
+npx reacticx list -s sheet
+```
+
+| Flag | Description |
+| --- | --- |
+| `-c, --category <name>` | one category only |
+| `-s, --search <query>` | filter by name |
+| `--json` | print the raw registry |
+
+---
+
+## `info`
+
+What a single component contains, and whether you already have it.
+
+```bash
+npx reacticx info accordion
+```
+
+```
+┌ reacticx info  accordion
+│
+│  name            accordion
+│  category        molecules
+│  source          src/components/molecules/accordion
+│  files           3 · 12.4 kB
+│  types           1 file(s)
+│  example         1 file(s)
+│  installed       no
+│
+├  files
+│  index.tsx                        10.8 kB
+│  presets.ts                       727 B
+│  types.ts                         977 B
+└  to add it
+```
+
+---
+
+## `diff`
+
+Compares what is on disk against the registry. The registry copy goes through
+the same import rewriting `add` does, so the only differences reported are real
+ones — your edits, or an updated upstream.
+
+```bash
+npx reacticx diff             # everything installed
+npx reacticx diff accordion   # one component
+```
+
+```
+├  profile-settings-v1
+│  modified  types.ts
+│
+│  ! 1 of 12 component(s) differ from the registry
+└  to take the registry version
+```
+
+---
+
+## `remove`
+
+Deletes an installed component's folder. Shared helpers stay put — another
+component may still import them.
+
+```bash
+npx reacticx remove accordion
+npx reacticx remove accordion button -y
+```
+
+| Flag | Description |
+| --- | --- |
+| `-y, --yes` | do not ask for confirmation |
+
+---
+
+## `config`
+
+Prints the configuration as the CLI resolves it — your file, with every default
+filled in — and exits non-zero if anything is invalid.
+
+```bash
+npx reacticx config
+npx reacticx config --json
+npx reacticx config --clear-cache
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | print it as JSON |
+| `--clear-cache` | drop the cached registry listings |
+
+---
+
+## `create`
+
+Scaffolds a new Expo app and initializes Reacticx inside it.
+
+```bash
+npx reacticx create
+npx reacticx create my-app
+```
+
+| Prompt | Description |
+| --- | --- |
+| **App name** | Directory name for your project. Spaces become dashes. |
+| **Bundle / package ID** | iOS `bundleIdentifier` and Android `package`, written into `app.json`. |
+| **Template** | `blank — typescript` (default), `blank`, or `tabs — expo router`. |
+| **Package manager** | Auto-detected; you can override it. |
+| **Initialize reacticx** | Runs `reacticx init` in the new project. |
+
+---
+
+## Configuration
+
+`component.config.json` lives in the project root. Every key is optional —
+anything left out falls back to the default below.
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `outDir` | `src/shared/components` | where components are written |
+| `structure` | `category` | `category`, `flat`, or `mirror` |
+| `typescript` | `true` | the library ships TypeScript source |
+| `aliases.components` | `@/shared/components` | import prefix written into copied files |
+| `aliases.utils` | `@/shared/utils` | same, for helpers |
+| `aliases.hooks` | `@/shared/hooks` | same, for hooks |
+| `paths.utils` | `src/shared/utils` | where helpers land on disk |
+| `paths.hooks` | `src/shared/hooks` | where hooks land |
+| `paths.types` | `src/shared/types` | where extracted types land |
+| `paths.examples` | `src/shared/examples` | where example screens land |
+| `include.dependencies` | `true` | follow `@/…` imports and copy what they point at |
+| `include.types` | `false` | copy the public types too |
+| `include.examples` | `false` | copy the example screen too |
+| `overwrite` | `false` | replace existing files without asking |
+| `packageManager` | `auto` | `auto` reads your lockfile |
+| `installDependencies` | `prompt` | `auto`, `prompt`, or `never` |
+| `registry.origin` | the public bucket | point this at your own mirror |
+| `registry.index` | `index.json` | key of the file listing |
+| `registry.registry` | `core/registry.json` | key of the component metadata |
+| `registry.cache` | `3600` | seconds the listings are cached; `false` disables it |
+
+The `$schema` line gives editors completion and validation for all of it.
+
+### Structures
+
+```
+category   outDir/molecules/accordion/index.tsx
+flat       outDir/accordion/index.tsx
+mirror     outDir/blocks/bottom-sheet/airbnb-v1/index.tsx
+```
+
+### A fuller example
+
+```json title="component.config.json"
+{
+  "$schema": "https://reacticx.com/schema/component.config.json",
+  "outDir": "src/ui",
+  "structure": "flat",
+  "aliases": {
+    "components": "~/ui",
+    "utils": "~/lib",
+    "hooks": "~/hooks"
+  },
+  "paths": {
+    "utils": "src/lib",
+    "hooks": "src/hooks",
+    "types": "src/types",
+    "examples": "src/examples"
+  },
+  "include": { "dependencies": true, "types": true, "examples": false },
+  "packageManager": "pnpm",
+  "installDependencies": "auto"
+}
+```
+
+---
+
+## Command summary
+
+| Command | Description |
+| --- | --- |
+| `reacticx init` | write `component.config.json` |
+| `reacticx add [components…]` | copy components in |
+| `reacticx list` | every component in the registry |
+| `reacticx info <component>` | what one contains, and whether it is installed |
+| `reacticx diff [component]` | compare what you have against the registry |
+| `reacticx remove <components…>` | delete an installed component |
+| `reacticx config` | print the resolved configuration |
+| `reacticx create [name]` | scaffold a new Expo app with Reacticx set up |
+
+---
+
+## Beyond the CLI
+
+The same registry is available to coding agents: `@reacticx/mcp` exposes it as
+[MCP tools](/docs/mcp), and the [`using-reacticx` skill](/docs/skills) teaches an
+agent the workflow around them.

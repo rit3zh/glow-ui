@@ -1,5 +1,6 @@
 import type { StyleProp, TextStyle } from "react-native";
 import type {
+  SharedValue,
   WithSpringConfig,
   WithTimingConfig,
 } from "react-native-reanimated";
@@ -41,6 +42,10 @@ interface SpinnerConfig {
   readonly color: string;
   readonly containerSize: number;
   readonly containerBackground: string;
+  /** Time for one full rotation, in milliseconds. */
+  readonly duration: number;
+  /** Length of the arc as a fraction of the circle (0–1). */
+  readonly arc: number;
   readonly position: {
     readonly right: number;
     readonly bottom: number;
@@ -70,19 +75,44 @@ interface SpinButtonProps {
   readonly isActive?: boolean;
 }
 
-interface TextAnimationProps {
-  readonly text: string;
-  readonly style: StyleProp<TextStyle>;
+/** Whether a label layer is the one coming in or the one going out. */
+type CharacterMode = "enter" | "exit";
+
+/**
+ * Character timings, normalized to the 0-1 transition progress so every label
+ * finishes within a single shared value sweep.
+ */
+interface CharacterTimeline {
+  readonly delay: number;
+  readonly exitSpan: number;
+  readonly enterSpan: number;
+  readonly enterOffset: number;
 }
 
 interface CharacterProps {
   readonly char: string;
   readonly style: StyleProp<TextStyle>;
-  readonly index: number;
-  readonly animationConfig: AnimationConfig;
+  readonly progress: SharedValue<number>;
+  readonly colorProgress: SharedValue<number>;
+  readonly start: number;
+  readonly end: number;
+  readonly mode: CharacterMode;
+  readonly idleColor: string;
+  readonly activeColor: string;
   readonly enterInitial: CharacterAnimationParams;
-  readonly enterFinal: CharacterAnimationParams;
-  readonly exitInitial: CharacterAnimationParams;
+  readonly exitFinal: CharacterAnimationParams;
+}
+
+interface LabelLayerProps {
+  readonly text: string;
+  readonly style: StyleProp<TextStyle>;
+  readonly progress: SharedValue<number>;
+  readonly colorProgress: SharedValue<number>;
+  readonly timeline: CharacterTimeline;
+  readonly mode: CharacterMode;
+  readonly idleColor: string;
+  readonly activeColor: string;
+  readonly enterInitial: CharacterAnimationParams;
   readonly exitFinal: CharacterAnimationParams;
 }
 
@@ -93,6 +123,8 @@ export {
   SpinnerConfig,
   ButtonStyleConfig,
   CharacterAnimationParams,
-  TextAnimationProps,
+  CharacterMode,
+  CharacterTimeline,
   CharacterProps,
+  LabelLayerProps,
 };

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { View, StyleSheet, Platform } from "react-native";
 import {
   Canvas,
@@ -20,10 +20,10 @@ import {
 import type {
   IAnimationConfig,
   ICharacterAnimationParams,
-  ICharacterMetrics,
   ICharacterRenderer,
   IStaggeredCharacterLayer,
   IStaggeredText,
+  ITextMetrics,
   ITransitionCharacter,
 } from "./types";
 import { withBuildCharacterMetrics } from "./helper";
@@ -55,20 +55,17 @@ const CharRenderer: React.FC<ICharacterRenderer<SkFont>> &
     | ICharacterRenderer<SkFont>): React.ReactElement &
     React.ReactNode &
     React.JSX.Element => {
-    const animatedY = useDerivedValue<number>(() => {
-      const fromPx = from.translateY * fontSize;
-      const toPx = to.translateY * fontSize;
-      return interpolate(progress.value, [0, 1], [fromPx, toPx]);
-    });
-
-    const opacity = useDerivedValue<number>(() => {
-      const mid = (from.opacity + to.opacity) / 2;
-      return interpolate(
+    const animatedY = useDerivedValue<number>(() =>
+      interpolate(
         progress.value,
-        [0, 0.5, 1],
-        [from.opacity, mid, to.opacity],
-      );
-    });
+        [0, 1],
+        [from.translateY * fontSize, to.translateY * fontSize],
+      ),
+    );
+
+    const opacity = useDerivedValue<number>(() =>
+      interpolate(progress.value, [0, 1], [from.opacity, to.opacity]),
+    );
 
     const blurAmount = useDerivedValue<number>(() =>
       interpolate(progress.value, [0, 1], [from.blur, to.blur]),
@@ -79,18 +76,14 @@ const CharRenderer: React.FC<ICharacterRenderer<SkFont>> &
     );
 
     const transform = useDerivedValue(() => [
-      { translateX: x },
-      { translateY: y + animatedY.value },
+      { translateY: animatedY.value },
       { scale: scaleVal.value },
-      { translateX: -x },
     ]);
 
     return (
-      <Group transform={transform} origin={{ x, y }}>
-        <Group opacity={opacity}>
-          <Blur blur={blurAmount} />
-          <SkiaText x={x} y={0} text={char} font={font} color={color} />
-        </Group>
+      <Group transform={transform} origin={{ x, y }} opacity={opacity}>
+        <Blur blur={blurAmount} />
+        <SkiaText x={x} y={y} text={char} font={font} color={color} />
       </Group>
     );
   },
@@ -113,7 +106,6 @@ const StaggeredTransitionCharacter: React.FC<ITransitionCharacter<SkFont>> &
     direction,
     config,
     triggerSnapshot,
-    ...props
   }:
     | React.ComponentProps<typeof StaggeredTransitionCharacter>
     | ITransitionCharacter<SkFont>): React.ReactElement &
@@ -172,12 +164,9 @@ const StaggeredTextTransitionLayer: React.FC<IStaggeredCharacterLayer<SkFont>> &
     | IStaggeredCharacterLayer<SkFont>):
     | (React.ReactElement & React.ReactNode & React.JSX.Element)
     | null => {
-    const trigger = useSharedValue<number>(0);
-    const prevIndexRef = useRef<number>(activeIndex);
-
-    const mesureMetrics = useMemo<ICharacterMetrics[][]>(
+    const measured = useMemo<ITextMetrics[]>(
       () =>
-        texts.map<ICharacterMetrics[]>((t) =>
+        texts.map<ITextMetrics>((t) =>
           withBuildCharacterMetrics<SkFont>(
             t,
             font,
@@ -189,64 +178,77 @@ const StaggeredTextTransitionLayer: React.FC<IStaggeredCharacterLayer<SkFont>> &
       [texts, font, staggerFrom, config.characterDelay, letterSpacing],
     );
 
-    const maxWidth = useMemo<number>(
+    // Derive the transition during render so an unrelated re-render can't
+    // unmount the outgoing characters mid-flight.
+    const [renderedIndex, setRenderedIndex] = useState<number>(activeIndex);
+    const [outgoingIndex, setOutgoingIndex] = useState<number | null>(null);
+    const [transitionId, setTransitionId] = useState<number>(0);
+
+    if (renderedIndex !== activeIndex) {
+      setOutgoingIndex(renderedIndex);
+      setRenderedIndex(activeIndex);
+      setTransitionId((n) => n + 1);
+    }
+
+    // Drop the faded-out characters once their animation has finished.
+    useEffect(() => {
+      if (outgoingIndex === null) return;
+      const longestDelay = Math.max(
+        0,
+        ...(measured[outgoingIndex]?.characters.map((c) => c.delay) ?? [0]),
+      );
+      const id = setTimeout(
+        () => setOutgoingIndex(null),
+        config.duration + longestDelay,
+      );
+      return () => clearTimeout(id);
+    }, [transitionId, outgoingIndex, measured, config.duration]);
+
+    const incoming = measured[activeIndex];
+    const outgoing = outgoingIndex !== null ? measured[outgoingIndex] : null;
+
+    // Blur and vertical travel bleed past the glyph box; pad so nothing clips.
+    const canvasWidth = useMemo<number>(
       () =>
-        Math.max(
-          ...mesureMetrics.map((m) => m.reduce((s, c) => s + c.width, 0)),
-          200,
-        ) + 100,
-      [mesureMetrics],
+        Math.ceil(Math.max(0, ...measured.map((m) => m.width)) + fontSize * 2),
+      [measured, fontSize],
     );
 
-    const outgoingIndex = prevIndexRef.current;
-    const incomingIndex = activeIndex;
-    const isTransitioning = outgoingIndex !== incomingIndex;
+    // Center on the font's own vertical extents rather than guessing with
+    // fontSize / 3. `ascent` is negative (above the baseline).
+    const baseY = useMemo<number>(() => {
+      const { ascent, descent } = font.getMetrics();
+      return height / 2 - (ascent + descent) / 2;
+    }, [font, height]);
 
-    useEffect(() => {
-      if (activeIndex !== prevIndexRef.current) {
-        trigger.value += 1;
-        prevIndexRef.current = activeIndex;
-      }
-    }, [activeIndex]);
+    if (!incoming) return null;
 
-    const triggerSnapshot = trigger.value;
-    const baseY = height / 2 + fontSize / 3;
-
-    const incomingMetrics = mesureMetrics[incomingIndex] ?? [];
-    const outgoingMetrics = isTransitioning
-      ? (mesureMetrics[outgoingIndex] ?? [])
-      : [];
-    const incomingTextWidth = incomingMetrics.reduce((s, c) => s + c.width, 0);
-    const outgoingTextWidth = outgoingMetrics.reduce((s, c) => s + c.width, 0);
-
-    const incomingOffsetX = (maxWidth - incomingTextWidth) / 2;
-    const outgoingOffsetX = (maxWidth - outgoingTextWidth) / 2;
+    const incomingOffsetX = (canvasWidth - incoming.width) / 2;
+    const outgoingOffsetX = outgoing ? (canvasWidth - outgoing.width) / 2 : 0;
 
     return (
       <View style={[styles.container, { height }]}>
-        <Canvas style={{ width: maxWidth, height }}>
-          {isTransitioning &&
-            outgoingMetrics.map((m, i) => (
-              <StaggeredTransitionCharacter
-                key={`out-${outgoingIndex}-${i}`}
-                char={m.char}
-                x={m.x + outgoingOffsetX}
-                y={baseY}
-                delay={m.delay}
-                font={font}
-                fontSize={fontSize}
-                color={color}
-                from={exitFrom}
-                to={exitTo}
-                direction="out"
-                config={config}
-                trigger={trigger}
-                triggerSnapshot={triggerSnapshot}
-              />
-            ))}
-          {incomingMetrics.map<React.ReactNode>((m, useless_index: number) => (
+        <Canvas style={{ width: canvasWidth, height }}>
+          {outgoing?.characters.map((m, i) => (
             <StaggeredTransitionCharacter
-              key={`in-${incomingIndex}-${useless_index}`}
+              key={`out-${transitionId}-${i}`}
+              char={m.char}
+              x={m.x + outgoingOffsetX}
+              y={baseY}
+              delay={m.delay}
+              font={font}
+              fontSize={fontSize}
+              color={color}
+              from={exitFrom}
+              to={exitTo}
+              direction="out"
+              config={config}
+              triggerSnapshot={transitionId}
+            />
+          ))}
+          {incoming.characters.map<React.ReactNode>((m, i: number) => (
+            <StaggeredTransitionCharacter
+              key={`in-${activeIndex}-${i}`}
               char={m.char}
               x={m.x + incomingOffsetX}
               y={baseY}
@@ -258,8 +260,7 @@ const StaggeredTextTransitionLayer: React.FC<IStaggeredCharacterLayer<SkFont>> &
               to={enterTo}
               direction="in"
               config={config}
-              trigger={trigger}
-              triggerSnapshot={triggerSnapshot}
+              triggerSnapshot={transitionId}
             />
           ))}
         </Canvas>
@@ -287,25 +288,38 @@ export const StaggeredText: React.FC<IStaggeredText> &
   }: React.ComponentProps<typeof StaggeredText> | IStaggeredText):
     | (React.ReactElement & React.ReactNode & React.JSX.Element)
     | null => {
-    const config = merge<Required<IAnimationConfig>>(
-      configProp,
-      DEFAULT_CONFIG,
+    const config = useMemo<Required<IAnimationConfig>>(
+      () => merge<Required<IAnimationConfig>>(configProp, DEFAULT_CONFIG),
+      [configProp],
     );
-    const enterFrom = merge<Required<ICharacterAnimationParams>>(
-      enterFromProp,
-      DEFAULT_ENTER_FROM,
+    const enterFrom = useMemo<Required<ICharacterAnimationParams>>(
+      () =>
+        merge<Required<ICharacterAnimationParams>>(
+          enterFromProp,
+          DEFAULT_ENTER_FROM,
+        ),
+      [enterFromProp],
     );
-    const enterTo = merge<Required<ICharacterAnimationParams>>(
-      enterToProp,
-      DEFAULT_ENTER_TO,
+    const enterTo = useMemo<Required<ICharacterAnimationParams>>(
+      () =>
+        merge<Required<ICharacterAnimationParams>>(
+          enterToProp,
+          DEFAULT_ENTER_TO,
+        ),
+      [enterToProp],
     );
-    const exitFrom = merge<Required<ICharacterAnimationParams>>(
-      exitFromProp,
-      DEFAULT_EXIT_FROM,
+    const exitFrom = useMemo<Required<ICharacterAnimationParams>>(
+      () =>
+        merge<Required<ICharacterAnimationParams>>(
+          exitFromProp,
+          DEFAULT_EXIT_FROM,
+        ),
+      [exitFromProp],
     );
-    const exitTo = merge<Required<ICharacterAnimationParams>>(
-      exitToProp,
-      DEFAULT_EXIT_TO,
+    const exitTo = useMemo<Required<ICharacterAnimationParams>>(
+      () =>
+        merge<Required<ICharacterAnimationParams>>(exitToProp, DEFAULT_EXIT_TO),
+      [exitToProp],
     );
 
     const height = heightProp ?? fontSize * 2;
@@ -321,7 +335,7 @@ export const StaggeredText: React.FC<IStaggeredText> &
       return matchFont({ fontFamily, fontSize });
     }, [fontSize]);
 
-    const font = loadedFont ?? systemFont;
+    const font = fontPath ? loadedFont : systemFont;
 
     if (!font) return null;
 

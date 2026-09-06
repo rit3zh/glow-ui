@@ -1,4 +1,6 @@
-import React, { useRef, useState, useCallback, memo } from "react";
+// @ts-check
+import * as React from "react";
+import { useRef, useState, useCallback, memo, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -179,7 +181,7 @@ export const MatchedGeometry: React.FC<IMatchedGeometry> &
         }
       });
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (isExpanded && layoutReady) {
         animateToCenter();
       }
