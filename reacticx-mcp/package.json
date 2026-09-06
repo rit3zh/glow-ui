@@ -1,0 +1,51 @@
+{
+  "name": "@reacticx/mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for the Reacticx React Native component registry",
+  "homepage": "https://www.reacticx.com/",
+  "type": "module",
+  "bin": {
+    "mcp": "./dist/index.js",
+    "reacticx-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/smoke.mjs",
+    "check": "bun run typecheck && bun run build && bun run test",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "react-native",
+    "expo",
+    "components",
+    "ui",
+    "registry",
+    "reacticx"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

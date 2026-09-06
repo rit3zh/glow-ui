@@ -79,7 +79,7 @@ export const AnimatedHeaderScrollView: React.FC<AnimatedHeaderProps> &
       const fontSize = interpolate(
         -scrollY.value,
         [0, 100],
-        [fontSizeValue, fontSizeValue * 2],
+        [fontSizeValue, fontSizeValue * 1],
         Extrapolation.CLAMP,
       );
       return {

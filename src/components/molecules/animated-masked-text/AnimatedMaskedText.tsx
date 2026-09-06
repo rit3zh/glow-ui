@@ -17,6 +17,7 @@ export const AnimatedMaskedText: React.FC<IAnimatedMaskedText> &
       "rgba(255,255,255,0.2)",
       "transparent",
     ],
+    textWaveLength = 0.8,
     baseTextColor = "#000000",
   }: IAnimatedMaskedText): React.ReactNode &
     React.JSX.Element &
@@ -41,7 +42,7 @@ export const AnimatedMaskedText: React.FC<IAnimatedMaskedText> &
       }
     }, [shimmerTranslate, speed, textWidth]);
 
-    const waveWidth = textWidth * 0.4;
+    const waveWidth = textWidth * textWaveLength;
 
     const translateX = shimmerTranslate.interpolate<number>({
       inputRange: [0, 1],

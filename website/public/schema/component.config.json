@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reacticx.com/schema/component.config.json",
+  "title": "Reacticx component config",
+  "description": "Configuration for the reacticx CLI. Every key is optional — anything left out falls back to the default shown here.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "outDir": {
+      "type": "string",
+      "description": "Where components are written, relative to the project root.",
+      "default": "src/shared/components"
+    },
+    "structure": {
+      "description": "How component folders are laid out inside outDir. category → outDir/molecules/accordion; flat → outDir/accordion; mirror → the library's own nested layout.",
+      "enum": ["category", "flat", "mirror"],
+      "default": "category"
+    },
+    "typescript": {
+      "type": "boolean",
+      "description": "The library ships TypeScript source. Turn this off only if your toolchain strips types itself.",
+      "default": true
+    },
+    "aliases": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Import prefixes written into copied files. An empty string makes that import relative instead.",
+      "properties": {
+        "components": { "type": "string", "default": "@/shared/components" },
+        "utils": { "type": "string", "default": "@/shared/utils" },
+        "hooks": { "type": "string", "default": "@/shared/hooks" }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where everything other than components lands, relative to the project root.",
+      "properties": {
+        "utils": { "type": "string", "default": "src/shared/utils" },
+        "hooks": { "type": "string", "default": "src/shared/hooks" },
+        "types": { "type": "string", "default": "src/shared/types" },
+        "examples": { "type": "string", "default": "src/shared/examples" }
+      }
+    },
+    "include": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What gets copied alongside each component.",
+      "properties": {
+        "types": {
+          "type": "boolean",
+          "description": "The component's extracted public types.",
+          "default": false
+        },
+        "examples": {
+          "type": "boolean",
+          "description": "The example screen that documents the component.",
+          "default": false
+        },
+        "dependencies": {
+          "type": "boolean",
+          "description": "Follow the source's own imports and copy the components and helpers they point at.",
+          "default": true
+        }
+      }
+    },
+    "overwrite": {
+      "type": "boolean",
+      "description": "Replace existing files without asking.",
+      "default": false
+    },
+    "packageManager": {
+      "enum": ["auto", "bun", "pnpm", "yarn", "npm"],
+      "description": "auto reads the project's lockfile.",
+      "default": "auto"
+    },
+    "installDependencies": {
+      "enum": ["auto", "prompt", "never"],
+      "description": "What to do about npm packages the copied source imports and the project does not have.",
+      "default": "prompt"
+    },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The reacticx-codebase bucket the CLI reads from.",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "format": "uri",
+          "description": "Public origin of the bucket, no trailing slash.",
+          "default": "https://pub-028ac77ff44d4123aed5b9b6592ec08d.r2.dev"
+        },
+        "index": {
+          "type": "string",
+          "description": "Key of the object listing every file in the bucket.",
+          "default": "index.json"
+        },
+        "registry": {
+          "type": "string",
+          "description": "Key of the component metadata document.",
+          "default": "core/registry.json"
+        },
+        "cache": {
+          "description": "false, or how long the two listings are cached on disk, in seconds.",
+          "anyOf": [{ "type": "integer", "minimum": 0 }, { "const": false }],
+          "default": 3600
+        }
+      }
+    }
+  }
+}

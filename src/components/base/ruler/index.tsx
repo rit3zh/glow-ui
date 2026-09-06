@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback, useEffect, useMemo } from "react";
 import { Canvas, Group, Line } from "@shopify/react-native-skia";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
@@ -30,121 +30,62 @@ import type { IRuler, ITick } from "./types";
 import { scheduleOnRN } from "react-native-worklets";
 
 const Tick = ({
-  index,
   tickX,
   xCenter,
   yCenter,
   translateX,
   mountAnimation,
-  tickHeight,
-  isLarge,
+  notchHeight,
+  notchWidth,
   tickColor,
   activeTickColor,
   step,
 }: ITick) => {
-  const distanceFromCenter = useDerivedValue(() => {
-    return Math.abs(tickX + translateX.value - xCenter);
-  });
-
-  const proximity = useDerivedValue(() => {
-    const activeZone = step * 0.6;
-    return interpolate(
-      distanceFromCenter.value,
-      [0, activeZone, step],
-      [1, 0.3, 0],
-      Extrapolation.CLAMP,
-    );
-  });
-
-  const baseOpacity = useDerivedValue(() => {
-    return interpolate(
-      distanceFromCenter.value,
-      [0, 50, 150, 300],
-      [1, 0.9, 0.6, 0.3],
-      Extrapolation.CLAMP,
-    );
+  const distance = useDerivedValue(() => {
+    return Math.abs(tickX + translateX.value - xCenter) / step;
   });
 
   const tickOpacity = useDerivedValue(() => {
-    const proximityBoost = proximity.value * 0.15;
     return (
-      Math.min(1, baseOpacity.value + proximityBoost) * mountAnimation.value
+      interpolate(
+        distance.value,
+        [0, 1, 3],
+        [1, 0.6, 0.3],
+        Extrapolation.CLAMP,
+      ) * mountAnimation.value
     );
   });
 
-  const tickScale = useDerivedValue(() => {
-    const baseScale = interpolate(
-      distanceFromCenter.value,
-      [0, 100, 200],
-      [1, 0.96, 0.88],
+  const clipFraction = useDerivedValue(() => {
+    return interpolate(
+      distance.value,
+      [0, 1, 2],
+      [0, 0.3, 0.6],
       Extrapolation.CLAMP,
     );
-
-    const popScale = interpolate(
-      proximity.value,
-      [0, 0.5, 1],
-      [1, 1.04, 1.1],
-      Extrapolation.CLAMP,
-    );
-
-    return baseScale * popScale;
-  });
-  const animatedTickHeight = useDerivedValue(() => {
-    const extraHeight = interpolate(
-      proximity.value,
-      [0, 1],
-      [0, 12],
-      Extrapolation.CLAMP,
-    );
-
-    return (tickHeight + extraHeight) * tickScale.value;
   });
 
-  const tickY1 = useDerivedValue(() => {
-    const baseLift = interpolate(
-      distanceFromCenter.value,
-      [0, 50],
-      [14, 15],
-      Extrapolation.CLAMP,
-    );
-    const proximityLift = interpolate(
-      proximity.value,
-      [0, 1],
-      [0, -5],
-      Extrapolation.CLAMP,
-    );
+  const baseline = yCenter + notchHeight / 2;
 
-    return yCenter + baseLift + proximityLift;
+  const tickTop = useDerivedValue<number>(() => {
+    return baseline - notchHeight * (1 - clipFraction.value);
   });
 
-  const tickY2 = useDerivedValue<number>(() => {
-    return withSpring(tickY1.value + animatedTickHeight.value);
-  });
-
-  const strokeWidth = useDerivedValue<number>(() => {
-    const baseWidth = isLarge ? 2.5 : 1.5;
-    const extraWidth = interpolate(
-      proximity.value,
-      [0, 1],
-      [0, 1.2],
-      Extrapolation.CLAMP,
-    );
-    return baseWidth + extraWidth;
-  });
   const tickColorAnimated = useDerivedValue<string>(() => {
     return interpolateColor(
-      proximity.value,
-      [0, 0.4, 1],
-      [tickColor, tickColor, activeTickColor],
+      distance.value,
+      [0, 0.5, 1],
+      [activeTickColor, activeTickColor, tickColor],
     );
   });
 
   return (
     <Line
-      p1={useDerivedValue(() => ({ x: tickX, y: tickY1.value }))}
-      p2={useDerivedValue(() => ({ x: tickX, y: tickY2.value }))}
+      p1={useDerivedValue(() => ({ x: tickX, y: tickTop.value }))}
+      p2={{ x: tickX, y: baseline }}
       color={tickColorAnimated}
-      strokeWidth={strokeWidth}
+      strokeWidth={notchWidth}
+      strokeCap="round"
       opacity={tickOpacity}
     />
   );
@@ -160,16 +101,14 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
       step,
       onScroll,
       onValueChange,
-      labelInterval = 10,
       tickColor = "rgba(255, 255, 255, 0.6)",
       activeTickColor = "#00D4FF",
-      cursorColor = "#00D4FF",
       backgroundColor = "transparent",
-      showCursor = true,
-      tickHeights = { small: 30, medium: 38, large: 45 },
+      notchHeight = 40,
+      notchWidth = 3,
       enableHaptics = false,
       animateOnMount = true,
-    }: IRuler) => {
+    }: IRuler): React.ReactNode & React.JSX.Element & React.ReactElement => {
       const xCenter = width / 2;
       const yCenter = height / 2;
       const translateX = useSharedValue<number>(animateOnMount ? -width : 0);
@@ -192,7 +131,7 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
         }
       }, [enableHaptics]);
 
-      const currentValue = useDerivedValue(() => {
+      const currentValue = useDerivedValue<number>(() => {
         const index = Math.round(-translateX.value / step);
         return Math.max(minValue, Math.min(maxValue, minValue + index));
       });
@@ -213,7 +152,7 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
         [onValueChange, enableHaptics],
       );
 
-      useAnimatedReaction(
+      useAnimatedReaction<number>(
         () => translateX.value,
         (value) => {
           if (onScroll) {
@@ -223,7 +162,7 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
         [onScroll],
       );
 
-      React.useEffect(() => {
+      useEffect(() => {
         if (animateOnMount) {
           translateX.value = withSpring<number>(0, SPRING_CONFIG_SOFT);
         }
@@ -286,101 +225,15 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
         return [{ translateX: translateX.value }];
       });
 
-      const cursorScale = useDerivedValue(() => {
-        return withSpring(active.value ? 1.15 : 1, {
-          damping: 15,
-          stiffness: 200,
-          mass: 0.5,
-        });
-      });
-
-      const cursorY1 = useDerivedValue(() => {
-        const baseY = yCenter - 10;
-        const lift = interpolate(
-          cursorScale.value,
-          [1, 1.15],
-          [0, -3],
-          Extrapolation.CLAMP,
-        );
-        return baseY + lift;
-      });
-
-      const cursorY2 = useDerivedValue<number>(() => {
-        return yCenter + 5;
-      });
-
       const ticksData = useMemo(() => {
-        return numbers.map((number, index) => {
-          const tickX = index * step + xCenter;
-          const isLarge = index % labelInterval === 0;
-          const isMedium = number % 5 === 0;
-          const tickHeight = isLarge
-            ? tickHeights.large
-            : isMedium
-              ? tickHeights.medium
-              : tickHeights.small;
-
-          return {
-            index,
-            tickX,
-            isLarge,
-            isMedium,
-            tickHeight,
-          };
-        });
-      }, [numbers, step, xCenter, labelInterval, tickHeights]);
-
-      const cursorP1 = useDerivedValue(() => ({
-        x: xCenter,
-        y: cursorY1.value,
-      }));
-      const cursorP2 = useDerivedValue(() => ({
-        x: xCenter,
-        y: cursorY2.value,
-      }));
-      const cursorLeftP1 = useDerivedValue(() => ({
-        x: xCenter - 6,
-        y: cursorY1.value,
-      }));
-      const cursorLeftP2 = useDerivedValue(() => ({
-        x: xCenter,
-        y: cursorY1.value - 8,
-      }));
-      const cursorRightP1 = useDerivedValue(() => ({
-        x: xCenter + 6,
-        y: cursorY1.value,
-      }));
-      const cursorRightP2 = useDerivedValue(() => ({
-        x: xCenter,
-        y: cursorY1.value - 8,
-      }));
-
+        return numbers.map((_number, index) => ({
+          index,
+          tickX: index * step + xCenter,
+        }));
+      }, [numbers, step, xCenter]);
       return (
         <GestureDetector gesture={pan}>
           <Canvas style={{ width, height, backgroundColor }}>
-            {showCursor && (
-              <Group>
-                <Line
-                  p1={cursorP1}
-                  p2={cursorP2}
-                  color={cursorColor}
-                  strokeWidth={3}
-                />
-                <Line
-                  p1={cursorLeftP1}
-                  p2={cursorLeftP2}
-                  color={cursorColor}
-                  strokeWidth={3}
-                />
-                <Line
-                  p1={cursorRightP1}
-                  p2={cursorRightP2}
-                  color={cursorColor}
-                  strokeWidth={3}
-                />
-              </Group>
-            )}
-
             <Group transform={transform}>
               {ticksData.map((tick) => (
                 <Tick
@@ -391,8 +244,8 @@ export const Ruler: React.FC<IRuler> & React.FunctionComponent<IRuler> =
                   yCenter={yCenter}
                   translateX={translateX}
                   mountAnimation={mountAnimation}
-                  tickHeight={tick.tickHeight}
-                  isLarge={tick.isLarge}
+                  notchHeight={notchHeight}
+                  notchWidth={notchWidth}
                   tickColor={tickColor}
                   activeTickColor={activeTickColor}
                   step={step}

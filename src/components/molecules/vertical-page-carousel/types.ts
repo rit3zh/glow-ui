@@ -12,7 +12,6 @@ export interface VerticalPageItemProps<ItemT extends VerticalPageItem> {
   scaleRange: [number, number, number];
   rotationRange: [number, number, number];
   opacityRange: [number, number, number];
-  useBlur: boolean;
 }
 
 export interface VerticalPageProps<ItemT extends VerticalPageItem> {
@@ -27,7 +26,6 @@ export interface VerticalPageProps<ItemT extends VerticalPageItem> {
   scaleRange?: [number, number, number];
   rotationRange?: [number, number, number];
   opacityRange?: [number, number, number];
-  useBlur?: boolean;
 }
 
 export interface VerticalPageItem {

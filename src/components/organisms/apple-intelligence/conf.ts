@@ -1,6 +1,6 @@
 import { Skia } from "@shopify/react-native-skia";
 
-const SHADER_SOURCE = Skia.RuntimeEffect.Make(`
+const SHADER_SOURCE = Skia.RuntimeEffect.Make(/*wgsl*/ `
   uniform float  iTime;
   uniform float  intensity;
   uniform float2 iResolution;
@@ -90,7 +90,6 @@ const SHADER_SOURCE = Skia.RuntimeEffect.Make(`
   half4 main(float2 fragCoord) {
     float2 uv = fragCoord / iResolution;
     float range = intensity;
-
     float2 margin = uMargin / iResolution;
     float2 excess = uExcess / iResolution;
     float2 radius = uRadius / iResolution;
@@ -125,13 +124,13 @@ const SHADER_SOURCE = Skia.RuntimeEffect.Make(`
 
     float shimmer = 0.5 + 0.5 * sin(angle * 3.0 + iTime * uShimmerSpeed);
     glow = mix(glow, glow * 1.4, shimmer * uShimmerAmount);
-
     half4 background = half4(half3(glow), 1.0);
-
     float edge   = alpha * (1.0 - c1);
     float bgMask = 1.0 - (1.0 - edge) * (1.0 - (1.0 - c1) * (1.0 - range) * 0.5);
-
-    half4 color = mix(foreground, background, half4(bgMask * intensity));
+    float2 q      = abs(fragCoord - iResolution * 0.5) - iResolution * 0.5 + uRadius;
+    float  boxSDF = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uRadius;
+    float  clip   = 1.0 - smoothstep(-1.0, 0.5, boxSDF);
+    half4 color = mix(foreground, background, half4(bgMask * intensity * clip));
     color *= half4(half3(cc), 1.0);
 
     return color;

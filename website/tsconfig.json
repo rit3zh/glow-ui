@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2024",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,11 +23,17 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "#/*": ["./*"],
-      "fumadocs-mdx:collections/*": ["./.source/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "#/*": [
+        "./*"
+      ]
     },
-    "types": ["./cloudflare-env.d.ts", "node"]
+    "types": [
+      "./cloudflare-env.d.ts",
+      "node"
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -35,8 +45,6 @@
   ],
   "exclude": [
     "node_modules",
-    "react-native",
-    "react-native-usage",
-    "react-native-types"
+    "inspo"
   ]
 }

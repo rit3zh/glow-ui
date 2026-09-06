@@ -1,4 +1,23 @@
 {
+  "title": "Docs",
+  "description": "Learn how to use Reacticx components and templates",
+  "icon": "Book",
   "root": true,
-  "pages": ["guides", "components", "community"]
+  "pages": [
+    "---Start---",
+    "index",
+    "installation",
+    "usage",
+    "---Reference---",
+    "cli",
+    "mcp",
+    "skills",
+    "troubleshooting",
+    "accessibility",
+    "---Project---",
+    "about",
+    "changelog",
+    "contributing",
+    "license"
+  ]
 }

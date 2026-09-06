@@ -1,19 +1,19 @@
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 
-type PressEffect = "speedUp" | "slowDown" | "pause" | "goBonkers" | null;
+type TPressEffect = "accelerate" | "slowDown" | "pause" | null;
 
-interface CircularTextProps {
-  text: string;
-  spinDuration?: number;
-  pressEffect?: PressEffect;
-  radius?: number;
-  fontSize?: number;
-  color?: string;
-  style?: StyleProp<ViewStyle>;
-  fontStyle?: StyleProp<TextStyle>;
+interface ICircularText {
+  readonly text: string;
+  readonly spinDuration?: number;
+  readonly pressEffect?: TPressEffect;
+  readonly radius?: number;
+  readonly fontSize?: number;
+  readonly color?: string;
+  readonly style?: StyleProp<ViewStyle>;
+  readonly textStyle?: StyleProp<TextStyle>;
 }
 
-interface LetterProps {
+interface ICircularTextLetter {
   readonly letter: string;
   readonly index: number;
   readonly totalLetters: number;
@@ -21,7 +21,7 @@ interface LetterProps {
   readonly fontSize: number;
   readonly color: string;
   readonly containerSize: number;
-  readonly fontStyle?: StyleProp<TextStyle>;
+  readonly textStyle?: StyleProp<TextStyle>;
 }
 
-export { CircularTextProps, LetterProps, PressEffect };
+export type { ICircularText, ICircularTextLetter, TPressEffect };

@@ -13,7 +13,6 @@ import type {
   VerticalPageItemProps,
   VerticalPageProps,
 } from "./types";
-import { BlurView } from "@sbaiahmed1/react-native-blur";
 import {
   impactAsync,
   ImpactFeedbackStyle,
@@ -23,8 +22,6 @@ import {
 import { scheduleOnRN } from "react-native-worklets";
 
 const { height } = Dimensions.get("window");
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const VerticalPageItemComponent = <ItemT extends VerticalPageItem>({
   item,
@@ -37,7 +34,6 @@ const VerticalPageItemComponent = <ItemT extends VerticalPageItem>({
   scaleRange,
   rotationRange,
   opacityRange,
-  useBlur,
 }: VerticalPageItemProps<ItemT>) => {
   const animatedBlurViewProps = useAnimatedProps(() => {
     const blurAmount = interpolate(
@@ -107,13 +103,6 @@ const VerticalPageItemComponent = <ItemT extends VerticalPageItem>({
           )}
         </Animated.View>
         {renderItem({ item, index })}
-        {useBlur && (
-          <AnimatedBlurView
-            style={StyleSheet.absoluteFill}
-            animatedProps={animatedBlurViewProps}
-            blurType="light"
-          />
-        )}
       </Animated.View>
     </View>
   );
@@ -131,7 +120,6 @@ const VerticalPageCarousel = <ItemT extends VerticalPageItem>({
   scaleRange = [0.9, 1, 0.9],
   rotationRange = [0, 0, 0],
   opacityRange = [0.5, 1, 0.5],
-  useBlur = true,
 }: VerticalPageProps<ItemT>) => {
   const scrollY = useSharedValue(0);
 
@@ -179,7 +167,6 @@ const VerticalPageCarousel = <ItemT extends VerticalPageItem>({
             scaleRange={scaleRange}
             rotationRange={rotationRange}
             opacityRange={opacityRange}
-            useBlur={useBlur}
           />
         )}
       />

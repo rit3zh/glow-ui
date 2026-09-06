@@ -13,6 +13,7 @@ import Animated, {
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const IS_IOS = Platform.OS === "ios";
 
 const ITEM_WIDTH = SCREEN_WIDTH * 0.75;
 const SPACING = 20;
@@ -83,11 +84,7 @@ const CarouselItem = <ItemT,>({
     );
 
     return {
-      filter: [
-        {
-          blur: blurIntensity,
-        },
-      ],
+      filter: IS_IOS ? [] : [{ blur: blurIntensity }],
       transform: [
         { perspective: 400 },
         { rotateY: `${rotateY}deg` },
@@ -130,7 +127,6 @@ const CarouselItem = <ItemT,>({
             style={[StyleSheet.absoluteFillObject, styles.blurOverlay]}
             tint="regular"
             animatedProps={animatedBlurProps}
-            // reducedTransparencyFallbackColor=""
           />
         )}
       </View>
@@ -191,10 +187,12 @@ const styles = StyleSheet.create({
   itemContainer: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "transparent",
   },
   contentWrapper: {
     overflow: "hidden",
     borderRadius: 20,
+    backgroundColor: "transparent",
   },
   blurOverlay: {
     borderRadius: 20,

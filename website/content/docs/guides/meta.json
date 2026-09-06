@@ -1,7 +1,0 @@
-{
-  "title": "Guides",
-  "description": "Learn how to use Reactix components and blocks",
-  "icon": "Book",
-  "root": true,
-  "pages": ["---Introduction---", "index", "about", "usage", "troubleshooting"]
-}

@@ -1,5 +1,12 @@
 // @ts-check
-import React, { memo, useEffect } from "react";
+import React, {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import {
   Pressable,
   StyleSheet,
@@ -17,175 +24,117 @@ import Animated, {
   interpolateColor,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-// @ts-check
-import type { IButton } from "./types";
+import type {
+  IButtonContent,
+  IButtonContext,
+  IButtonIndicator,
+  IButtonLabel,
+  IButtonLoading,
+  IButtonRoot,
+} from "./types";
+import { createCompoundComponent } from "@/utils/create-compound-component";
 
-export const Button: React.FC<IButton> & React.FunctionComponent<IButton> =
-  memo<IButton>(
-    ({
-      children,
-      isLoading = false,
-      onPress,
-      width = 200,
-      height = 48,
-      backgroundColor = "#fff",
-      loadingText = "Loading...",
-      loadingTextColor = "white",
-      loadingTextSize = 16,
-      borderRadius,
-      gradientColors,
-      style,
-      loadingTextStyle,
-      withPressAnimation = true,
-      animationDuration = 250,
-      disabled = false,
-      showLoadingIndicator = false,
-      renderLoadingIndicator,
-      loadingTextBackgroundColor = "#cacaca",
-    }: IButton): React.ReactNode & React.JSX.Element & React.ReactElement => {
-      const animationProgress = useSharedValue<number>(isLoading ? 1 : 0);
-      const scaleValue = useSharedValue<number>(1);
+const ButtonContext = createContext<IButtonContext | null>(null);
 
-      useEffect(() => {
-        animationProgress.value = withTiming<number>(isLoading ? 1 : 0, {
-          duration: animationDuration,
-          easing: Easing.bezier(0.4, 0, 0.2, 1),
-        });
-      }, [isLoading, animationDuration]);
+const useButton = (part: string): IButtonContext => {
+  const context = useContext(ButtonContext);
+  if (!context) {
+    throw new Error(`Button.${part} must be rendered inside <Button.Root>.`);
+  }
+  return context;
+};
 
-      const calculatedBorderRadius = borderRadius ?? height / 2;
+const ButtonRoot: React.FC<IButtonRoot> & React.FunctionComponent<IButtonRoot> =
+  ({
+    children,
+    isLoading = false,
+    onPress,
+    width = 200,
+    height = 48,
+    backgroundColor = "#fff",
+    loadingBackgroundColor = "#cacaca",
+    borderRadius,
+    gradientColors,
+    withPressAnimation = true,
+    animationDuration = 250,
+    disabled = false,
+    accessibilityLabel,
+    style,
+  }: IButtonRoot): React.ReactNode &
+    React.JSX.Element &
+    React.ReactElement => {
+    const progress = useSharedValue<number>(isLoading ? 1 : 0);
+    const scaleValue = useSharedValue<number>(1);
 
-      const contentAnimatedStylez = useAnimatedStyle<
-        Pick<ViewStyle, "transform" | "opacity">
-      >(() => {
-        const translateY = interpolate(
-          animationProgress.value,
-          [0, 1],
-          [0, -20],
-        );
-        const opacity = interpolate(animationProgress.value, [0, 0.5], [1, 0]);
-
-        return {
-          transform: [{ translateY }],
-          opacity,
-        };
+    useEffect(() => {
+      progress.value = withTiming<number>(isLoading ? 1 : 0, {
+        duration: animationDuration,
+        easing: Easing.bezier(0.4, 0, 0.2, 1),
       });
+    }, [isLoading, animationDuration, progress]);
 
-      const loadingAnimatedStylez = useAnimatedStyle<
-        Pick<ViewStyle, "transform" | "opacity">
-      >(() => {
-        const translateY = interpolate(
-          animationProgress.value,
-          [0, 1],
-          [20, 0],
-        );
-        const opacity = interpolate(animationProgress.value, [0.5, 1], [0, 1]);
+    const calculatedBorderRadius = borderRadius ?? height / 2;
 
-        return {
-          transform: [{ translateY }],
-          opacity,
-        };
-      });
+    const context = useMemo<IButtonContext>(
+      () => ({ progress, isLoading, disabled }),
+      [progress, isLoading, disabled],
+    );
 
-      const pressAnimatedStylez = useAnimatedStyle<
-        Pick<ViewStyle, "transform" | "backgroundColor">
-      >(() => {
-        const bgColor = interpolateColor(
-          animationProgress.value,
-          [0, 1],
-          [backgroundColor, loadingTextBackgroundColor!],
-        );
-        return {
-          transform: [{ scale: scaleValue.value }],
-          backgroundColor: bgColor,
-        };
-      });
+    const surfaceStyle = useAnimatedStyle<
+      Pick<ViewStyle, "transform" | "backgroundColor">
+    >(() => ({
+      transform: [{ scale: scaleValue.value }],
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [backgroundColor, loadingBackgroundColor],
+      ),
+    }));
 
-      const handlePressIn = () => {
-        if (withPressAnimation && !disabled && !isLoading) {
-          scaleValue.value = withTiming(0.95, { duration: 100 });
-        }
-      };
+    const handlePressIn = useCallback(() => {
+      if (withPressAnimation && !disabled && !isLoading) {
+        scaleValue.value = withTiming(0.95, { duration: 100 });
+      }
+    }, [withPressAnimation, disabled, isLoading, scaleValue]);
 
-      const handlePressOut = () => {
-        if (withPressAnimation && !disabled && !isLoading) {
-          scaleValue.value = withTiming(1, { duration: 200 });
-        }
-      };
+    const handlePressOut = useCallback(() => {
+      if (withPressAnimation && !disabled && !isLoading) {
+        scaleValue.value = withTiming(1, { duration: 200 });
+      }
+    }, [withPressAnimation, disabled, isLoading, scaleValue]);
 
-      const renderInnerContent = () => (
-        <View style={styles.contentWrapper}>
-          <Animated.View
-            style={[styles.contentContainer, contentAnimatedStylez]}
-          >
-            {children}
-          </Animated.View>
+    const inner = <View style={styles.contentWrapper}>{children}</View>;
 
-          <Animated.View
-            style={[styles.loadingContainer, loadingAnimatedStylez]}
-          >
-            {showLoadingIndicator &&
-              (renderLoadingIndicator ? (
-                renderLoadingIndicator()
-              ) : (
-                <Animated.View style={{ marginRight: loadingText ? 8 : 0 }}>
-                  <ActivityIndicator color={"#000"} size={"small"} />
-                </Animated.View>
-              ))}
-            <Animated.Text
-              style={[
-                styles.loadingText,
-                {
-                  color: loadingTextColor,
-                  fontSize: loadingTextSize,
-                },
-                loadingTextStyle,
-              ]}
-            >
-              {loadingText}
-            </Animated.Text>
-          </Animated.View>
-        </View>
-      );
-
-      const buttonContent = gradientColors ? (
-        <Animated.View style={[pressAnimatedStylez]}>
-          <LinearGradient
-            colors={gradientColors as [string, string, ...string[]]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={[
-              styles.button,
-              {
-                width,
-                height,
-                borderRadius: calculatedBorderRadius,
-              },
-              style,
-            ]}
-          >
-            {renderInnerContent()}
-          </LinearGradient>
-        </Animated.View>
-      ) : (
-        <Animated.View
+    const surface = gradientColors ? (
+      <Animated.View style={[surfaceStyle]}>
+        <LinearGradient
+          colors={gradientColors as [string, string, ...string[]]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
           style={[
             styles.button,
-            {
-              width,
-              height,
-              backgroundColor,
-              borderRadius: calculatedBorderRadius,
-            },
-            pressAnimatedStylez,
+            { width, height, borderRadius: calculatedBorderRadius },
             style,
           ]}
         >
-          {renderInnerContent()}
-        </Animated.View>
-      );
+          {inner}
+        </LinearGradient>
+      </Animated.View>
+    ) : (
+      <Animated.View
+        style={[
+          styles.button,
+          { width, height, borderRadius: calculatedBorderRadius },
+          surfaceStyle,
+          style,
+        ]}
+      >
+        {inner}
+      </Animated.View>
+    );
 
-      return (
+    return (
+      <ButtonContext.Provider value={context}>
         <Pressable
           onPress={onPress}
           disabled={isLoading || disabled}
@@ -197,13 +146,81 @@ export const Button: React.FC<IButton> & React.FunctionComponent<IButton> =
           ]}
           accessible={true}
           accessibilityRole="button"
-          accessibilityState={{ disabled: isLoading || disabled }}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityState={{ disabled: isLoading || disabled, busy: isLoading }}
         >
-          {buttonContent}
+          {surface}
         </Pressable>
-      );
-    },
+      </ButtonContext.Provider>
+    );
+  };
+
+const ButtonContent: React.FC<IButtonContent> = ({
+  children,
+  style,
+}: IButtonContent) => {
+  const { progress } = useButton("Content");
+  const animatedStyle = useAnimatedStyle<
+    Pick<ViewStyle, "transform" | "opacity">
+  >(() => ({
+    transform: [{ translateY: interpolate(progress.value, [0, 1], [0, -20]) }],
+    opacity: interpolate(progress.value, [0, 0.5], [1, 0]),
+  }));
+  return (
+    <Animated.View style={[styles.layer, animatedStyle, style]}>
+      {children}
+    </Animated.View>
   );
+};
+
+const ButtonLoading: React.FC<IButtonLoading> = ({
+  children,
+  style,
+}: IButtonLoading) => {
+  const { progress } = useButton("Loading");
+  const animatedStyle = useAnimatedStyle<
+    Pick<ViewStyle, "transform" | "opacity">
+  >(() => ({
+    transform: [{ translateY: interpolate(progress.value, [0, 1], [20, 0]) }],
+    opacity: interpolate(progress.value, [0.5, 1], [0, 1]),
+  }));
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[styles.layer, animatedStyle, style]}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
+const ButtonIndicator: React.FC<IButtonIndicator> = ({
+  children,
+  color = "#000",
+  size = "small",
+  style,
+}: IButtonIndicator) => {
+  useButton("Indicator");
+  return (
+    <View style={[styles.indicator, style]}>
+      {children ?? <ActivityIndicator color={color} size={size} />}
+    </View>
+  );
+};
+
+const ButtonLabel: React.FC<IButtonLabel> = ({
+  children,
+  color = "white",
+  size = 16,
+  style,
+}: IButtonLabel) => {
+  useButton("Label");
+  return (
+    <Animated.Text style={[styles.label, { color, fontSize: size }, style]}>
+      {children}
+    </Animated.Text>
+  );
+};
 
 const styles = StyleSheet.create({
   pressable: {
@@ -224,23 +241,44 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  contentContainer: {
+  layer: {
     position: "absolute",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  loadingContainer: {
-    position: "absolute",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+  indicator: {
+    marginRight: 8,
   },
-  loadingText: {
+  label: {
     fontWeight: "600",
   },
 });
 
-export default memo<React.FC<IButton> & React.FunctionComponent<IButton>>(
-  Button,
+const Root = createCompoundComponent("Button.Root", memo(ButtonRoot));
+const Content = createCompoundComponent("Button.Content", memo(ButtonContent));
+const Loading = createCompoundComponent("Button.Loading", memo(ButtonLoading));
+const Indicator = createCompoundComponent(
+  "Button.Indicator",
+  memo(ButtonIndicator),
 );
+const Label = createCompoundComponent("Button.Label", memo(ButtonLabel));
+
+const Button = createCompoundComponent("Button", Root, {
+  Root,
+  Content,
+  Loading,
+  Indicator,
+  Label,
+});
+
+export { Button, Root, Content, Loading, Indicator, Label, useButton };
+export default Button;
+export type {
+  IButtonRoot,
+  IButtonContent,
+  IButtonLoading,
+  IButtonIndicator,
+  IButtonLabel,
+  IButtonContext,
+} from "./types";

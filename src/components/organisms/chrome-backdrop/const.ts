@@ -1,0 +1,15 @@
+const DEFAULTS = {
+  VARIANT: "studio",
+  ACCENT: "#1A5766",
+  BASE: "#080F14",
+  BASE_OPACITY: 1,
+  INTENSITY: 1,
+  GRAIN: 0.012,
+  SPEED: 1,
+  HEIGHT: 260,
+  BORDER_RADIUS: 0,
+} as const;
+
+const STATIC_TIME = 6.2;
+
+export { DEFAULTS, STATIC_TIME };

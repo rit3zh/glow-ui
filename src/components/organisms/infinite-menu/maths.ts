@@ -106,12 +106,17 @@ const quatRotateVec3 = (q: Quat, v: Vec3): Vec3 => {
   return { x: result.x, y: result.y, z: result.z };
 };
 
-const projectToSphere = (x: number, y: number): Vec3 => {
+const projectToSphere = (
+  x: number,
+  y: number,
+  width: number = screenWidth,
+  height: number = screenHeight,
+): Vec3 => {
   "worklet";
   const r = 2;
-  const s = Math.max(screenWidth, screenHeight) - 1;
-  const px = (2 * x - screenWidth - 1) / s;
-  const py = (2 * y - screenHeight - 1) / s;
+  const s = Math.max(width, height) - 1;
+  const px = (2 * x - width - 1) / s;
+  const py = (2 * y - height - 1) / s;
   const xySq = px * px + py * py;
   const rSq = r * r;
   const pz = xySq <= rSq / 2 ? Math.sqrt(rSq - xySq) : rSq / Math.sqrt(xySq);

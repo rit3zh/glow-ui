@@ -1,2 +1,0 @@
-const DRAG_HANDLE_HEIGHT = 20;
-export { DRAG_HANDLE_HEIGHT };

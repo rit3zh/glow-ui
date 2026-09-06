@@ -13,6 +13,20 @@ enum AnimationType {
   WipeRight = "wipeRight",
   WipeDown = "wipeDown",
   WipeUp = "wipeUp",
+  /** Circular, with the reveal edge softened by a blur on the mask. */
+  CircularBlur = "circularBlur",
+  /** Vertical slats that widen inside their own column, like a shutter. */
+  Blinds = "blinds",
+  /** Horizontal slats that deepen inside their own row. */
+  BlindsHorizontal = "blindsHorizontal",
+  /** A band opening outward from the vertical centre line. */
+  Curtain = "curtain",
+  /** A rhombus expanding from the touch point. */
+  Iris = "iris",
+  /** Straight cross-fade between the two themes. */
+  Fade = "fade",
+  /** A radial sweep around the touch point, like a clock hand. */
+  ClockWipe = "clockWipe",
 }
 
 enum EasingType {
@@ -54,7 +68,7 @@ interface ThemeConfig {
 }
 
 interface ThemeSwitcherRef {
-  animate: (touchX?: number, touchY?: number) => Promise<void>;
+  animate: (options?: IThemeOptions) => Promise<void>;
 }
 
 interface ThemeSwitcherProps {

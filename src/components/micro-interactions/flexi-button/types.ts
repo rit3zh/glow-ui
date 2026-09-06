@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import React from "react";
 
 interface Dimensions {
   width: number;
@@ -8,7 +9,7 @@ interface Dimensions {
 }
 
 type IconName = keyof typeof Ionicons.glyphMap;
-type IconRenderFn = () => JSX.Element & React.ReactNode;
+type IconRenderFn = () => React.JSX.Element & React.ReactNode;
 
 interface FlexiButtonProps {
   onPress?: () => void;

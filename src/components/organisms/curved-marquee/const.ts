@@ -1,0 +1,15 @@
+const VIEW_BOX_WIDTH = 1040;
+const VIEW_BOX_HEIGHT = 190;
+const PATH_START_X = -100;
+const PATH_END_X = 1140;
+const PATH_CONTROL_X = 500;
+const PATH_Y = 50;
+
+export {
+  VIEW_BOX_HEIGHT,
+  PATH_CONTROL_X,
+  PATH_END_X,
+  PATH_START_X,
+  PATH_Y,
+  VIEW_BOX_WIDTH,
+};

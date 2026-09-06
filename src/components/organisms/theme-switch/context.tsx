@@ -72,23 +72,26 @@ export const ThemeProvider: React.FC<ThemeProviderProps> =
 
       const toggleTheme = useCallback(
         async <T extends IThemeOptions>(options?: T): Promise<void> => {
+          // The options go straight to the switcher rather than through
+          // provider state. Previously a per-call animationType was written to
+          // state and the call then waited a macrotask hoping React had both
+          // re-rendered and re-bound the imperative handle before `animate`
+          // read it — on a slow frame it did not, and the tap played the
+          // previous animation instead.
           if (
             options?.animationType ||
             options?.animationDuration ||
             options?.easing
           ) {
-            setCurrentAnimation({
-              type: options.animationType ?? currentAnimation.type,
-              duration: options.animationDuration ?? currentAnimation.duration,
-              easing: options.easing ?? currentAnimation.easing,
-            });
+            setCurrentAnimation((prev) => ({
+              type: options.animationType ?? prev.type,
+              duration: options.animationDuration ?? prev.duration,
+              easing: options.easing ?? prev.easing,
+            }));
           }
-          await new Promise((resolve) => setTimeout(resolve, 0));
-          if (switcherRef.current) {
-            await switcherRef.current.animate(options?.touchX, options?.touchY);
-          }
+          await switcherRef.current?.animate(options);
         },
-        [currentAnimation],
+        [],
       );
 
       const handleThemeChange = useCallback(

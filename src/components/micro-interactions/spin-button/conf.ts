@@ -69,6 +69,8 @@ const DEFAULT_SPINNER_CONFIG: SpinnerConfig = {
   color: "#FFFFFF",
   containerSize: 35,
   containerBackground: "#121212",
+  duration: 900,
+  arc: 0.28,
   position: {
     right: -12,
     bottom: 20,

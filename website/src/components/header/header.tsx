@@ -4,6 +4,7 @@ import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "#/lib/utils";
 import { MobileNav } from "./mobile-nav";
 import { buttonVariants } from "@/components/shadcn-ui/button";
+import { Logo } from "@/components/logo";
 
 // Icon components
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -88,12 +89,12 @@ const AboutIcon = ({ className }: { className?: string }) => (
 export const navLinks = [
   {
     label: "Components",
-    href: "/docs/components/apple-intelligence/",
+    href: "/components/apple-intelligence",
     icon: ComponentsIcon,
   },
   {
     label: "About",
-    href: "/docs/guides/",
+    href: "/docs/about",
     icon: AboutIcon,
   },
 ];
@@ -140,10 +141,10 @@ export function Header() {
       >
         {/* Logo */}
         <a className="rounded-md p-2 hover:bg-white/10" href="/">
-          <img
-            src="/static/deps/white_glow.png"
-            alt="React Native Skia"
-            className="h-12 w-auto object-contain opacity-70 transition-opacity duration-300 hover:opacity-100"
+          <Logo
+            role="img"
+            aria-label="Reactix"
+            className="h-9 w-9 text-black dark:text-white opacity-70 transition-opacity duration-300 hover:opacity-100"
           />
         </a>
 

@@ -1,0 +1,126 @@
+---
+title: Contributing
+description: How to report bugs, request components, and submit changes to Reacticx.
+icon: GitPullRequest
+---
+
+Reacticx is open source and contributions of every kind are welcome — bug reports, component requests, documentation fixes, and code.
+
+---
+
+## Reporting a bug
+
+Search the [issue tracker](https://github.com/rit3zh/reacticx/issues) first; if it's new, open an issue with:
+
+- A clear, specific title
+- Steps to reproduce
+- What you expected versus what happened
+- Your Expo SDK version and the component name
+- A screenshot, screen recording, or code snippet
+
+Animation bugs are hard to describe in prose — a short screen recording is worth more than a paragraph.
+
+---
+
+## Requesting a component
+
+Open an issue describing **the problem**, not just the component name. "I need a way to let users reorder a list by dragging" tells you more than "add a drag handle", and sometimes an existing component already solves it.
+
+---
+
+## Submitting a change
+
+<Steps>
+
+<Step>
+
+### Fork and clone
+
+```bash
+git clone https://github.com/YOUR-USERNAME/reacticx.git
+cd reacticx
+```
+
+</Step>
+
+<Step>
+
+### Create a branch
+
+```bash
+git checkout -b my-feature
+```
+
+</Step>
+
+<Step>
+
+### Make your changes
+
+Follow the existing code style and structure. Run the checks before committing:
+
+```bash
+bun run type-check
+bun run lint
+bun run test
+```
+
+</Step>
+
+<Step>
+
+### Commit
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) — releases *and* the [changelog](/docs/changelog) are generated from them, so the prefix decides how your change is listed:
+
+```bash
+git commit -m "feat: add drag-to-reorder list component"
+git commit -m "fix: gooey switch ignores reduced motion"
+git commit -m "docs: correct the reanimated plugin order"
+```
+
+</Step>
+
+<Step>
+
+### Open a pull request
+
+Push your branch and open a PR against `main` on `rit3zh/reacticx`. Describe what changed and link any related issues. Keep PRs focused — one concern per PR reviews faster than five.
+
+</Step>
+
+</Steps>
+
+---
+
+## Contributing a component
+
+A component is more than its animation. Before opening the PR, check that it:
+
+- **Works on both platforms.** Test on iOS and Android, not just the simulator you had open.
+- **Respects reduced motion.** See [Accessibility](/docs/accessibility) — this is the one that gets missed most.
+- **Carries roles and labels.** Anything interactive needs an accessible name.
+- **Types its props.** Export a `types.ts` with documented props; the docs tables are generated from it.
+- **Declares its dependencies.** If it needs Skia or Haptics, say so on the docs page.
+- **Cleans up.** Cancel animations and remove listeners on unmount.
+
+Components live under `src/components/<category>/<name>/`, following the categories listed in the [CLI reference](/docs/cli).
+
+---
+
+## Documentation
+
+Docs live in `website/content/docs` as MDX. The fastest path to a fix: click **Edit on GitHub** at the top of any page — it opens the exact source file.
+
+Two pages are generated rather than written, and hand edits to them are lost:
+
+```bash
+bun run changelog        # in website/ — rebuilds the changelog from git history
+bun run skill:catalog    # in the repo root — rebuilds the agent skill's catalog
+```
+
+---
+
+## Code of conduct
+
+Be decent to each other. Reacticx exists because people share their work freely; treat contributors, maintainers, and people asking beginner questions accordingly.

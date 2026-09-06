@@ -51,13 +51,19 @@ const useRipple = <T extends IUseRipple>(options: T) => {
     duration,
   ]);
 
+  const start = (x: number, y: number) => {
+    touchX.value = x;
+    touchY.value = y;
+    touchStartTime.value = clock.value;
+  };
+
   const tap = Gesture.Tap().onStart((event) => {
     touchX.value = event.x;
     touchY.value = event.y;
     touchStartTime.value = clock.value;
   });
 
-  return { uniforms, tap };
+  return { uniforms, tap, start };
 };
 
 export { useRipple };

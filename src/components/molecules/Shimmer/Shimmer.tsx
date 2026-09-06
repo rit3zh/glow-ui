@@ -31,13 +31,12 @@ export const ShimmerEffect: React.FC<IShimmerEffect> &
     const pulseAnim = useRef<Animated.Value>(new Animated.Value(0.3)).current;
     const fadeAnim = useRef<Animated.Value>(new Animated.Value(0)).current;
 
-    const themeColors =
-      preset === "custom" && shimmerColors
-        ? shimmerColors
-        : SHIMMER_PRESETS[preset].colors;
+    const theme = SHIMMER_PRESETS[preset] ?? SHIMMER_PRESETS.dark;
 
-    const backgroundColor =
-      preset !== "custom" ? SHIMMER_PRESETS[preset].backgroundColor : undefined;
+    const themeColors =
+      shimmerColors && shimmerColors.length >= 2 ? shimmerColors : theme.colors;
+
+    const backgroundColor = theme.backgroundColor;
 
     const onLayout = useCallback((e: LayoutChangeEvent) => {
       setLayout(e.nativeEvent.layout);
@@ -262,8 +261,10 @@ export const ShimmerGroup: React.FC<IShimmerGroup> &
     isLoading = true,
     children,
     preset = "dark",
+    shimmerColors,
     duration = 1500,
     direction = "leftToRight",
+    variant = "shimmer",
     opacity = 1,
   }: IShimmerGroup):
     | (React.JSX.Element & React.ReactNode & React.ReactElement)
@@ -278,8 +279,10 @@ export const ShimmerGroup: React.FC<IShimmerGroup> &
           return React.cloneElement(child as React.ReactElement<any>, {
             isLoading,
             preset: child.props.preset || preset,
+            shimmerColors: child.props.shimmerColors || shimmerColors,
             duration: child.props.duration || duration,
             direction: child.props.direction || direction,
+            variant: child.props.variant || variant,
             opacity: child.props.opacity ?? opacity,
           });
         }

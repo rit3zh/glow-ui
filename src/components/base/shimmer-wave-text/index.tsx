@@ -50,7 +50,7 @@ const AnimatedCharacter = memo<ISyncedAnimatedCharacter>(
     shimmerProgress,
     totalChars,
     shimmerWidth,
-  }: ISyncedAnimatedCharacter): JSX.Element => {
+  }: ISyncedAnimatedCharacter): React.JSX.Element => {
     const charPosition = totalChars > 1 ? charIndex / (totalChars - 1) : 0;
 
     const shimmerRange = 1 + shimmerWidth * 2;
@@ -59,7 +59,7 @@ const AnimatedCharacter = memo<ISyncedAnimatedCharacter>(
 
     const windowSize = shimmerWidth / shimmerRange;
 
-    const floatProgress = useDerivedValue(() => {
+    const floatProgress = useDerivedValue<number>(() => {
       const shimmerPos = shimmerProgress.value;
       const distance = Math.abs(shimmerPos - shimmerCenterAtChar);
       if (distance < windowSize) {
@@ -100,9 +100,9 @@ const TextRenderer: React.FC<ISyncedTextRenderer> = memo<ISyncedTextRenderer>(
     shimmerWidth,
     isMask = false,
   }: ISyncedTextRenderer): React.ReactNode &
-    JSX.Element &
+    React.JSX.Element &
     React.ReactElement => {
-    const renderContent = useMemo((): React.ReactNode & JSX.Element[] => {
+    const renderContent = useMemo((): React.ReactNode & React.JSX.Element[] => {
       let charIndex: number = 0;
       const keyPrefix: string = isMask ? "mask" : "char";
       const color: string = isMask ? MASK_COLOR : textColor;
@@ -176,7 +176,7 @@ export const ShimmerWaveText: React.FC<ShimmerWaveTextProps> =
       shimmerConfig = {},
       floatConfig = {},
       roundConfig = {},
-    }: ShimmerWaveTextProps): React.ReactNode & JSX.Element => {
+    }: ShimmerWaveTextProps): React.ReactNode & React.JSX.Element => {
       const mergedShimmerConfig: ShimmerConfig = useMemo<ShimmerConfig>(
         (): ShimmerConfig => ({
           ...DEFAULT_SHIMMER_CONFIG,

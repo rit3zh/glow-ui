@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 
 
+## <small>1.23.2 (2026-09-04)</small>
+
+* perf(website): stop the landing and catalogue pages juddering on mobile ([8436c18](https://github.com/rit3zh/reacticx/commit/8436c18))
+
+## <small>1.23.1 (2026-09-04)</small>
+
+* fix: repoint attribution comments at their upstream projects ([8401532](https://github.com/rit3zh/reacticx/commit/8401532))
+
+## 1.23.0 (2026-09-04)
+
+Reacticx M5 — the library becomes four catalogues, gains two published packages,
+and moves onto a rebuilt documentation site.
+
+### Catalogues
+
+163 components in the registry, filed by what they actually are:
+
+* **Components** (112) — shaders, texts, micro interactions and the building blocks
+* **Blocks** (19) — full screens: onboarding, sign-up, billing, settings, empty states
+* **Pieces** (10) — finished objects: tickets, receipts, coupons, badges, polaroids
+* **Primitives** (9) — the plain furniture: alert, avatar, dialog, list, switch, tabs
+* **Charts** (5) — bar, line, pie, radar and radial, drawn and animated on device
+
+Each catalogue owns its own browsing grid, docs section and navigation entry.
+
+### Packages
+
+* **`reacticx@0.2.0`** — the CLI, rebuilt around a command core: `init`, `create`,
+  `add`, `list`, `info`, `diff`, `remove`, `config`, plus a test suite
+* **`@reacticx/mcp@0.1.0`** — an MCP server exposing the registry to coding agents,
+  so a model can search and install components directly
+* **Agent skills** — `skills/using-reacticx` with CLI, MCP and configuration references
+
+### Website
+
+Rebuilt landing page; catalogue browsing at `/components-preview`,
+`/pieces-preview`, `/charts` and `/primitives`; per-primitive documentation
+pages; a generated changelog; and a shared docs shell across every section.
+
+### Asset pipeline
+
+A Cloudflare R2 pipeline that syncs, encodes and versions component recordings,
+generates preview manifests and mockups, and serves them content-addressed so a
+re-recorded clip replaces a cached one. The media stays out of git — the buckets
+hold the clips, the repo holds the ledgers. Run `bun run cloud:pull` to restore
+the local folders.
+
+### Notes
+
+Released as 1.23.0 rather than 1.21.0: tags `v1.21.0` and `v1.22.0` were cut on
+a branch that never merged to `main`, so the automated release had been failing
+on a tag collision since March. Those tags are left untouched.
+
 ## 1.21.0 (2026-05-29)
 
 * feat: add Apple Intelligence and Aura Lift components with shaders and context management ([629cb2e](https://github.com/rit3zh/reacticx/commit/629cb2e))
