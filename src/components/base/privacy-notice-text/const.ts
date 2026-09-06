@@ -1,4 +1,0 @@
-const DEFAULT_TINT = "#007AFF";
-const DEFAULT_SIZE = 14;
-
-export { DEFAULT_TINT, DEFAULT_SIZE };

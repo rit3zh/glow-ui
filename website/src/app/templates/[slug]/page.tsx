@@ -8,6 +8,7 @@ import { templates } from "#/lib/source";
 import Link from "next/link";
 import { Header } from "@/components/header/header";
 import { LazyVideo } from "@/components/docs/lazy-video";
+import { PackageInstall } from "@/components/component-docs/install-command";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -26,7 +27,7 @@ const videoMap: Record<string, string> = {
 };
 
 function getTemplate(slug: string) {
-  return templates.find((t) => t.info.path.replace(/\.mdx$/, "") === slug);
+  return templates.find((t) => t._file.path.replace(/\.mdx$/, "") === slug);
 }
 
 export default async function TemplatePage(props: {
@@ -121,6 +122,9 @@ export default async function TemplatePage(props: {
               ...TabsComponents,
               Steps,
               Step,
+              // `package-install` fences are rewritten into this tag before
+              // the highlighter runs — see `lib/remark-package-install.ts`.
+              PackageInstall,
             }}
           />
         </article>
@@ -157,7 +161,7 @@ export default async function TemplatePage(props: {
 
 export function generateStaticParams() {
   return templates.map((t) => ({
-    slug: t.info.path.replace(/\.mdx$/, ""),
+    slug: t._file.path.replace(/\.mdx$/, ""),
   }));
 }
 

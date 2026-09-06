@@ -1,0 +1,167 @@
+---
+title: Accessibility
+description: How Reacticx components handle accessibility, and what you own once the code is in your project.
+icon: Accessibility
+---
+
+Reacticx components are copied into your project, which means **accessibility is a shared responsibility**. The components ship with sensible roles and labels where the intent is unambiguous, but a component cannot know what a button in your app is for. That part is yours.
+
+This page covers what you get by default and what to check before shipping.
+
+---
+
+## Reduced motion
+
+Reacticx is an animation library, which makes this the most important setting to respect. Users who enable "Reduce Motion" at the OS level are telling you that movement causes them discomfort — vestibular disorders and motion sensitivity are common.
+
+React Native exposes the setting through `AccessibilityInfo`:
+
+```tsx title="hooks/use-reduced-motion.ts"
+import { AccessibilityInfo } from "react-native";
+import { useEffect, useState } from "react";
+
+export function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
+
+    const sub = AccessibilityInfo.addEventListener(
+      "reduceMotionChanged",
+      setReduced,
+    );
+    return () => sub.remove();
+  }, []);
+
+  return reduced;
+}
+```
+
+Reanimated also ships its own hook, which is usually the shorter path:
+
+```tsx
+import { useReducedMotion } from "react-native-reanimated";
+
+const reduced = useReducedMotion();
+```
+
+Use it to shorten or skip a transition rather than removing the feedback entirely — an instant state change still communicates what happened:
+
+```tsx
+const reduced = useReducedMotion();
+
+const style = useAnimatedStyle(() => ({
+  opacity: withTiming(visible ? 1 : 0, { duration: reduced ? 0 : 300 }),
+}));
+```
+
+<Callout title="Prefer fading over moving">
+  When you do need a transition under reduced motion, opacity is far safer than
+  translation, scale, or rotation. Large moving surfaces are what trigger
+  discomfort.
+</Callout>
+
+---
+
+## Labels and roles
+
+Anything a user can act on needs a role and an accessible name. Icon-only controls need the name most, because there is no text for a screen reader to fall back on.
+
+```tsx
+<Pressable
+  accessible
+  accessibilityRole="button"
+  accessibilityLabel="Add to favourites"
+  onPress={onPress}
+>
+  <HeartIcon />
+</Pressable>
+```
+
+Common roles worth knowing:
+
+| Role | Use for |
+| --- | --- |
+| `button` | Anything tappable that performs an action |
+| `link` | Navigation to another screen or an external URL |
+| `header` | Section titles, so users can jump between them |
+| `image` | Meaningful images — pair with `accessibilityLabel` |
+| `switch` / `checkbox` | Toggles — pair with `accessibilityState` |
+| `adjustable` | Sliders and steppers — pair with `accessibilityValue` |
+
+Decorative visuals should be hidden rather than labelled, so they don't add noise:
+
+```tsx
+<View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+  <DecorativeGlow />
+</View>
+```
+
+---
+
+## State
+
+A control that changes needs to announce its new state, not just look different:
+
+```tsx
+<Pressable
+  accessibilityRole="switch"
+  accessibilityState={{ checked: enabled }}
+  accessibilityLabel="Dark mode"
+  onPress={toggle}
+>
+  <GooeySwitch value={enabled} />
+</Pressable>
+```
+
+For anything with a range, `accessibilityValue` carries the number:
+
+```tsx
+<View
+  accessibilityRole="adjustable"
+  accessibilityLabel="Volume"
+  accessibilityValue={{ min: 0, max: 100, now: volume }}
+>
+  <ElasticSlider value={volume} onChange={setVolume} />
+</View>
+```
+
+---
+
+## Touch target size
+
+Both platforms recommend a minimum tappable area — 44×44pt on iOS, 48×48dp on Android. A small icon does not have to grow to meet it; extend the target instead:
+
+```tsx
+<Pressable hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+  <SmallIcon />
+</Pressable>
+```
+
+---
+
+## Colour and contrast
+
+Reacticx components inherit colour from the props you pass, so contrast is entirely under your control. WCAG AA asks for **4.5:1** against the background for body text and **3:1** for large text and meaningful UI elements.
+
+Two things to watch in an animation-heavy interface:
+
+- **Gradient and shader backgrounds** — check contrast at the lightest *and* darkest point of the gradient, not just the average.
+- **Colour as the only signal** — if state is communicated by colour alone, add an icon, a label, or a shape so it survives colour blindness.
+
+---
+
+## Testing
+
+Turn the screen readers on and navigate your app without looking at it:
+
+- **iOS** — Settings → Accessibility → VoiceOver
+- **Android** — Settings → Accessibility → TalkBack
+
+Then check the motion path: Settings → Accessibility → Motion → Reduce Motion (iOS), or Settings → Accessibility → Remove animations (Android).
+
+---
+
+## Reporting a gap
+
+If a component ships with a missing label, an unreachable control, or an animation that ignores the reduced-motion setting, that's a bug. Please [open an issue](https://github.com/rit3zh/reacticx/issues) — include the component name and the assistive technology you were using.

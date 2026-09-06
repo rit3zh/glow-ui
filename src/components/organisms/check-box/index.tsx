@@ -1,3 +1,4 @@
+// @ts-check
 import React, { memo, useEffect, useRef, useState } from "react";
 import Animated, {
   Easing,
@@ -74,10 +75,10 @@ export const Checkbox: React.FC<ICheckbox> = memo(
     size,
     showBorder = false,
   }: ICheckbox) => {
-    const animValue = useSharedValue(checked ? 1 : 0);
-    const borderAnimValue = useSharedValue(showBorder ? 1 : 0);
-    const scaleValue = useSharedValue(1);
-    const isFirstRender = useRef(true);
+    const animValue = useSharedValue<number>(checked ? 1 : 0);
+    const borderAnimValue = useSharedValue<number>(showBorder ? 1 : 0);
+    const scaleValue = useSharedValue<number>(1);
+    const isFirstRender = useRef<boolean>(true);
 
     useEffect(() => {
       if (isFirstRender.current) {
@@ -88,7 +89,7 @@ export const Checkbox: React.FC<ICheckbox> = memo(
         return;
       }
 
-      animValue.value = withTiming(checked ? 1 : 0, {
+      animValue.value = withTiming<number>(checked ? 1 : 0, {
         duration: checked ? 300 : 250,
         easing: checked
           ? Easing.bezier(0.4, 0, 0.2, 1)

@@ -125,6 +125,17 @@ const AnimatedWord: React.FC<AnimatedWordProps> = memo<AnimatedWordProps>(
       };
     });
 
+    const blurOverlayStyle = useAnimatedStyle<Pick<ViewStyle, "opacity">>(
+      () => ({
+        opacity: interpolate(
+          animationValue.value,
+          [0, 0.3, 1],
+          [1, 1, 0],
+          Extrapolation.CLAMP,
+        ),
+      }),
+    );
+
     const blurAnimatedProps = useAnimatedProps<
       Pick<BlurViewProps, "intensity">
     >(() => {
@@ -168,7 +179,7 @@ const AnimatedWord: React.FC<AnimatedWordProps> = memo<AnimatedWordProps>(
         style={[
           styles.wordContainer,
           animatedStyle,
-          animatedAndroidBlurViewStylez,
+          Platform.OS === "android" && animatedAndroidBlurViewStylez,
         ]}
       >
         <Text
@@ -187,7 +198,8 @@ const AnimatedWord: React.FC<AnimatedWordProps> = memo<AnimatedWordProps>(
         </Text>
         {Platform.OS === "ios" && (
           <AnimatedBlurView
-            style={[StyleSheet.absoluteFillObject]}
+            pointerEvents="none"
+            style={[StyleSheet.absoluteFill, blurOverlayStyle]}
             animatedProps={blurAnimatedProps}
             tint={blurTint}
           />
@@ -211,7 +223,6 @@ const styles = StyleSheet.create({
   },
   wordContainer: {
     overflow: "hidden",
-    borderRadius: 4,
   },
   word: {},
 });

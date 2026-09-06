@@ -40,7 +40,7 @@ const Character: React.FC<ICharacter> & React.FunctionComponent<ICharacter> = ({
     return {
       initialValues: {
         opacity: 0,
-        transform: [{ translateY: 20 }, { scale: 0.5 }],
+        transform: [{ translateY: 15 }, { scale: 0.5 }],
       },
       animations: {
         opacity: withDelay<number>(
@@ -90,7 +90,7 @@ const Character: React.FC<ICharacter> & React.FunctionComponent<ICharacter> = ({
           {
             translateY: withDelay<number>(
               animationDelay,
-              withTiming<number>(-5, { duration: exitDuration }),
+              withTiming<number>(-2, { duration: exitDuration }),
             ),
           },
           {

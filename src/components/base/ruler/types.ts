@@ -1,11 +1,5 @@
 import type { SharedValue } from "react-native-reanimated";
 
-interface ITickHeights {
-  small: number;
-  medium: number;
-  large: number;
-}
-
 interface IRuler {
   height: number;
   width: number;
@@ -14,13 +8,11 @@ interface IRuler {
   step: number;
   readonly onScroll?: (value: number) => void;
   readonly onValueChange?: (value: number) => void;
-  readonly labelInterval?: number;
   readonly tickColor?: string;
   readonly activeTickColor?: string;
-  readonly cursorColor?: string;
   readonly backgroundColor?: string;
-  readonly showCursor?: boolean;
-  readonly tickHeights?: ITickHeights;
+  readonly notchHeight?: number;
+  readonly notchWidth?: number;
   readonly enableHaptics?: boolean;
   readonly animateOnMount?: boolean;
 }
@@ -32,11 +24,11 @@ interface ITick {
   yCenter: number;
   translateX: SharedValue<number>;
   mountAnimation: SharedValue<number>;
-  tickHeight: number;
-  isLarge: boolean;
+  notchHeight: number;
+  notchWidth: number;
   tickColor: string;
   activeTickColor: string;
   step: number;
 }
 
-export type { IRuler, ITickHeights, ITick };
+export type { IRuler, ITick };

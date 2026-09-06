@@ -5,6 +5,8 @@ import {
   View,
   type ViewStyle,
   type LayoutChangeEvent,
+  Dimensions,
+  ScaledSize,
 } from "react-native";
 import {
   Canvas,
@@ -37,13 +39,14 @@ export const AuraLiftGlobalContextProvider: React.FC<IAuraLiftProvider> &
   ({
     children,
     duration = 2000,
+    style,
   }: React.ComponentProps<typeof AuraLiftGlobalContextProvider>):
     | (React.ReactNode & React.JSX.Element & React.ReactElement)
     | null => {
     const viewRef = useRef<View>(null);
     const [snapshot, setSnapshot] = useState<SkImage | null>(null);
     const [isActive, setIsActive] = useState<boolean>(false);
-    const [layout, setLayout] = useState<{ width: number; height: number }>({
+    const [layout, setLayout] = useState<Pick<ScaledSize, "width" | "height">>({
       width: 0,
       height: 0,
     });
@@ -112,37 +115,39 @@ export const AuraLiftGlobalContextProvider: React.FC<IAuraLiftProvider> &
 
     return (
       <AuraLiftContext.Provider value={contextValue}>
-        <View
-          ref={viewRef}
-          style={styles.container}
-          collapsable={false}
-          onLayout={(e: LayoutChangeEvent) => {
-            const { width, height } = e.nativeEvent.layout;
-            setLayout(() => ({ width, height }));
-          }}
-        >
-          {children}
-        </View>
-
-        {isActive && snapshot && layout.width > 0 && (
-          <Animated.View
-            style={[styles.overlay, overlayStyle]}
-            pointerEvents="none"
+        <View style={[styles.root, style]}>
+          <View
+            ref={viewRef}
+            style={styles.container}
+            collapsable={false}
+            onLayout={(e: LayoutChangeEvent) => {
+              const { width, height } = e.nativeEvent.layout;
+              setLayout(() => ({ width, height }));
+            }}
           >
-            <Canvas style={{ width: layout.width, height: layout.height }}>
-              <Fill>
-                <Shader source={SHADER_SOURCE} uniforms={uniforms}>
-                  <ImageShader
-                    image={snapshot}
-                    fit="cover"
-                    width={layout.width}
-                    height={layout.height}
-                  />
-                </Shader>
-              </Fill>
-            </Canvas>
-          </Animated.View>
-        )}
+            {children}
+          </View>
+
+          {isActive && snapshot && layout.width > 0 && (
+            <Animated.View
+              style={[styles.overlay, overlayStyle]}
+              pointerEvents="none"
+            >
+              <Canvas style={{ width: layout.width, height: layout.height }}>
+                <Fill>
+                  <Shader source={SHADER_SOURCE} uniforms={uniforms}>
+                    <ImageShader
+                      image={snapshot}
+                      fit="cover"
+                      width={layout.width}
+                      height={layout.height}
+                    />
+                  </Shader>
+                </Fill>
+              </Canvas>
+            </Animated.View>
+          )}
+        </View>
       </AuraLiftContext.Provider>
     );
   },
@@ -155,11 +160,16 @@ export default memo<
 >(AuraLiftGlobalContextProvider);
 export { useAuraLiftContext };
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
+    overflow: "hidden",
+  },
+  container: {
+    flexGrow: 1,
+    flexBasis: "auto",
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...(StyleSheet.absoluteFill as any),
     zIndex: 9999,
   },
 });

@@ -1,8 +1,4 @@
-/**
- * This text animation is inspired by the "Circular Text" effect from the React Bits.
- * @URL https://reactbits.dev/text-animations/circular-text
- */
-
+// @ts-check
 import React, { useEffect, useCallback, memo } from "react";
 import {
   View,
@@ -18,12 +14,11 @@ import Animated, {
   withTiming,
   Easing,
   cancelAnimation,
-  withSpring,
   type SharedValue,
 } from "react-native-reanimated";
-import type { CircularTextProps, PressEffect, LetterProps } from "./types";
+import type { ICircularText, ICircularTextLetter, TPressEffect } from "./types";
 
-const Letter = memo<LetterProps>(
+const Letter = memo<ICircularTextLetter>(
   ({
     letter,
     index,
@@ -32,7 +27,7 @@ const Letter = memo<LetterProps>(
     fontSize,
     color,
     containerSize,
-    fontStyle,
+    textStyle,
   }): React.ReactElement => {
     const angle: number = (360 / totalLetters) * index - 90;
     const angleRad: number = (angle * Math.PI) / 180;
@@ -66,7 +61,7 @@ const Letter = memo<LetterProps>(
               width: fontSize,
               height: fontSize * 1.2,
             },
-            fontStyle,
+            textStyle,
           ]}
         >
           {letter}
@@ -76,23 +71,19 @@ const Letter = memo<LetterProps>(
   },
 );
 
-export const CircularText: React.FC<CircularTextProps> &
-  React.FunctionComponent<CircularTextProps> = memo<CircularTextProps>(
+export const CircularText: React.FC<ICircularText> = memo<ICircularText>(
   ({
     text,
     spinDuration = 20,
-    pressEffect = "speedUp",
+    pressEffect = "accelerate",
     radius = 85,
     fontSize = 24,
     color = "#ffffff",
     style,
-    fontStyle,
-  }: CircularTextProps):
-    | (React.ReactElement & React.ReactNode & React.ReactElement)
-    | null => {
+    textStyle,
+  }: ICircularText): React.ReactElement => {
     const letters: readonly string[] = Array.from(text);
     const rotation: SharedValue<number> = useSharedValue<number>(0);
-    const scale: SharedValue<number> = useSharedValue<number>(1);
 
     const startRotation = useCallback(
       (duration: number): void => {
@@ -127,37 +118,26 @@ export const CircularText: React.FC<CircularTextProps> &
         case "slowDown":
           startRotation(spinDuration * 2);
           break;
-        case "speedUp":
+        case "accelerate":
           startRotation(spinDuration / 4);
           break;
         case "pause":
           cancelAnimation(rotation);
-          break;
-        case "goBonkers":
-          startRotation(spinDuration / 20);
-          scale.value = withSpring(0.8, {
-            damping: 20,
-            stiffness: 300,
-          });
           break;
         default: {
           const _exhaustiveCheck: never = pressEffect;
           return _exhaustiveCheck;
         }
       }
-    }, [pressEffect, spinDuration, startRotation, rotation, scale]);
+    }, [pressEffect, spinDuration, startRotation, rotation]);
 
     const handlePressOut = useCallback((): void => {
       startRotation(spinDuration);
-      scale.value = withSpring(1, {
-        damping: 20,
-        stiffness: 300,
-      });
-    }, [spinDuration, startRotation, scale]);
+    }, [spinDuration, startRotation]);
 
     const animatedContainerStyle = useAnimatedStyle(
       (): ViewStyle => ({
-        transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value }],
+        transform: [{ rotate: `${rotation.value}deg` }],
       }),
     );
 
@@ -187,7 +167,7 @@ export const CircularText: React.FC<CircularTextProps> &
                 fontSize={fontSize}
                 color={color}
                 containerSize={containerSize}
-                fontStyle={fontStyle}
+                textStyle={textStyle}
               />
             ),
           )}
@@ -197,7 +177,7 @@ export const CircularText: React.FC<CircularTextProps> &
   },
 );
 
-export default memo<CircularTextProps>(CircularText);
+export default memo<React.FC<ICircularText>>(CircularText);
 
 const styles = StyleSheet.create({
   container: {
@@ -214,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { type CircularTextProps, type PressEffect };
+export type { ICircularText, ICircularTextLetter, TPressEffect };

@@ -1,8 +1,14 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
-import { StyleSheet, View, type LayoutChangeEvent } from "react-native";
-import { Canvas, Path } from "@shopify/react-native-skia";
-import MaskedView from "@react-native-masked-view/masked-view";
 import {
+  ScaledSize,
+  StyleSheet,
+  View,
+  ViewStyle,
+  type LayoutChangeEvent,
+} from "react-native";
+import { Canvas, Path } from "@shopify/react-native-skia";
+import Animated, {
+  useAnimatedStyle,
   useDerivedValue,
   isSharedValue,
   type SharedValue,
@@ -48,8 +54,8 @@ export const SquircleView: React.FC<ISquircleView> &
     const height = heightProp ?? measured.h;
     const hasSize = width > 0 && height > 0;
 
-    const crIsShared = isSharedValue(cornerRadiusProp);
-    const csIsShared = isSharedValue(cornerSmoothingProp);
+    const crIsShared = isSharedValue<number>(cornerRadiusProp);
+    const csIsShared = isSharedValue<number>(cornerSmoothingProp);
 
     const animatedPath = useDerivedValue<string>(() => {
       "worklet";
@@ -66,56 +72,54 @@ export const SquircleView: React.FC<ISquircleView> &
       return buildSquirclePath(width, height, cr, cs);
     });
 
-    const maskSize = useMemo(() => ({ width, height }), [width, height]);
+    const clipStyle = useAnimatedStyle<Pick<ViewStyle, "borderRadius">>(() => {
+      "worklet";
+      return {
+        borderRadius: crIsShared
+          ? (cornerRadiusProp as SharedValue<number>).value
+          : (cornerRadiusProp as number),
+      };
+    });
 
-    const containerStyle = useMemo(() => {
-      if (!isDynamic) return { width: widthProp, height: heightProp };
-      if (hasSize) return { width, height };
-      return undefined;
-    }, [isDynamic, widthProp, heightProp, hasSize, width, height]);
+    const containerStyle = useMemo(
+      () => (isDynamic ? undefined : { width: widthProp, height: heightProp }),
+      [isDynamic, widthProp, heightProp],
+    );
 
     return (
       <View
         onLayout={isDynamic ? handleLayout : undefined}
         style={[containerStyle, style]}
       >
-        {!hasSize && children}
-
         {hasSize ? (
-          <>
-            <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
-              <Path path={animatedPath} color={backgroundColor} />
-            </Canvas>
+          <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+            <Path path={animatedPath} color={backgroundColor} />
+          </Canvas>
+        ) : null}
+        <Animated.View style={[styles.clip, clipStyle]}>
+          {children}
+        </Animated.View>
 
-            {children != null ? (
-              <MaskedView
-                style={StyleSheet.absoluteFill}
-                maskElement={
-                  <Canvas style={maskSize}>
-                    <Path path={animatedPath} color="white" />
-                  </Canvas>
-                }
-              >
-                <View style={StyleSheet.absoluteFill}>{children}</View>
-              </MaskedView>
-            ) : null}
-
-            {borderWidth > 0 ? (
-              <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
-                <Path
-                  path={animatedPath}
-                  color={borderColor}
-                  style="stroke"
-                  strokeWidth={borderWidth * 2}
-                />
-              </Canvas>
-            ) : null}
-          </>
+        {hasSize && borderWidth > 0 ? (
+          <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+            <Path
+              path={animatedPath}
+              color={borderColor}
+              style="stroke"
+              strokeWidth={borderWidth * 2}
+            />
+          </Canvas>
         ) : null}
       </View>
     );
   },
 );
+
+const styles = StyleSheet.create({
+  clip: {
+    overflow: "hidden",
+  },
+});
 
 export default memo<
   React.FC<ISquircleView> &

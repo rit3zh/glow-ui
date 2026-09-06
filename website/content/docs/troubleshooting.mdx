@@ -1,0 +1,133 @@
+---
+title: Troubleshooting
+description: Troubleshooting Reacticx Components.
+icon: Power
+---
+
+## Animations are not working
+
+Make sure `react-native-reanimated` is installed and its Babel plugin is added to your config:
+
+```js title="babel.config.js"
+module.exports = {
+  presets: ["babel-preset-expo"],
+  plugins: ["react-native-reanimated/plugin"],
+};
+```
+
+The Reanimated plugin **must be listed last** in the `plugins` array. After adding it, clear the Metro cache:
+
+```bash
+npx expo start --clear
+```
+
+On the React Native Community CLI, add `react-native-worklets/plugin` to
+`babel.config.js` yourself as well.
+
+---
+
+## "Cannot find module 'react-native-worklets'"
+
+Reanimated 4 moved worklets into their own package, so it installs separately:
+
+```bash
+npx expo install react-native-worklets
+```
+
+---
+
+## Blur renders nothing
+
+The blur components use `@sbaiahmed1/react-native-blur` — a **scoped** package.
+The unscoped `react-native-blur` is a different library and will not satisfy the
+import:
+
+```bash
+npx expo install @sbaiahmed1/react-native-blur
+```
+
+It is native, so rebuild afterwards rather than restarting Metro.
+
+---
+
+## Skia components crash or show a blank screen
+
+React Native Skia requires native modules. Make sure you've installed it with Expo:
+
+```bash
+npx expo install @shopify/react-native-skia
+```
+
+If you're using a bare workflow, run `npx pod-install` (iOS) after installing. Skia **does not work in Expo Go** — use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) instead.
+
+---
+
+## Gestures don't respond
+
+Wrap your root layout with `GestureHandlerRootView`:
+
+```tsx title="app/_layout.tsx"
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {children}
+    </GestureHandlerRootView>
+  );
+}
+```
+
+---
+
+## The component import fails with "module not found"
+
+Confirm the file exists — `npx reacticx info <component>` prints where it landed.
+If it is there, the alias in `component.config.json` has to match your
+`tsconfig.json` path mapping:
+
+```json title="tsconfig.json"
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+```
+
+---
+
+## Haptics throw an error on Android emulator
+
+`expo-haptics` is a no-op on emulators that don't support vibration. Wrap calls in a try/catch or check `Platform.OS` if you need to guard against it:
+
+```tsx
+import * as Haptics from "expo-haptics";
+import { Platform } from "react-native";
+
+if (Platform.OS !== "web") {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+}
+```
+
+---
+
+## Components look unstyled or use wrong fonts
+
+Reacticx components use your app's default styles. If something looks off, make sure your `app.json` / `app.config.ts` loads any custom fonts before the component renders. Use `expo-font` or `useFonts` from `expo-font` to preload fonts in your root layout.
+
+---
+
+## Still stuck?
+
+Open a discussion or issue on [GitHub](https://github.com/rit3zh/reacticx/issues) and include:
+
+- Your Expo SDK version
+- The component name
+- The full error message or a screenshot

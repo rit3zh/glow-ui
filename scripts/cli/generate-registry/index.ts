@@ -5,12 +5,16 @@ const COMPONENTS_DIR = "./src/components";
 const OUTPUT_FILES = ["./registry.json", `${COMPONENTS_DIR}/registry.json`];
 
 const CATEGORY_FOLDERS = [
+  "blocks",
   "ai",
   "atoms",
   "base",
+  "charts",
   "micro-interactions",
   "molecules",
   "organisms",
+  "pieces",
+  "primitives",
   "screens",
   "templates",
 ];

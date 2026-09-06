@@ -30,7 +30,7 @@ export const OrbitDotLoader: React.FC<IOrbitDotLoader> = ({
 
   useEffect(() => {
     rotation.value = withRepeat(
-      withTiming(360, {
+      withTiming<number>(360, {
         duration,
         easing: Easing.linear,
       }),
@@ -39,7 +39,7 @@ export const OrbitDotLoader: React.FC<IOrbitDotLoader> = ({
   }, [duration]);
 
   useEffect(() => {
-    centerScale.value = withRepeat(
+    centerScale.value = withRepeat<number>(
       withSequence(
         withTiming(1.3, { duration: 400, easing: Easing.out(Easing.ease) }),
         withTiming(1, { duration: 400, easing: Easing.in(Easing.ease) }),

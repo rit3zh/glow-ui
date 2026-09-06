@@ -24,6 +24,7 @@ const CircularListItem: FC<ICircularListItem> &
     contentOffset,
     imageUri,
     scaleEnabled,
+    reverse,
   }: ICircularListItem):
     | (React.ReactNode & React.JSX.Element & React.ReactElement)
     | null => {
@@ -72,14 +73,16 @@ const CircularListItem: FC<ICircularListItem> &
       return interpolatedBlur;
     }, []);
 
+    const direction = reverse ? 1 : -1;
+
     const rStyle = useAnimatedStyle<
       Partial<Required<Pick<ViewStyle, "opacity" | "transform">>>
     >(() => {
       const translateOutputRange = [
         0,
-        -LIST_ITEM_WIDTH / 3,
-        -LIST_ITEM_WIDTH / 2,
-        -LIST_ITEM_WIDTH / 3,
+        (direction * LIST_ITEM_WIDTH) / 3,
+        (direction * LIST_ITEM_WIDTH) / 2,
+        (direction * LIST_ITEM_WIDTH) / 2,
         0,
       ];
       const opacityOutputRange = [0.5, 1, 1, 1, 0.5];
@@ -108,7 +111,7 @@ const CircularListItem: FC<ICircularListItem> &
           { scale: scale.value },
         ],
       };
-    }, []);
+    }, [direction]);
 
     const blurStyle = useAnimatedStyle<
       Partial<Pick<ViewStyle, "opacity">>
@@ -146,6 +149,7 @@ const CircularList: FC<ICircularList> & FunctionComponent<ICircularList> =
     ({
       data,
       scaleEnabled,
+      reverse,
     }: ICircularList):
       | (React.ReactNode & React.JSX.Element & React.ReactElement)
       | null => {
@@ -189,6 +193,7 @@ const CircularList: FC<ICircularList> & FunctionComponent<ICircularList> =
           renderItem={({ index }) => (
             <CircularListItem
               imageUri={data[index]}
+              reverse={reverse!}
               scaleEnabled={scaleEnabled}
               index={index}
               contentOffset={contentOffset}

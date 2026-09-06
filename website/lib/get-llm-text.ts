@@ -1,19 +1,27 @@
-import { type Page } from "./source";
+import type { DocsSection } from "./source";
 
-export async function getLLMText(page: Page): Promise<string> {
-  const section = page.slugs[0];
-  const category =
-    {
-      components: "Reacticx Components",
-    }[section] ?? "Reacticx Documentation";
+type AnyPage = {
+  url: string;
+  path: string;
+  data: {
+    title: string;
+    description?: string;
+    content: string;
+  };
+};
 
-  const processed = await page.data.getText("processed");
+const CATEGORIES: Record<DocsSection, string> = {
+  docs: "Reacticx Docs",
+  components: "Reacticx Components",
+  primitives: "Reacticx Primitives",
+};
 
-  return `# ${category}: ${page.data.title}
+export function getLLMText(section: DocsSection, page: AnyPage): string {
+  return `# ${CATEGORIES[section]}: ${page.data.title}
 URL: https://www.reacticx.com${page.url}
-Source: https://raw.githubusercontent.com/rit3zh/reacticx/main/docs/content/docs/${page.path}
+Source: https://raw.githubusercontent.com/rit3zh/reacticx/main/website/content/${page.path}
 
 ${page.data.description ?? ""}
 
-${processed}`;
+${page.data.content}`;
 }

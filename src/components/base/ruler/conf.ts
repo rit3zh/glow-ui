@@ -1,8 +1,8 @@
 import type { WithSpringConfig } from "react-native-reanimated";
 
 const SPRING_CONFIG: WithSpringConfig = {
-  damping: 10,
-  stiffness: 190,
+  damping: 12,
+  stiffness: 150,
   mass: 0.5,
 };
 

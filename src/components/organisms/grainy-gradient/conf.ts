@@ -1,4 +1,4 @@
-const GRAINY_GRADIENT_SHADER = `
+const GRAINY_GRADIENT_SHADER = /*wgsl*/ `
 uniform float2 iResolution;
 uniform float iTime;
 uniform float4 uColor0;

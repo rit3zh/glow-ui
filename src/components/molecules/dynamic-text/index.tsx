@@ -13,6 +13,7 @@ import Animated, {
   LinearTransition,
   useAnimatedProps,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { BlurView, type BlurViewProps } from "expo-blur";
@@ -50,8 +51,7 @@ const DynamicText: React.FC<IDynamicText> &
     accessibilityLabel,
   }: IDynamicText): React.ReactNode &
     React.JSX.Element &
-    React.ReactElement &
-    React.ReactChild => {
+    React.ReactElement => {
     const timingConfig: TimingConfig = { ...DEFAULT_TIMING, ...timing };
     const dotConfig: DotConfig = { ...DEFAULT_DOT, ...dot };
     const textConfig: TextConfig = { ...DEFAULT_TEXT, ...text };
@@ -151,7 +151,7 @@ const DynamicText: React.FC<IDynamicText> &
       const blurIntensity = interpolate(
         progress.value,
         [0, 0.5, 1],
-        [0, 10, 0],
+        [0, 15, 0],
       );
 
       return {

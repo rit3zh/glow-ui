@@ -33,11 +33,19 @@ interface IDisclosureGroupItems {
   readonly style?: StyleProp<ViewStyle>;
 }
 
+interface IDisclosureGroupItemSpringConfig {
+  readonly mass?: number;
+  readonly stiffness?: number;
+  readonly damping?: number;
+}
+
 interface IDisclosureGroupItem {
   readonly children?: React.ReactNode;
   readonly onPress?: () => void;
   readonly style?: StyleProp<ViewStyle>;
   readonly disabled?: boolean;
+  readonly pressScale?: number;
+  readonly springConfig?: IDisclosureGroupItemSpringConfig;
 }
 
 type DisclosureComponent<P> = React.NamedExoticComponent<P>;
@@ -57,6 +65,7 @@ export type {
   IDisclosureGroupTrigger,
   IDisclosureGroupItems,
   IDisclosureGroupItem,
+  IDisclosureGroupItemSpringConfig,
   DisclosureGroupComposition,
   DisclosureGroupTheme,
 };
