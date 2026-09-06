@@ -259,7 +259,11 @@ await test("unresolvable imports are reported", () => {
   project(BASE);
   const out = cli(["add", "sign-up-v1", "--yes", "--dry"]);
   contains(out, "unresolved", "the unresolved section is missing");
-  contains(out, "@/helpers/hooks/use-responsive", "the dangling import was not named");
+  // Font assets, not a hook: the registry serves source files, so `sign-up-v1`'s
+  // `@/assets/fonts/*.ttf` imports can never resolve. `@/helpers/hooks/use-responsive`
+  // used to stand in here, but it is published now and resolves as a shared
+  // dependency, which quietly turned this assertion into a false failure.
+  contains(out, "@/assets/fonts/", "the dangling import was not named");
 });
 
 await test("missing npm packages are found but not installed", () => {
